@@ -80,6 +80,22 @@ Replace the existing WordPress website with a modern, responsive platform that r
 
 Launch a professional website within approximately four weeks without disrupting existing business operations.
 
+## Design Foundation
+
+Milestone 1 establishes the visual identity and user experience foundation for all future milestones.
+
+The following design deliverables shall be completed before UI implementation begins:
+
+- Brand Identity
+- Design Principles
+- Design System
+- Homepage Information Architecture
+- Mood Board
+- Wireframes
+- Responsive UI Designs (Figma)
+
+These artefacts ensure that every future milestone maintains a consistent user experience while allowing the platform to evolve into a modern Travel Experience Platform.
+
 ## Features
 
 ### Homepage

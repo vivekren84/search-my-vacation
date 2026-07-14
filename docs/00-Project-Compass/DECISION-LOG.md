@@ -240,9 +240,107 @@ Approved
 
 ---
 
+
+# Decision-003
+
+## Title
+
+Brand Identity and Design Philosophy
+
+---
+
+## Date
+
+13 Jul 2026
+
+---
+
+## Context
+
+As Project Compass transitions from product planning into user experience design, a consistent visual and brand foundation is required to ensure every future milestone delivers a cohesive customer experience.
+
+Without documented design standards, future development risks inconsistent branding, user interfaces and messaging.
+
+---
+
+## Decision
+
+Search My Vacation will establish an official Brand Identity, Design Principles and Design System.
+
+The company will position itself as a premium personalised travel planning company rather than a traditional Online Travel Agency (OTA).
+
+The website will follow a storytelling approach that emphasizes trust, personalization and memorable travel experiences before promotional content.
+
+---
+
+## Rationale
+
+This approach:
+
+- Differentiates Search My Vacation from price-led OTAs.
+- Reinforces the company's USP of handcrafted itineraries.
+- Creates a consistent visual language across future releases.
+- Simplifies future UX and UI decisions.
+- Supports the long-term vision of becoming a Travel Experience Platform.
+
+---
+
+## Alternatives Considered
+
+### Option A
+
+Continue designing pages individually without documented standards.
+
+**Rejected**
+
+Reason:
+
+Would lead to inconsistent branding and increased design rework.
+
+---
+
+### Option B
+
+Establish a formal Brand Identity and Design System before UI implementation.
+
+**Selected**
+
+Reason:
+
+Provides a reusable design foundation that supports long-term product evolution.
+
+---
+
+## Impact
+
+Positive
+
+- Stronger brand consistency.
+- Improved customer trust.
+- Faster UI development.
+- Reduced future redesign effort.
+- Better onboarding for future contributors.
+
+---
+
+## Related Documents
+
+- BRAND-IDENTITY.md
+- DESIGN-PRINCIPLES.md
+- DESIGN-SYSTEM.md
+- PRODUCT-ROADMAP.md
+- SRS.md
+
+---
+
+## Status
+
+Approved
+
+---
 # Future Decisions
 
 | ID | Title | Status |
 |----|-------|--------|
-| Decision-003 | TBD | Pending |
 | Decision-004 | TBD | Pending |
+| Decision-005 | TBD | Pending |

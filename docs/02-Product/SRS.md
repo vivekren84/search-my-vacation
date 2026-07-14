@@ -77,6 +77,16 @@ Every interaction should increase confidence and reduce uncertainty.
 
 ---
 
+### Personalization Before Standardization
+
+Search My Vacation differentiates itself through handcrafted travel experiences.
+
+The platform shall emphasize personalized journeys over predefined travel packages.
+
+Content, messaging and future interactive experiences should reinforce that every itinerary is designed around the traveller's unique requirements.
+
+---
+
 ### Build Trust Before Selling
 
 Customers should understand who we are before being asked to enquire.
@@ -268,7 +278,11 @@ The application shall support all modern browsers across:
 
 ## Branding
 
-The visual identity shall consistently reflect the Search My Vacation brand across every page.
+The visual identity shall consistently reflect the Search My Vacation Brand Identity and Design System.
+
+All user-facing interfaces shall adhere to the project's Design Principles, including Mobile-First design, trust-first communication, visual consistency, accessibility and clear calls-to-action.
+
+Brand, typography, colours, imagery, iconography and reusable UI components shall be maintained within the Design documentation and applied consistently throughout the application.
 
 ---
 
