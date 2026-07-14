@@ -338,9 +338,119 @@ Positive
 Approved
 
 ---
+
+## DECISION-004
+
+**Title:** Homepage Experience Direction & Navigation Simplification
+
+**Date:** 14 July 2026
+
+**Status:** Approved
+
+### Context
+
+During the Homepage Design Workshop, multiple homepage concepts were explored to determine the optimal balance between storytelling, inspiration and simplicity for SearchMyVacation Version 1.0.
+
+The objective was to create a homepage that feels premium and experience-first while avoiding unnecessary visual clutter and decision fatigue.
+
+Several navigation and hero alternatives were also evaluated.
+
+---
+
+### Options Considered
+
+#### Option A – Storyteller Homepage
+
+A richer homepage containing multiple storytelling sections including traveller stories, travel inspiration and featured experiences.
+
+**Pros**
+
+- Rich storytelling
+- More inspirational content
+- Greater opportunity for engagement
+
+**Cons**
+
+- Longer scrolling experience
+- Increased cognitive load
+- Slightly cluttered first impression
+
+---
+
+#### Option C – Experience Portal
+
+A cleaner homepage focused on progressive discovery.
+
+Sections are intentionally reduced while preserving trust and inspiration.
+
+**Pros**
+
+- Cleaner visual hierarchy
+- Better whitespace
+- Faster understanding
+- Stronger focus on the primary CTA
+- Premium first impression
+
+**Cons**
+
+- Less supporting content on the homepage
+- Inspiration content moves deeper into the website
+
+---
+
+### Decision
+
+The project will adopt **Concept C** as the homepage direction for Version 1.0.
+
+Additional decisions approved:
+
+- Hero will use a single cinematic image (no carousel).
+- Search will remain integrated within the Hero section.
+- "Contact Us" will be removed from the primary navigation.
+- Primary CTA remains **Plan My Journey**.
+- Traveller Stories will be redesigned as story-led content rather than traditional testimonials.
+- "Featured Experiences" naming will be revisited to improve clarity.
+
+---
+
+### Rationale
+
+Concept C best represents SearchMyVacation's vision of becoming an Experience Portal rather than a traditional travel website.
+
+The simplified layout improves usability, reduces visual clutter and creates a calmer, more premium experience while maintaining trust-building elements.
+
+---
+
+### Impact
+
+This decision establishes the visual direction for:
+
+- Homepage UI
+- Design System
+- React implementation
+- Responsive layouts
+- Future design consistency
+
+---
+
+### Follow-up Actions
+
+- Create high-fidelity Homepage Hero.
+- Design the final navigation.
+- Validate hero imagery.
+- Finalise naming for the curated journeys section.
+
+---
+
+### Decision Owners
+
+- Vivek
+- Archie 
+
+---
 # Future Decisions
 
 | ID | Title | Status |
 |----|-------|--------|
-| Decision-004 | TBD | Pending |
 | Decision-005 | TBD | Pending |
+| Decision-006 | TBD | Pending |
