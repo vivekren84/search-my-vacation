@@ -309,18 +309,36 @@ Implementation-specific values will be documented within the Design System.
 
 ---
 
-# Candidate Font Evaluation
+# Official Font Selection
 
-The final font family will be selected after evaluating multiple combinations against the criteria defined in this document.
+Following visual evaluation and alignment with the Search My Vacation brand identity, the project adopts the following typography.
 
-Candidate combinations include:
+## Primary Font Family
 
-- Poppins + Inter
-- Manrope + Inter
-- Plus Jakarta Sans + Inter
-- DM Sans + Inter
+**Plus Jakarta Sans**
 
-The selected combination should provide the best balance between readability, personality, accessibility and long-term maintainability.
+Fallback stack:
+
+```
+"Plus Jakarta Sans", system-ui, sans-serif
+```
+
+## Selection Rationale
+
+Plus Jakarta Sans was selected because it provides the best balance between:
+
+- Readability
+- Warmth
+- Professionalism
+- Accessibility
+- Modern appearance
+- Premium brand perception
+
+It aligns closely with the Search My Vacation brand personality while remaining highly legible across mobile, tablet and desktop devices.
+
+## Future Language Support
+
+As Search My Vacation expands into additional regional languages, compatible companion fonts may be introduced while preserving a visually consistent reading experience.
 
 ---
 
