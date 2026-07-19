@@ -20,19 +20,23 @@ export const siteConfig = {
   navigation: [
     {
       label: "Destinations",
-      href: "#",
+      href: "#destinations",
     },
     {
       label: "Experiences",
-      href: "#",
+      href: "#experiences",
     },
     {
-      label: "About",
-      href: "#",
+      label: "Travel Inspiration",
+      href: "#travel-inspiration",
+    },
+    {
+      label: "About Us",
+      href: "#about-us",
     },
     {
       label: "Contact",
-      href: "#",
+      href: "#contact",
     },
   ],
 };

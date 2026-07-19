@@ -7,58 +7,57 @@
  * the Golden Hour background image.
  */
 
-import { Button, Container } from "@/components";
-import { siteConfig } from "@/config/site.config";
+import Link from "next/link";
+
+import { Container, Header } from "@/components";
 
 import HeroImage from "./HeroImage";
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen overflow-hidden">
-      {/* Background */}
+    <section className="relative isolate min-h-[calc(100svh+7.5rem)] overflow-hidden" aria-labelledby="hero-heading">
       <HeroImage />
 
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/65 via-black/35 to-transparent" />
+      <div
+        className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(27,17,12,0.78)_0%,rgba(27,17,12,0.49)_43%,rgba(27,17,12,0.13)_100%),linear-gradient(0deg,rgba(27,17,12,0.55)_0%,transparent_42%)]"
+        aria-hidden="true"
+      />
 
-      {/* Content */}
-      <div className="relative z-10 flex min-h-screen items-center">
+      <Header />
+
+      <div className="relative z-10 flex min-h-[calc(100svh+7.5rem)] items-center">
         <Container>
-          <div className="max-w-2xl pt-24 lg:pt-28">
-
-            {/* Heading */}
-
-            <h1 className="text-5xl font-bold leading-[1.02] tracking-[-0.02em] text-white md:text-6xl lg:text-7xl">
-              More Than a Trip.
-              <br />
-              <span className="text-white/95">
-                It's an Experience.
-              </span>
-            </h1>
-
-            {/* Description */}
-
-            <p className="mt-10 max-w-xl text-lg leading-8 text-white/85 lg:text-xl">
-              {siteConfig.description}
+          <div className="max-w-2xl py-36 sm:py-40 lg:py-44 lg:pl-8 xl:pl-14">
+            <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#f3c681] sm:text-sm">
+              More Than a Trip. It&apos;s an Experience.
             </p>
 
-            {/* Actions */}
+            <h1 id="hero-heading" className="mt-5 max-w-[39rem] text-balance font-serif text-5xl font-normal leading-[0.98] tracking-[-0.045em] text-white md:text-6xl lg:text-7xl">
+              Every great journey begins with understanding you.
+            </h1>
 
-            <div className="mt-14 flex flex-wrap items-center gap-5">
-              <Button size="lg">
-                Plan My Journey
-              </Button>
+            <p className="mt-7 max-w-lg text-base leading-8 text-white/90 sm:text-lg lg:text-xl">
+              Share what matters to you, and our travel experts will thoughtfully
+              curate a journey that feels personal, effortless, and confidently yours.
+            </p>
 
-              <Button
-                variant="secondary"
-                size="lg"
-              >
-                Explore Destinations
-              </Button>
-            </div>
+            <Link
+              href="#experiences"
+              className="mt-12 inline-flex min-h-16 items-center justify-center rounded-full bg-[#f3c681] px-9 text-base font-bold text-[#25180f] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-[#ffe1ab] hover:shadow-lg hover:shadow-black/20 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#f3c681] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+            >
+              Plan My Experience <span aria-hidden="true" className="ml-2">→</span>
+            </Link>
           </div>
         </Container>
       </div>
+
+      <a
+        href="#experiences"
+        className="absolute bottom-6 right-6 z-10 hidden items-center gap-3 text-xs font-semibold uppercase tracking-[0.12em] text-white/90 transition hover:text-white sm:inline-flex lg:bottom-10 lg:right-10"
+      >
+        Discover what inspires you
+        <span aria-hidden="true" className="h-px w-10 bg-current" />
+      </a>
     </section>
   );
 }

@@ -7,14 +7,12 @@
  * Hero can provide an immersive first impression.
  */
 
-import { Header, Hero } from "@/components";
+import { Hero } from "@/components";
 import Experiences from "@/components/sections/Experiences";
 
 export default function HomePage() {
   return (
     <>
-      <Header />
-
       <main>
         <Hero />
         <Experiences />
