@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import JourneyExperienceV2 from "@/components/sections/JourneyExperienceV2";
 
 const emotions = [
   {
@@ -38,17 +38,18 @@ const emotions = [
 
 export default function HeroJourney() {
   const [selected, setSelected] = useState<string | null>(null);
-  const router = useRouter();
+  const [isPassportOpen, setIsPassportOpen] = useState(false);
 
-  const handleStart = () => {
-    if (!selected) return;
-    router.push(`/journey?feeling=${selected}`);
+  // ✅ FIX: Reset everything when passport closes
+  const handleClosePassport = () => {
+    setIsPassportOpen(false);
+    setSelected(null); // <-- THIS is the key fix
   };
 
   return (
     <section className="relative w-full h-[90vh] flex items-center justify-center text-center overflow-hidden">
-      
-      {/* Background Image */}
+
+      {/* Background */}
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
@@ -62,17 +63,14 @@ export default function HeroJourney() {
       {/* Content */}
       <div className="relative z-10 max-w-5xl px-6 flex flex-col items-center gap-6">
 
-        {/* Eyebrow */}
         <p className="text-xs tracking-[0.3em] text-white/70 uppercase">
           Your Journey, Your Feeling
         </p>
 
-        {/* Heading */}
         <h1 className="text-4xl md:text-6xl font-semibold text-white leading-tight">
           How do you want to feel?
         </h1>
 
-        {/* Subtext */}
         <p className="text-white/80 text-base md:text-lg">
           Tell us your mood. We’ll design the journey.
         </p>
@@ -94,12 +92,10 @@ export default function HeroJourney() {
                   }
                 `}
               >
-                {/* Emoji Container (FIXED PROPERLY) */}
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/30 backdrop-blur-md text-xl shrink-0">
                   <span className="leading-none">{emotion.emoji}</span>
                 </div>
 
-                {/* Text */}
                 <div>
                   <p className="font-semibold text-base">{emotion.title}</p>
                   <p className="text-sm opacity-70 mt-0.5">
@@ -113,8 +109,7 @@ export default function HeroJourney() {
 
         {/* CTA */}
         <button
-          onClick={handleStart}
-          disabled={!selected}
+          onClick={() => selected && setIsPassportOpen(true)}
           className={`mt-10 px-12 py-4 rounded-full text-base font-semibold transition-all duration-300
             ${
               selected
@@ -123,10 +118,9 @@ export default function HeroJourney() {
             }
           `}
         >
-          Start My Journey →
+          {selected ? "Start My Journey →" : "Select your mood to begin"}
         </button>
 
-        {/* Helper Text */}
         {selected && (
           <p className="text-xs text-white/60 mt-2">
             Takes less than a minute
@@ -136,6 +130,12 @@ export default function HeroJourney() {
 
       {/* Bottom Fade */}
       <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-b from-transparent to-[#f8f5f0]" />
+
+      <JourneyExperienceV2
+        isOpen={isPassportOpen}
+        onClose={handleClosePassport}
+        emotion={selected ?? undefined}
+      />
     </section>
   );
 }
