@@ -1,8 +1,8 @@
 # Traveller Intent Framework
 
-**Version:** 1.0 (Draft)
+**Version:** 1.1
 
-**Status:** Foundation Document
+**Status:** Approved Foundation Document
 
 **Owner:** Team Satvi
 
@@ -16,6 +16,8 @@ This framework establishes how Search My Vacation understands a traveller before
 
 The framework serves as the foundation for the homepage, future AI experiences, recommendation engines and traveller personalisation.
 
+This framework operationalises the philosophy established in `PRODUCT-VISION.md` by translating traveller motivations into meaningful product interactions.
+
 ---
 
 # Guiding Philosophy
@@ -23,6 +25,14 @@ The framework serves as the foundation for the homepage, future AI experiences, 
 > People don't search for destinations.
 >
 > They search for the life they want to experience for a few precious days.
+
+---
+
+# Traveller Voices
+
+This framework works alongside the Traveller Voices Workshop, which identifies the emotional mindsets behind each traveller's intent.
+
+Together, the Traveller Voices and Traveller Intent Framework ensure SearchMyVacation begins every journey by understanding the traveller before recommending destinations.
 
 ---
 
@@ -110,7 +120,7 @@ Examples include:
 
 ---
 
-## Stage 3 — Planning Preferences
+## Stage 3 — Journey Preferences
 
 Capture practical planning details.
 
@@ -161,6 +171,14 @@ Future releases may introduce personalised and AI-assisted discovery.
 - Personalised Surprise Me
 - Traveller memory and preferences
 - Dynamic recommendation engine
+
+---
+
+# Product Promise
+
+Every interaction within SearchMyVacation should reinforce our promise of **Travel Confidence**.
+
+Whether a traveller is seeking inspiration, planning a journey or making an enquiry, they should always feel informed, understood and confident.
 
 ---
 
