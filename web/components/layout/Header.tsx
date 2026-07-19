@@ -39,8 +39,8 @@ export default function Header() {
           />
         </Link>
 
-        <nav className="hidden flex-1 justify-center lg:flex">
-          <ul className="flex items-center gap-12">
+        <nav className="flex flex-1 justify-center">
+          <ul className="flex items-center gap-8 md:gap-12">
             {siteConfig.navigation.map((item) => (
               <li key={`${item.label}-${item.href}`}>
                 <Link
