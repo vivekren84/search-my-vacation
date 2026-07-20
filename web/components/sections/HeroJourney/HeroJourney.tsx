@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import JourneyExperienceV2 from "@/components/sections/JourneyExperienceV2";
+import { useRouter } from "next/navigation";
 
 const emotions = [
   {
@@ -38,13 +38,7 @@ const emotions = [
 
 export default function HeroJourney() {
   const [selected, setSelected] = useState<string | null>(null);
-  const [isPassportOpen, setIsPassportOpen] = useState(false);
-
-  // ✅ FIX: Reset everything when passport closes
-  const handleClosePassport = () => {
-    setIsPassportOpen(false);
-    setSelected(null); // <-- THIS is the key fix
-  };
+  const router = useRouter();
 
   return (
     <section className="relative w-full h-[90vh] flex items-center justify-center text-center overflow-hidden">
@@ -109,7 +103,7 @@ export default function HeroJourney() {
 
         {/* CTA */}
         <button
-          onClick={() => selected && setIsPassportOpen(true)}
+          onClick={() => selected && router.push(`/journey-passport?feeling=${encodeURIComponent(selected)}`)}
           className={`mt-10 px-12 py-4 rounded-full text-base font-semibold transition-all duration-300
             ${
               selected
@@ -131,11 +125,6 @@ export default function HeroJourney() {
       {/* Bottom Fade */}
       <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-b from-transparent to-[#f8f5f0]" />
 
-      <JourneyExperienceV2
-        isOpen={isPassportOpen}
-        onClose={handleClosePassport}
-        emotion={selected ?? undefined}
-      />
     </section>
   );
 }
