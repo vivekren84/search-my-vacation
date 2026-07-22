@@ -1,78 +1,75 @@
-import type { JourneyBudgetOption, JourneyChapter, JourneyOption, JourneyPassportState } from "@/types/journey-passport.types";
+import type { JourneyMoment, JourneyOption, JourneyPassportState } from "@/types/journey-passport.types";
 
-const image = (name: string) => `/images/journey-experience/${name}`;
+const journeyPassportImage = (group: "companions" | "dream-journeys" | "travel-styles", name: string) =>
+  `/images/journey-passport/${group}/${name}.webp`;
 
 export const companionOptions: JourneyOption[] = [
-  { value: "Couple", label: "Couple", description: "Moments meant only for two.", imageSrc: image("couple-golden-hour.png") },
-  { value: "Family", label: "Family", description: "Memories that stay for a lifetime.", imageSrc: image("family-golden-hour.png") },
-  { value: "Friends", label: "Friends", description: "Stories you’ll talk about forever.", imageSrc: image("friends-golden-hour.png") },
-  { value: "Solo", label: "Solo", description: "Just you, and the world slowing down.", imageSrc: image("solo-golden-hour.png") },
-  { value: "Business", label: "Business", description: "A considered pause between meaningful work.", imageSrc: image("elevated.png") },
+  { value: "Solo", label: "Solo", description: "Just you, and the world slowing down.", imageSrc: journeyPassportImage("companions", "solo") },
+  { value: "Couple", label: "Couple", description: "Moments meant only for two.", imageSrc: journeyPassportImage("companions", "couple") },
+  { value: "Family", label: "Family", description: "Memories that stay for a lifetime.", imageSrc: journeyPassportImage("companions", "family") },
+  { value: "Friends", label: "Friends", description: "Stories you’ll talk about forever.", imageSrc: journeyPassportImage("companions", "friends") },
+  { value: "Business", label: "Business", description: "Purposeful travel with room to reconnect and recharge.", imageSrc: journeyPassportImage("companions", "business") },
 ];
 
 export const dreamJourneyOptions: JourneyOption[] = [
-  { value: "Tropical Escape", label: "Tropical Escape", description: "Warm water, slower mornings and open skies.", imageSrc: image("bali-preview.png") },
-  { value: "Mountain Retreat", label: "Mountain Retreat", description: "Fresh air, far-reaching views and room to breathe.", imageSrc: image("switzerland-preview.png") },
-  { value: "City Discovery", label: "City Discovery", description: "New neighbourhoods, culture and stories around every corner.", imageSrc: image("exploring.png") },
-  { value: "Cruise Voyage", label: "Cruise Voyage", description: "A graceful way to let the horizon lead.", imageSrc: image("luxury.png") },
-  { value: "Winter Wonderland", label: "Winter Wonderland", description: "Quiet peaks and a beautiful change of pace.", imageSrc: image("later.png") },
-  { value: "Wildlife Adventure", label: "Wildlife Adventure", description: "Wild places that make the everyday feel far away.", imageSrc: image("now.png") },
+  { value: "Tropical Escape", label: "Tropical Escape", description: "Warm water, slower mornings and open skies.", imageSrc: journeyPassportImage("dream-journeys", "tropical-escape") },
+  { value: "Mountain Retreat", label: "Mountain Retreat", description: "Fresh air, far-reaching views and room to breathe.", imageSrc: journeyPassportImage("dream-journeys", "mountain-retreat") },
+  { value: "City Discovery", label: "City Discovery", description: "New neighbourhoods, culture and stories around every corner.", imageSrc: journeyPassportImage("dream-journeys", "city-discovery") },
+  { value: "Cruise Voyage", label: "Cruise Voyage", description: "A graceful way to let the horizon lead.", imageSrc: journeyPassportImage("dream-journeys", "cruise-voyage") },
+  { value: "Winter Wonderland", label: "Winter Wonderland", description: "Quiet landscapes and a beautiful change of pace.", imageSrc: journeyPassportImage("dream-journeys", "winter-wonderland") },
+  { value: "Wildlife Adventure", label: "Wildlife Adventure", description: "Wild places that make the everyday feel far away.", imageSrc: journeyPassportImage("dream-journeys", "wildlife-adventure") },
 ];
 
 export const travelStyleOptions: JourneyOption[] = [
-  { value: "Relaxation", label: "Relaxation" },
-  { value: "Adventure", label: "Adventure" },
-  { value: "Food and Dining", label: "Food and Dining" },
-  { value: "Culture and Heritage", label: "Culture and Heritage" },
-  { value: "Photography", label: "Photography" },
-  { value: "Nature", label: "Nature" },
-  { value: "Wildlife", label: "Wildlife" },
-  { value: "Beaches and Islands", label: "Beaches and Islands" },
-  { value: "Celebrations", label: "Celebrations" },
+  { value: "Relaxation", label: "Relaxation", imageSrc: journeyPassportImage("travel-styles", "relaxation") },
+  { value: "Adventure", label: "Adventure", imageSrc: journeyPassportImage("travel-styles", "adventure") },
+  { value: "Food & Dining", label: "Food & Dining", imageSrc: journeyPassportImage("travel-styles", "food-dining") },
+  { value: "Culture & Heritage", label: "Culture & Heritage", imageSrc: journeyPassportImage("travel-styles", "culture-heritage") },
+  { value: "Photography", label: "Photography", imageSrc: journeyPassportImage("travel-styles", "photography") },
+  { value: "Nature", label: "Nature", imageSrc: journeyPassportImage("travel-styles", "nature") },
+  { value: "Wildlife", label: "Wildlife", imageSrc: journeyPassportImage("travel-styles", "wildlife") },
+  { value: "Beaches & Islands", label: "Beaches & Islands", imageSrc: journeyPassportImage("travel-styles", "beaches-islands") },
+  { value: "Celebrations", label: "Celebrations", imageSrc: journeyPassportImage("travel-styles", "celebrations") },
 ];
 
 export const timingOptions: JourneyOption[] = [
-  { value: "Next Month", label: "Next Month", description: "A gentle change of scene, soon." },
-  { value: "Summer Holidays", label: "Summer Holidays", description: "A season set aside for time together." },
-  { value: "Winter", label: "Winter", description: "A different kind of light and landscape." },
-  { value: "Flexible", label: "Flexible", description: "Open to the right moment and the right place." },
-  { value: "Specific Dates", label: "Specific Dates", description: "You already have a time in mind." },
+  { value: "Within the Next Month", label: "Within the Next Month", description: "A gentle change of scene, soon." },
+  { value: "In the Next 2–3 Months", label: "In the Next 2–3 Months", description: "Enough time to shape something thoughtful." },
+  { value: "Later This Year", label: "Later This Year", description: "A journey to look forward to." },
+  { value: "I’m Flexible", label: "I’m Flexible", description: "Open to the right moment and place." },
+  { value: "Exact Dates", label: "Exact Dates", description: "You already have a time in mind." },
 ];
 
-export const comfortOptions: JourneyOption[] = [
-  { value: "Comfortable", label: "Comfortable", description: "Thoughtful, relaxed and well-crafted." },
-  { value: "Premium", label: "Premium", description: "A few more beautiful details along the way." },
-  { value: "Luxury", label: "Luxury", description: "Private, considered and unforgettable." },
-  { value: "Ultra Luxury", label: "Ultra Luxury", description: "Exceptional experiences shaped around you." },
+export const destinationSuggestions = [
+  "Bali", "Bhutan", "Dubai", "France", "Greece", "Iceland", "Italy", "Japan", "Maldives", "New Zealand", "Singapore", "South Africa", "Sri Lanka", "Switzerland", "Thailand", "Vietnam",
 ];
 
-export const budgetOptions: JourneyBudgetOption[] = [
-  { value: "Under ₹1 lakh", label: "Under ₹1 lakh" },
-  { value: "₹1–2 lakhs", label: "₹1–2 lakhs" },
-  { value: "₹2–4 lakhs", label: "₹2–4 lakhs" },
-  { value: "₹4–7 lakhs", label: "₹4–7 lakhs" },
-  { value: "₹7 lakhs+", label: "₹7 lakhs+" },
-  { value: "I'd like guidance", label: "I’d like guidance" },
-];
-
-const hasDates = (state: JourneyPassportState) => state.timing !== "Specific Dates" || Boolean(state.startDate && state.endDate);
-
-export const journeyChapters: JourneyChapter[] = [
-  { id: "welcome", number: 1, navigationLabel: "Welcome", title: "Welcome to Your Journey Passport", type: "welcome", required: false, nextLabel: "Begin My Journey", validate: () => true },
-  { id: "about-you", number: 2, navigationLabel: "About You", title: "First, tell us about you.", description: "This helps us personalise your Journey Passport and every recommendation that follows.", type: "name", required: true, nextLabel: "Continue", validate: (state) => state.name.trim().length >= 2 },
-  { id: "companions", number: 3, navigationLabel: "Companions", title: "Who will be sharing this journey with you?", type: "single-select", required: true, nextLabel: "Continue", options: companionOptions, validate: (state) => Boolean(state.companion) },
-  { id: "dream-journey", number: 4, navigationLabel: "Dream Journey", title: "What kind of journey has been living in your heart lately?", description: "Choose the one that excites you most right now.", type: "single-select", required: true, nextLabel: "Continue", options: dreamJourneyOptions, validate: (state) => Boolean(state.dreamJourney) },
-  { id: "travel-style", number: 5, navigationLabel: "Travel Style", title: "What kind of memories would you love to bring back?", description: "Select everything that feels like you.", type: "multi-select", required: true, nextLabel: "Continue", options: travelStyleOptions, validate: (state) => state.travelStyles.length > 0 },
-  { id: "timing", number: 6, navigationLabel: "Timing", title: "When are you hoping to travel?", type: "timing", required: true, nextLabel: "Continue", options: timingOptions, validate: (state) => Boolean(state.timing) && hasDates(state) },
-  { id: "comfort", number: 7, navigationLabel: "Comfort", title: "Tell us about your comfort and preferences.", description: "This helps us shape an experience that feels right for you.", type: "comfort", required: true, nextLabel: "Continue", validate: (state) => Boolean(state.comfort && state.budget) },
-  { id: "profile", number: 8, navigationLabel: "Profile", title: "Here’s what we understand about your journey so far.", type: "summary", required: false, nextLabel: "Continue to contact details", validate: () => true },
-  { id: "contact", number: 9, navigationLabel: "Let’s Connect", title: "We’ve got a wonderful starting point.", type: "contact", required: true, nextLabel: "Stamp My Journey Passport", validate: (state) => Boolean(state.contact.name.trim() && state.contact.phone.trim() && state.contact.email.trim() && state.contact.city.trim()) },
-  { id: "journey-begins", number: 10, navigationLabel: "Journey Begins", title: "Your Journey Begins Here.", type: "complete", required: false, nextLabel: "", validate: () => true },
-];
-
-export const passportStampConfig = {
-  city: "CHENNAI · INDIA",
-  brand: "SEARCH MY VACATION",
-  title: "JOURNEY PASSPORT",
-  message: "JOURNEY BEGINS",
+const hasValidName = (state: JourneyPassportState) => {
+  const name = state.name.trim();
+  return name.length >= 2 && name.length <= 80 && /\p{L}/u.test(name);
 };
+
+const localToday = () => {
+  const now = new Date();
+  const offset = now.getTimezoneOffset() * 60_000;
+  return new Date(now.getTime() - offset).toISOString().slice(0, 10);
+};
+
+const hasValidDates = (state: JourneyPassportState) => state.timing !== "Exact Dates" || Boolean(state.startDate && state.endDate && state.startDate >= localToday() && state.endDate > state.startDate);
+const hasValidDestination = (state: JourneyPassportState) => {
+  const destination = state.destination.trim();
+  return state.destinationMode === "discovery" || (state.destinationMode === "known" && destination.length >= 2 && destination.length <= 100 && /[\p{L}\p{N}]/u.test(destination));
+};
+
+export const journeyMoments: JourneyMoment[] = [
+  { id: "welcome", number: 1, navigationLabel: "Welcome", title: "Welcome to Your Journey Passport", type: "welcome", nextLabel: "Begin My Journey", validate: () => true },
+  { id: "about-you", number: 2, navigationLabel: "About You", title: "First, tell us about you.", description: "We’ll use your name to make every conversation feel personal.", type: "name", nextLabel: "Continue", validate: hasValidName },
+  { id: "companions", number: 3, navigationLabel: "Companions", title: "Who will be sharing this journey with you?", description: "Every journey feels different depending on who is beside you.", type: "single-select", nextLabel: "Continue", options: companionOptions, validate: (state) => Boolean(state.companion) },
+  { id: "dream-journey", number: 4, navigationLabel: "Dream Journey", title: "What kind of journey has been living in your heart lately?", description: "Choose the one that excites you most right now.", type: "single-select", nextLabel: "Continue", options: dreamJourneyOptions, validate: (state) => Boolean(state.dreamJourney) },
+  { id: "travel-style", number: 5, navigationLabel: "Travel Style", title: "What kind of memories would you love to bring back?", description: "Choose up to three. We’ll use them to keep your possibilities beautifully focused.", type: "multi-select", nextLabel: "Continue", options: travelStyleOptions, validate: (state) => state.travelStyles.length >= 1 && state.travelStyles.length <= 3 },
+  { id: "timing", number: 6, navigationLabel: "Timing", title: "When would you love this journey to begin?", description: "An exact date is wonderful. A general idea is enough too.", type: "timing", nextLabel: "Continue", options: timingOptions, validate: (state) => Boolean(state.timing) && hasValidDates(state) },
+  { id: "destination", number: 7, navigationLabel: "Destination", title: "Is there somewhere already calling you?", description: "Tell us what you have in mind, or invite us to help you discover somewhere special.", type: "destination", nextLabel: "Continue", validate: hasValidDestination },
+  { id: "discover", number: 8, navigationLabel: "Discover", title: "Wonderful. We have everything we need to begin crafting your journey.", description: "We’ll bring together possibilities shaped around what matters most to you.", type: "discover", nextLabel: "✨ Discover My Possibilities", validate: (state) => journeyMoments.slice(1, 7).every((moment) => moment.validate(state)) },
+];
+
+export const journeyMomentIndex = (id: JourneyPassportState["currentMoment"]) => journeyMoments.findIndex((moment) => moment.id === id);

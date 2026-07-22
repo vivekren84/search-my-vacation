@@ -1,25 +1,34 @@
-export type JourneyChapterId =
+export const JOURNEY_PASSPORT_SCHEMA_VERSION = 1 as const;
+export const JOURNEY_FEELINGS = ["relax", "explore", "celebrate", "romance", "escape"] as const;
+
+export type JourneyFeeling = (typeof JOURNEY_FEELINGS)[number];
+
+export function isJourneyFeeling(value: unknown): value is JourneyFeeling {
+  return typeof value === "string" && JOURNEY_FEELINGS.some((feeling) => feeling === value);
+}
+
+export type JourneyMomentId =
   | "welcome"
   | "about-you"
   | "companions"
   | "dream-journey"
   | "travel-style"
   | "timing"
-  | "comfort"
-  | "profile"
-  | "contact"
-  | "journey-begins";
+  | "destination"
+  | "discover";
 
-export type JourneyChapterType =
+export type JourneyMomentType =
   | "welcome"
   | "name"
   | "single-select"
   | "multi-select"
   | "timing"
-  | "comfort"
-  | "summary"
-  | "contact"
-  | "complete";
+  | "destination"
+  | "discover";
+
+export type DestinationMode = "" | "known" | "discovery";
+export type CompletionState = "idle" | "completing" | "complete" | "failed";
+export type NavigationDirection = "none" | "forward" | "backward";
 
 export type JourneyOption = {
   value: string;
@@ -27,13 +36,15 @@ export type JourneyOption = {
   description?: string;
   imageSrc?: string;
 };
-
-export type JourneyBudgetOption = {
-  value: string;
-  label: string;
+export type JourneyPassportEntryContext = {
+  feeling?: JourneyFeeling;
+  destination?: string;
+  source?: "homepage" | "direct";
 };
 
 export type JourneyPassportState = {
+  schemaVersion: typeof JOURNEY_PASSPORT_SCHEMA_VERSION;
+  currentMoment: JourneyMomentId;
   name: string;
   companion: string;
   dreamJourney: string;
@@ -41,29 +52,29 @@ export type JourneyPassportState = {
   timing: string;
   startDate: string;
   endDate: string;
-  comfort: string;
-  budget: string;
-  preferences: Record<string, string>;
-  contact: {
-    name: string;
-    phone: string;
-    email: string;
-    city: string;
-  };
-  feeling?: string;
+  destinationMode: DestinationMode;
+  destination: string;
+  entryContext: JourneyPassportEntryContext;
+  visitedMoments: JourneyMomentId[];
+  completion: CompletionState;
+  navigationDirection: NavigationDirection;
+  updatedAt: number;
 };
 
-export type JourneyChapter = {
-  id: JourneyChapterId;
+export type JourneyMoment = {
+  id: JourneyMomentId;
   number: number;
   navigationLabel: string;
   title: string;
   description?: string;
-  type: JourneyChapterType;
-  required: boolean;
+  type: JourneyMomentType;
   nextLabel: string;
   options?: JourneyOption[];
   validate: (state: JourneyPassportState) => boolean;
 };
 
-export type JourneyFieldErrors = Partial<Record<"name" | "phone" | "email" | "city" | "startDate" | "endDate", string>>;
+export type JourneyPassportDraft = {
+  schemaVersion: typeof JOURNEY_PASSPORT_SCHEMA_VERSION;
+  state: JourneyPassportState;
+  savedAt: number;
+};

@@ -1,7 +1,0 @@
-.stamp { position: relative; display: grid; justify-items: center; gap: 0.28rem; width: min(100%, 24rem); border: 4px double #a05230; border-radius: 50%; color: #a05230; padding: 2rem 1.25rem; text-align: center; font-size: 0.64rem; font-weight: 800; letter-spacing: 0.14em; line-height: 1.2; opacity: 0; transform: translateY(-2.6rem) rotate(-7deg) scale(1.35); filter: contrast(1.1); }
-.stamp::before { content: ""; position: absolute; inset: 0.45rem; border: 1px dashed rgba(160, 82, 48, 0.68); border-radius: 50%; pointer-events: none; }
-.stamp strong { font-size: 1.45rem; letter-spacing: 0.08em; }
-.stamp b { margin: 0.35rem 0; font-size: 0.75rem; letter-spacing: 0.16em; }
-.stampVisible { animation: passport-stamp 900ms cubic-bezier(.19,.9,.28,1) forwards; }
-@keyframes passport-stamp { 0% { opacity: 0; transform: translateY(-2.6rem) rotate(-7deg) scale(1.35); } 58% { opacity: 1; transform: translateY(.15rem) rotate(-4deg) scale(.9, .82); } 72% { transform: translateY(-.04rem) rotate(-4.5deg) scale(1.04, .98); } 100% { opacity: .9; transform: translateY(0) rotate(-4deg) scale(1); } }
-@media (prefers-reduced-motion: reduce) { .stamp, .stampVisible { animation: none; opacity: .9; transform: rotate(-4deg); } }
