@@ -5,11 +5,11 @@
 | Document field | Value |
 | --- | --- |
 | **Document** | `DESTINATION-KNOWLEDGE-BASE.md` |
-| **Version** | v1.0 |
+| **Version** | v1.0.1 |
 | **Status** | Approved for Release 1 implementation |
 | **Owner** | Search My Vacation — Product & Experience |
 | **Module** | Journey Director |
-| **Last updated** | 21 July 2026 |
+| **Last updated** | 22 July 2026 |
 | **Purpose** | Define the destination intelligence, operating boundaries, classification system, region-level guidance, and recommendation principles used by the Journey Director. |
 | **Audience** | Product managers, Journey Directors, journey designers, UX designers, engineers, content strategists, operations leaders, and future custodians of the recommendation engine. |
 
@@ -52,11 +52,11 @@ It gives the organisation one shared understanding of:
 
 This document is the business source of truth for destination recommendation behaviour.
 
-It is deliberately implementation-independent. A human Journey Director, a rule-based Release 1 engine, and a future AI-assisted engine should all arrive at recommendations that reflect the same principles.
+It is deliberately implementation-independent. The deterministic Release 1 engine, a human Journey Director refining the selected direction, and a future AI-assisted engine should all apply destination knowledge according to the same principles.
 
 This document does not replace live operational checks. Air access, hotel availability, weather, permits, visa rules, safety conditions, attraction closures, and commercial readiness must be validated before a recommendation becomes a confirmed journey.
 
-> **The Knowledge Base identifies what may be a strong fit. The Journey Designer confirms what can be responsibly delivered for the guest's dates and circumstances.**
+> **The Knowledge Base identifies what may be a strong fit. The human Journey Director confirms what can be responsibly delivered for the guest's dates and circumstances.**
 
 ---
 
@@ -84,13 +84,14 @@ A technically valid recommendation that lists popular places without connecting 
 
 A recommendation that reflects the traveller's story, narrows the choice thoughtfully, and can be confidently delivered has succeeded.
 
-Release 1 therefore makes five commitments:
+Release 1 therefore makes six commitments:
 
 1. Recommend only destinations that Search My Vacation currently serves.
 2. Begin with the experience the traveller wants, not with destination inventory.
 3. Recommend the most meaningful region, city, or area within a destination.
 4. Explain every recommendation in language connected to the traveller.
-5. Preserve human judgement before any recommendation becomes a promise.
+5. Use deterministic recommendation logic to generate **The Perfect Match**, **A Different Rhythm**, and **A Pleasant Surprise**, subject to documented confidence and fallback rules.
+6. Preserve human judgement for consultation, refinement, itinerary design, and the final traveller handoff before any recommendation becomes a promise.
 
 ---
 
@@ -184,7 +185,7 @@ The Journey Director connects the two.
 
 ## 3.5 Release philosophy
 
-Release 1 may use structured rules and human review.
+Release 1 uses deterministic recommendation logic to generate three journey possibilities: **The Perfect Match**, **A Different Rhythm**, and **A Pleasant Surprise**. A human Journey Director remains responsible for consultation, refinement, itinerary design, and the final traveller handoff.
 
 Future releases may use AI to assist with matching, trade-off analysis, and narrative creation.
 
@@ -246,13 +247,13 @@ If the connection cannot be explained clearly, the recommendation should not be 
 
 The Journey Director is not a search-results page.
 
-Release 1 should normally present:
+Release 1 generates three differentiated journey possibilities when each candidate satisfies its confidence and evidence requirements:
 
-1. one primary recommendation;
-2. one credible alternative;
-3. one wildcard only when it reveals a meaningful possibility the traveller may not have considered.
+1. **The Perfect Match** — the strongest overall alignment;
+2. **A Different Rhythm** — the same central need expressed through a meaningfully different journey; and
+3. **A Pleasant Surprise** — a less obvious but well-supported possibility the traveller may not have considered.
 
-Three weak recommendations are not better than one strong recommendation.
+When the governed portfolio cannot support three responsible results, the documented fallback may present fewer. Three weak recommendations are not better than one strong recommendation.
 
 ## 4.6 Preserve imagination before administration
 
@@ -323,7 +324,7 @@ The Journey Director should interpret the full story and avoid assumptions based
 
 No recommendation score can override a known safety, accessibility, health, legal, or operational concern.
 
-The Journey Director must surface uncertainty and involve a human Journey Designer whenever material needs are not represented in the Knowledge Base.
+The Journey Director must surface uncertainty and involve a human Journey Director whenever material needs are not represented in the Knowledge Base.
 
 ## 5.6 The Knowledge Base must remain explainable
 
@@ -335,7 +336,7 @@ The Journey Director should be able to identify the decisive signals, any trade-
 
 The Knowledge Base is a living product asset.
 
-Guest feedback, Journey Designer experience, supplier changes, seasonality, and operational learning should strengthen future versions without weakening the governing philosophy.
+Guest feedback, Journey Director experience, supplier changes, seasonality, and operational learning should strengthen future versions without weakening the governing philosophy.
 
 ---
 
@@ -362,7 +363,7 @@ Region Match
       ↓
 Signature Experience Match
       ↓
-Feasibility and Human Review
+      Confidence and Fallback Assessment
       ↓
 Journey Director Narrative
 ```
@@ -371,7 +372,7 @@ Journey Director Narrative
 
 The Journey Passport provides the context for recommendation.
 
-The Journey Director reviews:
+The deterministic recommendation logic receives:
 
 - who is travelling;
 - why the journey matters now;
@@ -389,7 +390,7 @@ The objective is to understand the experience they hope to create.
 
 ## 6.2 Stage Two — Build the journey intent
 
-The Journey Director identifies:
+The deterministic recommendation logic derives:
 
 - the **primary emotional outcome**;
 - up to three **supporting emotions**;
@@ -467,7 +468,7 @@ Recommended region: Ubud
 
 Experiences help the traveller imagine memories rather than logistics.
 
-The Journey Director should introduce two to four signature experiences that reinforce the recommendation, such as:
+The deterministic recommendation logic should select two to four approved signature experiences that reinforce each possibility, such as:
 
 - a tea-estate walk;
 - a backwater stay;
@@ -481,17 +482,18 @@ The Journey Director should introduce two to four signature experiences that rei
 
 Experiences are inspirational until availability and operating conditions are confirmed.
 
-## 6.7 Stage Seven — Human judgement
+## 6.7 Stage Seven — Human consultation and refinement
 
-Human review remains responsible for:
+After the deterministic possibilities are presented and a direction is explored or selected, the human Journey Director remains responsible for:
 
 - resolving conflicting preferences;
 - validating operational readiness;
 - checking seasonal and date-specific realities;
 - considering mobility, health, dietary, or accessibility needs;
 - calibrating transfer intensity;
-- deciding whether an alternative or wildcard is genuinely useful;
-- approving the final narrative.
+- refining the destination, region, and experience direction with the traveller;
+- designing the itinerary; and
+- owning the final traveller handoff.
 
 ---
 
@@ -1295,7 +1297,7 @@ A destination may move to `ACTIVE` only when all required owners approve:
 - sample itineraries have been operationally reviewed;
 - comfort claims are supported by actual inventory depth;
 - seasonal, visa, safety, and accessibility dependencies have owners;
-- Journey Designer training is complete;
+- Journey Director training is complete;
 - a go-live date and accountable destination owner are recorded;
 - Product & Experience explicitly changes the status.
 
@@ -1362,16 +1364,16 @@ Examples:
 - If the traveller values romance and quiet hills, consider **Kodaikanal**.
 - If the traveller is new to safari and wants lodge-led balanced comfort, consider **Kabini** when operations fit.
 
-## 13.5 Alternative and wildcard rules
+## 13.5 Different Rhythm and Pleasant Surprise rules
 
-An alternative should preserve the traveller's most important outcome while changing one meaningful dimension.
+**A Different Rhythm** should preserve the traveller's most important outcome while changing one meaningful dimension.
 
 Example:
 
-- Primary: Ubud for reconnection and culture.
-- Alternative: Kumarakom for reconnection with gentler logistics and a domestic journey.
+- The Perfect Match: Ubud for reconnection and culture.
+- A Different Rhythm: Kumarakom for reconnection with gentler logistics and a domestic journey.
 
-A wildcard should reveal a credible possibility, not demonstrate cleverness.
+**A Pleasant Surprise** should reveal a credible possibility, not demonstrate cleverness.
 
 It must:
 
@@ -1379,7 +1381,7 @@ It must:
 - match the primary emotion strongly;
 - differ in a way worth explaining;
 - not introduce avoidable operational risk;
-- be approved by a human in Release 1.
+- satisfy the deterministic Pleasant Surprise confidence and evidence thresholds.
 
 ## 13.6 Suppression rules
 
@@ -1410,7 +1412,7 @@ Each recommendation should follow this order:
 3. Explain the connection using the traveller's own signals.
 4. Introduce two to four experiences that express the match.
 5. Acknowledge one useful trade-off or planning consideration.
-6. Invite the human Journey Designer to refine the possibility.
+6. Invite the human Journey Director to refine the possibility.
 
 ## 14.2 Recommended structure
 
@@ -1439,7 +1441,7 @@ One thing to consider
 
 What happens next
 
-Your Journey Designer will validate the best route, stay style, and timing.
+Your Journey Director will validate the best route, stay style, and timing.
 ```
 
 ## 14.3 Tone principles
@@ -1460,7 +1462,7 @@ Use language that is:
 - “We believe this is the stronger fit because...”
 - “This gives you...”
 - “One consideration is...”
-- “Your Journey Designer will confirm...”
+- “Your Journey Director will confirm...”
 
 ## 14.5 Language to avoid
 
@@ -1482,7 +1484,7 @@ Use language that is:
 >
 > Ubud aligns with your preference for a slower pace, nature, wellbeing, and experiences that create conversation rather than rush. We can imagine mornings among green landscapes, thoughtful cultural experiences, a gentle wellness ritual, and enough open time for the journey to feel like a break.
 >
-> One consideration is that Bali traffic can make short distances feel longer. Your Journey Designer will therefore keep the route focused and validate the right stay location for your dates.
+> One consideration is that Bali traffic can make short distances feel longer. Your Journey Director will therefore keep the route focused and validate the right stay location for your dates.
 
 ---
 
@@ -1496,7 +1498,7 @@ Use language that is:
 | Destination status | Product & Experience with Operations approval |
 | Region and experience knowledge | Destination owner / Journey Design |
 | Supplier and service readiness | Operations |
-| Seasonal and date-specific validation | Journey Designer for each enquiry |
+| Seasonal and date-specific validation | Journey Director for each enquiry |
 | Technical representation and tests | Engineering |
 | Guest-facing narrative quality | Content & Experience |
 
@@ -1547,8 +1549,9 @@ Release 1 is ready when:
 - the application reads destination status from a single governed source;
 - non-active destinations cannot enter recommendation output;
 - every recommendation includes destination, region, and an explainable reason;
-- the system can produce primary and alternative recommendations without duplicates;
-- wildcard recommendations require explicit logic and human approval;
+- the system deterministically generates **The Perfect Match**, **A Different Rhythm**, and **A Pleasant Surprise** without duplicates when all three meet governed thresholds;
+- documented fallback behaviour presents fewer possibilities rather than manufacturing a weak result;
+- Pleasant Surprise recommendations require explicit deterministic logic, strong evidence, and sufficient confidence;
 - structured output records the signals that led to the match;
 - a Journey Director can override the ranking with a recorded reason;
 - automated tests cover portfolio status, collection membership, and suppression rules.
@@ -1561,11 +1564,11 @@ Recommended measures include:
 
 - traveller response to “this feels like me”;
 - percentage of recommendations accepted for human refinement;
-- percentage requiring complete replacement by a Journey Designer;
+- percentage requiring complete replacement by a Journey Director;
 - region-level recommendation usefulness;
 - operational rejection rate after recommendation;
 - repeated or generic recommendation rate;
-- time required for a Journey Designer to prepare the first response;
+- time required for a Journey Director to prepare the first response;
 - conversion after recommendation;
 - post-trip alignment between promised and experienced journey character.
 
@@ -1576,7 +1579,8 @@ Recommended measures include:
 - Active portfolio and hard status gate.
 - Controlled vocabulary.
 - Destination and region profiles.
-- Human-reviewed primary and alternative recommendations.
+- Deterministic generation of three differentiated journey possibilities.
+- Human consultation, refinement, itinerary design, and final traveller handoff.
 - Explainable match reasons.
 
 ### Release 2 — Operational depth
@@ -1638,7 +1642,7 @@ Before adding, changing, or using destination intelligence, ask:
 ## Trust
 
 - Are we implying certainty where only possibility exists?
-- Would a Journey Designer make the same recommendation after reading the Passport?
+- Would a Journey Director make the same recommendation after reading the Passport?
 - Would we be comfortable explaining this recommendation face to face?
 - Does the narrative sound like guidance rather than marketing?
 
@@ -1652,6 +1656,7 @@ The final stewardship principle is simple:
 
 | Version | Date | Author / Owner | Status | Description |
 | --- | --- | --- | --- | --- |
+| v1.0.1 | 22 July 2026 | Search My Vacation — Product & Experience | Approved for Release 1 implementation | Clarified deterministic generation of three journey personalities and the human Journey Director's consultation, refinement, itinerary, and handoff responsibilities. |
 | v1.0 | 21 July 2026 | Search My Vacation — Product & Experience | Approved for Release 1 implementation | Established the Journey Director destination philosophy, eligibility model, controlled vocabulary, active domestic and international portfolio, region intelligence, coming-soon exclusions, recommendation rules, content guidance, governance, and roadmap. |
 
 ---

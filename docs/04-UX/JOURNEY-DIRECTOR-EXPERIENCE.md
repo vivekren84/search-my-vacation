@@ -6,10 +6,10 @@
 | --- | --- |
 | **Document Name** | Journey Director Experience |
 | **Document ID** | JDE-001 |
-| **Version** | v1.0 |
-| **Status** | Draft for Product and UX Review |
+| **Version** | v1.0.1 |
+| **Status** | Approved UX Specification |
 | **Owner** | Search My Vacation – Product & Experience |
-| **Last Updated** | 21 July 2026 |
+| **Last Updated** | 22 July 2026 |
 | **Document Type** | User Experience Specification |
 | **Experience Stage** | Post–Journey Passport Recommendation Experience |
 | **Purpose** | Define the experience vision, goals, principles and end-to-end journey for the first Journey Director experience presented after a traveller completes the Journey Passport. |
@@ -18,13 +18,13 @@
 
 ### 1.1 Document Purpose
 
-This document defines how the Journey Director should feel and behave from the moment a traveller submits the Journey Passport until they are invited to continue with a human Journey Designer.
+This document defines how the Journey Director should feel and behave from the moment a traveller submits the Journey Passport until they are invited to continue with a human Journey Director.
 
 It establishes the emotional and structural foundation for the experience before visual design, recommendation logic and technical implementation begin.
 
 The specification is intentionally implementation-independent.
 
-It describes the experience Search My Vacation must create regardless of whether recommendations are prepared manually, supported by business rules or assisted by artificial intelligence in future releases.
+It describes the experience Search My Vacation must create in Release 1, where deterministic recommendation logic generates three journey possibilities and a human Journey Director remains responsible for consultation, refinement, itinerary design and the final traveller handoff. Future AI assistance may deepen this model without weakening its experience principles.
 
 This document answers five foundational questions:
 
@@ -47,12 +47,12 @@ It includes:
 - acknowledgement that the Journey Passport has been received;
 - a purposeful transition into the Journey Director experience;
 - reflection of the traveller's story and priorities;
-- introduction of a curated destination recommendation;
-- introduction of the most suitable city, region or area within that destination;
+- presentation of three differentiated journey possibilities when governed confidence and evidence requirements are met;
+- introduction of the selected destination and the most suitable city, region or area within it;
 - explanation of why the recommendation fits;
 - presentation of signature experience possibilities;
-- presentation of a small number of carefully considered alternatives, when appropriate;
-- a clear invitation to continue with a human Journey Designer; and
+- the ability to explore another generated possibility without restarting the Passport;
+- a clear invitation to continue with a human Journey Director; and
 - graceful handling of incomplete, unavailable or low-confidence recommendation states.
 
 Version 1.0 does not define:
@@ -64,7 +64,7 @@ Version 1.0 does not define:
 - live hotel or flight inventory;
 - real-time pricing;
 - booking or payment flows; or
-- the internal Journey Designer workspace.
+- the internal Journey Director workspace.
 
 Those capabilities may connect to the Journey Director experience, but they are not part of this UX specification.
 
@@ -77,7 +77,7 @@ Those capabilities may connect to the Journey Director experience, but they are 
 | **Product Vision** | Defines why Search My Vacation exists and the value it promises to travellers. |
 | **Journey Passport v1.0** | Defines how Search My Vacation listens to and understands the traveller before making recommendations. |
 | **Destination Knowledge Base** | Defines the destinations, regions, emotional identities and experiences Search My Vacation can confidently recommend. |
-| **Journey Director Decision Engine** | Future document defining how traveller signals and destination intelligence are evaluated to produce recommendations. |
+| **Journey Director Decision Engine** | Defines the deterministic eligibility, scoring, personality, regional selection and explanation rules that produce Release 1 journey possibilities. |
 | **EBC-003 – Journey Director Implementation** | Future build card translating the approved experience into implementation requirements. |
 
 The Journey Director Experience is the bridge between traveller understanding and destination intelligence.
@@ -105,8 +105,9 @@ The Journey Director Experience makes the following commitments:
 - It will recommend at the most meaningful level possible, including a city, region or area when that improves the quality of the guidance.
 - It will explain why each recommendation fits the traveller.
 - It will favour a few confident possibilities over an exhaustive catalogue.
+- It will use deterministic Release 1 logic to generate **The Perfect Match**, **A Different Rhythm** and **A Pleasant Surprise**, with honest fallbacks when three responsible results are unavailable.
 - It will never present generated content as confirmed operational truth without validation.
-- It will preserve a visible and intentional path to a human Journey Designer.
+- It will preserve a visible and intentional path to a human Journey Director, who remains responsible for consultation, refinement, itinerary design and the final traveller handoff.
 - It will treat the traveller's attention, personal information and trust with care.
 
 ---
@@ -115,6 +116,7 @@ The Journey Director Experience makes the following commitments:
 
 | Version | Date | Author | Description |
 | --- | --- | --- | --- |
+| v1.0.1 | 22 July 2026 | Search My Vacation – Product & Experience | Approved the Release 1 deterministic three-possibility model, selected-possibility dynamic flow and human Journey Director handoff boundary. |
 | v1.0 | 21 July 2026 | Search My Vacation – Product & Experience | Initial UX specification covering Document Header, Experience Vision, Experience Goals, Experience Principles and Journey Flow. |
 
 ---
@@ -199,13 +201,13 @@ Then it offers direction.
 
 ### 2.3 The Signature Moment
 
-The signature moment occurs immediately before the primary destination is revealed.
+The signature moment occurs immediately before the three journey possibilities are revealed.
 
 The Journey Director reflects one meaningful insight from the traveller's Passport, such as:
 
 > **“One thing stood out: you are not simply looking for a holiday. You are looking for unhurried time together, surrounded by nature, with enough comfort for everyone to truly relax.”**
 
-Only after this reflection should the recommendation appear:
+Only after this reflection should the possibility set appear. The first card may begin:
 
 > **“Because of that, we believe Kerala could be a wonderful fit — especially the quiet backwaters around Alleppey.”**
 
@@ -241,7 +243,7 @@ The destination provides recognition.
 
 The region provides relevance.
 
-When region-level intelligence is not yet sufficiently confident, the experience may recommend the broader destination and clearly reserve the regional decision for the Journey Designer.
+When region-level intelligence is not yet sufficiently confident, the experience may recommend the broader destination and clearly reserve the regional decision for the human Journey Director.
 
 It must never imply false precision.
 
@@ -378,13 +380,13 @@ It should never depend on an unnecessarily long delay.
 
 ---
 
-### 3.3 Goal Three – Present Recommendations with Confidence
+### 3.3 Goal Three – Present Possibilities with Confidence
 
-The Journey Director should make a recommendation, not return search results.
+The Journey Director should present a governed set of possibilities, not return search results.
 
-The primary destination must be visually and narratively clear.
+The three recommendation personalities must be visually and narratively clear.
 
-Alternatives may be offered when they add genuine value, but they should not compete equally with the primary recommendation or recreate decision fatigue.
+**The Perfect Match**, **A Different Rhythm** and **A Pleasant Surprise** represent three valid futures rather than first, second and third place. When a governed threshold cannot be met, the experience presents fewer possibilities honestly rather than filling an arbitrary card count.
 
 Confidence does not require pretending certainty.
 
@@ -392,10 +394,10 @@ When traveller inputs are incomplete, preferences conflict or destination suitab
 
 **Experience indicators:**
 
-- One recommendation is clearly identified as the strongest fit.
-- The recommended region, city or area is named when supported by the Destination Knowledge Base.
+- The Perfect Match is clearly identified as the strongest overall fit.
+- Each presented possibility names its recommended region, city or area when supported by the Destination Knowledge Base.
 - No inactive or coming-soon destination is shown.
-- Alternatives are limited and meaningfully differentiated.
+- All presented possibilities are meaningfully differentiated and evidence-backed.
 - Uncertainty is communicated through helpful language rather than hidden behind generic claims.
 
 ---
@@ -419,7 +421,7 @@ It should answer:
 
 **Experience indicators:**
 
-- Every primary recommendation includes a plain-language rationale.
+- Every presented possibility includes a plain-language rationale.
 - Region-level recommendations include a region-specific reason.
 - Claims remain consistent with approved destination intelligence.
 - The rationale avoids generic superlatives and unsupported certainty.
@@ -460,22 +462,22 @@ The Journey Director exists to narrow possibilities thoughtfully.
 
 It should not transfer the burden of research back to the traveller.
 
-The primary recommendation should lead the experience, followed by no more than the minimum number of alternatives required to create useful choice.
+The three recommendation personalities should create useful choice without becoming an undifferentiated catalogue.
 
-When alternatives are shown, each should have a distinct role.
+Each has a distinct role:
 
 For example:
 
-- **Primary Recommendation** – the strongest overall fit;
-- **Consider This Too** – a close alternative with a meaningful trade-off; and
-- **A Different Possibility** – an optional wildcard that fulfils the traveller's intent in an unexpected way.
+- **The Perfect Match** – the strongest overall fit;
+- **A Different Rhythm** – the same central need expressed through a meaningfully different journey; and
+- **A Pleasant Surprise** – a less obvious possibility supported by strong fit evidence.
 
 The labels should communicate purpose rather than ranking anxiety.
 
 **Experience indicators:**
 
 - The traveller is not presented with a grid of undifferentiated destinations.
-- Alternatives explain how they differ from the primary recommendation.
+- A Different Rhythm and A Pleasant Surprise explain how they differ from The Perfect Match.
 - The primary call to action remains clear throughout.
 - Secondary exploration does not interrupt the main narrative.
 
@@ -487,7 +489,7 @@ Every visible recommendation must fall within the active Search My Vacation port
 
 The experience must distinguish between inspiration, recommendation and confirmed travel arrangements.
 
-It should never imply that availability, pricing, visa conditions, weather or inclusions have been validated unless the relevant systems or Journey Designer have confirmed them.
+It should never imply that availability, pricing, visa conditions, weather or inclusions have been validated unless the relevant systems or human Journey Director have confirmed them.
 
 Operational limits should be expressed as responsible guidance rather than legalistic warnings.
 
@@ -495,7 +497,7 @@ Operational limits should be expressed as responsible guidance rather than legal
 
 - Only destinations marked **ACTIVE** are eligible for traveller-facing recommendations.
 - Coming-soon and inactive destinations remain hidden.
-- Dynamic facts are validated before display or deferred to the Journey Designer.
+- Dynamic facts are validated before display or deferred to the human Journey Director.
 - The experience clearly positions the recommendation as the beginning of personalised planning.
 - No unsupported guarantee is made.
 
@@ -507,13 +509,13 @@ The Journey Director should not end with “Submit your details.”
 
 The traveller has already shared their story.
 
-The next step should feel like a continuation of the experience: inviting a Journey Designer to shape the recommendation into a real journey.
+The next step should feel like a continuation of the experience: inviting a human Journey Director to shape the recommendation into a real journey.
 
 The handoff should explain what the human expert will do and what the traveller can expect next.
 
 For example:
 
-> **“A Journey Designer can now turn this possibility into a journey shaped around your dates, pace and priorities.”**
+> **“A human Journey Director can now turn this possibility into a journey shaped around your dates, pace and priorities.”**
 
 The call to action should feel collaborative rather than transactional.
 
@@ -553,11 +555,11 @@ Recommended measures include:
 
 | Measure | What It Helps Us Understand |
 | --- | --- |
-| **Recommendation continuation rate** | Whether travellers choose to move from the reveal into a conversation with a Journey Designer. |
+| **Recommendation continuation rate** | Whether travellers choose to move from the reveal into a conversation with a human Journey Director. |
 | **Passport-to-reveal completion rate** | Whether the transition and narrative help travellers reach the recommendation successfully. |
 | **Recommendation relevance feedback** | Whether travellers feel the recommendation reflects what they shared. |
 | **Passport correction rate** | Whether reflection helps travellers identify information they want to revise. |
-| **Alternative exploration rate** | Whether alternatives are useful without distracting from the primary recommendation. |
+| **Possibility exploration rate** | Whether the differentiated possibilities invite useful exploration without recreating decision fatigue. |
 | **Time to meaningful content** | How quickly the traveller receives acknowledgement, recognition and a useful recommendation. |
 | **Human handoff completion rate** | Whether the next step is clear and appropriately timed. |
 | **Accessibility and recovery success** | Whether all travellers can complete the experience and recover from interruptions. |
@@ -595,7 +597,7 @@ The traveller has invested attention and personal context in the Journey Passpor
 
 The Journey Director should feel like expert guidance, not a demonstration of automation.
 
-The experience may be powered by rules, data, AI or human review. Those implementation choices should remain behind the experience unless disclosure is required for trust, safety or compliance.
+Release 1 is powered by governed deterministic rules and destination data. Future releases may add AI assistance. These implementation choices should remain behind the experience unless disclosure is required for trust, safety or compliance.
 
 **Therefore:**
 
@@ -603,7 +605,7 @@ The experience may be powered by rules, data, AI or human review. Those implemen
 - explain recommendations through reasons, not scores;
 - avoid technical processing terminology;
 - preserve human review where operational judgement is required; and
-- make the Journey Designer handoff visible and meaningful.
+- make the human Journey Director handoff visible and meaningful.
 
 ---
 
@@ -682,9 +684,9 @@ The Journey Director should reduce uncertainty, not display the size of the dest
 
 **Therefore:**
 
-- lead with one primary recommendation;
-- introduce alternatives only when they serve a clear purpose;
-- differentiate alternatives through meaningful trade-offs;
+- present the three governed recommendation personalities when their thresholds are met;
+- use an honest fallback when fewer than three responsible results are available;
+- differentiate the possibilities through meaningful trade-offs;
 - avoid endless browsing within the core reveal; and
 - make the recommended next step more prominent than continued comparison.
 
@@ -702,7 +704,7 @@ The first recommendation should help the traveller imagine the journey before pr
 - introduce a small number of signature moments;
 - defer detailed planning to the next stage;
 - avoid presenting a day-by-day itinerary as though it were final; and
-- preserve room for the Journey Designer to shape the journey collaboratively.
+- preserve room for the human Journey Director to shape the journey collaboratively.
 
 ---
 
@@ -749,7 +751,7 @@ The recommendation should help the traveller imagine possibilities while remaini
 - avoid guaranteed outcomes such as perfect weather, sightings or availability;
 - validate time-sensitive operational information before presenting it as fact;
 - use specific, grounded language rather than superlatives; and
-- position the Journey Designer as the person who will confirm and shape the details.
+- position the human Journey Director as the person who will confirm and shape the details.
 
 ---
 
@@ -810,7 +812,7 @@ The call to action should continue the recommendation conversation rather than a
 
 **Therefore:**
 
-- explain the value of speaking with a Journey Designer;
+- explain the value of speaking with a human Journey Director;
 - carry relevant context forward;
 - set expectations for the next step;
 - avoid requesting information already provided; and
@@ -818,7 +820,7 @@ The call to action should continue the recommendation conversation rather than a
 
 The Journey Director opens the possibility.
 
-The Journey Designer helps make it real.
+The human Journey Director helps make it real.
 
 ---
 
@@ -865,11 +867,11 @@ Journey Character
 
 ↓
 
-Primary Destination Reveal
+Three Journey Possibilities
 
 ↓
 
-Recommended Region / City / Area
+Selected Destination and Region / City / Area
 
 ↓
 
@@ -881,11 +883,11 @@ Signature Experience Possibilities
 
 ↓
 
-Alternative Possibilities, When Helpful
+Explore Another Possibility, When Helpful
 
 ↓
 
-Human Journey Designer Handoff
+Human Journey Director Handoff
 
 ↓
 
@@ -896,7 +898,21 @@ The flow is progressive.
 
 The traveller should understand each idea before the next one is introduced.
 
-The primary recommendation remains the centre of the experience from reveal through handoff.
+The three possibilities are presented together before the traveller enters a selected story. From that point onward, the active possibility remains the centre of the experience through explanation, imagery and handoff. Selecting another possibility changes the story content without changing the reusable layout or restarting the Passport.
+
+For implementation, the stages map to the reusable screen contract as follows:
+
+| Screen | Experience responsibility |
+| --- | --- |
+| **Screen 1** | Passport acknowledgement and Journey Director arrival |
+| **Screen 2** | Traveller reflection |
+| **Screen 3** | Matching journey qualities |
+| **Screen 4** | Three journey possibilities |
+| **Screen 5** | Selected destination, region and evidence-backed fit narrative |
+| **Screen 6** | Selected destination and region imagery, signature experiences and memory moments |
+| **Screen 7** | Contextual human Journey Director handoff |
+
+Screens 5–7 are dynamically driven by the active `possibilityId`. Their narrative, imagery, fit reasons, journey experiences and handoff copy change together when the traveller selects another possibility. Their reusable layout, interaction structure, focus order, semantics and responsive behaviour remain unchanged.
 
 ---
 
@@ -1108,63 +1124,74 @@ It explains what the Journey Director searched for within the active portfolio.
 - describe the desired journey in experiential language;
 - avoid exposing taxonomy labels as though they were diagnoses;
 - include only the strongest decision factors; and
-- create a natural lead-in to the destination reveal.
+- create a natural lead-in to the three journey possibilities.
 
 ---
 
-### 5.8 Stage Six – Primary Destination Reveal
+### 5.8 Stage Six – Three Journey Possibilities
 
 **Purpose**
 
-Present the strongest destination match as the culmination of the preceding narrative.
+Present the deterministic shortlist as three distinct, defensible expressions of the traveller's intent.
 
 **Traveller need**
 
-> “Where could this journey come to life?”
+> “Which versions of this journey could feel right for me?”
 
 **Experience response**
 
-The primary destination is revealed with visual confidence and restrained celebration.
+The Journey Director presents the three recommendation personalities together:
 
-Recommended content structure:
+- **The Perfect Match** — the strongest overall alignment;
+- **A Different Rhythm** — the same central need expressed through a meaningfully different journey; and
+- **A Pleasant Surprise** — a less obvious but well-supported possibility.
 
-> **We believe Kerala could be a wonderful fit.**
+Each possibility is generated by deterministic Release 1 logic and includes enough information for the traveller to choose which story to explore.
+
+Recommended card structure:
+
+> **The Perfect Match**
 >
-> It brings together the calm, nature and unhurried family time that stood out in your Journey Passport.
+> **Kerala — Alleppey**
+>
+> Slow backwater mornings, generous time together and nature that asks nothing of you.
 
-The reveal should include:
+Each possibility should include:
 
+- recommendation personality;
 - destination name;
-- a concise destination-level reason;
+- recommended region, city or area;
+- a concise fit summary;
 - purposeful imagery with appropriate alternative text;
-- category or location context only when useful; and
-- a visible continuation into the recommended region.
+- and a clear **Explore This Journey** action.
 
-It should not begin with hotel prices, package durations or a list of attractions.
+If the governed portfolio cannot support three candidates above the required thresholds, the experience should follow the documented fallback and present fewer possibilities honestly. It must never manufacture a weak result merely to fill the layout.
 
 **Flow requirements**
 
-- reveal only an active destination;
-- preserve the primary recommendation as the clear focal point;
+- reveal only active destinations and approved regions;
+- use the three personality labels consistently;
+- make every card traceable to the current Passport and Decision Engine result;
 - ensure motion is optional and does not delay content access;
-- avoid unsupported claims; and
-- continue directly into region intelligence.
+- avoid unsupported claims;
+- require an explicit exploration action before entering the detailed story; and
+- preserve all three possibilities so the traveller can switch later without restarting.
 
 ---
 
-### 5.9 Stage Seven – Recommended Region, City or Area
+### 5.9 Stage Seven – Selected Destination and Region, City or Area
 
 **Purpose**
 
-Make the destination recommendation meaningfully specific.
+Reveal the selected possibility as one connected destination-and-region recommendation.
 
 **Traveller need**
 
-> “Where within this destination best matches the experience I want?”
+> “Where will the possibility I selected come to life?”
 
 **Experience response**
 
-The Journey Director identifies the area that most strongly expresses the intended journey.
+After the traveller selects **Explore This Journey**, the selected `possibilityId` becomes the active story context. The Journey Director reveals its destination and identifies the area that most strongly expresses the intended journey.
 
 Example:
 
@@ -1174,6 +1201,8 @@ Example:
 
 The region recommendation should include:
 
+- selected recommendation personality;
+- destination name;
 - region, city or area name;
 - emotional and experiential fit;
 - a concise contrast when another commonly selected area offers a materially different experience; and
@@ -1185,11 +1214,12 @@ For example, the Journey Director may explain why **Ubud** is a stronger fit tha
 
 **Flow requirements**
 
+- use only the active possibility's Story Packet;
 - recommend only regions supported by approved destination intelligence;
 - explain the regional choice;
 - avoid false precision;
 - support more than one region only when the combination is coherent; and
-- allow the Journey Designer to refine the routing later.
+- allow the human Journey Director to refine the routing later.
 
 ---
 
@@ -1262,44 +1292,35 @@ They should not be presented as confirmed itinerary inclusions.
 
 ---
 
-### 5.12 Stage Ten – Alternative Possibilities
+### 5.12 Stage Ten – Explore Another Possibility
 
 **Purpose**
 
-Offer meaningful choice when another active destination fulfils the traveller's intent through a distinct experience.
+Allow the traveller to explore either of the other generated possibilities without restarting the Journey Passport or leaving the reusable story layout.
 
 **Traveller need**
 
-> “Is there another direction worth considering?”
+> “How would one of my other possibilities feel?”
 
 **Experience response**
 
-Alternatives appear after the primary recommendation has been understood.
+The original deterministic shortlist remains available through a compact switcher or an **Explore Another Possibility** action. Selecting a different possibility replaces the destination-specific narrative, imagery, fit reasons, signature experiences and contextual handoff copy for Stages Seven through Eleven.
 
-They remain secondary in visual weight and narrative depth.
+The page structure, interaction pattern, accessibility semantics and responsive behaviour remain unchanged. Only the selected story changes.
 
-Each alternative should explain its role.
-
-Example:
-
-- **Consider this too:** Sri Lanka, for a broader mix of coast, culture and wildlife within one journey.
-- **A different possibility:** Bali, centred around Ubud, if wellness and cultural immersion matter more than staying closer to home.
-
-Alternatives should not be included merely to fill a fixed number of cards.
-
-If the primary recommendation is clearly superior, the experience may proceed without them.
+Exploring another possibility is not framed as indecision and does not automatically mark that possibility as preferred.
 
 **Flow requirements**
 
-- show only active destinations;
-- differentiate each alternative through a meaningful trade-off;
-- keep the primary recommendation prominent;
-- avoid a comparison grid that recreates search behaviour; and
-- allow the Journey Designer to explore alternatives in conversation.
+- preserve the original three personalities and their meaning;
+- replace all destination-specific content atomically when the active `possibilityId` changes;
+- prevent imagery, reasons or handoff copy from different possibilities from mixing;
+- preserve the Passport, shortlist and any explicit preferred selection; and
+- keep an accessible route back to all possibilities.
 
 ---
 
-### 5.13 Stage Eleven – Human Journey Designer Handoff
+### 5.13 Stage Eleven – Human Journey Director Handoff
 
 **Purpose**
 
@@ -1311,13 +1332,13 @@ Transform inspiration into a clear and trustworthy next step.
 
 **Experience response**
 
-The Journey Director invites the traveller to continue with a human Journey Designer.
+The Journey Director experience invites the traveller to continue with a human Journey Director.
 
 Recommended content direction:
 
 > **Let us shape this into your journey.**
 >
-> A Journey Designer can now refine the route around your dates, pace, comfort and priorities — and turn these possibilities into a thoughtful plan.
+> A human Journey Director can now refine the route around your dates, pace, comfort and priorities — and turn these possibilities into a thoughtful plan.
 
 Primary action:
 
@@ -1349,7 +1370,7 @@ The canonical experience may conclude in one of four states.
 
 | Completion State | Definition | Required Outcome |
 | --- | --- | --- |
-| **Continue with a Journey Designer** | The traveller chooses the primary handoff action. | Preserve context, confirm the request and explain what happens next. |
+| **Continue with a Journey Director** | The traveller chooses the primary handoff action. | Preserve context, confirm the request and explain what happens next. |
 | **Save and Revisit** | The traveller wants time before continuing. | Save the recommendation securely and provide a reliable return path. |
 | **Revise the Journey Passport** | The traveller wants to change what they shared. | Return to the Passport with responses intact and regenerate or review the recommendation after changes. |
 | **Leave the Experience** | The traveller exits without selecting a next step. | Preserve progress where consent and session rules allow; avoid manipulative exit prompts. |
@@ -1374,19 +1395,19 @@ Do not discard completed responses.
 
 Do not manufacture a destination recommendation.
 
-Explain that the traveller's preferences deserve a closer look and offer a human Journey Designer review.
+Explain that the traveller's preferences deserve a closer look and offer a human Journey Director review.
 
 Suggested direction:
 
 > **Your journey deserves a little more thought.**
 >
-> The preferences you shared create an unusual combination, and we would rather have a Journey Designer review them than offer a generic suggestion.
+> The preferences you shared create an unusual combination, and we would rather have a human Journey Director review them than offer a generic suggestion.
 
 #### Low-Confidence Region Match
 
 Recommend the active destination when appropriate, but defer the city or region choice.
 
-Explain that the Journey Designer will refine the location based on dates, pace and operational considerations.
+Explain that the human Journey Director will refine the location based on dates, pace and operational considerations.
 
 #### Recommendation Preparation Failure
 
@@ -1404,7 +1425,7 @@ If resumption is not possible, restore the Passport or saved recommendation rath
 
 Remove the affected recommendation before display where possible.
 
-If availability changes after the traveller has saved a recommendation, explain the change transparently and invite the Journey Designer to propose the closest responsible alternative.
+If availability changes after the traveller has saved a recommendation, explain the change transparently and invite the human Journey Director to propose the closest responsible alternative.
 
 ---
 
@@ -1415,10 +1436,10 @@ When a traveller returns to a saved or recently completed recommendation, the ex
 The traveller should land on a concise recommendation summary with access to:
 
 - the understanding statement;
-- the primary destination and region;
+- the selected destination and region;
 - why the recommendation fits;
 - signature experience possibilities;
-- any saved alternatives;
+- the original possibility set and any explicit preference;
 - the Journey Passport; and
 - the human handoff action.
 
@@ -1452,12 +1473,15 @@ The following conditions must remain true throughout the Journey Director flow:
 - The traveller always knows whether their Passport was received.
 - The experience never reveals an inactive or coming-soon destination.
 - The recommendation never appears without an explanation.
+- The deterministic shortlist uses **The Perfect Match**, **A Different Rhythm** and **A Pleasant Surprise**, unless a documented confidence fallback responsibly returns fewer possibilities.
+- Selecting a possibility makes it the sole source of the narrative, imagery, fit reasons, journey experiences and handoff copy that follow.
+- The reusable layout, interaction structure and accessibility semantics remain unchanged when the active possibility changes.
 - Region guidance is included whenever reliable region intelligence improves the recommendation.
 - The experience does not imply a confirmed itinerary, price or booking.
 - The traveller can revisit what they shared.
 - Essential meaning remains available without motion or imagery.
 - Failures do not erase completed Passport information.
-- The primary recommendation remains clearer than any alternatives.
+- The active possibility remains clear throughout its detailed story and handoff.
 - The human handoff explains what will happen next.
 
 These guardrails are acceptance criteria for every future screen, prototype and implementation derived from this specification.
@@ -1473,13 +1497,15 @@ Sections 1–5 are considered successfully represented in design when:
 3. The transition communicates purposeful consideration without artificial delay.
 4. The Journey Director is introduced as a trusted service identity.
 5. The traveller's intent is reflected before a destination is shown.
-6. One primary active destination is clearly recommended.
-7. A city, region or area is recommended when reliable intelligence is available.
-8. The reason for both destination and region selection is understandable.
-9. Signature experiences help the traveller imagine the journey without implying confirmation.
-10. Alternatives are limited, differentiated and optional.
-11. The next step with a human Journey Designer is clear.
-12. The flow supports correction, saving, recovery and accessible completion.
+6. Three differentiated journey possibilities are generated when they meet governed confidence and evidence requirements, with honest fallback behaviour when they do not.
+7. The three recommendation personalities are labelled consistently as **The Perfect Match**, **A Different Rhythm** and **A Pleasant Surprise**.
+8. Selecting a possibility drives the destination, region, narrative, imagery, fit reasons, journey experiences and handoff copy for the detailed story.
+9. The reusable layout remains unchanged when the selected possibility changes.
+10. A city, region or area is recommended when reliable intelligence is available.
+11. The reason for both destination and region selection is understandable.
+12. Signature experiences help the traveller imagine the journey without implying confirmation.
+13. The next step with a human Journey Director is clear and preserves the selected `possibilityId`.
+14. The flow supports correction, switching, saving, recovery and accessible completion.
 
 ---
 
@@ -1488,4 +1514,3 @@ Sections 1–5 are considered successfully represented in design when:
 > The Journey Director should never make the traveller feel processed.
 >
 > It should make them feel understood, guided and excited to take the next step.
-

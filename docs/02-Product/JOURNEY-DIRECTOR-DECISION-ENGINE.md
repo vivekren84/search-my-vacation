@@ -4,10 +4,10 @@
 
 | Document Field | Value |
 | --- | --- |
-| **Version** | v1.0 |
+| **Version** | v1.0.1 |
 | **Status** | Approved Product Decision Specification |
 | **Owner** | Search My Vacation – Product & Experience |
-| **Last Updated** | 21 July 2026 |
+| **Last Updated** | 22 July 2026 |
 | **Module** | Journey Director |
 | **Purpose** | Define the deterministic matching, eligibility, ranking, regional selection, explanation and governance rules that connect Journey Passport inputs with journey possibilities from the Destination Knowledge Base. |
 
@@ -212,7 +212,7 @@ The Decision Engine supports a Journey Director.
 
 It does not replace professional judgement.
 
-A human Journey Director remains responsible for resolving ambiguity, recognising special circumstances, validating operational reality and improving recommendations where structured rules are insufficient.
+A human Journey Director remains responsible for consultation, refinement, itinerary design and the final traveller handoff. Within that responsibility, the Journey Director resolves ambiguity, recognises special circumstances, validates operational reality and may improve recommendations where structured rules are insufficient.
 
 ---
 
@@ -291,67 +291,53 @@ The engine may receive the following Journey Passport inputs.
 ### Traveller Identity
 
 - Traveller name
-- Contact context, where separately consented and required for handoff
-- Returning traveller identifier, when available in a future release
 
 Identity personalises the experience but must not influence destination ranking unless a future, consented preference history explicitly supports it.
 
+Journey Passport v1.0 does not include contact details or a returning traveller identifier in the recommendation input. Contact context belongs to the intentional human handoff and must be stored separately with appropriate consent.
+
 ### Travel Companions
 
-- Solo Traveller
+- Solo
 - Couple
-- Honeymoon
 - Family
 - Friends
-- Multi-generation Family
-- Senior Travellers
-- Corporate or group context, where supported
-- Other companion detail supplied in free text
+- Business
+
+These are the canonical Release 1 Journey Passport values. Honeymoon, multi-generation family, senior traveller, corporate group and other companion profiles may be supported in a later Passport version or supplied through separately governed planning context; the Decision Engine must not pretend they were selected when the v1.0 Passport did not collect them.
 
 Companion information affects traveller suitability, pace, accessibility, privacy, activity balance and regional logistics.
 
 ### Dream Journey
 
-The traveller's own description of what they hope the journey will feel like or create.
+Release 1 receives one selected journey character:
 
-This may include:
+- Tropical Escape
+- Mountain Retreat
+- City Discovery
+- Cruise Voyage
+- Winter Wonderland
+- Wildlife Adventure
 
-- emotional needs;
-- desired memories;
-- celebration context;
-- preferred environments;
-- cultural or activity interests;
-- people-centred goals;
-- explicit destinations;
-- destinations or experiences to avoid; and
-- special circumstances.
-
-Free-text content is valuable evidence, but Release 1 must not silently infer unsupported details from it.
+The engine maps this selected archetype, together with Travel Style and any homepage intent carried into the Passport, into controlled emotional and thematic signals. It must not describe the Dream Journey response as free text or invent motivations beyond the selected evidence.
 
 ### Travel Style
 
-Travel style selections may express preferences such as:
+Release 1 receives one to three selections from the governed Journey Passport vocabulary:
 
-- relaxation;
-- nature;
-- culture and heritage;
-- food;
-- beaches and islands;
-- mountains;
-- wildlife;
-- wellness;
-- adventure;
-- shopping;
-- nightlife;
-- road trips;
-- spirituality;
-- family attractions;
-- hidden gems; and
-- premium or distinctive experiences.
-
-The exact selectable vocabulary remains governed by the Journey Passport specification.
+- Relaxation
+- Adventure
+- Food & Dining
+- Culture & Heritage
+- Photography
+- Nature
+- Wildlife
+- Beaches & Islands
+- Celebrations
 
 The Decision Engine maps each selection to the controlled Emotion and Theme Libraries in the Destination Knowledge Base.
+
+Future Passport versions may expand the vocabulary. New values must not enter scoring until the Passport, Destination Knowledge Base and Decision Engine mappings are versioned together.
 
 ### Travel Pace
 
@@ -360,7 +346,7 @@ The Decision Engine maps each selection to the controlled Emotion and Theme Libr
 - Explorer
 - Fast Paced
 
-Where the Journey Passport does not ask for pace directly, pace may be derived cautiously from selected travel styles and free-text statements.
+Journey Passport v1.0 does not ask for pace directly. Pace may be derived cautiously from selected journey character, travel styles or an explicit statement carried from a governed entry context.
 
 Derived pace must carry lower evidence strength than an explicit selection.
 
@@ -374,14 +360,17 @@ Comfort represents the expected style of travel, not a precise budget.
 
 The engine must not translate comfort into a promised price without current commercial data.
 
+Journey Passport v1.0 does not collect comfort preference. Release 1 must therefore treat traveller comfort as `UNKNOWN` unless an explicit, separately governed signal is available. It must not infer premium, balanced or simple comfort from destination, companion, nationality or journey character.
+
 ### Timing
 
-- Known travel dates
-- Travel month or season
-- Approximate travel window
-- Flexible timing
-- Undecided timing
-- Ideal duration, when supplied
+Release 1 receives one of:
+
+- Within the Next Month
+- In the Next 2–3 Months
+- Later This Year
+- I’m Flexible
+- Exact Dates, with a valid start and end date
 
 Timing influences season suitability, operational feasibility and trip rhythm.
 
@@ -389,10 +378,12 @@ Unknown timing should reduce certainty but should not automatically prevent insp
 
 ### Destination Certainty
 
-- Open to possibilities
-- Considering one or more destinations
-- Already decided on a destination
-- Explicitly excluding a destination or journey type
+Release 1 receives one of two governed modes:
+
+- `discovery` — open to possibilities; or
+- `known` — a destination or place is supplied in the traveller's own text.
+
+Journey Passport v1.0 does not collect a separate exclusion list or a multi-destination consideration set. The engine must not treat absent exclusions as evidence of preference.
 
 Destination certainty changes the interpretation of the request.
 
@@ -848,6 +839,7 @@ Release 1 should use:
 | Only a materially different comfort level is supported | 0.20 plus material conflict penalty |
 | Comfort support unknown | 0.00 and reduced confidence |
 | Essential comfort requirement cannot be met | Exclude |
+| Traveller comfort preference not collected | Neutral contribution; no confidence penalty |
 
 The ordered comfort range is `Simple → Balanced → Premium`.
 
@@ -2641,4 +2633,5 @@ That is how the Journey Director turns destination knowledge into personal disco
 
 | Version | Date | Owner | Description |
 | --- | --- | --- | --- |
+| v1.0.1 | 22 July 2026 | Search My Vacation – Product & Experience | Clarified the human Journey Director's responsibility for consultation, refinement, itinerary design and final traveller handoff within the deterministic Release 1 model. |
 | v1.0 | 21 July 2026 | Search My Vacation – Product & Experience | Initial approved specification defining deterministic Journey Passport matching, operational eligibility, destination and region scoring, recommendation personalities, dynamic Screens 5–7, human override, Release 1 implementation and future AI-assisted evolution. |

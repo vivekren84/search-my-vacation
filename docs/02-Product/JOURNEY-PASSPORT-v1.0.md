@@ -7,7 +7,7 @@
 | **Version** | v1.0 |
 | **Status** | Approved product and UX specification |
 | **Owner** | Search My Vacation — Product & Experience |
-| **Last updated** | 20 July 2026 |
+| **Last updated** | 22 July 2026 |
 | **Purpose** | Define the enduring product intent, traveller experience, interaction model, language, information boundaries, handoff and future direction of Journey Passport v1.0. |
 
 > **Audience:** Product Managers, UX Designers, Content Designers, Developers, AI Engineers, Journey Directors, Operations leaders and future custodians of the Search My Vacation experience.
@@ -45,7 +45,8 @@ Journey Passport v1.0 therefore makes a clear product commitment:
 - Discovery comes before planning.
 - Understanding comes before recommendation.
 - Recommendations come before logistics.
-- A Journey Director remains responsible for the relationship in Release 1.
+- Deterministic recommendation logic generates three journey possibilities in Release 1.
+- A human Journey Director remains responsible for consultation, refinement, itinerary design and the final traveller handoff.
 
 ---
 
@@ -61,7 +62,7 @@ Search My Vacation begins from a different belief:
 
 Journey Passport turns that belief into a product experience. It gives travellers a considered way to express how they want to feel, who they will share the journey with, what kinds of memories matter, how they prefer to travel, when they may travel and whether a destination is already in mind. It converts an uncertain aspiration into a useful human story.
 
-The Passport is not intended to produce a final itinerary on its own. It creates the foundation from which a Journey Director can offer relevant possibilities and begin planning intelligently.
+The Passport is not intended to produce a final itinerary on its own. It creates the foundation from which deterministic Release 1 logic can generate three relevant journey possibilities and a human Journey Director can continue consultation and planning intelligently.
 
 ### 3.2 Problems it solves
 
@@ -79,7 +80,7 @@ Every additional field asks the traveller to spend attention and disclose inform
 
 #### Recommendation engines often begin with insufficient context
 
-Automated systems can rank inventory, but meaningful recommendations require a model of the traveller. The Passport establishes a structured but human-readable foundation that can support future intelligence without making v1.0 feel automated or impersonal.
+Automated systems can rank inventory, but meaningful recommendations require a model of the traveller. The Passport establishes a structured but human-readable foundation for governed deterministic matching in Release 1 and future intelligence, without making the experience feel mechanical or impersonal.
 
 #### Travel planning becomes logistical too soon
 
@@ -100,11 +101,11 @@ When budget, airports, room configurations and flight preferences dominate the o
 
 ### 3.4 Relationship with the Journey Director
 
-The Passport does not replace the Journey Director. It makes the Journey Director’s first conversation better.
+The Passport and deterministic recommendation logic do not replace the Journey Director. They make the Journey Director’s first conversation better.
 
-In Release 1, a human Journey Director reviews the completed Passport, interprets its emotional and practical signals, identifies any tensions or missing context, and prepares a thoughtful response. The first follow-up should prove that the Passport was read. It should reference the traveller’s stated preferences naturally and offer a small number of relevant possibilities rather than a catalogue.
+In Release 1, deterministic recommendation logic interprets the completed Passport, applies operational eligibility rules and generates three journey possibilities: **The Perfect Match**, **A Different Rhythm** and **A Pleasant Surprise**. Each possibility must be traceable to the traveller’s signals and grounded in destinations and regions Search My Vacation can confidently deliver.
 
-The Journey Director owns judgement. For example, “relaxation,” “family,” “adventure” and “exact dates” may point toward several very different journeys. The Passport provides evidence; the Journey Director turns that evidence into empathy, advice and possibilities.
+The human Journey Director remains responsible for consultation, refinement, itinerary design and the final traveller handoff. For example, “relaxation,” “family,” “adventure” and “exact dates” may create tensions that deterministic matching can surface but should not silently resolve through unsupported assumptions. The Passport provides evidence, the recommendation logic creates governed possibilities and the Journey Director turns the selected direction into empathy, advice and a thoughtfully designed journey.
 
 ### 3.5 Relationship with future AI
 
@@ -150,7 +151,7 @@ Planning begins after recommendations. This boundary is essential. Without it, t
 
 ### 4.6 Human judgement remains visible
 
-Release 1 culminates in manual Journey Director follow-up. Even as automation grows, the product should retain moments where human interpretation, accountability and advice are clear. Search My Vacation’s advantage is not merely knowing more options; it is caring which option is right for this traveller.
+Release 1 uses deterministic recommendation logic to generate three journey possibilities and then continues into human Journey Director consultation. Human interpretation, accountability and advice remain explicit: the Journey Director refines the selected direction, designs the itinerary and owns the final traveller handoff. Search My Vacation’s advantage is not merely knowing more options; it is caring which option is right for this traveller.
 
 ---
 
@@ -511,7 +512,7 @@ Natural-language destination intent, map-based inspiration, region suggestions a
 ### 7.8 Moment Eight — Discover My Possibilities
 
 **Purpose**  
-Confirm that Search My Vacation has enough context to begin discovery and create an intentional handoff to a Journey Director.
+Confirm that Search My Vacation has enough context to generate three governed journey possibilities and enter the Journey Director experience.
 
 **Traveller emotion**  
 Understood, excited and confident.
@@ -529,24 +530,24 @@ Reflect a concise, conversational interpretation of the traveller’s answers. D
 **✨ Discover My Possibilities**
 
 **Interaction**  
-The final action completes discovery and begins the handoff. Where contact permission or details are needed, their purpose must be explained in direct relation to the Journey Director response. Do not end with “Submit.”
+The final action completes the Journey Passport, starts deterministic recommendation logic and transitions into the Journey Director experience. It does not begin booking or imply that a human has already reviewed the Passport. Contact permission or details belong at the intentional human handoff and must be explained in direct relation to the Journey Director consultation. Do not end with “Submit.”
 
 **Validation**  
 Any missing requirement should be addressed in its original moment where possible. Final action feedback should be calm, human and unambiguous.
 
 **Microcopy**  
 - “Wonderful. We have everything we need to begin crafting your journey.”
-- “Your Journey Director will begin with the choices that matter most to you.”
+- “We’ll use the choices that matter most to you to prepare three thoughtful possibilities.”
 - “Discover My Possibilities.”
 
 **Developer notes**  
-Completion must create a coherent Journey Director handoff record and preserve the traveller’s original language. Do not claim automated recommendations, confirmed availability or a response time that the current release cannot guarantee.
+Completion must preserve the traveller’s original language, create the versioned input required for deterministic matching and generate three journey possibilities using approved eligibility, destination and regional rules. The experience must not claim AI involvement, confirmed availability, a completed itinerary, human review that has not occurred or a response time that the current release cannot guarantee.
 
 **Design notes**  
-The closing moment should feel earned but restrained. A single strong action and a clear explanation are more valuable than several competing destinations or promotional links.
+The closing moment should feel earned but restrained. The transition should prepare the traveller for three carefully differentiated possibilities rather than a catalogue of competing destinations or promotional links.
 
 **Future enhancements**  
-Passport stamping, adaptive completion illustrations, immediate AI-assisted possibility previews and a saved Journey Passport for authenticated travellers.
+Passport stamping, adaptive completion illustrations, AI-assisted interpretation within deterministic safeguards and a saved Journey Passport for authenticated travellers.
 
 ---
 
@@ -788,8 +789,6 @@ Journey Passport captures only information required for meaningful discovery and
 | Exact date range, when selected | Supports time-sensitive possibilities | Active only when Exact Dates is the chosen timing mode |
 | Destination intent | Establishes known-place versus open-discovery mode | May include a specific place or broad natural-language idea |
 | Known destination text, when applicable | Preserves the traveller’s own expression | Retain raw wording even if later normalised |
-| Contact channel required for follow-up | Allows the Journey Director to continue the conversation | Collect only what the current operating model genuinely uses |
-| Consent and communication preference, where legally or operationally required | Supports respectful contact | Must be explicit and separate from discovery preferences |
 | Entry source and completion context | Helps understand the experience and preserve continuity | Use for experience quality, not covert profiling |
 
 The Journey Director briefing may contain a concise narrative derived from these fields. Derived interpretation must remain distinguishable from what the traveller explicitly said.
@@ -846,7 +845,11 @@ Journey Passport should not ask travellers to document private medical or access
 
 Celebration can be a travel-style signal. Names, dates, surprises, ceremonies and supplier requests belong in planning once the broad journey is selected.
 
-### 11.12 Why these belong to Journey Director Planning
+### 11.12 Contact details and communication consent
+
+Journey Passport v1.0 does not collect contact details as recommendation inputs. Contact channel and communication consent belong to the intentional human handoff after the traveller has explored or selected a possibility. Their purpose must be explained clearly, consent must be explicit where required and the Decision Engine must not use them to influence ranking.
+
+### 11.13 Why these belong to Journey Director Planning
 
 Deferred information shares one or more characteristics:
 
@@ -865,9 +868,9 @@ Journey Director Planning is the appropriate place because context exists, value
 
 ### 12.1 What happens after “Discover My Possibilities”
 
-The final action does not begin booking. It signals that the traveller has completed discovery and is ready for Search My Vacation to interpret what they shared.
+The final action does not begin booking or claim human review. It signals that the traveller has completed the Passport and is ready for Search My Vacation’s deterministic Release 1 logic to interpret what they shared.
 
-The handoff should include:
+The recommendation input should include:
 
 - the traveller’s own answers and original wording;
 - a concise narrative summary;
@@ -875,30 +878,53 @@ The handoff should include:
 - the chosen companion, journey character and travel styles;
 - timing and destination certainty;
 - any unresolved ambiguity worth discussing;
-- consented contact information and channel preference;
 - a clear distinction between explicit answers and inferred observations.
 
-The traveller should receive an honest acknowledgement explaining the next step. Internal handoff must be reliable enough that the Journey Director never needs to begin by asking for the same information again.
+The deterministic logic applies operational eligibility, destination and region matching, confidence and explanation rules to generate three journey possibilities: **The Perfect Match**, **A Different Rhythm** and **A Pleasant Surprise**. When a documented fallback prevents a responsible three-result set, the experience must preserve that state honestly rather than manufacture a weak recommendation.
 
-### 12.2 Current Release — manual Journey Director
+After the traveller explores or selects a possibility, the human handoff should additionally preserve:
 
-Release 1 is intentionally human-led.
+- the selected `possibilityId`;
+- the destination and recommended region;
+- the recommendation personality;
+- why the possibility fits;
+- relevant trade-offs or unresolved questions; and
+- the traveller’s original Passport context;
+- consented contact information and channel preference, when the traveller chooses the human handoff; and
+- the consent record required for that communication.
+
+The Journey Director must receive enough context to continue without asking the traveller to begin again.
+
+### 12.2 Current Release — deterministic possibilities and human consultation
+
+Release 1 is deterministic in recommendation and human-led in consultation, refinement and planning.
+
+The recommendation logic:
+
+1. validates and normalises the completed Passport;
+2. excludes destinations and regions Search My Vacation cannot confidently deliver;
+3. matches eligible destinations and regions to the traveller’s signals;
+4. generates three differentiated journey possibilities;
+5. preserves evidence explaining why each possibility fits; and
+6. provides the selected possibility and its context to the human handoff.
 
 The Journey Director:
 
-1. reviews the Passport in full;
-2. identifies the traveller’s strongest priorities;
-3. considers tensions, such as adventure and deep relaxation within exact dates;
-4. prepares a small number of relevant destination or journey possibilities;
-5. opens the conversation by reflecting what was understood;
-6. asks only the next questions needed to refine direction;
-7. begins planning after the traveller responds to the possibilities.
+1. reviews the Passport, recommendation evidence and the possibility the traveller explored or selected;
+2. opens the consultation by reflecting what was understood;
+3. validates tensions, exceptions and current operational reality;
+4. refines the destination, region and journey direction with the traveller;
+5. asks only the next questions needed for responsible planning;
+6. designs the itinerary after a direction has been chosen; and
+7. owns the final traveller handoff and ongoing relationship.
 
-The first contact is successful when it could not have been written to any generic traveller.
+The first consultation is successful when it could not have been written to any generic traveller and does not require the traveller to repeat the Passport.
 
-### 12.3 Future — automated preparation
+### 12.3 Release 1 deterministic boundaries
 
-Automation may validate handoff completeness, structure the Passport, identify missing context, assemble relevant knowledge and prepare a draft brief. It should reduce operational delay without pretending that a human has reviewed something when they have not.
+Release 1 recommendation logic is configuration-driven, deterministic, explainable and reviewable. Given the same versioned Passport, destination knowledge and rules, it should produce the same result.
+
+It may normalise inputs, apply eligibility gates, score destinations and regions, assign the three recommendation personalities and assemble approved recommendation content. It must not generate an itinerary, promise availability, reactivate an unsupported destination, conceal missing evidence or imply that a Journey Director has reviewed the result when that has not occurred.
 
 ### 12.4 Future — AI-assisted Journey Director
 
@@ -1100,7 +1126,7 @@ The following decisions are approved for Journey Passport v1.0 and must not be c
 
 1. Journey Passport is a discovery experience, not a planning tool.
 2. Planning begins after recommendations.
-3. Release 1 uses manual Journey Director follow-up.
+3. Release 1 uses deterministic recommendation logic to generate three journey possibilities; a human Journey Director remains responsible for consultation, refinement, itinerary design and the final traveller handoff.
 4. Journey Builder is a future authenticated capability.
 5. Daily itinerary customisation belongs to Journey Builder.
 6. Journey Passport intentionally avoids logistical information.
@@ -1131,7 +1157,7 @@ The concept therefore evolved through several important shifts:
 - from unrestricted preference collection to focused Travel Style prioritisation;
 - from system validation to conversational guidance;
 - from contact submission to **Discover My Possibilities**;
-- from an implied automated result to honest manual Journey Director follow-up;
+- from an implied or opaque automated result to governed deterministic possibilities followed by honest human Journey Director consultation;
 - from itinerary ambitions inside the Passport to a separate future Journey Builder.
 
 The immigration-style stamp explored during earlier design work remains a valuable future completion expression, but the enduring product value is the feeling of being understood. The stamp must never become more important than the conversation that earns it.

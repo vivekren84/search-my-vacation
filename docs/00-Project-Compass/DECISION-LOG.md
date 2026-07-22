@@ -4,7 +4,7 @@
 
 **Internal Project:** Project Compass
 
-**Document Version:** 0.1
+**Document Version:** 0.2
 
 **Status:** Living Document
 
@@ -16,7 +16,7 @@
 
 **Created:** 09 Jul 2026
 
-**Last Updated:** 09 Jul 2026
+**Last Updated:** 22 Jul 2026
 
 ---
 
@@ -325,11 +325,11 @@ Positive
 
 ## Related Documents
 
-- BRAND-IDENTITY.md
-- DESIGN-PRINCIPLES.md
-- DESIGN-SYSTEM.md
-- PRODUCT-ROADMAP.md
-- SRS.md
+- `docs/07-Design/BRAND-IDENTITY.md`
+- `docs/07-Design/DESIGN-PRINCIPLES.md`
+- `docs/04-UX/DESIGN-TOKENS.md`
+- `docs/02-Product/PRODUCT-ROADMAP.md`
+- `docs/02-Product/SRS.md`
 
 ---
 
@@ -448,9 +448,89 @@ This decision establishes the visual direction for:
 - Archie 
 
 ---
+
+## DECISION-005
+
+**Title:** Deterministic Release 1 Journey Director Model
+
+**Date:** 22 July 2026
+
+**Status:** Approved
+
+### Context
+
+The Journey Passport, Destination Knowledge Base, Journey Director Decision Engine and Journey Director Experience initially described different Release 1 responsibility boundaries. Some passages implied that a human prepared the initial possibilities manually, while the Decision Engine defined deterministic generation of three recommendation personalities.
+
+EBC-003 requires one unambiguous model so product content, state contracts, implementation and testing share the same source of truth.
+
+### Decision
+
+Release 1 uses deterministic recommendation logic to generate three journey possibilities:
+
+- **The Perfect Match**;
+- **A Different Rhythm**; and
+- **A Pleasant Surprise**.
+
+Each possibility must use an active destination, approved region intelligence, evidence-backed fit reasons and the governed confidence thresholds defined by the Journey Director Decision Engine. When three responsible results are unavailable, the documented fallback presents fewer possibilities rather than manufacturing a weak result.
+
+A human Journey Director remains responsible for consultation, refinement, itinerary design and the final traveller handoff. Human override remains available within the approved eligibility and audit rules, but routine generation of the three Release 1 possibilities does not depend on pre-display manual preparation.
+
+### Rationale
+
+This model:
+
+- gives travellers an immediate, explainable result after completing the Journey Passport;
+- keeps Release 1 deterministic, testable and reviewable;
+- preserves meaningful choice without recreating an OTA catalogue;
+- protects operational boundaries through governed destination eligibility;
+- keeps professional judgement visible where consultation and planning require it; and
+- provides a safe foundation for future AI assistance without making AI part of the Release 1 dependency chain.
+
+### Impact
+
+- Journey Passport completion triggers deterministic recommendation logic.
+- The Journey Director Experience presents the three named recommendation personalities when thresholds are met.
+- Selecting a possibility dynamically drives its narrative, imagery, fit reasons, journey experiences and handoff copy while the reusable layout remains unchanged.
+- The selected `possibilityId` and its evidence travel into the human handoff.
+- Documentation, implementation and tests must not imply that a human has already reviewed an automatically presented result.
+
+### Alternatives Considered
+
+#### Option A – Manual preparation of all Release 1 recommendations
+
+**Rejected**
+
+Reason:
+
+It creates avoidable delay, prevents deterministic acceptance testing and contradicts the approved Decision Engine architecture.
+
+#### Option B – Autonomous AI recommendation generation
+
+**Rejected for Release 1**
+
+Reason:
+
+It introduces unnecessary model, governance and evaluation risk before the deterministic product rules have been validated.
+
+#### Option C – Deterministic possibilities followed by human consultation
+
+**Selected**
+
+Reason:
+
+It combines immediate explainable discovery with accountable human refinement and planning.
+
+### Related Documents
+
+- `docs/02-Product/JOURNEY-PASSPORT-v1.0.md`
+- `docs/02-Product/DESTINATION-KNOWLEDGE-BASE.md`
+- `docs/02-Product/JOURNEY-DIRECTOR-DECISION-ENGINE.md`
+- `docs/04-UX/JOURNEY-DIRECTOR-EXPERIENCE.md`
+
+---
+
 # Future Decisions
 
 | ID | Title | Status |
 |----|-------|--------|
-| Decision-005 | TBD | Pending |
 | Decision-006 | TBD | Pending |
