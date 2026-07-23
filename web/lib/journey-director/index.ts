@@ -11,3 +11,10 @@ export type {
   EngineResult,
   JourneyCandidate,
 } from "./engine";
+
+export {
+  RELEASE1_CATALOGUE_METADATA,
+  release1ExcludedPortfolio,
+  release1JourneyCandidates,
+  validateRuntimeCatalogue,
+} from "./catalogue";

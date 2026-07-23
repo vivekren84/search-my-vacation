@@ -13,6 +13,7 @@
     "types": ["node"]
   },
   "include": [
+    "lib/journey-director/catalogue/**/*.ts",
     "lib/journey-director/engine/**/*.ts",
     "lib/journey-director/validation/**/*.ts",
     "lib/journey-director/passport-adapter.ts",
