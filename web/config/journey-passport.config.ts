@@ -1,6 +1,6 @@
 import type { JourneyMoment, JourneyOption, JourneyPassportState } from "@/types/journey-passport.types";
 
-const journeyPassportImage = (group: "companions" | "dream-journeys" | "travel-styles", name: string) =>
+const journeyPassportImage = (group: "companions" | "dream-journeys" | "travel-styles" | "timing", name: string) =>
   `/images/journey-passport/${group}/${name}.webp`;
 
 export const companionOptions: JourneyOption[] = [
@@ -33,11 +33,11 @@ export const travelStyleOptions: JourneyOption[] = [
 ];
 
 export const timingOptions: JourneyOption[] = [
-  { value: "Within the Next Month", label: "Within the Next Month", description: "A gentle change of scene, soon." },
-  { value: "In the Next 2–3 Months", label: "In the Next 2–3 Months", description: "Enough time to shape something thoughtful." },
-  { value: "Later This Year", label: "Later This Year", description: "A journey to look forward to." },
-  { value: "I’m Flexible", label: "I’m Flexible", description: "Open to the right moment and place." },
-  { value: "Exact Dates", label: "Exact Dates", description: "You already have a time in mind." },
+  { value: "Within the Next Month", label: "Within the Next Month", description: "A gentle change of scene, soon.", imageSrc: journeyPassportImage("timing", "within-next-month"), imageAlt: "Traveller calmly preparing a small bag for a near-term escape" },
+  { value: "In the Next 2–3 Months", label: "In the Next 2–3 Months", description: "Enough time to shape something thoughtful.", imageSrc: journeyPassportImage("timing", "next-two-three-months"), imageAlt: "Traveller planning a considered journey with a map and notebook" },
+  { value: "Later This Year", label: "Later This Year", description: "A journey to look forward to.", imageSrc: journeyPassportImage("timing", "later-this-year"), imageAlt: "Traveller looking toward a distant landscape and a journey later this year" },
+  { value: "I’m Flexible", label: "I’m Flexible", description: "Open to the right moment and place.", imageSrc: journeyPassportImage("timing", "flexible-timing"), imageAlt: "Traveller pausing on an open route with several possible journeys ahead" },
+  { value: "Exact Dates", label: "Exact Dates", description: "You already have a time in mind.", imageSrc: journeyPassportImage("timing", "exact-dates"), imageAlt: "Traveller confidently confirming a specific journey on a calendar and itinerary" },
 ];
 
 export const destinationSuggestions = [

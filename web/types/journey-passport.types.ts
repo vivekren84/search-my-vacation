@@ -35,6 +35,7 @@ export type JourneyOption = {
   label: string;
   description?: string;
   imageSrc?: string;
+  imageAlt?: string;
 };
 export type JourneyPassportEntryContext = {
   feeling?: JourneyFeeling;
