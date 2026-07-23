@@ -18,3 +18,5 @@ export {
   release1JourneyCandidates,
   validateRuntimeCatalogue,
 } from "./catalogue";
+
+export { createJourneyRecommendationSet } from "./createJourneyRecommendationSet";
