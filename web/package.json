@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "verify:journey-engine": "tsc -p tsconfig.engine-verification.json && node node_modules/.cache/smv-engine-verification/lib/journey-director/validation/verifyEngine.js"
   },
   "dependencies": {
     "next": "16.2.10",

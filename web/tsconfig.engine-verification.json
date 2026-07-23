@@ -1,0 +1,23 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "allowJs": false,
+    "incremental": false,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "noEmit": false,
+    "outDir": "./node_modules/.cache/smv-engine-verification",
+    "plugins": [],
+    "rootDir": ".",
+    "target": "ES2022",
+    "types": ["node"]
+  },
+  "include": [
+    "lib/journey-director/engine/**/*.ts",
+    "lib/journey-director/validation/**/*.ts",
+    "lib/journey-director/passport-adapter.ts",
+    "types/journey-passport.types.ts",
+    "types/journey-director.ts"
+  ],
+  "exclude": ["node_modules"]
+}
