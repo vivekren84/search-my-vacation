@@ -94,6 +94,7 @@ export default function Header() {
                     <Link
                       href={item.href}
                       onClick={() => setIsMenuOpen(false)}
+                      aria-current={pathname === item.href ? "page" : undefined}
                       className="block rounded-xl px-4 py-3 text-sm font-medium text-white transition hover:bg-white/10 focus-visible:bg-white/10 focus-visible:outline-none"
                     >
                       {item.label}

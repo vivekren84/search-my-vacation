@@ -6,6 +6,8 @@ import type {
 const keralaImage = "/images/journey-director/kerala-alleppey-golden-hour.jpg";
 const baliImage = "/images/journey-director/bali-ubud-golden-hour.jpg";
 const sriLankaImage = "/images/journey-director/sri-lanka-galle-golden-hour.jpg";
+const goaImage = "/images/journey-passport/travel-styles/beaches-islands.webp";
+const vizagImage = "/images/journey-passport/dream-journeys/tropical-escape.webp";
 
 export const DEFAULT_JOURNEY_PRESENTATION = {
   heroImage: "/images/golden-hour.png",
@@ -25,6 +27,18 @@ function metadata(
  * eligible, change its score, or alter engine recommendation order.
  */
 export const journeyPresentationCatalogue: JourneyPresentationCatalogue = {
+  "goa:goa-south": metadata({
+    candidateId: "goa", regionId: "goa-south",
+    summary: "A calmer coastal expression of Goa, with room for slow mornings, local flavour, and time together.",
+    heroImage: goaImage, heroImageAlt: "A warm coastal scene representing a quieter South Goa stay", heroImagePosition: "center",
+    supportingEvidenceIds: ["goa-identity", "goa-themes"],
+    moments: [
+      { id: "goa-morning", title: "Let the coast set the pace", description: "Begin with an unhurried morning close to the water.", image: goaImage, imageAlt: "A quiet golden-hour coastal moment in Goa", supportingEvidenceIds: ["goa-identity"] },
+      { id: "goa-table", title: "Stay for local flavour", description: "Make room for a long table and the stories that arrive with it.", image: goaImage, imageAlt: "A relaxed coastal dining moment in Goa", supportingEvidenceIds: ["goa-themes"] },
+      { id: "goa-evening", title: "Keep the evening simple", description: "A gentle end to the day, shaped around the people travelling with you.", image: goaImage, imageAlt: "A calm evening by the Goan coast", supportingEvidenceIds: ["goa-identity"] },
+    ],
+    handoffHeadline: "Let’s shape a calmer Goa story together.", handoffMessage: "A Journey Director can help choose the coast and pace that best fit the journey you described.", ctaLabel: "Explore This Journey",
+  }),
   "kerala:kerala-alappuzha": metadata({
     candidateId: "kerala",
     regionId: "kerala-alappuzha",
@@ -154,6 +168,18 @@ export const journeyPresentationCatalogue: JourneyPresentationCatalogue = {
     handoffMessage:
       "A Journey Director can shape Bentota and Galle into a journey that moves gently between coast, culture, and discovery.",
     ctaLabel: "Explore This Journey",
+  }),
+  "vizag:vizag-rushikonda": metadata({
+    candidateId: "vizag", regionId: "vizag-rushikonda",
+    summary: "A relaxed coastal break where beach time, green hills, and easy shared moments can sit comfortably together.",
+    heroImage: vizagImage, heroImageAlt: "A warm coastal landscape representing the Rushikonda coast near Vizag", heroImagePosition: "center",
+    supportingEvidenceIds: ["vizag-identity", "vizag-themes"],
+    moments: [
+      { id: "vizag-coast", title: "Begin beside the coast", description: "Let the sea create a softer rhythm for the first days of the journey.", image: vizagImage, imageAlt: "A peaceful coastal moment near Rushikonda", supportingEvidenceIds: ["vizag-identity"] },
+      { id: "vizag-drive", title: "Follow the scenic edges", description: "Make space for a hill-and-coast drive without turning the day into a checklist.", image: vizagImage, imageAlt: "A scenic coastal road near Vizag", supportingEvidenceIds: ["vizag-themes"] },
+      { id: "vizag-together", title: "Leave room for togetherness", description: "A simple, family-friendly pause shaped around time rather than urgency.", image: vizagImage, imageAlt: "A family sharing an easy coastal travel moment", supportingEvidenceIds: ["vizag-identity"] },
+    ],
+    handoffHeadline: "Let’s make this Vizag coast journey feel considered.", handoffMessage: "A Journey Director can refine the coastal base, hills, and shared pace around your family’s time together.", ctaLabel: "Explore This Journey",
   }),
 };
 

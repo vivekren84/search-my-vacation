@@ -10,7 +10,8 @@
     "verify:journey-engine": "tsc -p tsconfig.engine-verification.json && node node_modules/.cache/smv-engine-verification/lib/journey-director/validation/verifyEngine.js",
     "verify:journey-presentation": "tsc -p tsconfig.engine-verification.json && node node_modules/.cache/smv-engine-verification/lib/journey-director/validation/verifyPresentationAdapter.js",
     "verify:journey-catalogue": "tsc -p tsconfig.engine-verification.json && node node_modules/.cache/smv-engine-verification/lib/journey-director/validation/verifyRuntimeCatalogue.js",
-    "verify:journey-orchestration": "tsc -p tsconfig.engine-verification.json && node node_modules/.cache/smv-engine-verification/lib/journey-director/validation/verifyJourneyRecommendationSet.js"
+    "verify:journey-orchestration": "tsc -p tsconfig.engine-verification.json && node node_modules/.cache/smv-engine-verification/lib/journey-director/validation/verifyJourneyRecommendationSet.js",
+    "verify:journey-runtime": "tsc -p tsconfig.engine-verification.json && node node_modules/.cache/smv-engine-verification/lib/journey-director/validation/verifyRuntimeJourneyDirector.js"
   },
   "dependencies": {
     "next": "16.2.10",

@@ -1,0 +1,60 @@
+import { journeyPresentationCatalogue, journeyPresentationKey } from "../../../config/journey-director.config";
+import { RELEASE1_CATALOGUE_METADATA, release1JourneyCandidates } from "../catalogue";
+import { createJourneyRecommendationSet } from "../createJourneyRecommendationSet";
+import { representativeProfiles } from "./representativeProfiles";
+
+const executionTimestamp = "2026-07-25T09:00:00.000Z";
+let checks = 0;
+
+function assert(condition: unknown, message: string): asserts condition {
+  checks += 1;
+  if (!condition) throw new Error(`Runtime Journey Director verification failed: ${message}`);
+}
+
+function verifyPresentationContent(candidateId: string, regionId: string) {
+  const metadata = journeyPresentationCatalogue[journeyPresentationKey(candidateId, regionId)];
+  assert(Boolean(metadata), `${candidateId}:${regionId} has governed presentation metadata`);
+  assert(Boolean(metadata?.summary.trim()), `${candidateId}:${regionId} has a traveller-facing summary`);
+  assert(Boolean(metadata?.heroImage) && Boolean(metadata?.heroImageAlt), `${candidateId}:${regionId} has approved imagery`);
+  assert((metadata?.moments.length ?? 0) >= 1, `${candidateId}:${regionId} has traveller-facing journey moments`);
+}
+
+function verifyQualifiedRuntimeProfile() {
+  const first = createJourneyRecommendationSet(representativeProfiles.relaxedFamily, executionTimestamp);
+  const second = createJourneyRecommendationSet(representativeProfiles.relaxedFamily, executionTimestamp);
+  assert(JSON.stringify(first) === JSON.stringify(second), "runtime catalogue output is deterministic");
+  assert(first.state === "success" && first.possibilities.length === 3, "relaxed family receives three qualified runtime recommendations");
+  assert(new Set(first.possibilities.map((possibility) => possibility.candidateId)).size === 3, "runtime recommendations use unique destinations");
+  assert(first.possibilities.map((possibility) => possibility.personality).join("|") === "perfect-match|different-rhythm|pleasant-surprise", "runtime recommendations preserve approved personalities");
+  assert(first.possibilities.every((possibility) => possibility.candidateId !== "japan"), "unsupported Japan is excluded from runtime recommendations");
+  assert(first.possibilities.some((possibility) => possibility.cautions.length >= 1), "runtime shortlist includes an applicable planning consideration where the catalogue identifies one");
+  first.possibilities.forEach((possibility) => {
+    assert(possibility.reasons.length >= 2, `${possibility.destination} has traveller-facing fit explanations`);
+    verifyPresentationContent(possibility.candidateId, possibility.regionId);
+  });
+  return first;
+}
+
+function verifyAdditionalRuntimeProfiles() {
+  [representativeProfiles.cultureCouple, representativeProfiles.activeFriends].forEach((passport) => {
+    const result = createJourneyRecommendationSet(passport, executionTimestamp);
+    const repeat = createJourneyRecommendationSet(passport, executionTimestamp);
+    assert(JSON.stringify(result) === JSON.stringify(repeat), `${passport.name} receives deterministic runtime output`);
+    assert(["success", "partial", "unavailable"].includes(result.state), `${passport.name} receives a governed runtime state`);
+    assert(result.possibilities.every((possibility) => possibility.candidateId !== "japan"), `${passport.name} never receives unsupported Japan`);
+  });
+}
+
+function verifyReadinessGovernance() {
+  const confident = release1JourneyCandidates.filter((candidate) => candidate.serviceConfidence === "CONFIDENT");
+  assert(confident.map((candidate) => candidate.id).join("|") === RELEASE1_CATALOGUE_METADATA.confidentApprovalCandidateIds.join("|"), "only the governed presentation-ready destinations are CONFIDENT");
+  confident.forEach((candidate) => {
+    assert(candidate.evidenceReadiness.hasQualifiedRegionContent && !candidate.evidenceReadiness.hasMaterialContentGap, `${candidate.name} has complete runtime presentation readiness`);
+  });
+}
+
+const qualified = verifyQualifiedRuntimeProfile();
+verifyAdditionalRuntimeProfiles();
+verifyReadinessGovernance();
+console.log(`Runtime Journey Director verification passed (${checks} checks).`);
+console.log(`Qualified runtime shortlist: ${qualified.possibilities.map((item) => `${item.personality}:${item.destination}`).join(", ")}.`);

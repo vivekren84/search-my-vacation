@@ -85,31 +85,31 @@ function verifyGovernanceMappings() {
   assert(validation.candidateCount === 24, "all active portfolio candidates validate");
   assert(validation.excludedPortfolioCount === 4, "all coming-soon exclusions validate");
   assert(
-    release1JourneyCandidates.every((candidate) => candidate.serviceConfidence === "SUPPORTED"),
-    "ACTIVE maps to SUPPORTED and never implicitly to CONFIDENT",
-  );
-  assert(
     release1JourneyCandidates.every((candidate) =>
-      !RELEASE1_CATALOGUE_METADATA.confidentApprovalCandidateIds.includes(candidate.id),
+      candidate.serviceConfidence === (RELEASE1_CATALOGUE_METADATA.confidentApprovalCandidateIds.includes(candidate.id) ? "CONFIDENT" : "SUPPORTED"),
     ),
-    "no candidate has CONFIDENT approval provenance",
+    "CONFIDENT is granted only through explicit catalogue approval provenance",
   );
   assert(
-    release1JourneyCandidates.every((candidate) =>
-      candidate.regions.every(
-        (region) => region.logisticalFit === RELEASE1_CATALOGUE_METADATA.neutralLogisticalFit,
-      ),
-    ),
-    "neutral logistical values are identical and cannot differentiate candidates",
+    RELEASE1_CATALOGUE_METADATA.confidentApprovalCandidateIds.length > 0,
+    "approved presentation-ready candidates retain CONFIDENT provenance",
   );
   assert(
-    release1JourneyCandidates.every((candidate) =>
+    release1JourneyCandidates
+      .filter((candidate) => !RELEASE1_CATALOGUE_METADATA.confidentApprovalCandidateIds.includes(candidate.id))
+      .every((candidate) => candidate.regions.every((region) => region.logisticalFit === RELEASE1_CATALOGUE_METADATA.neutralLogisticalFit)),
+    "candidates without explicit readiness evidence retain neutral logistical values",
+  );
+  assert(
+    release1JourneyCandidates
+      .filter((candidate) => !RELEASE1_CATALOGUE_METADATA.confidentApprovalCandidateIds.includes(candidate.id))
+      .every((candidate) =>
       candidate.seasonality.every((entry) => entry.guidance === "UNKNOWN") &&
       candidate.regions.every((region) =>
         region.seasonality.every((entry) => entry.guidance === "UNKNOWN"),
       ),
-    ),
-    "all monthly seasonality remains UNKNOWN",
+      ),
+    "candidates without approved seasonality evidence remain UNKNOWN",
   );
   assert(
     ENGINE_THEME_IDS.every((theme) => Object.prototype.hasOwnProperty.call(THEME_MEMORY_GOAL_MAP, theme)),
@@ -146,13 +146,10 @@ function verifyEngineConsumption() {
       reversed.possibilities.map((possibility) => possibility.possibilityId).join("|"),
     "recommendation order is independent of catalogue insertion order",
   );
+  assert(first.status === "success" && first.possibilities.length === 3, "approved runtime evidence produces a complete qualified shortlist");
   assert(
-    first.status === "partial" || first.status === "insufficient-candidates",
-    "governed evidence produces an honest Release 1 partial or insufficient result",
-  );
-  assert(
-    first.possibilities.every((possibility) => possibility.personality !== "pleasant-surprise"),
-    "Pleasant Surprise remains suppressed without CONFIDENT Operations evidence",
+    first.possibilities.map((possibility) => possibility.personality).join("|") === "perfect-match|different-rhythm|pleasant-surprise",
+    "Pleasant Surprise is available only through explicit CONFIDENT approval evidence",
   );
   assert(
     first.possibilities.every((possibility) => possibility.fitEvidence.length >= 2),
@@ -215,7 +212,7 @@ function runVerification() {
   console.log(
     `Catalogue ${RELEASE1_CATALOGUE_METADATA.catalogueVersion}: ${release1JourneyCandidates.length} active candidates; ${release1ExcludedPortfolio.length} governed exclusions.`,
   );
-  console.log("No candidate is CONFIDENT; confidence-dependent personalities remain correctly suppressible.");
+  console.log("CONFIDENT approval remains limited to explicitly evidenced, presentation-ready candidates.");
 }
 
 runVerification();

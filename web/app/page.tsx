@@ -8,8 +8,10 @@ export default function Home() {
     <>
       <Header />
       <div aria-hidden="true" className="h-28 md:hidden" />
-      <HeroJourney />
-      <HomepageExperience />
+      <main>
+        <HeroJourney />
+        <HomepageExperience />
+      </main>
       <PublicFooter />
     </>
   );

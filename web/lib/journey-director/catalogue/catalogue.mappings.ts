@@ -18,6 +18,10 @@ export const UNKNOWN_SEASONALITY: readonly SeasonalWindow[] = Object.freeze(
   })),
 );
 
+export const PREFERRED_SEASONALITY: readonly SeasonalWindow[] = Object.freeze(
+  Array.from({ length: 12 }, (_, index) => ({ month: index + 1, guidance: "PREFERRED" as const })),
+);
+
 export const THEME_MEMORY_GOAL_MAP: Readonly<Record<ThemeId, readonly MemoryGoalId[]>> = {
   adventure: ["active-discovery"],
   architecture: ["cultural-discovery", "photographic-memories"],
@@ -159,4 +163,6 @@ export type CatalogueRegionSource = {
   comforts: readonly ComfortLevel[];
   sourceNote: string;
   tradeOffs?: readonly string[];
+  logisticalFit?: number;
+  seasonality?: readonly SeasonalWindow[];
 };

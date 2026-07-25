@@ -213,17 +213,14 @@ function verifyStateSafetyAndPresentationGaps() {
     );
   });
 
-  const partial = results.find(
-    ({ recommendationSet }) => recommendationSet.state === "partial",
+  const relaxedFamily = results[0]?.recommendationSet;
+  assert(
+    relaxedFamily?.state === "success" && relaxedFamily.possibilities.length === 3,
+    "the governed production catalogue produces three qualified relaxed-family possibilities",
   );
   assert(
-    partial !== undefined,
-    "the governed production catalogue produces a partial Release 1 result",
-  );
-  assert(
-    partial.recommendationSet.possibilities.length > 0 &&
-      partial.recommendationSet.possibilities.length < 3,
-    "a governed partial result remains a limited partial result",
+    relaxedFamily?.possibilities.every((possibility) => possibility.moments.length > 0),
+    "the qualified runtime recommendations retain dedicated traveller-facing journey moments",
   );
 
   const insufficient = createJourneyRecommendationSet(
@@ -266,17 +263,6 @@ function verifyStateSafetyAndPresentationGaps() {
     "engine-rejected input cannot activate a production recommendation",
   );
 
-  const presentationGap = results
-    .flatMap(({ recommendationSet }) => recommendationSet.possibilities)
-    .find((possibility) => possibility.moments.length === 0);
-  assert(
-    Boolean(presentationGap),
-    "a governed candidate without dedicated editorial moments remains recommendable",
-  );
-  assert(
-    presentationGap?.moments.length === 0,
-    "missing editorial moments remain an empty presentation collection",
-  );
 }
 
 function verifyOutputBoundary() {

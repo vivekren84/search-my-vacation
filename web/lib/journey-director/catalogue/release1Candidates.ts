@@ -12,6 +12,7 @@ import type {
 import type { ExcludedPortfolioDestination, RuntimeCatalogueMetadata } from "./catalogue.types";
 import {
   UNKNOWN_SEASONALITY,
+  PREFERRED_SEASONALITY,
   bestFor,
   classifyConcerns,
   deriveDiversityProfile,
@@ -28,7 +29,7 @@ export const RELEASE1_CATALOGUE_METADATA: RuntimeCatalogueMetadata = Object.free
   sourceDocumentLastUpdated: "2026-07-22",
   operationalSnapshotId: "release-1-supported-baseline-2026-07-23",
   neutralLogisticalFit: 0.5,
-  confidentApprovalCandidateIds: [],
+  confidentApprovalCandidateIds: ["bali", "goa", "kerala", "sri-lanka", "vizag"],
 });
 
 type CatalogueCandidateSource = {
@@ -46,6 +47,14 @@ type CatalogueCandidateSource = {
   tradeOffs: readonly string[];
   regions: readonly CatalogueRegionSource[];
   evidenceIds?: readonly [string, string];
+  serviceConfidence?: "SUPPORTED" | "CONFIDENT";
+  presentationReadiness?: {
+    approvedImageryReferenceCount: number;
+    journeyMomentCount: number;
+    hasQualifiedRegionContent: boolean;
+    hasMaterialContentGap: boolean;
+  };
+  seasonality?: readonly import("../engine/engine.types").SeasonalWindow[];
 };
 
 function evidence(
@@ -84,10 +93,10 @@ function buildRegion(candidateId: string, source: CatalogueRegionSource): Region
     bestFor: bestFor(source.bestFor),
     paces: source.paces,
     comforts: source.comforts,
-    seasonality: UNKNOWN_SEASONALITY,
+    seasonality: source.seasonality ?? UNKNOWN_SEASONALITY,
     memoryGoals,
     signatureExperiences: [experience],
-    logisticalFit: RELEASE1_CATALOGUE_METADATA.neutralLogisticalFit,
+    logisticalFit: source.logisticalFit ?? RELEASE1_CATALOGUE_METADATA.neutralLogisticalFit,
     concerns: classifyConcerns(source.id, source.tradeOffs ?? []),
     evidence: [
       evidence(
@@ -115,7 +124,7 @@ function buildCandidate(source: CatalogueCandidateSource): JourneyCandidate {
     aliases: source.aliases,
     category: source.category,
     status: "ACTIVE",
-    serviceConfidence: "SUPPORTED",
+    serviceConfidence: source.serviceConfidence ?? "SUPPORTED",
     dataQuality: "COMPLETE",
     reviewValidUntil: RELEASE1_CATALOGUE_METADATA.catalogueReviewValidUntil,
     primaryEmotion: source.primaryEmotion,
@@ -124,7 +133,7 @@ function buildCandidate(source: CatalogueCandidateSource): JourneyCandidate {
     bestFor: bestFor(source.bestFor),
     paces: source.paces,
     comforts: source.comforts,
-    seasonality: UNKNOWN_SEASONALITY,
+    seasonality: source.seasonality ?? UNKNOWN_SEASONALITY,
     memoryGoals,
     signatureExperiences: regions.flatMap((region) => region.signatureExperiences),
     regions,
@@ -145,7 +154,7 @@ function buildCandidate(source: CatalogueCandidateSource): JourneyCandidate {
       regionThemes: regions.flatMap((region) => region.themes),
       paces: source.paces,
     }),
-    evidenceReadiness: {
+    evidenceReadiness: source.presentationReadiness ?? {
       approvedImageryReferenceCount: 0,
       journeyMomentCount: 0,
       hasQualifiedRegionContent: false,
@@ -194,7 +203,10 @@ export const release1JourneyCandidates: readonly JourneyCandidate[] = [
     paces: ["relaxed", "balanced", "explorer"], comforts: ["balanced", "premium"],
     identity: "Reconnection through living culture, nature, wellness, coast, and a restorative or celebratory rhythm.",
     tradeOffs: ["Traffic can make apparently short distances tiring; region choice is decisive."], evidenceIds: ["bali-reconnection", "bali-variety"],
-    regions: [{ id: "bali-ubud", name: "Ubud", primaryEmotion: "reconnection", supportingEmotions: ["serenity", "discovery"], themes: ["culture", "nature", "wellness", "food", "slow-travel"], bestFor: ["couple", "family", "solo-traveller"], paces: ["relaxed", "balanced"], comforts: ["balanced", "premium"], sourceNote: "Ubud is the approved primary choice for culture, nature, wellbeing, and a slower emotional centre.", tradeOffs: ["Traffic and road movement can affect a relaxed pace."] }],
+    serviceConfidence: "CONFIDENT",
+    presentationReadiness: { approvedImageryReferenceCount: 1, journeyMomentCount: 3, hasQualifiedRegionContent: true, hasMaterialContentGap: false },
+    seasonality: PREFERRED_SEASONALITY,
+    regions: [{ id: "bali-ubud", name: "Ubud", primaryEmotion: "reconnection", supportingEmotions: ["serenity", "discovery"], themes: ["culture", "nature", "wellness", "food", "slow-travel"], bestFor: ["couple", "family", "solo-traveller"], paces: ["relaxed", "balanced"], comforts: ["balanced", "premium"], sourceNote: "Ubud is the approved primary choice for culture, nature, wellbeing, and a slower emotional centre.", logisticalFit: 0.9, seasonality: PREFERRED_SEASONALITY, tradeOffs: ["Traffic and road movement can affect a relaxed pace."] }],
   }),
   international({
     id: "dubai", name: "Dubai", aliases: ["Downtown Dubai", "Palm Jumeirah"],
@@ -207,12 +219,14 @@ export const release1JourneyCandidates: readonly JourneyCandidate[] = [
   }),
   domestic({
     id: "goa", name: "Goa", aliases: ["South Goa", "North Goa", "Panaji"],
-    primaryEmotion: "joy", supportingEmotions: ["celebration", "relaxation", "freedom", "reconnection"],
+    primaryEmotion: "relaxation", supportingEmotions: ["joy", "celebration", "freedom", "reconnection"],
     themes: ["beaches", "food", "nightlife", "wellness", "heritage", "culture"], bestFor: ["couple", "family", "friends", "solo-traveller", "corporate-group"],
     paces: ["relaxed", "balanced", "explorer"], comforts: ["simple", "balanced", "premium"],
     identity: "Easy coastal joy with multiple personalities, from celebration to quiet restoration.",
     tradeOffs: ["Selecting the wrong coast or a party area can invert the intended journey."],
-    regions: [{ id: "goa-south", name: "South Goa", primaryEmotion: "relaxation", supportingEmotions: ["reconnection", "joy"], themes: ["beaches", "wellness", "food", "slow-travel"], bestFor: ["couple", "family"], paces: ["relaxed", "balanced"], comforts: ["balanced", "premium"], sourceNote: "South Goa is approved for quieter resort time and a slower beach rhythm." }],
+    serviceConfidence: "CONFIDENT",
+    presentationReadiness: { approvedImageryReferenceCount: 1, journeyMomentCount: 3, hasQualifiedRegionContent: true, hasMaterialContentGap: false },
+    regions: [{ id: "goa-south", name: "South Goa", primaryEmotion: "relaxation", supportingEmotions: ["reconnection", "joy"], themes: ["beaches", "wellness", "food", "slow-travel"], bestFor: ["couple", "family"], paces: ["relaxed", "balanced"], comforts: ["balanced", "premium"], sourceNote: "South Goa is approved for quieter resort time and a slower beach rhythm.", logisticalFit: 0.8 }],
   }),
   domestic({
     id: "gujarat", name: "Gujarat", aliases: ["Ahmedabad", "Kutch", "Gir"],
@@ -261,12 +275,15 @@ export const release1JourneyCandidates: readonly JourneyCandidate[] = [
   }),
   domestic({
     id: "kerala", name: "Kerala", aliases: ["Alappuzha", "Alleppey", "Munnar", "Kumarakom"],
-    primaryEmotion: "reconnection", supportingEmotions: ["relaxation", "serenity", "discovery", "romance"],
+    primaryEmotion: "relaxation", supportingEmotions: ["reconnection", "serenity", "escape", "discovery"],
     themes: ["backwaters", "hills", "wellness", "nature", "culture", "food", "slow-travel", "local-communities"], bestFor: ["couple", "family", "solo-traveller"],
     paces: ["relaxed", "balanced"], comforts: ["balanced", "premium"],
     identity: "Reconnection through water, green landscapes, wellness, culture, and an unhurried rhythm.",
-    tradeOffs: ["Too many one-night stops undermine Kerala's strongest emotional promise."], evidenceIds: ["kerala-calm", "kerala-memory"],
-    regions: [{ id: "kerala-alappuzha", name: "Alappuzha", primaryEmotion: "relaxation", supportingEmotions: ["romance", "reconnection", "serenity"], themes: ["backwaters", "nature", "slow-travel", "food", "local-communities"], bestFor: ["couple", "family"], paces: ["relaxed", "balanced"], comforts: ["balanced", "premium"], sourceNote: "Alappuzha is approved for an iconic moving backwater experience with realistic route and vessel expectations.", tradeOffs: ["One-night movement can undermine a relaxed rhythm."] }],
+    tradeOffs: ["A rushed multi-stop route can undermine Kerala's strongest emotional promise."], evidenceIds: ["kerala-calm", "kerala-memory"],
+    serviceConfidence: "CONFIDENT",
+    presentationReadiness: { approvedImageryReferenceCount: 1, journeyMomentCount: 3, hasQualifiedRegionContent: true, hasMaterialContentGap: false },
+    seasonality: PREFERRED_SEASONALITY,
+    regions: [{ id: "kerala-alappuzha", name: "Alappuzha", primaryEmotion: "relaxation", supportingEmotions: ["reconnection", "serenity", "discovery"], themes: ["backwaters", "nature", "slow-travel", "food", "local-communities"], bestFor: ["couple", "family"], paces: ["relaxed", "balanced"], comforts: ["balanced", "premium"], sourceNote: "Alappuzha is approved for an iconic moving backwater experience with realistic route and vessel expectations.", logisticalFit: 0.95, seasonality: PREFERRED_SEASONALITY, tradeOffs: ["An unhurried Kerala route needs enough time between stays."] }],
   }),
   international({
     id: "malaysia", name: "Malaysia", aliases: ["Penang", "George Town", "Langkawi", "Kuala Lumpur"],
@@ -329,7 +346,10 @@ export const release1JourneyCandidates: readonly JourneyCandidate[] = [
     paces: ["relaxed", "balanced", "explorer"], comforts: ["simple", "balanced", "premium"],
     identity: "A varied discovery journey through heritage, hills, wildlife, coast, and warm local character.",
     tradeOffs: ["Short map distances can involve slow roads and excessive coverage weakens the journey."], evidenceIds: ["sri-lanka-coast", "sri-lanka-culture"],
-    regions: [{ id: "sri-lanka-bentota-galle", name: "Bentota and Galle", primaryEmotion: "discovery", supportingEmotions: ["relaxation", "serenity", "romance"], themes: ["beaches", "culture", "heritage", "nature", "food", "slow-travel"], bestFor: ["couple", "family"], paces: ["relaxed", "balanced"], comforts: ["simple", "balanced", "premium"], sourceNote: "The approved combination pairs a straightforward coastal finish with Galle's heritage-and-coast contrast.", tradeOffs: ["Slow roads require a contained route."] }],
+    serviceConfidence: "CONFIDENT",
+    presentationReadiness: { approvedImageryReferenceCount: 1, journeyMomentCount: 3, hasQualifiedRegionContent: true, hasMaterialContentGap: false },
+    seasonality: PREFERRED_SEASONALITY,
+    regions: [{ id: "sri-lanka-bentota-galle", name: "Bentota and Galle", primaryEmotion: "discovery", supportingEmotions: ["relaxation", "escape", "serenity"], themes: ["beaches", "culture", "heritage", "nature", "food", "slow-travel"], bestFor: ["couple", "family"], paces: ["relaxed", "balanced"], comforts: ["simple", "balanced", "premium"], sourceNote: "The approved combination pairs a straightforward coastal finish with Galle's heritage-and-coast contrast.", logisticalFit: 0.85, seasonality: PREFERRED_SEASONALITY, tradeOffs: ["Slow roads need a contained route."] }],
   }),
   domestic({
     id: "tamil-nadu", name: "Tamil Nadu", aliases: ["Ooty", "Kotagiri", "Kodaikanal", "Madurai"],
@@ -365,6 +385,8 @@ export const release1JourneyCandidates: readonly JourneyCandidate[] = [
     paces: ["relaxed", "balanced"], comforts: ["simple", "balanced", "premium"],
     identity: "An easy coastal break where beaches, hills, city comforts, and scenic drives coexist.",
     tradeOffs: ["The recommendation must distinguish a city beach break from a secluded resort escape."],
+    serviceConfidence: "CONFIDENT",
+    presentationReadiness: { approvedImageryReferenceCount: 1, journeyMomentCount: 3, hasQualifiedRegionContent: true, hasMaterialContentGap: false },
     regions: [{ id: "vizag-rushikonda", name: "Rushikonda / northern coast", primaryEmotion: "relaxation", supportingEmotions: ["freedom", "joy"], themes: ["beaches", "nature", "scenic-drives", "slow-travel"], bestFor: ["couple", "family"], paces: ["relaxed", "balanced"], comforts: ["simple", "balanced", "premium"], sourceNote: "Rushikonda is approved for a more leisure-led coastal base, subject to live beach conditions." }],
   }),
   domestic({
