@@ -5,20 +5,24 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 import { isJourneyPassportSnapshot } from "@/lib/journey-director/passport-adapter";
-import type { JourneyPassportSnapshot } from "@/types/journey-director";
+import { isJourneySessionSnapshot } from "@/lib/journey-director/journey-synopsis";
+import type { JourneyPassportSnapshot, JourneySessionSnapshot } from "@/types/journey-director";
 
 type JourneySessionContextValue = {
   passport: JourneyPassportSnapshot | null;
+  journeySession: JourneySessionSnapshot | null;
   isHydrated: boolean;
   savePassport: (passport: JourneyPassportSnapshot) => void;
+  saveJourneySession: (session: JourneySessionSnapshot) => void;
   clearPassport: () => void;
 };
 
-const JOURNEY_SESSION_KEY = "smv:journey-director:session:v1";
+const JOURNEY_SESSION_KEY = "smv:journey-director:session:v2";
 const JourneySessionContext = createContext<JourneySessionContextValue | null>(null);
 
 export function JourneySessionProvider({ children }: { children: React.ReactNode }) {
   const [passport, setPassport] = useState<JourneyPassportSnapshot | null>(null);
+  const [journeySession, setJourneySession] = useState<JourneySessionSnapshot | null>(null);
   const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
@@ -26,7 +30,7 @@ export function JourneySessionProvider({ children }: { children: React.ReactNode
       const storedPassport = sessionStorage.getItem(JOURNEY_SESSION_KEY);
       if (storedPassport) {
         const parsedPassport: unknown = JSON.parse(storedPassport);
-        if (isJourneyPassportSnapshot(parsedPassport)) setPassport(parsedPassport);
+        if (isJourneySessionSnapshot(parsedPassport) && isJourneyPassportSnapshot(parsedPassport.passport)) { setPassport(parsedPassport.passport); setJourneySession(parsedPassport); }
         else sessionStorage.removeItem(JOURNEY_SESSION_KEY);
       }
     } catch {
@@ -38,15 +42,22 @@ export function JourneySessionProvider({ children }: { children: React.ReactNode
 
   const savePassport = useCallback((nextPassport: JourneyPassportSnapshot) => {
     setPassport(nextPassport);
+    setJourneySession(null);
     try {
-      sessionStorage.setItem(JOURNEY_SESSION_KEY, JSON.stringify(nextPassport));
+      sessionStorage.removeItem(JOURNEY_SESSION_KEY);
     } catch {
       // The current in-memory journey remains available when browser storage is unavailable.
     }
   }, []);
 
+  const saveJourneySession = useCallback((nextSession: JourneySessionSnapshot) => {
+    setPassport(nextSession.passport); setJourneySession(nextSession);
+    try { sessionStorage.setItem(JOURNEY_SESSION_KEY, JSON.stringify(nextSession)); } catch {}
+  }, []);
+
   const clearPassport = useCallback(() => {
     setPassport(null);
+    setJourneySession(null);
     try {
       sessionStorage.removeItem(JOURNEY_SESSION_KEY);
     } catch {
@@ -57,11 +68,13 @@ export function JourneySessionProvider({ children }: { children: React.ReactNode
   const value = useMemo(
     () => ({
       passport,
+      journeySession,
       isHydrated,
       savePassport,
+      saveJourneySession,
       clearPassport,
     }),
-    [clearPassport, isHydrated, passport, savePassport],
+    [clearPassport, isHydrated, journeySession, passport, saveJourneySession, savePassport],
   );
 
   return (

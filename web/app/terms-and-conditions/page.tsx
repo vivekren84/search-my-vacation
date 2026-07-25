@@ -1,0 +1,1 @@
+import type { Metadata } from "next"; import LegalPage from "@/components/legal/LegalPage"; export const metadata:Metadata={title:"Terms and Conditions",description:"Terms for travel planning and services from Search My Vacation."}; export default function Page(){return <LegalPage file="TERMS-AND-CONDITIONS-v1.0.md" title="Terms and Conditions"/>}

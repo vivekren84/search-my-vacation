@@ -129,6 +129,44 @@ export type JourneyRecommendationSet = {
   isFallback: boolean;
 };
 
+export type JourneySynopsis = {
+  travellerFirstName: string;
+  travellingParty: string;
+  approximatePartySize: "to-be-confirmed";
+  travelTiming: string;
+  journeyIntent: string;
+  preferredComfort: "to-be-discussed";
+  preferredPace: "to-be-discussed";
+  knownDestination?: string;
+  recommendedPossibility: {
+    id: string;
+    destination: string;
+    region: string;
+    personality: JourneyPossibilityPersonality;
+    personalityLabel: string;
+    whyThisFits: string[];
+    planningConsiderations: string[];
+  };
+  createdAt: string;
+};
+
+export type JourneySessionSnapshot = {
+  version: 2;
+  passport: JourneyPassportSnapshot;
+  journeyReference: string;
+  journeySynopsis: JourneySynopsis;
+  activePossibilityId: string;
+  activeRecommendationPersonality: JourneyPossibilityPersonality;
+  preferredPossibilityId: string | null;
+  selectedRecommendationPersonality: JourneyPossibilityPersonality | null;
+  visitedPossibilityIds: string[];
+  handoffConsent: boolean;
+  callbackPreference: {
+    preferredDate: string;
+    preferredTimeWindow: string;
+  } | null;
+};
+
 export type JourneyMomentMetadata = {
   id: string;
   title: string;

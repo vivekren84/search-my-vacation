@@ -14,7 +14,7 @@ export default function Experiences() {
           </h2>
 
           <p className="mt-6 text-lg leading-8 text-gray-600">
-            Discover journeys inspired by the experiences you've been dreaming
+            Discover journeys inspired by the experiences you’ve been dreaming
             about.
           </p>
         </div>

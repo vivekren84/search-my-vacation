@@ -49,16 +49,16 @@ All homepage design, development and testing activities must align with this blu
 
 ## Upstream
 
-- BRAND-IDENTITY.md
-- DESIGN-PRINCIPLES.md
-- PRODUCT-ROADMAP.md
-- SRS.md
+- `docs/07-Design/BRAND-IDENTITY.md`
+- `docs/07-Design/DESIGN-PRINCIPLES.md`
+- `docs/02-Product/PRODUCT-ROADMAP.md`
+- `docs/02-Product/SRS.md`
 
 ## Downstream
 
-- MOOD-BOARD.md
-- DESIGN-SYSTEM.md
-- COMPONENT-LIBRARY.md
+- `docs/04-UX/IMAGERY-GUIDELINES.md`
+- `docs/04-UX/DESIGN-TOKENS.md`
+- `docs/04-UX/UI-COMPONENTS.md`
 - Wireframes
 - Figma Designs
 

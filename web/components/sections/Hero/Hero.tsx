@@ -42,7 +42,7 @@ export default function Hero() {
             </p>
 
             <Link
-              href="#experiences"
+              href="/journey-passport"
               className="mt-12 inline-flex min-h-16 items-center justify-center rounded-full bg-[#f3c681] px-9 text-base font-bold text-[#25180f] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-[#ffe1ab] hover:shadow-lg hover:shadow-black/20 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#f3c681] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
             >
               Plan My Experience <span aria-hidden="true" className="ml-2">→</span>

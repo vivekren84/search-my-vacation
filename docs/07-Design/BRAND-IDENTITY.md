@@ -35,17 +35,17 @@ Every public-facing touchpoint should align with the principles defined in this 
 
 ## Upstream
 
-- VISION.md
-- VALUES.md
-- PRODUCT-ROADMAP.md
+- `docs/01-Vision-Business/VISION.md`
+- `docs/01-Vision-Business/VALUES.md`
+- `docs/02-Product/PRODUCT-ROADMAP.md`
 
 ## Downstream
 
-- DESIGN-PRINCIPLES.md
-- DESIGN-SYSTEM.md
-- HOMEPAGE-EXPERIENCE-ARCHITECTURE.md
-- MOOD-BOARD.md
-- COMPONENT-LIBRARY.md
+- `docs/07-Design/DESIGN-PRINCIPLES.md`
+- `docs/04-UX/DESIGN-TOKENS.md`
+- `docs/04-UX/HOMEPAGE-INFORMATION-ARCHITECTURE.md`
+- `docs/04-UX/IMAGERY-GUIDELINES.md`
+- `docs/04-UX/UI-COMPONENTS.md`
 
 ---
 

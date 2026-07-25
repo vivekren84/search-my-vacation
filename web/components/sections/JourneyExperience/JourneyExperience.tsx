@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import styles from "./JourneyExperience.module.css";
 
@@ -49,20 +49,23 @@ export default function JourneyExperience({ isOpen, onClose, emotion }: JourneyE
   const [direction, setDirection] = useState<"forward" | "back">("forward");
   const [selected, setSelected] = useState({ companion: "", timing: "", tone: "" });
 
-  useEffect(() => {
-    if (!isOpen) return;
-
+  const resetAndClose = useCallback(() => {
     setStep(1);
     setDirection("forward");
     setSelected({ companion: "", timing: "", tone: "" });
+    onClose();
+  }, [onClose]);
+
+  useEffect(() => {
+    if (!isOpen) return;
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape") resetAndClose();
     };
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [isOpen, onClose]);
+  }, [isOpen, resetAndClose]);
 
   if (!isOpen) return null;
 
@@ -88,7 +91,7 @@ export default function JourneyExperience({ isOpen, onClose, emotion }: JourneyE
       aria-modal="true"
       aria-labelledby="journey-experience-heading"
       onMouseDown={(event) => {
-        if (event.target === event.currentTarget) onClose();
+        if (event.target === event.currentTarget) resetAndClose();
       }}
     >
       <div className="relative max-h-[94svh] w-full max-w-6xl overflow-y-auto rounded-[2rem] border border-white/60 bg-[#fffaf3]/95 shadow-[0_28px_100px_rgba(37,24,15,0.32)] backdrop-blur-xl sm:rounded-[2.5rem]">
@@ -97,7 +100,7 @@ export default function JourneyExperience({ isOpen, onClose, emotion }: JourneyE
           <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#9a642e]">Your journey, thoughtfully unfolding</p>
           <button
             type="button"
-            onClick={onClose}
+            onClick={resetAndClose}
             aria-label="Close journey experience"
             className="rounded-full p-2 text-[#725137] transition hover:bg-[#f3e5d2] hover:text-[#2b1c13] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9a642e]"
           >
@@ -146,7 +149,7 @@ export default function JourneyExperience({ isOpen, onClose, emotion }: JourneyE
               />
             ) : null}
 
-            {step === 4 ? <PreviewStep emotion={emotion} onExplore={onClose} /> : null}
+            {step === 4 ? <PreviewStep emotion={emotion} onExplore={resetAndClose} /> : null}
           </div>
 
           {step > 1 ? (
@@ -196,7 +199,7 @@ function ChoiceStep({ eyebrow, heading, choices, selectedValue, onSelect, layout
               }`}
             >
               <Image
-                src={choice.imageSrc ?? "/images/hero/golden-hour1.png"}
+                src={choice.imageSrc ?? "/images/golden-hour.png"}
                 alt=""
                 fill
                 sizes={layout === "four" ? "(max-width: 640px) 100vw, 45vw" : "(max-width: 768px) 100vw, 30vw"}
@@ -227,7 +230,7 @@ function PreviewStep({ emotion, onExplore }: { emotion?: string; onExplore: () =
         {previews.map((preview) => (
           <article key={preview.destination} className="group relative min-h-64 overflow-hidden rounded-[1.5rem] shadow-[0_10px_30px_rgba(76,45,20,0.12)]">
             <Image
-              src="/images/hero/golden-hour1.png"
+              src="/images/golden-hour.png"
               alt={`Golden Hour travel inspiration for ${preview.destination}`}
               fill
               sizes="(max-width: 768px) 100vw, 30vw"

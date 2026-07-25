@@ -3,12 +3,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 import { siteConfig } from "@/config/site.config";
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const updateScrolledState = () => setIsScrolled(window.scrollY > 24);
@@ -24,11 +26,11 @@ export default function Header() {
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
         isScrolled
           ? "border-b border-white/15 bg-[#20150f]/90 shadow-lg shadow-black/15 backdrop-blur-md"
-          : "bg-transparent"
+          : "bg-[#20150f]/90 md:bg-transparent"
       }`}
     >
-      <div className="mx-auto flex h-24 max-w-7xl items-center justify-between px-5 sm:px-6 lg:px-10">
-        <Link href="/" aria-label="Search My Vacation home" className="flex shrink-0 items-center rounded-2xl bg-black/10 p-1 backdrop-blur-[2px]">
+      <div className="mx-auto flex min-h-28 max-w-7xl flex-wrap items-center justify-between gap-x-4 px-5 py-3 sm:px-6 md:h-24 md:min-h-0 md:flex-nowrap md:py-0 lg:px-10">
+        <Link href="/" aria-label="Search My Vacation home" className="flex shrink-0 items-center">
           <Image
             src={siteConfig.logo}
             alt={siteConfig.name}
@@ -39,12 +41,22 @@ export default function Header() {
           />
         </Link>
 
-        <nav className="flex flex-1 justify-center">
+        <div className="order-3 flex w-full min-w-0 flex-col border-t border-white/25 pt-2 text-left md:order-none md:w-auto md:shrink-0 md:border-l md:border-t-0 md:py-0 md:pl-4">
+          <p className="whitespace-nowrap text-[0.68rem] font-bold uppercase tracking-[0.14em] text-white min-[360px]:text-[0.74rem] min-[360px]:tracking-[0.17em] md:text-[0.8rem]">
+            {siteConfig.name}
+          </p>
+          <p className="mt-0.5 whitespace-nowrap text-[0.62rem] font-medium tracking-[0.02em] text-[#f3c681] min-[360px]:text-[0.67rem] min-[360px]:tracking-[0.035em]">
+            {siteConfig.tagline}
+          </p>
+        </div>
+
+        <nav aria-label="Primary navigation" className="hidden flex-1 justify-end lg:flex xl:justify-center">
           <ul className="flex items-center gap-8 md:gap-12">
             {siteConfig.navigation.map((item) => (
               <li key={`${item.label}-${item.href}`}>
                 <Link
                   href={item.href}
+                  aria-current={pathname === item.href ? "page" : undefined}
                   className="text-sm font-medium tracking-wide text-white transition-colors duration-300 hover:text-white/75"
                 >
                   {item.label}
@@ -54,7 +66,11 @@ export default function Header() {
           </ul>
         </nav>
 
-        <div className="relative lg:hidden">
+        <Link href="/journey-passport" className="hidden rounded-full bg-[#f3c681] px-4 py-2 text-xs font-bold uppercase tracking-[0.1em] text-[#20150f] transition hover:bg-[#ffe0a5] lg:inline-flex">
+          Plan My Experience
+        </Link>
+
+        <div className="relative ml-auto lg:hidden">
           <button
             type="button"
             aria-expanded={isMenuOpen}
@@ -70,7 +86,7 @@ export default function Header() {
             <nav
               id="mobile-primary-navigation"
               aria-label="Mobile primary navigation"
-              className="absolute right-0 top-[calc(100%+0.75rem)] w-60 rounded-2xl border border-white/15 bg-[#20150f]/95 p-2 shadow-xl shadow-black/25 backdrop-blur-md"
+              className="absolute right-0 top-[calc(100%+3.25rem)] w-60 rounded-2xl border border-white/15 bg-[#20150f]/95 p-2 shadow-xl shadow-black/25 backdrop-blur-md md:top-[calc(100%+0.75rem)]"
             >
               <ul>
                 {siteConfig.navigation.map((item) => (
@@ -84,6 +100,7 @@ export default function Header() {
                     </Link>
                   </li>
                 ))}
+                <li><Link href="/journey-passport" onClick={() => setIsMenuOpen(false)} className="mt-1 block rounded-xl bg-[#f3c681] px-4 py-3 text-sm font-bold text-[#20150f]">Plan My Experience</Link></li>
               </ul>
             </nav>
           ) : null}

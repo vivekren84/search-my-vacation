@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface Props {
   isOpen: boolean;
@@ -18,14 +18,13 @@ export default function TravellerPassport({ isOpen, onClose, emotion }: Props) {
 
   const totalSteps = 3;
 
-  useEffect(() => {
-    if (isOpen) {
-      setStep(1);
-      setAnswers({ group: "", time: "", budget: "" });
-    }
-  }, [isOpen]);
-
   if (!isOpen) return null;
+
+  const resetAndClose = () => {
+    setStep(1);
+    setAnswers({ group: "", time: "", budget: "" });
+    onClose();
+  };
 
   const next = () => setStep((s) => s + 1);
   const back = () => setStep((s) => s - 1);
@@ -52,7 +51,7 @@ export default function TravellerPassport({ isOpen, onClose, emotion }: Props) {
 
         {/* Close */}
         <button
-          onClick={onClose}
+          onClick={resetAndClose}
           className="absolute top-6 right-6 text-gray-500 hover:text-black"
         >
           ✕

@@ -105,3 +105,16 @@ body {
   line-height: 1.6;
 
 }
+
+@keyframes journey-passport-enter {
+  from { opacity: 0; transform: translateY(0.75rem); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.journey-passport-enter { animation: journey-passport-enter 260ms ease-out both; }
+.journey-passport-reveal { animation: journey-passport-enter 200ms ease-out both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .journey-passport-enter,
+  .journey-passport-reveal { animation: none; }
+}

@@ -33,14 +33,14 @@ Design Tokens ensure visual consistency, simplify maintenance and establish a si
 
 ## Upstream
 
-- BRAND-IDENTITY.md
-- DESIGN-PRINCIPLES.md
-- COLOR-SYSTEM.md
-- TYPOGRAPHY.md
+- `docs/07-Design/BRAND-IDENTITY.md`
+- `docs/07-Design/DESIGN-PRINCIPLES.md`
+- `docs/04-UX/COLOR-SYSTEM.md`
+- `docs/04-UX/TYPOGRAPHY.md`
 
 ## Downstream
 
-- COMPONENT-LIBRARY.md
+- `docs/04-UX/UI-COMPONENTS.md`
 - Tailwind Configuration
 - CSS Variables
 - Figma Design Files

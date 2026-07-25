@@ -18,25 +18,10 @@ export const siteConfig = {
   logo: "/logos/smv-logo.png",
 
   navigation: [
-    {
-      label: "Destinations",
-      href: "#destinations",
-    },
-    {
-      label: "Experiences",
-      href: "#experiences",
-    },
-    {
-      label: "Travel Inspiration",
-      href: "#travel-inspiration",
-    },
-    {
-      label: "About Us",
-      href: "#about-us",
-    },
-    {
-      label: "Contact",
-      href: "#contact",
-    },
+    { label: "Destinations", href: "/destinations" },
+    { label: "Experiences", href: "/experiences" },
+    { label: "Travel Inspiration", href: "/travel-inspiration" },
+    { label: "About Us", href: "/about" },
+    { label: "Contact", href: "/contact" },
   ],
 };

@@ -1039,6 +1039,41 @@
   font-size: 0.72rem;
 }
 
+.continuationPanel {
+  width: min(100%, 48rem);
+  margin-top: 2.5rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border: 1px solid rgb(242 201 130 / 32%);
+  border-radius: 1.25rem;
+  background: rgb(255 255 255 / 6%);
+  text-align: left;
+}
+
+.summaryGrid { display: grid; grid-template-columns: 0.8fr 1.5fr; gap: 1rem; }
+.summaryGrid > div, .synopsis { padding: 1rem; border-radius: 0.8rem; background: rgb(0 0 0 / 14%); }
+.summaryGrid span, .summaryGrid small, .synopsisMeta { display: block; color: rgb(255 255 255 / 62%); font-size: 0.75rem; line-height: 1.5; }
+.summaryGrid strong { display: block; margin-top: 0.3rem; color: #f7d79b; font-size: 0.95rem; }
+.summaryGrid small { margin-top: 0.3rem; }
+.synopsis { margin-top: 1rem; }
+.synopsis > p:not(.eyebrowLight) { margin-top: 0.6rem; color: rgb(255 255 255 / 82%); line-height: 1.65; }
+.consent { display: flex; gap: 0.75rem; align-items: flex-start; margin-top: 1.4rem; color: rgb(255 255 255 / 83%); font-size: 0.84rem; line-height: 1.6; cursor: pointer; }
+.consent input { width: 1.15rem; height: 1.15rem; margin-top: 0.15rem; accent-color: #f2c982; }
+.continuationActions { margin-top: 1.5rem; }
+.primaryAction:disabled { cursor: not-allowed; opacity: 0.5; transform: none; }
+.secondaryAction:disabled { cursor: not-allowed; opacity: 0.5; }
+.callbackPanel { margin-top: 1rem; padding: 1rem; border: 1px solid rgb(255 255 255 / 15%); border-radius: 0.8rem; }
+.callbackPanel > p:first-child { color: #f7d79b; font-weight: 700; }
+.callbackFields { display: grid; grid-template-columns: 1fr 1.4fr; gap: 0.75rem; margin-top: 0.8rem; }
+.callbackFields label { display: grid; gap: 0.4rem; color: rgb(255 255 255 / 68%); font-size: 0.75rem; }
+.callbackError { color: #ffd0c8; line-height: 1.45; }
+.callbackFields input, .callbackFields select { min-height: 2.7rem; border: 1px solid rgb(255 255 255 / 26%); border-radius: 0.55rem; background: rgb(0 0 0 / 24%); color: white; padding: 0.55rem; font: inherit; }
+.callbackFields option { color: #25180f; }
+.callbackFields input:focus-visible, .callbackFields select:focus-visible, .consent input:focus-visible { outline: 2px solid #f2c982; outline-offset: 3px; }
+
+@media (max-width: 620px) {
+  .summaryGrid, .callbackFields { grid-template-columns: 1fr; }
+}
+
 .page a:focus-visible,
 .page button:focus-visible {
   outline: 2px solid #f2c982;

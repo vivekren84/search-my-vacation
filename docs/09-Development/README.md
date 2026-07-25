@@ -30,9 +30,7 @@ The Development Documentation serves to:
 ├── README.md
 │
 ├── Homepage/
-│   ├── Hero-Canvas.md
-│   ├── Hero-Polish.md
-│   └── Homepage-Sections.md
+│   └── Hero-Canvas.md
 │
 ├── Authentication/
 │

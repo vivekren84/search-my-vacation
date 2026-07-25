@@ -35,16 +35,16 @@ Typography should support the brand rather than compete with it.
 
 ## Upstream
 
-- BRAND-IDENTITY.md
-- DESIGN-PRINCIPLES.md
-- HOMEPAGE-EXPERIENCE-ARCHITECTURE.md
-- COLOR-SYSTEM.md
+- `docs/07-Design/BRAND-IDENTITY.md`
+- `docs/07-Design/DESIGN-PRINCIPLES.md`
+- `docs/04-UX/HOMEPAGE-INFORMATION-ARCHITECTURE.md`
+- `docs/04-UX/COLOR-SYSTEM.md`
 
 ## Downstream
 
-- IMAGERY-GUIDELINES.md
-- DESIGN-SYSTEM.md
-- COMPONENT-LIBRARY.md
+- `docs/04-UX/IMAGERY-GUIDELINES.md`
+- `docs/04-UX/DESIGN-TOKENS.md`
+- `docs/04-UX/UI-COMPONENTS.md`
 - Figma Design Files
 
 ---

@@ -1,0 +1,12 @@
+import Image from "next/image";
+import Link from "next/link";
+
+const links = [
+  { title: "Discover", items: [["Destinations", "/destinations"], ["Experiences", "/experiences"], ["Travel Inspiration", "/travel-inspiration"], ["Plan My Experience", "/journey-passport"]] },
+  { title: "About", items: [["About Us", "/about"], ["Our Promise", "/about#our-promise"], ["Contact Us", "/contact"]] },
+  { title: "Support", items: [["Privacy Policy", "/privacy-policy"], ["Terms and Conditions", "/terms-and-conditions"]] },
+] as const;
+
+export default function PublicFooter() {
+  return <footer className="bg-[#20150f] text-white"><div className="mx-auto grid max-w-7xl gap-10 px-6 py-14 sm:grid-cols-2 lg:grid-cols-[1.5fr_repeat(3,1fr)] lg:px-10"><div><div className="flex items-center gap-3"><Image src="/logos/smv-logo.png" alt="Search My Vacation" width={56} height={52} className="h-12 w-auto"/><span className="text-lg font-semibold">Search My Vacation</span></div><p className="mt-5 max-w-sm text-sm leading-6 text-white/70">Thoughtful travel planning begins with understanding the person taking the journey.</p><p className="mt-4 text-sm font-medium text-[#f3c681]">More Than a Trip. It’s an Experience.</p></div>{links.map((group) => <div key={group.title}><h2 className="text-sm font-bold uppercase tracking-[0.12em] text-[#f3c681]">{group.title}</h2><ul className="mt-4 space-y-3">{group.items.map(([label, href]) => <li key={href}><Link href={href} className="text-sm text-white/75 transition hover:text-white">{label}</Link></li>)}</ul></div>)}<div className="sm:col-span-2 lg:col-span-1"><h2 className="text-sm font-bold uppercase tracking-[0.12em] text-[#f3c681]">Connect</h2><div className="mt-4 space-y-3 text-sm text-white/75"><a href="https://wa.me/918925838541" className="block hover:text-white">WhatsApp: +91 89258 38541</a><a href="mailto:bookings@searchmyvacation.com" className="block hover:text-white">bookings@searchmyvacation.com</a><p>Monday–Saturday, 10:00 AM–7:00 PM IST</p></div></div></div><div className="border-t border-white/10 px-6 py-5 text-center text-xs text-white/55">© 2026 Search My Vacation. All rights reserved.</div></footer>;
+}

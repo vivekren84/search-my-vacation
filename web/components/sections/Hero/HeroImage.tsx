@@ -12,7 +12,7 @@ export default function HeroImage() {
   return (
     <div className="absolute inset-0 -z-10">
       <Image
-        src="/images/hero/golden-hour1.png"
+        src="/images/golden-hour.png"
         alt="Golden hour overlooking a beautiful destination"
         fill
         priority
