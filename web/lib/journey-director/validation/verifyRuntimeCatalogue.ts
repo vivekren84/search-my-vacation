@@ -149,7 +149,13 @@ function verifyEngineConsumption() {
   assert(first.status === "success" && first.possibilities.length === 3, "approved runtime evidence produces a complete qualified shortlist");
   assert(
     first.possibilities.map((possibility) => possibility.personality).join("|") === "perfect-match|different-rhythm|pleasant-surprise",
-    "Pleasant Surprise is available only through explicit CONFIDENT approval evidence",
+    "The Hidden Gem is available only through explicit CONFIDENT approval evidence",
+  );
+  assert(
+    first.trace.personalityAssignments
+      .map((assignment) => assignment.personalityLabel)
+      .join("|") === "The Perfect Match|The Beautiful Puzzle|The Hidden Gem",
+    "decision traces use the approved user-visible personality names",
   );
   assert(
     first.possibilities.every((possibility) => possibility.fitEvidence.length >= 2),

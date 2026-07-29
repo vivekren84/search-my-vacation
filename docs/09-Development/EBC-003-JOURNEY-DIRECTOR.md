@@ -58,8 +58,8 @@ Implementation convenience must never introduce new product behaviour. Any unres
 Release 1 uses deterministic recommendation logic to generate up to three qualified journey possibilities:
 
 - **The Perfect Match**;
-- **A Different Rhythm**; and
-- **A Pleasant Surprise**.
+- **The Beautiful Puzzle**; and
+- **The Hidden Gem**.
 
 The normal result contains all three. When governed eligibility, evidence or confidence requirements cannot support three responsible results, the documented fallback returns fewer rather than manufacturing a weak possibility.
 
@@ -129,7 +129,7 @@ EBC-003 includes:
 - destination scoring, penalties and deterministic tie-breaking;
 - region eligibility, scoring and selection;
 - recommendation confidence assessment;
-- personality assignment for The Perfect Match, A Different Rhythm and A Pleasant Surprise;
+- personality assignment for The Perfect Match, The Beautiful Puzzle and The Hidden Gem;
 - honest one-result, two-result, no-result and system-failure states;
 - explanation evidence and Decision Trace generation;
 - Story Packet generation and validation;
@@ -475,8 +475,8 @@ All values and formulas must come from the approved Decision Engine specificatio
 Implement:
 
 - The Perfect Match assignment;
-- A Different Rhythm diversity calculation and assignment;
-- A Pleasant Surprise novelty and evidence-readiness calculation and assignment;
+- The Beautiful Puzzle diversity calculation and assignment;
+- The Hidden Gem novelty and evidence-readiness calculation and assignment;
 - one- and two-result fallbacks;
 - no-result and clarification states;
 - evidence-backed explanations;
@@ -579,8 +579,8 @@ Complete:
 ### 7.5 Recommendation Personalities
 
 - **FR-027:** The Perfect Match is the strongest qualified overall alignment.
-- **FR-028:** A Different Rhythm preserves the core emotional need while differing meaningfully on approved diversity axes.
-- **FR-029:** A Pleasant Surprise meets its fit, novelty, evidence-readiness and operational-confidence requirements.
+- **FR-028:** The Beautiful Puzzle preserves the core emotional need while differing meaningfully on approved diversity axes.
+- **FR-029:** The Hidden Gem meets its fit, novelty, evidence-readiness and operational-confidence requirements.
 - **FR-030:** One candidate cannot occupy more than one personality.
 - **FR-031:** Personality assignment order and tie-breaking follow the Decision Engine specification.
 - **FR-032:** Failure to fill a personality returns the approved fallback; it never weakens thresholds.
@@ -1121,7 +1121,7 @@ EBC-003 is done only when:
 - [ ] eligibility filtering excludes every non-presentable destination;
 - [ ] destination scoring, penalties, ranking and tie-breaking are implemented;
 - [ ] regional ranking selects qualified, explainable regions;
-- [ ] The Perfect Match, A Different Rhythm and A Pleasant Surprise are assigned according to approved rules;
+- [ ] The Perfect Match, The Beautiful Puzzle and The Hidden Gem are assigned according to approved rules;
 - [ ] confidence, conflict and fallback handling are implemented;
 - [ ] Decision Results and Decision Traces are generated;
 - [ ] every displayed possibility produces a validated Story Packet;

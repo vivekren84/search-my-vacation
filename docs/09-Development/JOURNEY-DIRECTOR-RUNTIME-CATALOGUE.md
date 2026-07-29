@@ -5,11 +5,11 @@
 | Document field | Value |
 | --- | --- |
 | **Document** | `JOURNEY-DIRECTOR-RUNTIME-CATALOGUE.md` |
-| **Version** | v1.0.0 |
+| **Version** | v1.0.1 |
 | **Status** | Implemented for Release 1 |
 | **Owner** | Search My Vacation — Product, Operations, and Engineering |
 | **Module** | Journey Director |
-| **Last updated** | 23 July 2026 |
+| **Last updated** | 29 July 2026 |
 | **Purpose** | Define the governed runtime-catalogue boundary, temporary Release 1 mappings, validation rules, and known limitations used by the deterministic Journey Director engine. |
 
 ---
@@ -122,12 +122,12 @@ Changing any governed candidate field requires a new catalogue version or operat
 | Themes | Uses the controlled Knowledge Base vocabulary represented by the engine contract. |
 | Traveller suitability | Includes only traveller types present in both source and engine contracts. |
 | Pace and comfort | Derived directly from approved records. |
-| Monthly seasonality | Unsupported by the source; all months remain `UNKNOWN`. |
+| Monthly seasonality | Defaults to `UNKNOWN`; explicitly approved presentation-ready records may carry governed guidance. |
 | Memory goals | Derived through the common taxonomy in Section 7. |
-| Logistical fit | Unsupported as differentiated numeric data; every region uses the same neutral baseline. |
+| Logistical fit | Defaults to the neutral baseline; explicitly approved records may carry governed values. |
 | Concerns | Created only by the deterministic classification in Section 8. |
 | Evidence | Paraphrases approved identity and taxonomy, with stable identifiers. |
-| Presentation readiness | Not established by destination knowledge; retained as zero or false with a material gap. |
+| Presentation readiness | Defaults to a material gap; five explicitly approved records carry separate readiness provenance. |
 
 `dataQuality: COMPLETE` means that the candidate has the structurally required governed matching fields for this catalogue. It does not assert current weather, route, supplier, safety, visa, inventory, accessibility, or service conditions.
 
@@ -141,15 +141,24 @@ Destination portfolio status and operational service confidence are separate gov
 
 | Portfolio state | Temporary engine service confidence |
 | --- | --- |
-| `ACTIVE` | `SUPPORTED` |
+| `ACTIVE` | `SUPPORTED` by default |
+| `ACTIVE` with explicit confidence approval provenance | `CONFIDENT` |
 | `LIMITED` | `LIMITED` |
 | `PAUSED` or `INACTIVE` | `PAUSED` |
 
 `ACTIVE` means that Product has included the destination in the approved Release 1 portfolio. `SUPPORTED` is the temporary Release 1 operational baseline. It does not mean that Operations has approved the destination at the highest confidence level.
 
-**No destination is classified as CONFIDENT in Release 1 unless separately approved by Operations.**
+**No destination is classified as CONFIDENT in Release 1 unless it has separate explicit approval provenance.**
 
-The Operations approval provenance list is empty in catalogue version `release-1.0.0`. Recommendation personalities that require `CONFIDENT`, including Pleasant Surprise under the current engine contract, may therefore be unavailable. The engine must return fewer possibilities rather than manufacture a result.
+Catalogue version `release-1.0.0` records explicit confidence approval provenance for:
+
+- Bali;
+- Goa;
+- Kerala;
+- Sri Lanka; and
+- Vizag.
+
+All other active candidates remain `SUPPORTED`. Recommendation personalities that require `CONFIDENT`, including The Hidden Gem under the current engine contract, may draw only from the explicit approval list. When no approved candidate satisfies the remaining fit and personality gates, the engine must return fewer possibilities rather than manufacture a result.
 
 ### 6.2 Region status
 
@@ -166,23 +175,25 @@ This is a release-governance mapping. It is not a claim about live destination c
 
 Every active candidate and configured region references the same 23 July–22 August 2026 catalogue governance window. No historic destination-specific review date has been invented.
 
-### 6.4 Unknown seasonality
+### 6.4 Seasonality defaults and approved guidance
 
-The Knowledge Base provides broad prose and repeatedly requires live date-specific validation. The runtime catalogue therefore represents all 12 months as `UNKNOWN` for every candidate and region.
+The Knowledge Base provides broad prose and repeatedly requires live date-specific validation. The runtime catalogue therefore defaults all 12 months to `UNKNOWN` for every candidate and region.
+
+Bali, Kerala, and Sri Lanka are explicit Release 1 exceptions: their candidate and configured region records carry the governed `PREFERRED` seasonality set used by the current runtime. Goa and Vizag retain the `UNKNOWN` default.
 
 Fixed-date Passport inputs remain subject to the engine's existing unknown-seasonality eligibility rule. Flexible timing receives the engine's existing neutral treatment. The catalogue does not translate broad prose into monthly suitability.
 
-### 6.5 Neutral logistical fit
+### 6.5 Logistical-fit default and approved values
 
-The engine contract requires a number and has no `UNKNOWN` value. Release 1 therefore uses `0.5` for every configured region.
+The engine contract requires a number and has no `UNKNOWN` value. Release 1 therefore defaults every configured region to `0.5`.
 
-This is an engine-contract limitation, not a destination assessment. Because every region receives the identical value, logistical fit cannot create artificial differentiation. Release 1 does not perform governed destination-to-destination logistical ranking.
+Four explicitly approved region records carry governed values: Bali — Ubud (`0.9`), Goa — South Goa (`0.8`), Kerala — Alappuzha (`0.95`), and Sri Lanka — Bentota and Galle (`0.85`). Vizag retains the neutral `0.5` baseline. Candidates outside the explicit approval provenance list cannot receive differentiated logistical values.
 
 ### 6.6 Evidence readiness
 
 Destination knowledge does not prove approved imagery, editorial moments, or presentation readiness.
 
-Every Release 1 runtime candidate therefore uses:
+Every Release 1 runtime candidate defaults to:
 
 ```text
 approvedImageryReferenceCount: 0
@@ -191,7 +202,7 @@ hasQualifiedRegionContent: false
 hasMaterialContentGap: true
 ```
 
-The presence of an image file or presentation record does not change these decision-domain values. Separate approved presentation metadata may enrich an already-selected possibility, but it cannot affect eligibility, scores, ranking, or personality selection.
+Bali, Goa, Kerala, Sri Lanka, and Vizag are explicit exceptions. Each carries one approved imagery reference, three governed journey moments, qualified region content, and no material presentation-content gap. These values provide the evidence-readiness required by the current personality rules; the presentation catalogue itself still cannot alter eligibility, scores, ranking, or selection.
 
 ### 6.7 Traveller-type intersection
 
@@ -279,7 +290,7 @@ Season, weather, wildlife, safety, permit, access, and similar prose are not con
 
 ## 9. Diversity-Axis Mapping
 
-Diversity values are generated from existing governed fields. They are not written to force a Different Rhythm result.
+Diversity values are generated from existing governed fields. They are not written to force a Beautiful Puzzle result.
 
 | Engine diversity axis | Deterministic source mapping |
 | --- | --- |
@@ -320,8 +331,8 @@ The verification asserts:
 3. no `ACTIVE → CONFIDENT` implicit mapping exists;
 4. no candidate is `CONFIDENT` without explicit approval provenance;
 5. every candidate and region references the catalogue review window;
-6. all 12 monthly values remain `UNKNOWN`;
-7. every region uses the identical neutral logistical baseline;
+6. candidates without explicit guidance retain 12 `UNKNOWN` monthly values;
+7. candidates without explicit readiness provenance retain the neutral logistical baseline;
 8. the memory-goal mapping covers every engine theme;
 9. only documented concern classifications are active;
 10. verification fixtures and presentation code are not runtime dependencies;
@@ -329,21 +340,21 @@ The verification asserts:
 12. identical inputs and catalogue versions produce identical results;
 13. insertion order cannot change recommendation order;
 14. incomplete input and no-result recovery remain available;
-15. confidence-dependent personalities remain suppressed without evidence;
+15. confidence-dependent personalities remain limited to explicitly approved evidence;
 16. presentation metadata cannot influence engine decisions.
 
 ---
 
 ## 12. Known Release 1 Limitations
 
-- No destination has separate Operations-approved `CONFIDENT` provenance.
-- Pleasant Surprise may therefore be absent from runtime output under the current engine rule.
-- Monthly suitability, live route conditions, and operational availability remain unknown.
-- Logistical fit is neutral and cannot differentiate destinations.
+- Only Bali, Goa, Kerala, Sri Lanka, and Vizag have explicit `CONFIDENT` provenance.
+- The Hidden Gem may therefore draw only from that approval list and may be absent when no remaining approved candidate meets its gates.
+- Monthly suitability remains unknown outside the explicit Bali, Kerala, and Sri Lanka guidance.
+- Logistical fit remains neutral outside the four explicitly approved regional values.
 - Only one source-supported region per active destination is configured in this catalogue version.
 - Honeymoon, multi-generation, senior, educational, and interest-led traveller profiles are not represented by the engine traveller-type contract.
 - Accessibility, visa, safety, budget, duration, inventory, and price are not recommendation inputs.
-- Destination knowledge is not evidence of presentation-asset readiness.
+- Presentation-asset readiness is explicitly approved for only five candidates and is not inferred from destination knowledge.
 - Some source trade-offs remain human-review notes because the engine concern contract cannot express their conditions faithfully.
 
 These limitations are intentional. Unknown information remains unknown, weak results remain suppressed, and the human Journey Director remains responsible for consultation, refinement, itinerary design, current-condition validation, and final traveller handoff.

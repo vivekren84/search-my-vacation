@@ -282,12 +282,12 @@ function JourneyDirectorContent({
         <div className={styles.completionInner}>
           <div className={styles.passportStamp} aria-hidden="true">
             <span className={styles.stampCompass}>✦</span>
-            <span>Story received</span>
+            <span>Next chapter</span>
           </div>
           <p className={styles.eyebrowLight}>Your Journey Director</p>
-          <h1 id="journey-complete-heading">Your story has been received.</h1>
+          <h1 id="journey-complete-heading">Your story is ready.</h1>
           <p className={styles.completionCopy}>
-            We have taken a moment to understand what matters most to you—and to look for
+            Your Journey Passport has carried what matters forward. Now we can look for
             journeys that feel considered, not simply available.
           </p>
           <a className={styles.continueCue} href="#we-heard-you">
@@ -401,7 +401,7 @@ function JourneyDirectorHeader() {
         />
       </Link>
       <p>Journey Director</p>
-      <Link href="/journey-passport">Back to Journey Passport</Link>
+      <Link href="/">Back to Home</Link>
     </header>
   );
 }
@@ -548,9 +548,7 @@ function PossibilitySwitcher({
 }
 
 function possibilityEditorialLabel(possibility: JourneyPossibility) {
-  return possibility.personality === "perfect-match"
-    ? "First to explore"
-    : possibility.personalityLabel;
+  return possibility.personalityLabel;
 }
 
 function WhyThisFits({
@@ -791,7 +789,7 @@ function JourneyDirectorHandoff({
               <div><span>Journey Reference</span><strong>{journeyReference}</strong></div>
               <div><span>Selected journey</span><strong>{selectedPossibility.destination}, {selectedPossibility.region}</strong><small>{selectedPossibility.personalityLabel}</small></div>
             </div>
-            <div className={styles.synopsis}><p className={styles.eyebrowLight}>Your Journey Synopsis</p><p>{journeySynopsis.travellerFirstName}, your Journey Designer will continue with the preferences, timing and possibility captured here.</p><p>{journeySynopsis.journeyIntent}</p><p className={styles.synopsisMeta}>{journeySynopsis.travellingParty} · {journeySynopsis.travelTiming}</p></div>
+            <div className={styles.synopsis}><p className={styles.eyebrowLight}>Your Journey Synopsis</p><p className={styles.synopsisLead}>A small keepsake of what matters for this journey.</p><p>{journeySynopsis.travellerFirstName}, your Journey Designer will continue with the preferences, timing and possibility captured here.</p><p>{journeySynopsis.journeyIntent}</p><p className={styles.synopsisMeta}>{journeySynopsis.travellingParty} · {journeySynopsis.travelTiming}</p></div>
             <label className={styles.consent}><input type="checkbox" checked={handoffConsent} onChange={(event) => onConsentChange(event.target.checked)} /><span>I agree to share my Journey Synopsis with my Journey Designer so they can continue planning my journey.</span></label>
             <div className={styles.continuationActions}>
               <button type="button" className={styles.primaryAction} onClick={continueOnWhatsApp} disabled={!canContinue}>Continue on WhatsApp <span aria-hidden="true">→</span></button>

@@ -82,7 +82,7 @@ Human Journey Director consultation, refinement,
 itinerary design and final traveller handoff
 ```
 
-Release 1 uses deterministic recommendation logic to generate **The Perfect Match**, **A Different Rhythm** and **A Pleasant Surprise**. The same selected possibility must drive the downstream narrative, imagery, fit reasons, journey experiences and handoff copy while the reusable layout remains unchanged.
+Release 1 uses deterministic recommendation logic to generate **The Perfect Match**, **The Beautiful Puzzle** and **The Hidden Gem**. The same selected possibility must drive the downstream narrative, imagery, fit reasons, journey experiences and handoff copy while the reusable layout remains unchanged.
 
 ## Index Governance
 

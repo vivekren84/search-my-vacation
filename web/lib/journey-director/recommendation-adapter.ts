@@ -1,5 +1,6 @@
 import {
   DEFAULT_JOURNEY_PRESENTATION,
+  journeyCanonicalImage,
   journeyPresentationCatalogue,
   journeyPresentationKey,
 } from "../../config/journey-director.config";
@@ -36,8 +37,8 @@ export type RecommendationAdapterInput = {
 
 const personalityDescriptions = {
   "perfect-match": "Closest to the strongest signals in your Journey Passport.",
-  "different-rhythm": "A distinct expression of the same traveller priorities.",
-  "pleasant-surprise": "A credible alternative that adds meaningful variety.",
+  "different-rhythm": "A strong fit with a thoughtful contrast, trade-off, or unexpected dimension.",
+  "pleasant-surprise": "A less obvious, well-supported journey that still aligns meaningfully.",
 } as const;
 
 function stateFor(result: EngineResult): JourneyRecommendationState {
@@ -117,6 +118,7 @@ function mapPossibility(
     presentation[journeyPresentationKey(possibility.candidateId, possibility.regionId)];
   const evidenceIds = new Set(possibility.fitEvidence.map((evidence) => evidence.id));
   const supportingEvidence = possibility.fitEvidence.map(evidenceReference);
+  const canonicalImage = journeyCanonicalImage(possibility.candidateId);
   const canUseMetadata =
     metadata &&
     metadata.candidateId === possibility.candidateId &&
@@ -150,12 +152,12 @@ function mapPossibility(
     summary,
     heroImage: canUseMetadata
       ? metadata.heroImage
-      : DEFAULT_JOURNEY_PRESENTATION.heroImage,
+      : canonicalImage.heroImage,
     heroImageAlt: canUseMetadata
       ? metadata.heroImageAlt
-      : DEFAULT_JOURNEY_PRESENTATION.heroImageAlt,
+      : canonicalImage.heroImageAlt,
     heroImagePosition:
-      (canUseMetadata ? metadata.heroImagePosition : undefined) ??
+      (canUseMetadata ? metadata.heroImagePosition : canonicalImage.heroImagePosition) ??
       DEFAULT_JOURNEY_PRESENTATION.heroImagePosition,
     reasons: mapReasons(possibility),
     moments,

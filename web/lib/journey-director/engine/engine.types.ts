@@ -386,7 +386,7 @@ export type ConfidenceBand = "high" | "moderate" | "low" | "insufficient";
 export type EnginePossibility = {
   possibilityId: string;
   personality: RecommendationPersonality;
-  personalityLabel: "The Perfect Match" | "A Different Rhythm" | "A Pleasant Surprise";
+  personalityLabel: "The Perfect Match" | "The Beautiful Puzzle" | "The Hidden Gem";
   candidateId: string;
   destinationName: string;
   regionId: string;
@@ -437,6 +437,7 @@ export type DecisionTrace = {
   personalityAssignments: readonly {
     possibilityId: string;
     personality: RecommendationPersonality;
+    personalityLabel: EnginePossibility["personalityLabel"];
     candidateId: string;
     explanation: string;
   }[];

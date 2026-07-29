@@ -6,6 +6,7 @@
 
 :root {
 
+
   /* ----------------------------------------------------------
      Brand Colors
      ---------------------------------------------------------- */
@@ -88,9 +89,10 @@
 html {
 
   scroll-behavior: smooth;
-  scroll-padding-top: 5rem;
+  scroll-padding-top: 7.5rem;
 
 }
+
 
 body {
 
@@ -106,6 +108,20 @@ body {
 
 }
 
+::selection {
+  background: #d5a665;
+  color: #20150f;
+}
+
+:focus-visible {
+  outline: 2px solid #a86f29;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a, button { transition-timing-function: cubic-bezier(.22, 1, .36, 1); }
+}
+
 @keyframes journey-passport-enter {
   from { opacity: 0; transform: translateY(0.75rem); }
   to { opacity: 1; transform: translateY(0); }
@@ -114,7 +130,25 @@ body {
 .journey-passport-enter { animation: journey-passport-enter 260ms ease-out both; }
 .journey-passport-reveal { animation: journey-passport-enter 200ms ease-out both; }
 
+.journey-passport-closure { position: relative; width: min(100%, 34rem); overflow: hidden; border: 1px solid #e2cda9; border-radius: 2rem; background: #fff; padding: 3rem 2rem; box-shadow: 0 20px 55px rgba(86,55,22,.13); text-align: center; }
+.journey-passport-closure h1 { margin-top: 1.4rem; font-family: Georgia, "Times New Roman", serif; font-size: clamp(2.45rem, 8vw, 4rem); font-weight: 400; letter-spacing: -.05em; line-height: 1; }
+.journey-passport-closure > p:not(.journey-passport-closure-eyebrow) { max-width: 28rem; margin: 1.25rem auto 0; color: #705c47; line-height: 1.75; }
+.journey-passport-closure button { min-height: 2.75rem; margin-top: 1.75rem; border: 0; border-radius: 999px; background: #a86f29; padding: .72rem 1.35rem; color: white; font-size: .875rem; font-weight: 700; }
+.journey-passport-closure-eyebrow { position: relative; z-index: 1; margin-top: 1.9rem; color: #96652b; font-size: .72rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; }
+.passport-closure-book { position: relative; width: 8rem; height: 5.5rem; margin: 0 auto; perspective: 32rem; }
+.passport-closure-book span { position: absolute; inset: 0 50% 0 0; border: 1px solid #c89a57; border-radius: .45rem 0 0 .45rem; background: linear-gradient(130deg, #fffdf9, #f2dfbd); box-shadow: inset 0 0 0 .35rem #fffaf0; transform-origin: right center; animation: passport-page-close 680ms cubic-bezier(.22,1,.36,1) both; }
+.passport-closure-book span:last-child { inset: 0 0 0 50%; border-radius: 0 .45rem .45rem 0; transform-origin: left center; animation-delay: 80ms; }
+.passport-closure-stamp { position: absolute; top: 3.9rem; left: 50%; z-index: 2; display: grid; width: 3.5rem; height: 3.5rem; place-items: center; border: 2px solid #a86f29; border-radius: 50%; background: #f8e8c9; color: #8e5920; font-size: 1.2rem; transform: translateX(-50%) scale(.5) rotate(-18deg); animation: passport-stamp 320ms 220ms cubic-bezier(.22,1,.36,1) both; }
+.passport-closure-seal { position: absolute; top: 3.35rem; left: 50%; z-index: 3; display: grid; width: 4.55rem; height: 4.55rem; place-items: center; border: 1px solid #7d4b13; border-radius: 50%; outline: 1px solid #d8a75e; outline-offset: .25rem; background: radial-gradient(circle at 35% 28%, #f9dfaa, #b37525); color: #fff7e8; font-size: .68rem; font-weight: 900; letter-spacing: .14em; opacity: 0; transform: translateX(-50%) scale(.65); }
+.journey-passport-closure.is-sealed .passport-closure-seal { animation: passport-seal 360ms cubic-bezier(.22,1,.36,1) both; }
+@keyframes passport-page-close { to { transform: rotateY(-62deg); } }
+@keyframes passport-stamp { to { transform: translateX(-50%) scale(1) rotate(-6deg); } }
+@keyframes passport-seal { to { opacity: 1; transform: translateX(-50%) scale(1) rotate(4deg); } }
+
 @media (prefers-reduced-motion: reduce) {
   .journey-passport-enter,
-  .journey-passport-reveal { animation: none; }
+  .journey-passport-reveal,
+  .passport-closure-book span,
+  .passport-closure-stamp,
+  .journey-passport-closure.is-sealed .passport-closure-seal { animation: none; }
 }

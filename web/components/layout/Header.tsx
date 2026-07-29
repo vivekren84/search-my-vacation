@@ -2,32 +2,19 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { usePathname } from "next/navigation";
 
 import { siteConfig } from "@/config/site.config";
 
 export default function Header() {
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
 
-  useEffect(() => {
-    const updateScrolledState = () => setIsScrolled(window.scrollY > 24);
-
-    updateScrolledState();
-    window.addEventListener("scroll", updateScrolledState, { passive: true });
-
-    return () => window.removeEventListener("scroll", updateScrolledState);
-  }, []);
-
   return (
+    <>
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? "border-b border-white/15 bg-[#20150f]/90 shadow-lg shadow-black/15 backdrop-blur-md"
-          : "bg-[#20150f]/90 md:bg-transparent"
-      }`}
+      className="sticky inset-x-0 top-0 z-50 border-b border-white/15 bg-[#20150f]/95 shadow-[0_4px_18px_rgba(32,21,15,.12)] backdrop-blur-md"
     >
       <div className="mx-auto flex min-h-28 max-w-7xl flex-wrap items-center justify-between gap-x-4 px-5 py-3 sm:px-6 md:h-24 md:min-h-0 md:flex-nowrap md:py-0 lg:px-10">
         <Link href="/" aria-label="Search My Vacation home" className="flex shrink-0 items-center">
@@ -108,5 +95,6 @@ export default function Header() {
         </div>
       </div>
     </header>
+    </>
   );
 }

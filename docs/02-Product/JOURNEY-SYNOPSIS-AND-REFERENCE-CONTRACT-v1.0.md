@@ -77,7 +77,7 @@ If the traveller has not made an explicit preference, the Synopsis may identify 
 | Preferred pace | An explicit preference where available. A cautiously derived pace may support human planning only when described as an interpretation, not a stated fact. | Traveller-visible; Journey Designer-visible |
 | Known destination | A destination or destination idea supplied by the traveller, if any. | Traveller-visible; Journey Designer-visible |
 | Recommended possibility | The active or explicitly preferred destination and region. | Traveller-visible; Journey Designer-visible |
-| Recommendation personality | **The Perfect Match**, **A Different Rhythm**, or **A Pleasant Surprise**. | Traveller-visible; Journey Designer-visible |
+| Recommendation personality | **The Perfect Match**, **The Beautiful Puzzle**, or **The Hidden Gem**. | Traveller-visible; Journey Designer-visible |
 | Why this fits | Two to four grounded reasons expressed in traveller language. | Traveller-visible; Journey Designer-visible |
 | Key planning considerations | Important trade-offs, unanswered questions or conditions requiring human validation. | Traveller-visible where relevant; Journey Designer-visible |
 | Timestamp | The moment the Synopsis was prepared or materially updated. | Journey Designer-visible; traveller-visible where useful |

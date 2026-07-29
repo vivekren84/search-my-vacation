@@ -90,7 +90,7 @@ Release 1 therefore makes six commitments:
 2. Begin with the experience the traveller wants, not with destination inventory.
 3. Recommend the most meaningful region, city, or area within a destination.
 4. Explain every recommendation in language connected to the traveller.
-5. Use deterministic recommendation logic to generate **The Perfect Match**, **A Different Rhythm**, and **A Pleasant Surprise**, subject to documented confidence and fallback rules.
+5. Use deterministic recommendation logic to generate **The Perfect Match**, **The Beautiful Puzzle**, and **The Hidden Gem**, subject to documented confidence and fallback rules.
 6. Preserve human judgement for consultation, refinement, itinerary design, and the final traveller handoff before any recommendation becomes a promise.
 
 ---
@@ -185,7 +185,7 @@ The Journey Director connects the two.
 
 ## 3.5 Release philosophy
 
-Release 1 uses deterministic recommendation logic to generate three journey possibilities: **The Perfect Match**, **A Different Rhythm**, and **A Pleasant Surprise**. A human Journey Director remains responsible for consultation, refinement, itinerary design, and the final traveller handoff.
+Release 1 uses deterministic recommendation logic to generate three journey possibilities: **The Perfect Match**, **The Beautiful Puzzle**, and **The Hidden Gem**. A human Journey Director remains responsible for consultation, refinement, itinerary design, and the final traveller handoff.
 
 Future releases may use AI to assist with matching, trade-off analysis, and narrative creation.
 
@@ -250,8 +250,8 @@ The Journey Director is not a search-results page.
 Release 1 generates three differentiated journey possibilities when each candidate satisfies its confidence and evidence requirements:
 
 1. **The Perfect Match** — the strongest overall alignment;
-2. **A Different Rhythm** — the same central need expressed through a meaningfully different journey; and
-3. **A Pleasant Surprise** — a less obvious but well-supported possibility the traveller may not have considered.
+2. **The Beautiful Puzzle** — the same central need expressed through a meaningfully different journey; and
+3. **The Hidden Gem** — a less obvious but well-supported possibility the traveller may not have considered.
 
 When the governed portfolio cannot support three responsible results, the documented fallback may present fewer. Three weak recommendations are not better than one strong recommendation.
 
@@ -1364,16 +1364,16 @@ Examples:
 - If the traveller values romance and quiet hills, consider **Kodaikanal**.
 - If the traveller is new to safari and wants lodge-led balanced comfort, consider **Kabini** when operations fit.
 
-## 13.5 Different Rhythm and Pleasant Surprise rules
+## 13.5 Beautiful Puzzle and Hidden Gem rules
 
-**A Different Rhythm** should preserve the traveller's most important outcome while changing one meaningful dimension.
+**The Beautiful Puzzle** should preserve the traveller's most important outcome while changing one meaningful dimension.
 
 Example:
 
 - The Perfect Match: Ubud for reconnection and culture.
-- A Different Rhythm: Kumarakom for reconnection with gentler logistics and a domestic journey.
+- The Beautiful Puzzle: Kumarakom for reconnection with gentler logistics and a domestic journey.
 
-**A Pleasant Surprise** should reveal a credible possibility, not demonstrate cleverness.
+**The Hidden Gem** should reveal a credible possibility, not demonstrate cleverness.
 
 It must:
 
@@ -1381,7 +1381,7 @@ It must:
 - match the primary emotion strongly;
 - differ in a way worth explaining;
 - not introduce avoidable operational risk;
-- satisfy the deterministic Pleasant Surprise confidence and evidence thresholds.
+- satisfy the deterministic Hidden Gem confidence and evidence thresholds.
 
 ## 13.6 Suppression rules
 
@@ -1549,9 +1549,9 @@ Release 1 is ready when:
 - the application reads destination status from a single governed source;
 - non-active destinations cannot enter recommendation output;
 - every recommendation includes destination, region, and an explainable reason;
-- the system deterministically generates **The Perfect Match**, **A Different Rhythm**, and **A Pleasant Surprise** without duplicates when all three meet governed thresholds;
+- the system deterministically generates **The Perfect Match**, **The Beautiful Puzzle**, and **The Hidden Gem** without duplicates when all three meet governed thresholds;
 - documented fallback behaviour presents fewer possibilities rather than manufacturing a weak result;
-- Pleasant Surprise recommendations require explicit deterministic logic, strong evidence, and sufficient confidence;
+- Hidden Gem recommendations require explicit deterministic logic, strong evidence, and sufficient confidence;
 - structured output records the signals that led to the match;
 - a Journey Director can override the ranking with a recorded reason;
 - automated tests cover portfolio status, collection membership, and suppression rules.

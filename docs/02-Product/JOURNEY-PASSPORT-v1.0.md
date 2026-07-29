@@ -103,7 +103,7 @@ When budget, airports, room configurations and flight preferences dominate the o
 
 The Passport and deterministic recommendation logic do not replace the Journey Director. They make the Journey Director’s first conversation better.
 
-In Release 1, deterministic recommendation logic interprets the completed Passport, applies operational eligibility rules and generates three journey possibilities: **The Perfect Match**, **A Different Rhythm** and **A Pleasant Surprise**. Each possibility must be traceable to the traveller’s signals and grounded in destinations and regions Search My Vacation can confidently deliver.
+In Release 1, deterministic recommendation logic interprets the completed Passport, applies operational eligibility rules and generates three journey possibilities: **The Perfect Match**, **The Beautiful Puzzle** and **The Hidden Gem**. Each possibility must be traceable to the traveller’s signals and grounded in destinations and regions Search My Vacation can confidently deliver.
 
 The human Journey Director remains responsible for consultation, refinement, itinerary design and the final traveller handoff. For example, “relaxation,” “family,” “adventure” and “exact dates” may create tensions that deterministic matching can surface but should not silently resolve through unsupported assumptions. The Passport provides evidence, the recommendation logic creates governed possibilities and the Journey Director turns the selected direction into empathy, advice and a thoughtfully designed journey.
 
@@ -880,7 +880,7 @@ The recommendation input should include:
 - any unresolved ambiguity worth discussing;
 - a clear distinction between explicit answers and inferred observations.
 
-The deterministic logic applies operational eligibility, destination and region matching, confidence and explanation rules to generate three journey possibilities: **The Perfect Match**, **A Different Rhythm** and **A Pleasant Surprise**. When a documented fallback prevents a responsible three-result set, the experience must preserve that state honestly rather than manufacture a weak recommendation.
+The deterministic logic applies operational eligibility, destination and region matching, confidence and explanation rules to generate three journey possibilities: **The Perfect Match**, **The Beautiful Puzzle** and **The Hidden Gem**. When a documented fallback prevents a responsible three-result set, the experience must preserve that state honestly rather than manufacture a weak recommendation.
 
 After the traveller explores or selects a possibility, the human handoff should additionally preserve:
 

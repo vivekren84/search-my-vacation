@@ -112,6 +112,7 @@ export function generateJourneyRecommendations(
       personalityAssignments: possibilities.map((possibility) => ({
         possibilityId: possibility.possibilityId,
         personality: possibility.personality,
+        personalityLabel: possibility.personalityLabel,
         candidateId: possibility.candidateId,
         explanation: `${possibility.personalityLabel} selected from governed fit, region and personality rules.`,
       })),

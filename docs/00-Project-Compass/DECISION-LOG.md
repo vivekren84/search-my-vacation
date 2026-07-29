@@ -468,8 +468,8 @@ EBC-003 requires one unambiguous model so product content, state contracts, impl
 Release 1 uses deterministic recommendation logic to generate three journey possibilities:
 
 - **The Perfect Match**;
-- **A Different Rhythm**; and
-- **A Pleasant Surprise**.
+- **The Beautiful Puzzle**; and
+- **The Hidden Gem**.
 
 Each possibility must use an active destination, approved region intelligence, evidence-backed fit reasons and the governed confidence thresholds defined by the Journey Director Decision Engine. When three responsible results are unavailable, the documented fallback presents fewer possibilities rather than manufacturing a weak result.
 

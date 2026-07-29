@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 type CompanionOption = {
   value: string;
   label: string;
@@ -82,9 +84,11 @@ export default function StepCompanions({
               ].join(" ")}
             >
               {/* Cinematic card imagery with a per-option focal point. */}
-              <img
+              <Image
                 src={option.image}
                 alt=""
+                fill
+                sizes="(max-width: 640px) 100vw, 50vw"
                 className="absolute inset-0 h-full w-full object-cover"
                 style={{ objectPosition: option.objectPosition }}
               />

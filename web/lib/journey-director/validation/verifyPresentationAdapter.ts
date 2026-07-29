@@ -109,6 +109,18 @@ function runVerification() {
     "the adapter preserves engine personality assignments",
   );
   assert(
+    first.possibilities.map((item) => item.personalityLabel).join("|") ===
+      "The Perfect Match|The Beautiful Puzzle|The Hidden Gem",
+    "the adapter preserves the approved user-visible personality names",
+  );
+  assert(
+    new Set(first.possibilities.map((item) => item.heroImage)).size ===
+      first.possibilities.length &&
+      new Set(first.possibilities.map((item) => item.summary)).size ===
+        first.possibilities.length,
+    "changing the active shortlist option changes both destination imagery and narrative",
+  );
+  assert(
     first.possibilities.every(
       (item) => !first.excludedCandidateIds.includes(item.candidateId),
     ),

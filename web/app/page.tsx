@@ -7,7 +7,6 @@ export default function Home() {
   return (
     <>
       <Header />
-      <div aria-hidden="true" className="h-28 md:hidden" />
       <main>
         <HeroJourney />
         <HomepageExperience />

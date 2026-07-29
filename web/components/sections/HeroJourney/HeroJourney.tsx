@@ -41,31 +41,31 @@ export default function HeroJourney() {
   const router = useRouter();
 
   return (
-    <section className="relative w-full h-[90vh] flex items-center justify-center text-center overflow-hidden">
+    <section className="relative flex min-h-[44rem] w-full items-center justify-center overflow-hidden text-center md:min-h-[48rem]">
 
       {/* Background */}
       <div
-        className="absolute inset-0 bg-cover bg-center"
+        className="absolute inset-0 bg-cover bg-center motion-safe:scale-105"
         style={{
           backgroundImage: "url('/images/golden-hour.png')",
         }}
       />
 
       {/* Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/70" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(20,13,8,.45),rgba(20,13,8,.22)_42%,rgba(20,13,8,.82))]" />
 
       {/* Content */}
-      <div className="relative z-10 max-w-5xl px-6 flex flex-col items-center gap-6">
+      <div className="relative z-10 flex max-w-5xl flex-col items-center gap-6 px-6 pt-20">
 
         <p className="text-xs tracking-[0.3em] text-white/70 uppercase">
           Your Journey, Your Feeling
         </p>
 
-        <h1 className="text-4xl md:text-6xl font-semibold text-white leading-tight">
+        <h1 className="max-w-3xl font-serif text-5xl leading-[.96] tracking-[-.05em] text-white sm:text-6xl md:text-7xl">
           How do you want to feel?
         </h1>
 
-        <p className="text-white/80 text-base md:text-lg">
+        <p className="max-w-xl text-base leading-7 text-white/80 md:text-lg">
           Tell us your mood. We’ll design the journey.
         </p>
 
@@ -77,8 +77,10 @@ export default function HeroJourney() {
             return (
               <button
                 key={emotion.key}
+                type="button"
                 onClick={() => setSelected(emotion.key)}
-                className={`flex items-center gap-4 text-left px-6 py-5 rounded-2xl backdrop-blur-md border transition-all duration-300 min-w-[220px]
+                aria-pressed={isActive}
+                className={`flex min-w-[220px] items-center gap-4 rounded-2xl border px-6 py-5 text-left backdrop-blur-md transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white
                   ${
                     isActive
                       ? "bg-white text-black border-white scale-105 shadow-2xl"
@@ -103,8 +105,10 @@ export default function HeroJourney() {
 
         {/* CTA */}
         <button
+          type="button"
           onClick={() => selected && router.push(`/journey-passport?feeling=${encodeURIComponent(selected)}`)}
-          className={`mt-10 px-12 py-4 rounded-full text-base font-semibold transition-all duration-300
+          disabled={!selected}
+          className={`mt-10 rounded-full px-12 py-4 text-base font-semibold transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white disabled:cursor-not-allowed
             ${
               selected
                 ? "bg-[#E6B980] text-black hover:scale-105 shadow-xl"

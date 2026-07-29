@@ -1,9 +1,23 @@
-import { journeyPresentationCatalogue, journeyPresentationKey } from "../../../config/journey-director.config";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
+
+import {
+  journeyCanonicalImages,
+  journeyPresentationCatalogue,
+  journeyPresentationKey,
+  retainedJourneyImageAlternatives,
+} from "../../../config/journey-director.config";
 import { RELEASE1_CATALOGUE_METADATA, release1JourneyCandidates } from "../catalogue";
 import { createJourneyRecommendationSet } from "../createJourneyRecommendationSet";
 import { representativeProfiles } from "./representativeProfiles";
 
 const executionTimestamp = "2026-07-25T09:00:00.000Z";
+const approvedPersonalityLabels = [
+  "The Perfect Match",
+  "The Beautiful Puzzle",
+  "The Hidden Gem",
+] as const;
+const documentedFallbackCandidateIds = ["tamil-nadu"] as const;
 let checks = 0;
 
 function assert(condition: unknown, message: string): asserts condition {
@@ -26,13 +40,79 @@ function verifyQualifiedRuntimeProfile() {
   assert(first.state === "success" && first.possibilities.length === 3, "relaxed family receives three qualified runtime recommendations");
   assert(new Set(first.possibilities.map((possibility) => possibility.candidateId)).size === 3, "runtime recommendations use unique destinations");
   assert(first.possibilities.map((possibility) => possibility.personality).join("|") === "perfect-match|different-rhythm|pleasant-surprise", "runtime recommendations preserve approved personalities");
+  assert(
+    first.possibilities.map((possibility) => possibility.personalityLabel).join("|") ===
+      approvedPersonalityLabels.join("|"),
+    "runtime recommendations use the three approved user-visible personality names exactly",
+  );
+  assert(
+    new Set(first.possibilities.map((possibility) => possibility.personality)).size === 3,
+    "the shortlist contains three distinct personality assignments",
+  );
   assert(first.possibilities.every((possibility) => possibility.candidateId !== "japan"), "unsupported Japan is excluded from runtime recommendations");
   assert(first.possibilities.some((possibility) => possibility.cautions.length >= 1), "runtime shortlist includes an applicable planning consideration where the catalogue identifies one");
+  assert(
+    new Set(first.possibilities.map((possibility) => possibility.heroImage)).size ===
+      first.possibilities.length,
+    "switching shortlist options changes the destination image",
+  );
+  assert(
+    new Set(first.possibilities.map((possibility) => possibility.summary)).size ===
+      first.possibilities.length,
+    "switching shortlist options changes the destination narrative",
+  );
   first.possibilities.forEach((possibility) => {
     assert(possibility.reasons.length >= 2, `${possibility.destination} has traveller-facing fit explanations`);
     verifyPresentationContent(possibility.candidateId, possibility.regionId);
   });
   return first;
+}
+
+function verifyCanonicalImageCoverage() {
+  const candidateIds = release1JourneyCandidates.map((candidate) => candidate.id).sort();
+  const mappedIds = Object.keys(journeyCanonicalImages).sort();
+  assert(
+    mappedIds.join("|") === candidateIds.join("|"),
+    "canonical image mapping covers exactly the Release 1 runtime candidates",
+  );
+
+  const retainedAlternatives = new Set(retainedJourneyImageAlternatives);
+  release1JourneyCandidates.forEach((candidate) => {
+    const mapping = journeyCanonicalImages[candidate.id];
+    assert(Boolean(mapping), `${candidate.name} has a canonical image record`);
+    assert(
+      !retainedAlternatives.has(
+        mapping.heroImage as (typeof retainedJourneyImageAlternatives)[number],
+      ),
+      `${candidate.name} does not select a retained editorial alternative`,
+    );
+
+    if (mapping.status === "approved-active") {
+      assert(
+        /^\/images\/journey-director\/[^/]+\.webp$/.test(mapping.heroImage),
+        `${candidate.name} uses an approved Journey Director WebP path`,
+      );
+      assert(
+        existsSync(join(process.cwd(), "public", mapping.heroImage.replace(/^\//, ""))),
+        `${candidate.name} canonical image resolves on disk`,
+      );
+      return;
+    }
+
+    assert(
+      documentedFallbackCandidateIds.includes(
+        candidate.id as (typeof documentedFallbackCandidateIds)[number],
+      ) && Boolean(mapping.fallbackReason?.trim()),
+      `${candidate.name} uses only an explicitly documented fallback`,
+    );
+  });
+
+  retainedJourneyImageAlternatives.forEach((image) => {
+    assert(
+      existsSync(join(process.cwd(), "public", image.replace(/^\//, ""))),
+      `${image} remains retained on disk`,
+    );
+  });
 }
 
 function verifyAdditionalRuntimeProfiles() {
@@ -54,6 +134,7 @@ function verifyReadinessGovernance() {
 }
 
 const qualified = verifyQualifiedRuntimeProfile();
+verifyCanonicalImageCoverage();
 verifyAdditionalRuntimeProfiles();
 verifyReadinessGovernance();
 console.log(`Runtime Journey Director verification passed (${checks} checks).`);

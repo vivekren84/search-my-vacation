@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 type Props = {
   value: string[];
   onChange: (value: string[]) => void;
@@ -87,20 +89,26 @@ export default function StepMemories({ value, onChange }: Props) {
             value.length >= MAX_SELECTION && !isSelected;
 
           return (
-            <div
+            <button
               key={option.value}
+              type="button"
               onClick={() => !isDisabled && toggleSelection(option.value)}
-              className={`relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 group active:scale-95 ${
+              aria-pressed={isSelected}
+              aria-label={`${option.label}: ${option.subtext}`}
+              disabled={isDisabled}
+              className={`relative min-h-40 overflow-hidden rounded-2xl text-left transition-all duration-300 group active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white disabled:cursor-not-allowed ${
                 isSelected
                   ? "ring-2 ring-white scale-105 shadow-xl"
                   : "opacity-90 hover:opacity-100 hover:scale-[1.02]"
-              } ${isDisabled ? "opacity-40 pointer-events-none" : ""}`}
+              } ${isDisabled ? "opacity-40" : ""}`}
             >
               {/* Image */}
-              <img
+              <Image
                 src={option.image}
                 alt={option.label}
-                className="w-full h-40 object-cover rounded-2xl"
+                fill
+                sizes="(max-width: 768px) 50vw, 33vw"
+                className="object-cover"
               />
 
               {/* Gradient Overlay */}
@@ -122,7 +130,7 @@ export default function StepMemories({ value, onChange }: Props) {
                   Selected
                 </div>
               )}
-            </div>
+            </button>
           );
         })}
       </div>

@@ -6,7 +6,7 @@
 | --- | --- |
 | **Document Name** | Journey Director Experience |
 | **Document ID** | JDE-001 |
-| **Version** | v1.0.1 |
+| **Version** | v1.1 |
 | **Status** | Approved UX Specification |
 | **Owner** | Search My Vacation – Product & Experience |
 | **Last Updated** | 22 July 2026 |
@@ -24,7 +24,7 @@ It establishes the emotional and structural foundation for the experience before
 
 The specification is intentionally implementation-independent.
 
-It describes the experience Search My Vacation must create in Release 1, where deterministic recommendation logic generates three journey possibilities and a human Journey Director remains responsible for consultation, refinement, itinerary design and the final traveller handoff. Future AI assistance may deepen this model without weakening its experience principles.
+It describes the experience Search My Vacation must create in Release 1, where deterministic recommendation logic generates up to three qualified journey possibilities and a human Journey Director remains responsible for consultation, refinement, itinerary design and the final traveller handoff. Future AI assistance may deepen this model without weakening its experience principles.
 
 This document answers five foundational questions:
 
@@ -105,7 +105,7 @@ The Journey Director Experience makes the following commitments:
 - It will recommend at the most meaningful level possible, including a city, region or area when that improves the quality of the guidance.
 - It will explain why each recommendation fits the traveller.
 - It will favour a few confident possibilities over an exhaustive catalogue.
-- It will use deterministic Release 1 logic to generate **The Perfect Match**, **A Different Rhythm** and **A Pleasant Surprise**, with honest fallbacks when three responsible results are unavailable.
+- It will use deterministic Release 1 logic to generate **The Perfect Match**, **The Beautiful Puzzle** and **The Hidden Gem**, with honest fallbacks when three responsible results are unavailable.
 - It will never present generated content as confirmed operational truth without validation.
 - It will preserve a visible and intentional path to a human Journey Director, who remains responsible for consultation, refinement, itinerary design and the final traveller handoff.
 - It will treat the traveller's attention, personal information and trust with care.
@@ -116,6 +116,7 @@ The Journey Director Experience makes the following commitments:
 
 | Version | Date | Author | Description |
 | --- | --- | --- | --- |
+| v1.1 | 27 July 2026 | Search My Vacation – Product & Experience | Added experience-first recommendations, supported-destination guardrails, stay-area guidance and Experience Anchors. |
 | v1.0.1 | 22 July 2026 | Search My Vacation – Product & Experience | Approved the Release 1 deterministic three-possibility model, selected-possibility dynamic flow and human Journey Director handoff boundary. |
 | v1.0 | 21 July 2026 | Search My Vacation – Product & Experience | Initial UX specification covering Document Header, Experience Vision, Experience Goals, Experience Principles and Journey Flow. |
 
@@ -386,7 +387,7 @@ The Journey Director should present a governed set of possibilities, not return 
 
 The three recommendation personalities must be visually and narratively clear.
 
-**The Perfect Match**, **A Different Rhythm** and **A Pleasant Surprise** represent three valid futures rather than first, second and third place. When a governed threshold cannot be met, the experience presents fewer possibilities honestly rather than filling an arbitrary card count.
+**The Perfect Match**, **The Beautiful Puzzle** and **The Hidden Gem** represent three valid futures rather than first, second and third place. When a governed threshold cannot be met, the experience presents fewer possibilities honestly rather than filling an arbitrary card count.
 
 Confidence does not require pretending certainty.
 
@@ -469,15 +470,15 @@ Each has a distinct role:
 For example:
 
 - **The Perfect Match** – the strongest overall fit;
-- **A Different Rhythm** – the same central need expressed through a meaningfully different journey; and
-- **A Pleasant Surprise** – a less obvious possibility supported by strong fit evidence.
+- **The Beautiful Puzzle** – the same central need expressed through a meaningfully different journey; and
+- **The Hidden Gem** – a less obvious possibility supported by strong fit evidence.
 
 The labels should communicate purpose rather than ranking anxiety.
 
 **Experience indicators:**
 
 - The traveller is not presented with a grid of undifferentiated destinations.
-- A Different Rhythm and A Pleasant Surprise explain how they differ from The Perfect Match.
+- The Beautiful Puzzle and The Hidden Gem explain how they differ from The Perfect Match.
 - The primary call to action remains clear throughout.
 - Secondary exploration does not interrupt the main narrative.
 
@@ -1143,8 +1144,8 @@ Present the deterministic shortlist as three distinct, defensible expressions of
 The Journey Director presents the three recommendation personalities together:
 
 - **The Perfect Match** — the strongest overall alignment;
-- **A Different Rhythm** — the same central need expressed through a meaningfully different journey; and
-- **A Pleasant Surprise** — a less obvious but well-supported possibility.
+- **The Beautiful Puzzle** — the same central need expressed through a meaningfully different journey; and
+- **The Hidden Gem** — a less obvious but well-supported possibility.
 
 Each possibility is generated by deterministic Release 1 logic and includes enough information for the traveller to choose which story to explore.
 
@@ -1473,7 +1474,7 @@ The following conditions must remain true throughout the Journey Director flow:
 - The traveller always knows whether their Passport was received.
 - The experience never reveals an inactive or coming-soon destination.
 - The recommendation never appears without an explanation.
-- The deterministic shortlist uses **The Perfect Match**, **A Different Rhythm** and **A Pleasant Surprise**, unless a documented confidence fallback responsibly returns fewer possibilities.
+- The deterministic shortlist uses **The Perfect Match**, **The Beautiful Puzzle** and **The Hidden Gem**, unless a documented confidence fallback responsibly returns fewer possibilities.
 - Selecting a possibility makes it the sole source of the narrative, imagery, fit reasons, journey experiences and handoff copy that follow.
 - The reusable layout, interaction structure and accessibility semantics remain unchanged when the active possibility changes.
 - Region guidance is included whenever reliable region intelligence improves the recommendation.
@@ -1498,7 +1499,7 @@ Sections 1–5 are considered successfully represented in design when:
 4. The Journey Director is introduced as a trusted service identity.
 5. The traveller's intent is reflected before a destination is shown.
 6. Three differentiated journey possibilities are generated when they meet governed confidence and evidence requirements, with honest fallback behaviour when they do not.
-7. The three recommendation personalities are labelled consistently as **The Perfect Match**, **A Different Rhythm** and **A Pleasant Surprise**.
+7. The three recommendation personalities are labelled consistently as **The Perfect Match**, **The Beautiful Puzzle** and **The Hidden Gem**.
 8. Selecting a possibility drives the destination, region, narrative, imagery, fit reasons, journey experiences and handoff copy for the detailed story.
 9. The reusable layout remains unchanged when the selected possibility changes.
 10. A city, region or area is recommended when reliable intelligence is available.
@@ -1508,6 +1509,43 @@ Sections 1–5 are considered successfully represented in design when:
 14. The flow supports correction, switching, saving, recovery and accessible completion.
 
 ---
+
+## 6. Experience-First Recommendation Model
+
+### 6.1 Recommend What We Can Deliver
+
+The Journey Director recommends experiences that Search My Vacation can confidently deliver. It is not a destination discovery engine and must never present an unsupported destination merely because it appears attractive in the abstract.
+
+- **Supported:** Bali may be recommended when it meets the traveller's intent.
+- **Unsupported:** China must never appear until Search My Vacation officially supports it.
+
+Every recommendation must be immediately actionable by the SMV team. The experience should feel like advice from an experienced travel consultant: trusted guidance, thoughtful curation and personalised advice—not search, ranking, scoring or an algorithm.
+
+### 6.2 Recommendation Hierarchy
+
+The Journey Director matches travellers to an experience before it names a place:
+
+**Traveller Intent** → **Destination** → **Preferred Stay Area** → **Experience Anchors** → **Personalised Narrative**
+
+This hierarchy produces a meaningful journey recommendation rather than a country or state suggestion. A destination provides recognition; the preferred stay area and its experiences make the advice relevant to the traveller's actual pace, companions and desired feeling.
+
+### 6.3 Stay-Area Recommendations
+
+Recommendations should identify the most suitable stay area whenever supported intelligence is available. The preferred area depends on traveller intent, not popularity.
+
+| Destination | Example preferred stay areas |
+| --- | --- |
+| Bali | Ubud |
+| Kerala | Munnar, Kumarakom, Thekkady or Alleppey |
+| Thailand | Krabi, Phuket, Chiang Mai or Koh Samui |
+| Dubai | Downtown, Palm Jumeirah or Marina |
+| Vietnam | Da Nang, Hoi An, Hanoi or Halong Bay |
+
+### 6.4 Experience Anchors
+
+Experience Anchors are the structured, human-readable qualities attached to each supported stay area. They include emotional atmosphere, signature experiences, ideal traveller types, companion suitability, comfort positioning, journey pace, best duration and seasonal strengths.
+
+They form the shared foundation for the Journey Director, destination pages, future itinerary generation, AI-assisted recommendations and internal travel-consultant guidance. They must support honest, specific narratives without exposing internal reasoning to travellers.
 
 > **Closing Principle**
 >

@@ -11,8 +11,8 @@ import type {
 
 const PERSONALITY_LABELS = {
   "perfect-match": "The Perfect Match",
-  "different-rhythm": "A Different Rhythm",
-  "pleasant-surprise": "A Pleasant Surprise",
+  "different-rhythm": "The Beautiful Puzzle",
+  "pleasant-surprise": "The Hidden Gem",
 } as const;
 
 function compareIds(left: string, right: string) {

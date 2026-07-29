@@ -4,10 +4,10 @@
 
 | Document Field | Value |
 | --- | --- |
-| **Version** | v1.0.1 |
+| **Version** | v1.1.0 |
 | **Status** | Approved Product Decision Specification |
 | **Owner** | Search My Vacation – Product & Experience |
-| **Last Updated** | 22 July 2026 |
+| **Last Updated** | 27 July 2026 |
 | **Module** | Journey Director |
 | **Purpose** | Define the deterministic matching, eligibility, ranking, regional selection, explanation and governance rules that connect Journey Passport inputs with journey possibilities from the Destination Knowledge Base. |
 
@@ -74,10 +74,10 @@ It establishes:
 - how traveller inputs are interpreted;
 - how traveller signals are normalised;
 - which destinations are operationally eligible;
-- how destinations and regions are scored;
+- how destinations and Preferred Stay Areas are evaluated;
 - how the three journey personalities are assigned;
 - how recommendation evidence is preserved;
-- how explanations and destination-specific content are assembled;
+- how Story Packets are assembled from traveller evidence, Experience Anchors and destination knowledge;
 - how uncertainty, conflicts and missing information are handled;
 - how a human Journey Director may review or override a result; and
 - how Release 1 can evolve safely into an AI-assisted system.
@@ -96,7 +96,7 @@ Release 1 decisioning includes:
 - deterministic scoring and ranking;
 - a shortlist of up to three journey possibilities;
 - recommendation personality assignment;
-- region-level matching;
+- Preferred Stay Area matching;
 - explanation evidence;
 - dynamic content selection for the post-selection experience;
 - confidence assessment;
@@ -156,7 +156,7 @@ Bali should become Ubud, Seminyak, Nusa Dua or another appropriate region.
 
 Kerala should become Alleppey, Munnar, Thekkady, Kovalam or another appropriate region.
 
-The engine recommends the destination and the region together whenever regional intelligence is available.
+The engine recommends the destination together with the most appropriate Preferred Stay Area whenever sufficient destination knowledge is available.
 
 ## 4.5 Three Possibilities, Three Valid Futures
 
@@ -165,8 +165,8 @@ The three recommendation personalities are not first, second and third place.
 Each represents a different but credible interpretation of the traveller's story:
 
 - **The Perfect Match** reflects the closest overall alignment.
-- **A Different Rhythm** fulfils the same core emotional need through a meaningfully different setting or travel expression.
-- **A Pleasant Surprise** introduces a less obvious but well-supported possibility.
+- **The Beautiful Puzzle** fulfils the same core emotional need through a meaningfully different setting or travel expression.
+- **The Hidden Gem** introduces a less obvious but well-supported possibility.
 
 No personality may be filled merely to complete the set.
 
@@ -218,7 +218,17 @@ A human Journey Director remains responsible for consultation, refinement, itine
 
 # 5. Decision Architecture
 
-The Decision Engine connects three forms of intelligence.
+The Journey Director Decision Engine transforms a traveller's story into a small number of explainable, operationally deliverable journey possibilities.
+
+Rather than matching travellers directly to destinations, the engine progressively refines traveller intent through a series of deterministic decision stages.
+
+Each stage has a single responsibility.
+
+Outputs from one stage become validated inputs for the next.
+
+Later stages must never override the hard decisions made by earlier stages.
+
+The engine therefore follows the architecture below.
 
 ```text
 Journey Passport
@@ -227,22 +237,28 @@ Journey Passport
 Traveller Signal Profile
         │
         ▼
+Experience Profile
+        │
+        ▼
 Operational Eligibility Filters
+        │
+        ▼
+Served Destination Filter
         │
         ▼
 Destination Candidate Scoring
         │
         ▼
-Destination Shortlist
+Preferred Stay Area Evaluation
         │
         ▼
-Region-Level Selection
+Experience Anchor Matching
         │
         ▼
 Recommendation Personality Assignment
         │
         ▼
-Evidence and Explanation Assembly
+Evidence and Narrative Assembly
         │
         ▼
 Journey Possibility Story Packets
@@ -254,23 +270,164 @@ Journey Director Experience
 Human Journey Director Handoff
 ```
 
+The architecture intentionally separates **traveller understanding**, **destination suitability**, **stay area precision**, **experience reasoning**, and **presentation** into independent stages.
+
+This separation allows each layer to evolve without changing the responsibilities of the others.
+
+For example:
+
+- new traveller inputs may improve Experience Profile generation without affecting recommendation personalities;
+- new destinations may be introduced without changing traveller interpretation;
+- new Experience Anchors may enrich narratives without changing scoring rules; and
+- future AI assistance may improve language generation while preserving deterministic recommendation decisions.
+
+The recommendation engine therefore remains modular, explainable and maintainable.
+
+---
+
 ## 5.1 Decision Stages
 
-The engine proceeds through nine stages.
+Release 1 proceeds through eleven deterministic stages.
 
-1. **Validate the Journey Passport.** Confirm that sufficient information exists to begin matching.
-2. **Normalise traveller signals.** Convert structured selections and free-text responses into a consistent Traveller Signal Profile.
-3. **Apply operational eligibility filters.** Remove destinations and regions Search My Vacation cannot confidently deliver.
-4. **Score eligible destinations.** Evaluate suitability across the defined matching dimensions.
-5. **Select candidate regions.** Find the most meaningful regional expression within each leading destination.
-6. **Apply diversity and personality rules.** Create up to three distinct, defensible possibilities.
-7. **Assess confidence.** Determine whether results may be shown, require clarification or require human review.
-8. **Assemble explanations and story content.** Preserve traveller evidence and destination evidence for every claim.
-9. **Record the decision trace.** Store enough information to reproduce, inspect and govern the recommendation.
+### Stage 1 — Validate the Journey Passport
 
-The order matters.
+Confirm that sufficient traveller information exists to begin meaningful recommendation.
 
-Later stages must never reintroduce a candidate removed by an earlier hard eligibility filter.
+Where mandatory information is missing, request clarification before matching.
+
+---
+
+### Stage 2 — Build the Traveller Signal Profile
+
+Convert Journey Passport responses into a structured Traveller Signal Profile while preserving the original traveller evidence for explanation and human review.
+
+---
+
+### Stage 3 — Generate the Experience Profile
+
+Translate traveller signals into an experience-oriented profile.
+
+Rather than asking "Which destination matches?", the engine first answers:
+
+- What emotions is the traveller seeking?
+- What style of memories matter most?
+- What journey rhythm feels appropriate?
+- What travel expression best reflects the traveller's story?
+
+The Experience Profile becomes the primary input for recommendation.
+
+---
+
+### Stage 4 — Apply Operational Eligibility
+
+Remove destinations and stay areas that Search My Vacation cannot confidently deliver.
+
+Operational readiness remains a mandatory gateway.
+
+No later stage may reintroduce an excluded destination.
+
+---
+
+### Stage 5 — Apply the Served Destination Filter
+
+Only destinations currently maintained as **ACTIVE** within the Destination Knowledge Base proceed to suitability evaluation.
+
+Destinations marked **COMING_SOON**, **INACTIVE**, **PAUSED** or otherwise unavailable remain excluded regardless of emotional fit.
+
+This stage reinforces one of the Journey Director's core promises:
+
+> Search My Vacation recommends only journeys it can confidently deliver.
+
+---
+
+### Stage 6 — Score Destination Candidates
+
+Evaluate every eligible destination using the deterministic scoring framework defined within this specification.
+
+Destination scoring identifies broad suitability.
+
+It intentionally does not determine the final traveller experience.
+
+---
+
+### Stage 7 — Evaluate Preferred Stay Areas
+
+Within every shortlisted destination, independently evaluate each eligible stay area.
+
+Stay areas represent the most meaningful expression of the traveller's desired journey.
+
+For example:
+
+```text
+Bali
+ ├── Ubud
+ ├── Seminyak
+ ├── Nusa Dua
+ ├── Uluwatu
+ └── Jimbaran
+```
+
+The highest-quality stay area becomes the recommended regional expression of the destination.
+
+---
+
+### Stage 8 — Match Experience Anchors
+
+Once the preferred stay area has been selected, compare its maintained Experience Anchors against the traveller's Experience Profile.
+
+Experience Anchors provide the narrative bridge between traveller intent and destination knowledge.
+
+They include attributes such as:
+
+- emotional atmosphere;
+- signature experiences;
+- traveller suitability;
+- comfort positioning;
+- journey pace;
+- seasonal strengths;
+- memory opportunities; and
+- destination character.
+
+Experience Anchors explain **why** a stay area feels right rather than merely confirming **where** it is.
+
+---
+
+### Stage 9 — Assign Recommendation Personalities
+
+Construct up to three complementary journey possibilities using the approved recommendation personalities:
+
+- The Perfect Match
+- The Beautiful Puzzle
+- The Hidden Gem
+
+Each possibility must remain independently explainable and operationally credible.
+
+---
+
+### Stage 10 — Assemble Evidence and Narrative
+
+Combine:
+
+- Traveller Evidence,
+- Experience Profile,
+- Destination Knowledge,
+- Preferred Stay Area,
+- Experience Anchors, and
+- Recommendation Personality
+
+into a complete Journey Possibility Story Packet.
+
+Every traveller-facing statement must be traceable to maintained evidence.
+
+---
+
+### Stage 11 — Deliver the Journey Story
+
+The completed Story Packet becomes the single source of truth for the Journey Director Experience.
+
+Screens 4–7, recommendation summaries, future itinerary generation and human Journey Director handoff all consume the same Story Packet rather than independently rebuilding recommendation logic.
+
+The engine therefore produces one coherent recommendation that remains consistent across every touchpoint.
 
 ---
 
@@ -550,7 +707,133 @@ Each region should provide:
 - Destination-specific imagery references
 - Dynamic content references for Screens 5–7
 
-## 7.3 Unknown and Missing Knowledge
+## 7.3 Experience Anchor Model
+
+Every Preferred Stay Area should contain one or more **Experience Anchors**.
+
+Experience Anchors transform geographical knowledge into traveller-centred recommendation intelligence.
+
+They explain **why** a particular stay area best expresses the traveller's desired journey rather than merely describing **where** it is located.
+
+Experience Anchors are therefore considered mandatory recommendation assets rather than optional destination metadata.
+
+Without Experience Anchors, a stay area may exist operationally but should not participate in high-confidence recommendation generation.
+
+---
+
+### Required Experience Anchor Attributes
+
+Each Experience Anchor should describe:
+
+- Primary Emotional Atmosphere
+- Supporting Emotional Atmospheres
+- Signature Experiences
+- Traveller Suitability
+- Companion Suitability
+- Journey Pace
+- Comfort Positioning
+- Typical Stay Duration
+- Seasonal Strengths
+- Memory Opportunities
+- Destination Character
+- Storytelling Notes
+- Recommendation Evidence References
+- Last Reviewed Date
+
+The exact implementation structure may evolve, but these concepts should remain available to the Decision Engine.
+
+---
+
+### Purpose of Experience Anchors
+
+Experience Anchors serve four distinct purposes.
+
+#### 1. Recommendation Precision
+
+Several stay areas may belong to the same destination while expressing very different experiences.
+
+For example:
+
+```text
+Bali
+
+├── Ubud
+│   Nature
+│   Wellness
+│   Culture
+│   Slow Living
+
+├── Seminyak
+│   Dining
+│   Shopping
+│   Vibrant Evenings
+
+├── Nusa Dua
+│   Premium Resorts
+│   Family Comfort
+│   Beach Relaxation
+```
+
+The Decision Engine therefore recommends the stay area whose Experience Anchors best align with the traveller's Experience Profile.
+
+---
+
+#### 2. Narrative Generation
+
+Experience Anchors provide the evidence used when constructing traveller-facing explanations.
+
+Instead of saying:
+
+> "Ubud has beautiful scenery."
+
+the engine can explain:
+
+> "From what you shared about wanting to reconnect through slower, meaningful experiences, Ubud stood out because its wellness, culture and nature align closely with your journey."
+
+The recommendation remains grounded in maintained knowledge rather than generated opinion.
+
+---
+
+#### 3. Dynamic Journey Director Experience
+
+Screens 5–7 consume Experience Anchors when assembling:
+
+- personalised explanations;
+- signature experiences;
+- memory moments;
+- imagery selection;
+- contextual handoff messaging; and
+- future itinerary inspiration.
+
+The layout remains reusable.
+
+The Experience Anchors determine the story.
+
+---
+
+#### 4. Future AI Readiness
+
+Experience Anchors also establish safe boundaries for future AI assistance.
+
+Generative systems may improve wording or storytelling, but they should remain grounded in approved Experience Anchors rather than inventing unsupported destination claims.
+
+This preserves explainability while allowing richer traveller experiences.
+
+---
+
+### Governance Requirement
+
+A Preferred Stay Area should not achieve **ACTIVE** recommendation status until its Experience Anchors have been reviewed and approved.
+
+This requirement ensures that every recommendation remains:
+
+- explainable;
+- operationally trustworthy;
+- narratively complete;
+- consistent across the Journey Director experience; and
+- maintainable as the destination catalogue evolves.
+
+## 7.4 Unknown and Missing Knowledge
 
 Missing destination knowledge is not a match.
 
@@ -692,7 +975,7 @@ The Release 1 Destination Fit Score uses a 100-point model.
 | **Travel Pace Alignment** | 10 | Compatibility with relaxed, balanced, explorer or fast-paced preferences |
 | **Comfort Alignment** | 10 | Ability to deliver the preferred simple, balanced or premium experience |
 | **Season and Timing Suitability** | 10 | Quality of fit for known travel dates or season |
-| **Region Match Quality** | 8 | Strength of at least one region capable of expressing the traveller's needs |
+| **Preferred Stay Area Match Quality** | 8 | Strength of at least one region capable of expressing the traveller's needs |
 | **Memory Goal Alignment** | 6 | Ability to create the memories described in the traveller's own language |
 | **Operational Confidence** | 4 | Relative confidence among candidates that already passed hard operational filters |
 | **Total** | **100** | Overall destination suitability |
@@ -940,12 +1223,12 @@ They should not be shown as percentages to travellers, because numeric precision
 
 Every operationally eligible destination is scored.
 
-For each destination, the engine also identifies its highest-scoring eligible region before final destination ranking.
+For each destination, the engine also identifies its highest-scoring Preferred Stay Area before final destination ranking.
 
 The candidate record should include:
 
 - destination score;
-- selected region score;
+- selected stay area score;
 - matched traveller signals;
 - material unmatched signals;
 - trade-offs;
@@ -1038,13 +1321,13 @@ It should:
 
 The highest numerical score is not automatically a Perfect Match when a material preference remains unresolved.
 
-## 11.2 A Different Rhythm
+## 11.2 The Beautiful Puzzle
 
 **Traveller-facing description:**
 
 > *The same emotions, expressed through a different kind of journey.*
 
-A Different Rhythm should preserve the traveller's central emotional need while changing how that need is experienced.
+The Beautiful Puzzle should preserve the traveller's central emotional need while changing how that need is experienced.
 
 Examples include:
 
@@ -1057,18 +1340,18 @@ Selection rules:
 
 - all hard requirements must pass;
 - the primary emotional goal must remain strongly supported;
-- the destination must exceed the Different Rhythm threshold;
+- the destination must exceed the Beautiful Puzzle threshold;
 - at least one meaningful diversity dimension must differ from The Perfect Match;
 - the difference must be explained positively; and
 - the option must never be described as second best.
 
-## 11.3 A Pleasant Surprise
+## 11.3 The Hidden Gem
 
 **Traveller-facing description:**
 
 > *A journey you may not have considered, but one we think could become unforgettable.*
 
-A Pleasant Surprise expands the traveller's imagination without becoming speculative.
+The Hidden Gem expands the traveller's imagination without becoming speculative.
 
 It may be selected because:
 
@@ -1082,7 +1365,7 @@ Selection rules:
 
 - every hard requirement must pass;
 - primary emotion, companion and comfort requirements must remain credible;
-- the option must exceed the Pleasant Surprise threshold;
+- the option must exceed the Hidden Gem threshold;
 - at least two evidence-backed reasons must explain the recommendation;
 - operational confidence must be strong; and
 - surprise must never be manufactured by choosing a weak or unsuitable candidate.
@@ -1092,8 +1375,8 @@ Selection rules:
 Release 1 should assign personalities in this sequence:
 
 1. Select The Perfect Match from the highest-confidence leading candidate.
-2. Select A Different Rhythm from remaining candidates that preserve core alignment while maximising meaningful difference.
-3. Select A Pleasant Surprise from remaining candidates that meet core thresholds and provide credible novelty.
+2. Select The Beautiful Puzzle from remaining candidates that preserve core alignment while maximising meaningful difference.
+3. Select The Hidden Gem from remaining candidates that meet core thresholds and provide credible novelty.
 
 The same candidate cannot occupy more than one personality.
 
@@ -1103,7 +1386,7 @@ The Perfect Match is selected using the highest Final Destination Score after co
 
 No separate novelty or diversity modifier applies.
 
-### Different Rhythm Selection Value
+### Beautiful Puzzle Selection Value
 
 After The Perfect Match is selected, each remaining qualified candidate receives a Diversity Score from `0.00` to `1.00`.
 
@@ -1124,17 +1407,17 @@ For each axis:
 The selection value is:
 
 ```text
-Different Rhythm Selection Value =
+Beautiful Puzzle Selection Value =
   (Normalised Final Destination Score × 0.75)
   +
   (Diversity Score × 0.25)
 ```
 
-The candidate must still meet all Different Rhythm gates.
+The candidate must still meet all Beautiful Puzzle gates.
 
 Diversity cannot compensate for a failure to support the traveller's primary emotional goal.
 
-### Pleasant Surprise Selection Value
+### Hidden Gem Selection Value
 
 After the first two personalities are assigned, each remaining qualified candidate receives:
 
@@ -1164,7 +1447,7 @@ Evidence Readiness is `1.00` only when the candidate has:
 The selection value is:
 
 ```text
-Pleasant Surprise Selection Value =
+Hidden Gem Selection Value =
   (Normalised Final Destination Score × 0.70)
   +
   (Novelty Score × 0.20)
@@ -1172,7 +1455,7 @@ Pleasant Surprise Selection Value =
   (Evidence Readiness Score × 0.10)
 ```
 
-The candidate must still meet the Pleasant Surprise fit and confidence thresholds.
+The candidate must still meet the Hidden Gem fit and confidence thresholds.
 
 ### Deterministic Personality Tie-Breaking
 
@@ -1196,95 +1479,166 @@ It must not relabel an unsuitable destination to preserve the visual design.
 
 ---
 
-# 12. Region-Level Selection
+# 12. Preferred Stay Area Selection
 
-The destination creates the broad possibility.
+A destination introduces the journey.
 
-The region makes it personal.
+A Preferred Stay Area personalises it.
 
-Region selection is therefore a required decision stage whenever maintained regional intelligence exists.
+The Decision Engine therefore performs recommendation at two levels:
 
-## 12.1 Region Eligibility
+1. Destination Selection — *Where should the traveller go?*
+2. Preferred Stay Area Selection — *Where within that destination will the traveller experience the journey most meaningfully?*
 
-A region must pass:
+This distinction allows Search My Vacation to recommend journeys that feel intentionally curated rather than geographically broad.
+
+For Release 1, every shortlisted destination should resolve to one Preferred Stay Area whenever maintained knowledge is available.
+
+---
+
+## 12.1 Preferred Stay Area Eligibility
+
+A Preferred Stay Area must satisfy all operational and traveller-specific requirements before it may participate in recommendation.
+
+Eligibility includes:
 
 - active operational availability;
-- timing and seasonal feasibility;
-- accessibility and companion requirements;
-- minimum duration practicality;
-- explicit exclusion checks; and
-- critical data-quality checks.
+- seasonal suitability;
+- accessibility compatibility;
+- companion suitability;
+- minimum practical duration;
+- explicit traveller exclusions;
+- critical data quality checks; and
+- approved Experience Anchors.
 
-## 12.2 Region Fit Score
+A stay area failing any mandatory eligibility requirement must not proceed to scoring.
 
-Eligible regions are scored within their parent destination using a 100-point model.
+---
 
-| Dimension | Weight | What It Measures |
-| --- | ---: | --- |
-| **Emotional Fit** | 30 | How well the region expresses the traveller's desired feeling |
-| **Theme and Signature Experience Fit** | 20 | Strength of relevant, deliverable experiences |
-| **Pace Fit** | 15 | Compatibility with the traveller's preferred rhythm |
-| **Companion Suitability** | 10 | Suitability for the travelling party |
-| **Memory Goal Fit** | 10 | Ability to create the moments described by the traveller |
-| **Logistical Fit** | 10 | Transfer, duration and movement suitability |
-| **Comfort Fit** | 5 | Ability to deliver the intended comfort style |
-| **Total** | **100** | Overall regional suitability |
+## 12.2 Preferred Stay Area Evaluation
 
-## 12.3 Selecting the Recommended Region
+Every eligible stay area within a destination is evaluated independently.
 
-The highest-scoring eligible region is selected when:
+Rather than rewarding popularity, the engine identifies the stay area that best expresses the traveller's Experience Profile.
 
-- it meets the minimum Region Fit threshold;
-- no material hard requirement remains unresolved; and
-- its personality is meaningfully distinct and explainable.
+Evaluation considers:
 
-If the leading two regions are within three points and offer materially different expressions, the engine should preserve the runner-up as an internal alternative for the Journey Director.
+| Dimension | Purpose |
+| --- | --- |
+| Emotional Fit | Does the stay area naturally support the traveller's emotional goals? |
+| Experience Anchor Match | How closely do its Experience Anchors align with the Experience Profile? |
+| Companion Suitability | Is the stay area well suited to the travelling party? |
+| Journey Pace | Does its natural rhythm match the traveller's preferred pace? |
+| Comfort Positioning | Can the desired comfort level be confidently delivered? |
+| Memory Opportunities | Does it create the kinds of memories the traveller hopes to bring home? |
+| Seasonal Strength | Is it appropriate for the traveller's timing? |
+| Operational Readiness | Can Search My Vacation confidently curate this experience today? |
 
-It should not automatically show both to the traveller unless the experience calls for an explicit destination-level comparison.
+These dimensions complement the broader destination score rather than replacing it.
 
-## 12.4 Ubud Over Kuta Principle
+---
 
-The region recommendation must reflect the traveller's desired experience rather than the destination's most famous or commercially visible locality.
+## 12.3 Preferred Stay Area Selection
+
+The highest-scoring eligible stay area becomes the destination's recommended regional expression.
 
 For example:
 
-- prefer **Ubud** over a nightlife-led Bali region for travellers seeking wellness, culture, nature and reconnection;
-- prefer **Nusa Dua** for travellers seeking premium resort comfort and calm beaches;
-- prefer **Seminyak** for travellers seeking dining, shopping and vibrant evenings;
-- prefer **Alleppey** for slow backwater experiences and meaningful family time;
-- prefer **Munnar** for tea landscapes, cooler weather and scenic nature; and
-- prefer **Krabi** over a more active nightlife region when the traveller seeks quieter island experiences.
+```text
+Destination: Bali
 
-These are examples, not hard-coded universal truths.
+Stay Areas Evaluated
 
-Season, companions, duration, operational readiness and the maintained Destination Knowledge Base must remain authoritative.
+✓ Ubud
+✓ Seminyak
+✓ Nusa Dua
+✓ Uluwatu
+✓ Jimbaran
 
-## 12.5 Multi-Region Journeys
+↓
 
-The Decision Engine recommends a primary region for emotional clarity.
+Recommended Stay Area
 
-It may also attach one compatible supporting region when:
+Ubud
+```
 
-- the duration supports it;
-- movement does not conflict with the desired pace;
-- the combination adds a meaningful second dimension; and
-- Search My Vacation can confidently curate the connection.
+The selected stay area should represent the strongest overall alignment between the traveller's Experience Profile and the maintained Experience Anchors.
 
-The initial possibility card should still lead with one destination and one primary region.
+The recommendation is therefore both geographically precise and emotionally meaningful.
 
-Complex itinerary structure belongs to later journey design.
+---
 
-## 12.6 No Eligible Region
+## 12.4 Experience Anchor Validation
 
-If a destination scores well but no region meets the Region Fit threshold, the destination must not be presented as a high-confidence possibility.
+Once a Preferred Stay Area has been selected, its Experience Anchors are validated against the traveller's Experience Profile.
 
-The engine should either:
+The engine confirms that the recommendation is supported by maintained evidence across areas such as:
 
-- choose another destination;
-- request human regional review; or
-- present the broad destination only when the product experience explicitly supports a low-specificity inspiration state and the limitation is transparent.
+- emotional atmosphere;
+- signature experiences;
+- traveller suitability;
+- comfort positioning;
+- journey pace;
+- seasonal strengths;
+- memory opportunities; and
+- destination character.
 
-Release 1 should prefer another well-supported destination.
+If the selected stay area's Experience Anchors cannot adequately support the traveller's Experience Profile, the engine should evaluate the next eligible stay area before considering the broader destination unsuitable.
+
+---
+
+## 12.5 The "Ubud Over Kuta" Principle
+
+The Decision Engine recommends the stay area that best represents the traveller's desired experience rather than the destination's best-known location.
+
+Examples include:
+
+- Ubud for travellers seeking wellness, culture and reconnection.
+- Nusa Dua for premium family comfort and relaxed beach experiences.
+- Seminyak for dining, shopping and vibrant evenings.
+- Alleppey for meaningful family time and slow backwater journeys.
+- Munnar for cooler weather, scenic landscapes and nature.
+- Krabi for quieter coastal discovery.
+
+These examples illustrate the recommendation philosophy.
+
+They are not fixed rules.
+
+Operational readiness, seasonality, companion needs and maintained Experience Anchors always remain authoritative.
+
+---
+
+## 12.6 Supporting Stay Areas
+
+A destination may contain more than one highly suitable stay area.
+
+When journey duration, traveller pace and operational confidence support it, the engine may preserve one additional stay area as an internal recommendation for the Journey Director.
+
+Examples include:
+
+- Ubud with Nusa Dua.
+- Alleppey with Munnar.
+- Bentota with Galle.
+
+Supporting stay areas assist itinerary planning.
+
+They should not normally appear as separate traveller-facing possibilities during Release 1.
+
+---
+
+## 12.7 No Suitable Stay Area
+
+If no stay area satisfies both operational requirements and Experience Anchor validation, the destination should not be presented as a high-confidence recommendation.
+
+The engine should instead:
+
+- evaluate another eligible destination;
+- request human Journey Director review; or
+- enter the governed fallback flow defined elsewhere in this specification.
+
+Release 1 should always prefer a well-supported recommendation over a vague one.
+
+A destination without a suitable stay area should rarely become a Journey Possibility.
 
 ---
 
@@ -1301,7 +1655,7 @@ Every recommendation explanation must connect three elements.
 ```text
 What the traveller shared
         +
-What the destination and region genuinely offer
+What the destination and Preferred Stay Area genuinely offer
         =
 Why this possibility deserves consideration
 ```
@@ -1364,7 +1718,7 @@ Use language such as:
 
 > “This feels closest to the journey you described because…”
 
-### A Different Rhythm
+### The Beautiful Puzzle
 
 Lead with the shared emotional goal and the intentionally different expression.
 
@@ -1372,7 +1726,7 @@ Use language such as:
 
 > “This offers the same sense of reconnection through culture, wellness and a different rhythm…”
 
-### A Pleasant Surprise
+### The Hidden Gem
 
 Lead with discovery and the specific evidence that made the less obvious option credible.
 
@@ -1490,21 +1844,79 @@ Each shortlisted possibility must produce a complete Story Packet before it is s
 ```ts
 interface JourneyPossibilityStoryPacket {
   possibilityId: string;
-  personality: "PERFECT_MATCH" | "DIFFERENT_RHYTHM" | "PLEASANT_SURPRISE";
+
+  personality:
+    | "PERFECT_MATCH"
+    | "DIFFERENT_RHYTHM"
+    | "PLEASANT_SURPRISE";
+
   destinationId: string;
   destinationName: string;
-  regionId: string;
-  regionName: string;
+
+  stayAreaId: string;
+  stayAreaName: string;
+
+  travellerProfile: TravellerSignalProfile;
+
+  experienceProfile: ExperienceProfile;
+
+  experienceAnchors: ExperienceAnchor[];
+
   card: PossibilityCardContent;
+
   whyThisFits: WhyThisFitsContent;
+
   imagineYourJourney: JourneyMomentContent[];
+
   handoff: HandoffContent;
+
   imagery: ApprovedImageReference[];
+
   tradeOff?: TravellerFacingTradeOff;
+
   evidence: ExplanationEvidence[];
+
   confidence: ConfidenceRecord;
 }
 ```
+
+### Story Packet Assembly
+
+The Story Packet is the final product of the deterministic Decision Engine.
+
+It represents the complete traveller-specific journey recommendation and becomes the single source of truth for every Journey Director touchpoint.
+
+Story Packet assembly combines six validated inputs:
+
+1. Traveller Signal Profile
+2. Experience Profile
+3. Destination Knowledge
+4. Preferred Stay Area
+5. Experience Anchors
+6. Recommendation Personality
+
+The Story Packet intentionally separates **decision making** from **presentation**.
+
+The Decision Engine determines *what* should be recommended.
+
+The Journey Director Experience determines *how* that recommendation is revealed.
+
+Every traveller-facing explanation, image, memory moment and contextual handoff should therefore originate from the same Story Packet.
+
+This guarantees consistency across:
+
+- Journey Director Screen 4
+- Screen 5 – Why This Fits You
+- Screen 6 – Imagine Your Journey
+- Screen 7 – Human Journey Director Handoff
+- Saved recommendations
+- Shared recommendations
+- Future itinerary generation
+- Future AI-assisted narrative refinement
+
+No presentation component should independently rebuild recommendation logic.
+
+The Story Packet remains the authoritative recommendation record throughout the traveller journey.
 
 A possibility must not appear on Screen 4 if its Story Packet lacks the minimum content required for Screens 5–7.
 
@@ -1635,7 +2047,7 @@ Confidence should consider:
 - Journey Passport completeness;
 - strength and consistency of traveller signals;
 - destination score;
-- region score;
+- Preferred Stay Area score;
 - operational confidence;
 - seasonal certainty;
 - quantity and quality of explanation evidence;
@@ -1645,11 +2057,11 @@ Confidence should consider:
 
 ## 15.2 Release 1 Thresholds
 
-| Result Type | Minimum Destination Score | Minimum Region Score | Additional Requirement |
+| Result Type | Minimum Destination Score | Minimum Preferred Stay Area Score | Additional Requirement |
 | --- | ---: | ---: | --- |
 | **The Perfect Match** | 78 | 75 | No unresolved material conflict; strong primary-emotion evidence |
-| **A Different Rhythm** | 70 | 68 | Core emotional alignment retained; meaningful diversity established |
-| **A Pleasant Surprise** | 68 | 68 | At least two evidence-backed reasons; strong operational confidence |
+| **The Beautiful Puzzle** | 70 | 68 | Core emotional alignment retained; meaningful diversity established |
+| **The Hidden Gem** | 68 | 68 | At least two evidence-backed reasons; strong operational confidence |
 | **Human Review Candidate** | 60 | 60 | May be considered internally but not automatically presented |
 | **Below Recommendation Threshold** | Under 60 | Under 60 | Do not present as a Journey Director possibility |
 
@@ -1979,7 +2391,7 @@ journey-director/
 │   ├── normalize-passport.ts
 │   ├── eligibility.ts
 │   ├── score-destination.ts
-│   ├── score-region.ts
+│   ├── evaluate-stay-area.ts
 │   ├── assign-personalities.ts
 │   ├── confidence.ts
 │   └── build-story-packet.ts
@@ -2013,8 +2425,8 @@ function recommendJourneys(
 
   const candidates = eligible
     .map((destination) => scoreDestination(destination, traveller, rules))
-    .map((candidate) => selectBestRegion(candidate, traveller, rules))
-    .filter((candidate) => candidate.regionIsQualified);
+    .map((candidate) => selectPreferredStayArea(candidate, traveller, rules))
+    .filter((candidate) => candidate.stayAreaIsQualified);
 
   const ranked = rankCandidates(candidates, rules);
   const possibilities = assignRecommendationPersonalities(
@@ -2319,10 +2731,79 @@ Search My Vacation should periodically review whether the engine:
 - confuses popularity with suitability;
 - produces stereotyped companion recommendations;
 - favours international or premium journeys without evidence;
-- assigns A Pleasant Surprise randomly rather than meaningfully; or
+- assigns The Hidden Gem randomly rather than meaningfully; or
 - creates hidden commercial bias.
 
 Portfolio diversity should never be forced at the expense of individual traveller fit.
+
+### Experience Anchor Governance
+
+Experience Anchors are considered governed recommendation assets within the Journey Director ecosystem.
+
+Every Experience Anchor should be treated with the same level of stewardship as destination knowledge, operational readiness and traveller-facing content.
+
+To maintain recommendation quality, the following governance principles apply.
+
+#### Approval Requirement
+
+A Preferred Stay Area should not achieve **ACTIVE** recommendation status until its Experience Anchors have been reviewed and approved.
+
+Approval confirms that the maintained Experience Anchors accurately represent the intended traveller experience and remain operationally deliverable.
+
+---
+
+#### Change Management
+
+Any meaningful change to Experience Anchors should trigger a review of:
+
+- traveller suitability;
+- recommendation narratives;
+- Story Packet generation;
+- imagery selection;
+- recommendation confidence; and
+- Journey Director presentation.
+
+This ensures that recommendation quality remains consistent across every traveller touchpoint.
+
+---
+
+#### Periodic Review
+
+Experience Anchors should be reviewed whenever:
+
+- destination products materially change;
+- new experiences become available;
+- operational capabilities change;
+- seasonal characteristics evolve;
+- customer feedback identifies inconsistencies; or
+- Journey Directors identify repeated recommendation adjustments.
+
+Regular review preserves the credibility and freshness of traveller recommendations.
+
+---
+
+#### Explainability
+
+Every traveller-facing recommendation generated by the Decision Engine should remain traceable to approved Experience Anchors and maintained destination knowledge.
+
+The engine must always be able to explain:
+
+- why the destination was selected;
+- why the Preferred Stay Area was recommended;
+- which Experience Anchors influenced the recommendation; and
+- which traveller signals contributed to the final decision.
+
+This principle reinforces Search My Vacation's commitment to transparent, trustworthy and evidence-based journey recommendations.
+
+---
+
+#### Product Stewardship
+
+Experience Anchors should be maintained as reusable knowledge assets rather than implementation-specific data.
+
+They are expected to support not only the Journey Director Experience, but also future itinerary generation, destination storytelling, AI-assisted narrative refinement and future traveller personalisation capabilities.
+
+Maintaining a single governed source of recommendation knowledge ensures long-term consistency across the Search My Vacation platform.
 
 ---
 
@@ -2330,7 +2811,7 @@ Portfolio diversity should never be forced at the expense of individual travelle
 
 Testing must validate the product decision, not only the code path.
 
-Every test should inspect eligibility, ranking, region selection, personality assignment, explanation evidence, confidence and dynamic content integrity.
+Every test should inspect eligibility, ranking, Preferred Stay Area selection, personality assignment, explanation evidence, confidence and dynamic content integrity.
 
 ## 22.1 Test Layers
 
@@ -2342,7 +2823,7 @@ Validate individual functions such as:
 - hard-filter behaviour;
 - dimension scoring;
 - penalties;
-- region scoring;
+- Preferred Stay Area scoring;
 - tie-breaking;
 - confidence assessment; and
 - Story Packet validation.
@@ -2362,7 +2843,7 @@ Use realistic traveller stories to validate the full pipeline.
 
 ### Content Integrity Tests
 
-Ensure that explanations, imagery and experiences remain attached to the correct destination and region.
+Ensure that explanations, imagery and experiences remain attached to the correct destination and Preferred Stay Area.
 
 ### Journey Director Review
 
@@ -2381,9 +2862,9 @@ Human Journey Directors should review whether the output feels credible, helpful
 | **7. Requested unsupported destination** | Traveller asks for Japan while status is `COMING_SOON` | Japan must be excluded; active alternatives should reflect the underlying culture, wonder or discovery need; transparent fallback language required |
 | **8. Fixed timing conflict** | Traveller requests a destination during a period marked not recommended | Candidate excluded or downgraded according to hard seasonal policy; alternatives should preserve emotional intent |
 | **9. Conflicting pace signals** | Selects adventure but explicitly asks to avoid rushing and strenuous activity | Explicit clarification should shape “adventure” as gentle discovery; strenuous regions must not be inferred |
-| **10. Only one qualified result** | Narrow requirements leave one candidate above threshold | Present one honest possibility; do not manufacture Different Rhythm or Pleasant Surprise |
+| **10. Only one qualified result** | Narrow requirements leave one candidate above threshold | Present one honest possibility; do not manufacture Beautiful Puzzle or Hidden Gem |
 | **11. Incomplete Passport** | No clear emotion, timing or style | Request minimal clarification or human review; do not present a false Perfect Match |
-| **12. Pleasant Surprise validity** | Traveller is open, seeks coast, culture and gentle discovery but names no destination | Surprise candidate must meet thresholds and have at least two evidence-backed reasons; novelty alone is insufficient |
+| **12. Hidden Gem validity** | Traveller is open, seeks coast, culture and gentle discovery but names no destination | Surprise candidate must meet thresholds and have at least two evidence-backed reasons; novelty alone is insufficient |
 | **13. Explicit destination, different region** | Traveller names Bali and describes quiet wellness | Honour destination intent where active, recommend the region that fits; show a trade-off only if needed |
 | **14. Accessibility requirement** | Explicit mobility need | Any incompatible region must be excluded; unknown accessibility data triggers review rather than assumption |
 | **15. Dynamic possibility switching** | Traveller explores Kerala, then Bali | Screens 5–7 must replace explanations, images, moments and handoff copy with Bali content while layout and Passport state remain unchanged |
@@ -2394,8 +2875,8 @@ Human Journey Directors should review whether the output feels credible, helpful
 For every three-option result, verify:
 
 - The Perfect Match has the strongest defensible overall alignment.
-- A Different Rhythm preserves the central emotion while differing meaningfully.
-- A Pleasant Surprise is less obvious but not weaker than its threshold.
+- The Beautiful Puzzle preserves the central emotion while differing meaningfully.
+- The Hidden Gem is less obvious but not weaker than its threshold.
 - labels do not imply gold, silver and bronze;
 - no destination appears twice without an approved reason; and
 - each option has a complete and distinct explanation.
@@ -2405,7 +2886,7 @@ For every three-option result, verify:
 The following tests are mandatory:
 
 1. Selecting a possibility updates the active `possibilityId`.
-2. Screen 5 uses only that possibility's destination, region and evidence.
+2. Screen 5 uses only that possibility's destination, Preferred Stay Area and evidence.
 3. Screen 6 uses only that possibility's approved imagery and moments.
 4. Screen 7 carries the same possibility into the human handoff.
 5. Switching possibilities replaces all destination-specific content.
@@ -2474,11 +2955,11 @@ They do not replace current Destination Knowledge Base records or operational re
 
 Closest alignment through slow backwater experiences, family time and gentle nature.
 
-#### A Different Rhythm – Bali, Ubud
+#### The Beautiful Puzzle – Bali, Ubud
 
 The same need for reconnection expressed through culture, wellness and tropical nature.
 
-#### A Pleasant Surprise – Sri Lanka, Bentota and Galle
+#### The Hidden Gem – Sri Lanka, Bentota and Galle
 
 A less obvious combination of coast, heritage and comfortable family discovery.
 
@@ -2540,7 +3021,7 @@ The engine preserves the traveller's underlying signals and searches active dest
 
 The traveller receives transparent language explaining that Search My Vacation only recommends destinations it can currently deliver with confidence.
 
-The unavailable destination must not appear as A Pleasant Surprise or in Screen 6 imagery.
+The unavailable destination must not appear as The Hidden Gem or in Screen 6 imagery.
 
 ---
 
@@ -2560,8 +3041,8 @@ Before approving a Decision Engine change, recommendation rule or new destinatio
 
 - Does every possibility satisfy operational eligibility?
 - Is The Perfect Match genuinely the closest fit?
-- Does A Different Rhythm preserve the emotional need while changing the expression?
-- Is A Pleasant Surprise credible rather than random?
+- Does The Beautiful Puzzle preserve the emotional need while changing the expression?
+- Is The Hidden Gem credible rather than random?
 - Are we presenting fewer, better possibilities?
 - Can we explain why each destination moved forward and why another did not?
 

@@ -10,9 +10,13 @@ export type EditorialCardItem = {
   prompt?: string;
 };
 
+function anchorFor(title: string) {
+  return title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+}
+
 export function EditorialCardGrid({ items, tone = "light" }: { items: EditorialCardItem[]; tone?: "light" | "dark" }) {
   const dark = tone === "dark";
-  return <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{items.map((item) => <article key={item.title} className={`group overflow-hidden rounded-[1.5rem] border ${dark ? "border-white/15 bg-white/5" : "border-[#e4d2b5] bg-white shadow-[0_10px_28px_rgba(91,55,18,.06)]"}`}><div className="relative aspect-[4/3] overflow-hidden"><Image src={item.image} alt={item.alt} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-cover transition duration-700 group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100"/></div><div className="p-6"><p className={`text-[0.68rem] font-bold uppercase tracking-[.15em] ${dark ? "text-[#f3c681]" : "text-[#96652b]"}`}>{item.label}</p><h3 className={`mt-3 font-serif text-3xl leading-none tracking-[-.035em] ${dark ? "text-white" : "text-[#2d2117]"}`}>{item.title}</h3><p className={`mt-3 text-sm leading-7 ${dark ? "text-white/72" : "text-[#705c47]"}`}>{item.copy}</p>{item.prompt ? <p className={`mt-5 border-t pt-4 text-sm italic leading-6 ${dark ? "border-white/15 text-white/62" : "border-[#eadcc8] text-[#80664d]"}`}>{item.prompt}</p> : null}</div></article>)}</div>;
+  return <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{items.map((item) => <article id={anchorFor(item.title)} key={item.title} className={`group scroll-mt-32 overflow-hidden rounded-[1.5rem] border ${dark ? "border-white/15 bg-white/5" : "border-[#e4d2b5] bg-white shadow-[0_10px_28px_rgba(91,55,18,.06)]"}`}><div className="relative aspect-[4/3] overflow-hidden"><Image src={item.image} alt={item.alt} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-cover transition duration-700 group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100"/></div><div className="p-6"><p className={`text-[0.68rem] font-bold uppercase tracking-[.15em] ${dark ? "text-[#f3c681]" : "text-[#96652b]"}`}>{item.label}</p><h3 className={`mt-3 font-serif text-3xl leading-none tracking-[-.035em] ${dark ? "text-white" : "text-[#2d2117]"}`}>{item.title}</h3><p className={`mt-3 text-sm leading-7 ${dark ? "text-white/72" : "text-[#705c47]"}`}>{item.copy}</p>{item.prompt ? <p className={`mt-5 border-t pt-4 text-sm italic leading-6 ${dark ? "border-white/15 text-white/62" : "border-[#eadcc8] text-[#80664d]"}`}>{item.prompt}</p> : null}</div></article>)}</div>;
 }
 
 export function EditorialContinuation({ eyebrow, title, copy, label }: { eyebrow: string; title: string; copy: string; label: string }) {
