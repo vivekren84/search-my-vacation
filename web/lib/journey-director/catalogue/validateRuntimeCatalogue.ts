@@ -20,7 +20,15 @@ export function validateRuntimeCatalogue(
   const ids = candidates.map((candidate) => candidate.id);
   assert(new Set(ids).size === ids.length, "candidate identifiers are unique");
   assert(ids.join("|") === [...ids].sort((left, right) => left.localeCompare(right, "en-US")).join("|"), "candidate order is deterministic");
-  assert(candidates.length === 24, "all 24 approved active destinations are represented");
+  assert(
+    candidates.length === metadata.generatedCandidateCount,
+    "every generated destination with an approved Journey Base is represented",
+  );
+  assert(
+    candidates.flatMap((candidate) => candidate.regions).length ===
+      metadata.generatedRegionCount,
+    "every generated Journey Base is represented once",
+  );
   assert(
     metadata.confidentApprovalCandidateIds.every((id) => ids.includes(id)),
     "every Operations-approved CONFIDENT candidate is in the active runtime catalogue",

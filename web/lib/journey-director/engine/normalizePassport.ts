@@ -7,12 +7,16 @@ import {
   ALLOWED_TIMING,
   ALLOWED_TRAVEL_STYLES,
   COMPANION_MAP,
+  DREAM_CORE_INTENT_MAP,
   DREAM_JOURNEY_MAP,
   HOMEPAGE_FEELING_MAP,
+  TRAVEL_STYLE_CORE_INTENT_MAP,
   TRAVEL_STYLE_MAP,
 } from "./engine.rules";
 import {
   JOURNEY_PASSPORT_ENGINE_SCHEMA_VERSION,
+  type CoreIntent,
+  type CoreIntentDetection,
   type DestinationIntent,
   type EmotionId,
   type MemoryGoalId,
@@ -23,9 +27,78 @@ import {
   type SignalEvidence,
   type ThemeId,
   type TravelPace,
+  type TravelScope,
   type TravellerType,
   type WeightedSignal,
 } from "./engine.types";
+
+function normalizeTravelScope(value: unknown): TravelScope {
+  return value === "DOMESTIC" || value === "INTERNATIONAL" || value === "ANY"
+    ? value
+    : "ANY";
+}
+
+const compatibleSpecificIntents: Readonly<
+  Partial<Record<CoreIntent, readonly CoreIntent[]>>
+> = {
+  BEACH: ["BEACH", "NATURE", "ADVENTURE", "WELLNESS"],
+  MOUNTAIN: ["MOUNTAIN", "NATURE", "ADVENTURE"],
+  WILDLIFE: ["WILDLIFE", "NATURE", "ADVENTURE"],
+  ADVENTURE: ["ADVENTURE", "NATURE"],
+};
+
+function resolveExplicitCoreIntent(
+  intents: readonly CoreIntent[],
+): CoreIntent | undefined {
+  const unique = [...new Set(intents)];
+  if (unique.length === 1) return unique[0];
+
+  return (["WILDLIFE", "MOUNTAIN", "BEACH", "ADVENTURE"] as const).find(
+    (specific) =>
+      unique.includes(specific) &&
+      unique.every((intent) =>
+        compatibleSpecificIntents[specific]?.includes(intent),
+      ),
+  );
+}
+
+function detectCoreIntent(snapshot: JourneyPassportSnapshot): CoreIntentDetection {
+  const explicitIntents = snapshot.travelStyles.flatMap((style) => {
+    const intent = TRAVEL_STYLE_CORE_INTENT_MAP[style];
+    return intent ? [intent] : [];
+  });
+  const explicitIntent = resolveExplicitCoreIntent(explicitIntents);
+
+  if (explicitIntent) {
+    return {
+      intent: explicitIntent,
+      strength: "STRONG",
+      evidence: snapshot.travelStyles.filter(
+        (style) => TRAVEL_STYLE_CORE_INTENT_MAP[style] !== undefined,
+      ),
+    };
+  }
+
+  if (new Set(explicitIntents).size > 1) {
+    return {
+      strength: "AMBIGUOUS",
+      evidence: snapshot.travelStyles.filter(
+        (style) => TRAVEL_STYLE_CORE_INTENT_MAP[style] !== undefined,
+      ),
+    };
+  }
+
+  const dreamIntent = DREAM_CORE_INTENT_MAP[snapshot.dreamJourney];
+  if (dreamIntent) {
+    return {
+      intent: dreamIntent,
+      strength: "STRONG",
+      evidence: [snapshot.dreamJourney],
+    };
+  }
+
+  return { strength: "NONE", evidence: [] };
+}
 
 type MutableSignal<T extends string> = {
   id: T;
@@ -292,11 +365,27 @@ export function normalizeJourneyPassport(
     mode: snapshot.destinationMode,
     rawText: snapshot.destination.trim(),
   };
+  const travelScope = normalizeTravelScope(
+    (snapshot as { travelScope?: unknown }).travelScope,
+  );
+  const coreIntent = detectCoreIntent(snapshot);
 
   if (snapshot.destinationMode === "known") {
     sourceEvidence.push({
       sourceField: "destination",
       sourceValue: snapshot.destination.trim(),
+      strengthKind: "explicit",
+    });
+  }
+
+  if (
+    snapshot.travelScope === "DOMESTIC" ||
+    snapshot.travelScope === "INTERNATIONAL" ||
+    snapshot.travelScope === "ANY"
+  ) {
+    sourceEvidence.push({
+      sourceField: "travelScope",
+      sourceValue: snapshot.travelScope,
       strengthKind: "explicit",
     });
   }
@@ -314,6 +403,8 @@ export function normalizeJourneyPassport(
     comfortPreferences: [],
     timing: normalizeTiming(snapshot, evaluationDate),
     destinationIntent,
+    travelScope,
+    coreIntent,
     sourceEvidence,
     completeness: 1,
   };

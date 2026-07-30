@@ -82,7 +82,15 @@ function verifyGovernanceMappings() {
     RELEASE1_CATALOGUE_METADATA,
   );
 
-  assert(validation.candidateCount === 24, "all active portfolio candidates validate");
+  assert(
+    validation.candidateCount === RELEASE1_CATALOGUE_METADATA.generatedCandidateCount,
+    "all generated active destination candidates validate",
+  );
+  assert(
+    release1JourneyCandidates.flatMap((candidate) => candidate.regions).length ===
+      RELEASE1_CATALOGUE_METADATA.generatedRegionCount,
+    "all generated Journey Bases enter the catalogue exactly once",
+  );
   assert(validation.excludedPortfolioCount === 4, "all coming-soon exclusions validate");
   assert(
     release1JourneyCandidates.every((candidate) =>
@@ -148,8 +156,12 @@ function verifyEngineConsumption() {
   );
   assert(first.status === "success" && first.possibilities.length === 3, "approved runtime evidence produces a complete qualified shortlist");
   assert(
+    first.trace.rankedCandidates.length === release1JourneyCandidates.length,
+    "every served Release 1 destination is scored and ranked",
+  );
+  assert(
     first.possibilities.map((possibility) => possibility.personality).join("|") === "perfect-match|different-rhythm|pleasant-surprise",
-    "The Hidden Gem is available only through explicit CONFIDENT approval evidence",
+    "all three traveller-facing recommendation roles are always assigned",
   );
   assert(
     first.trace.personalityAssignments

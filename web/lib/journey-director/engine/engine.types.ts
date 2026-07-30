@@ -92,6 +92,7 @@ export type SignalSourceField =
   | "travelStyles"
   | "timing"
   | "destination"
+  | "travelScope"
   | "entryContext";
 
 export type EvidenceStrength = "explicit" | "derived";
@@ -122,6 +123,24 @@ export type DestinationIntent = {
   rawText: string;
 };
 
+export type TravelScope = "DOMESTIC" | "INTERNATIONAL" | "ANY";
+
+export type CoreIntent =
+  | "MOUNTAIN"
+  | "BEACH"
+  | "WILDLIFE"
+  | "CITY"
+  | "HERITAGE"
+  | "WELLNESS"
+  | "NATURE"
+  | "ADVENTURE";
+
+export type CoreIntentDetection = {
+  intent?: CoreIntent;
+  strength: "STRONG" | "AMBIGUOUS" | "NONE";
+  evidence: readonly string[];
+};
+
 export type NormalizedJourneyPassport = {
   schemaVersion: typeof JOURNEY_PASSPORT_ENGINE_SCHEMA_VERSION;
   travellerName?: string;
@@ -136,6 +155,8 @@ export type NormalizedJourneyPassport = {
   comfortPreferences: readonly WeightedSignal<ComfortLevel>[];
   timing: NormalizedTiming;
   destinationIntent: DestinationIntent;
+  travelScope: TravelScope;
+  coreIntent: CoreIntentDetection;
   sourceEvidence: readonly SignalEvidence[];
   completeness: number;
 };
@@ -234,6 +255,17 @@ export type EvidenceReadiness = {
   hasMaterialContentGap: boolean;
 };
 
+export type CandidateCapabilities = {
+  mountain: boolean;
+  beach: boolean;
+  wildlife: boolean;
+  city: boolean;
+  heritage: boolean;
+  wellness: boolean;
+  nature: boolean;
+  adventure: boolean;
+};
+
 export type RegionCandidate = {
   id: string;
   name: string;
@@ -243,6 +275,7 @@ export type RegionCandidate = {
   primaryEmotion: EmotionId;
   supportingEmotions: readonly EmotionId[];
   themes: readonly ThemeId[];
+  capabilities?: CandidateCapabilities;
   bestFor: readonly TravellerSuitability[];
   paces: readonly TravelPace[];
   comforts: readonly ComfortLevel[];
@@ -315,7 +348,32 @@ export type CandidateEligibility = {
   regions: readonly RegionEligibility[];
 };
 
+export type ContradictionReasonCode =
+  | "TRAVEL_SCOPE_DOMESTIC_REQUIRED"
+  | "TRAVEL_SCOPE_INTERNATIONAL_REQUIRED"
+  | "CORE_INTENT_CAPABILITY_MISSING"
+  | "REQUESTED_REGION_UNAVAILABLE";
+
+export type ContradictionReason = {
+  code: ContradictionReasonCode;
+  scope: "destination" | "region";
+  candidateId: string;
+  explanation: string;
+  relevantInput?: string;
+  requiredCapability?: keyof CandidateCapabilities;
+};
+
+export type CandidateContradictionEvaluation = {
+  eligibility: CandidateEligibility;
+  passed: boolean;
+  evaluatedRules: readonly string[];
+  contradictions: readonly ContradictionReason[];
+  compatibleRegions: readonly RegionEligibility[];
+  requestedRegionId?: string;
+};
+
 export type DestinationScoreDimension =
+  | "core-intent-alignment"
   | "emotional-alignment"
   | "theme-experience-alignment"
   | "traveller-companion-suitability"
@@ -399,7 +457,20 @@ export type EnginePossibility = {
   cautions: readonly string[];
   confidence: ConfidenceBand;
   selectionValue: number;
+  experienceHighlights: readonly string[];
+  recommendedTravelStyle: string;
+  recommendedSeason?: string;
 };
+
+export type EngineDestinationResolution =
+  | { status: "discovery"; requestedText: "" }
+  | {
+      status: "served";
+      requestedText: string;
+      matchedCandidateId: string;
+      matchedCandidateName: string;
+    }
+  | { status: "unserved"; requestedText: string };
 
 export type EngineStatus =
   | "success"
@@ -427,13 +498,65 @@ export type EngineExecutionContext = {
 export type CandidateExclusionSummary = {
   candidateId: string;
   candidateName: string;
-  reasons: readonly EligibilityReason[];
+  stage: "ELIGIBILITY_FAILURE" | "CONTRADICTION_FAILURE";
+  reasons: readonly (EligibilityReason | ContradictionReason)[];
+};
+
+export type EligibilityTraceEntry = {
+  candidateId: string;
+  passed: boolean;
+  evaluatedGates: readonly string[];
+  passedGates: readonly string[];
+  failedReasons: readonly EligibilityReason[];
+  regions: readonly {
+    regionId: string;
+    passed: boolean;
+    failedReasons: readonly EligibilityReason[];
+  }[];
+};
+
+export type ContradictionTraceEntry = {
+  candidateId: string;
+  passed: boolean;
+  evaluatedRules: readonly string[];
+  contradictions: readonly ContradictionReason[];
+  compatibleRegionIds: readonly string[];
+};
+
+export type ShortlistDecision = {
+  candidateId: string;
+  qualified: boolean;
+  eligiblePersonalities: readonly RecommendationPersonality[];
+  selectedPersonality?: RecommendationPersonality;
+  explanation: string;
 };
 
 export type DecisionTrace = {
   normalizedPassport?: NormalizedJourneyPassport;
+  normalizedTravelScope: TravelScope;
+  detectedCoreIntent: CoreIntentDetection;
+  eligibilityEvaluations: readonly EligibilityTraceEntry[];
+  contradictionEvaluations: readonly ContradictionTraceEntry[];
+  rejectedBeforeScoring: readonly {
+    candidateId: string;
+    stage: CandidateExclusionSummary["stage"];
+    reasonCodes: readonly (EligibilityReasonCode | ContradictionReasonCode)[];
+  }[];
   exclusions: readonly CandidateExclusionSummary[];
   rankedCandidates: readonly RankedCandidate[];
+  knownDestinationHandling: {
+    requestedText: string;
+    matchedCandidateId?: string;
+    matchedRegionId?: string;
+    preferenceApplied: boolean;
+    explanation: string;
+  };
+  internationalPolicy: {
+    scope: TravelScope;
+    decision: string;
+    internationalCandidateId?: string;
+  };
+  shortlistDecisions: readonly ShortlistDecision[];
   personalityAssignments: readonly {
     possibilityId: string;
     personality: RecommendationPersonality;
@@ -453,12 +576,19 @@ export type EngineResult = {
     themeIds: readonly ThemeId[];
     timingKind: NormalizedTiming["kind"];
     destinationMode: DestinationIntent["mode"];
+    travelScope: TravelScope;
+    coreIntent?: CoreIntent;
   };
   possibilities: readonly EnginePossibility[];
+  destinationResolution: EngineDestinationResolution;
   exclusions: readonly CandidateExclusionSummary[];
   recovery: {
     code: "NONE" | "CLARIFICATION_REQUIRED" | "NO_ELIGIBLE_CANDIDATES" | "NOT_ENOUGH_QUALIFIED_CANDIDATES";
-    issueCodes: readonly (PassportValidationIssueCode | EligibilityReasonCode)[];
+    issueCodes: readonly (
+      | PassportValidationIssueCode
+      | EligibilityReasonCode
+      | ContradictionReasonCode
+    )[];
   };
   trace: DecisionTrace;
 };

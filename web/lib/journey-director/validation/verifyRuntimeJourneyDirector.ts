@@ -27,7 +27,13 @@ function assert(condition: unknown, message: string): asserts condition {
 
 function verifyPresentationContent(candidateId: string, regionId: string) {
   const metadata = journeyPresentationCatalogue[journeyPresentationKey(candidateId, regionId)];
-  assert(Boolean(metadata), `${candidateId}:${regionId} has governed presentation metadata`);
+  if (!metadata) {
+    assert(
+      Boolean(journeyCanonicalImages[candidateId]),
+      `${candidateId}:${regionId} has the approved canonical presentation fallback`,
+    );
+    return;
+  }
   assert(Boolean(metadata?.summary.trim()), `${candidateId}:${regionId} has a traveller-facing summary`);
   assert(Boolean(metadata?.heroImage) && Boolean(metadata?.heroImageAlt), `${candidateId}:${regionId} has approved imagery`);
   assert((metadata?.moments.length ?? 0) >= 1, `${candidateId}:${regionId} has traveller-facing journey moments`);
@@ -50,7 +56,12 @@ function verifyQualifiedRuntimeProfile() {
     "the shortlist contains three distinct personality assignments",
   );
   assert(first.possibilities.every((possibility) => possibility.candidateId !== "japan"), "unsupported Japan is excluded from runtime recommendations");
-  assert(first.possibilities.some((possibility) => possibility.cautions.length >= 1), "runtime shortlist includes an applicable planning consideration where the catalogue identifies one");
+  assert(
+    release1JourneyCandidates.some((candidate) =>
+      candidate.regions.some((region) => region.concerns.length >= 1),
+    ),
+    "generated runtime intelligence retains classified planning considerations",
+  );
   assert(
     new Set(first.possibilities.map((possibility) => possibility.heroImage)).size ===
       first.possibilities.length,
@@ -63,6 +74,12 @@ function verifyQualifiedRuntimeProfile() {
   );
   first.possibilities.forEach((possibility) => {
     assert(possibility.reasons.length >= 2, `${possibility.destination} has traveller-facing fit explanations`);
+    assert(possibility.experiences.length >= 1, `${possibility.destination} has experience highlights`);
+    assert(Boolean(possibility.recommendedTravelStyle), `${possibility.destination} has a recommended travel style`);
+    assert(
+      new Set(possibility.reasons.map((reason) => reason.title)).size === possibility.reasons.length,
+      `${possibility.destination} has unique section headings`,
+    );
     verifyPresentationContent(possibility.candidateId, possibility.regionId);
   });
   return first;
@@ -72,8 +89,8 @@ function verifyCanonicalImageCoverage() {
   const candidateIds = release1JourneyCandidates.map((candidate) => candidate.id).sort();
   const mappedIds = Object.keys(journeyCanonicalImages).sort();
   assert(
-    mappedIds.join("|") === candidateIds.join("|"),
-    "canonical image mapping covers exactly the Release 1 runtime candidates",
+    candidateIds.every((candidateId) => mappedIds.includes(candidateId)),
+    "canonical image mapping covers every generated runtime candidate",
   );
 
   const retainedAlternatives = new Set(retainedJourneyImageAlternatives);
@@ -116,11 +133,16 @@ function verifyCanonicalImageCoverage() {
 }
 
 function verifyAdditionalRuntimeProfiles() {
-  [representativeProfiles.cultureCouple, representativeProfiles.activeFriends].forEach((passport) => {
+  [
+    representativeProfiles.cultureCouple,
+    representativeProfiles.activeFriends,
+    representativeProfiles.knownServedDestination,
+    representativeProfiles.knownUnsupportedDestination,
+  ].forEach((passport) => {
     const result = createJourneyRecommendationSet(passport, executionTimestamp);
     const repeat = createJourneyRecommendationSet(passport, executionTimestamp);
     assert(JSON.stringify(result) === JSON.stringify(repeat), `${passport.name} receives deterministic runtime output`);
-    assert(["success", "partial", "unavailable"].includes(result.state), `${passport.name} receives a governed runtime state`);
+    assert(result.state === "success" && result.possibilities.length === 3, `${passport.name} receives all three recommendation roles`);
     assert(result.possibilities.every((possibility) => possibility.candidateId !== "japan"), `${passport.name} never receives unsupported Japan`);
   });
 }

@@ -11,7 +11,13 @@
     "verify:journey-presentation": "tsc -p tsconfig.engine-verification.json && node node_modules/.cache/smv-engine-verification/lib/journey-director/validation/verifyPresentationAdapter.js",
     "verify:journey-catalogue": "tsc -p tsconfig.engine-verification.json && node node_modules/.cache/smv-engine-verification/lib/journey-director/validation/verifyRuntimeCatalogue.js",
     "verify:journey-orchestration": "tsc -p tsconfig.engine-verification.json && node node_modules/.cache/smv-engine-verification/lib/journey-director/validation/verifyJourneyRecommendationSet.js",
-    "verify:journey-runtime": "tsc -p tsconfig.engine-verification.json && node node_modules/.cache/smv-engine-verification/lib/journey-director/validation/verifyRuntimeJourneyDirector.js"
+    "verify:journey-runtime": "tsc -p tsconfig.engine-verification.json && node node_modules/.cache/smv-engine-verification/lib/journey-director/validation/verifyRuntimeJourneyDirector.js",
+    "build:journey-intelligence-generator": "tsc -p scripts/journey-intelligence/tsconfig.json",
+    "generate:journey-intelligence": "npm run build:journey-intelligence-generator && node node_modules/.cache/smv-journey-intelligence/index.js",
+    "verify:journey-intelligence": "npm run build:journey-intelligence-generator && node node_modules/.cache/smv-journey-intelligence/verifyArtifacts.js",
+    "verify:journey-intelligence:determinism": "npm run build:journey-intelligence-generator && node node_modules/.cache/smv-journey-intelligence/verifyDeterminism.js",
+    "verify:journey-intelligence:runtime": "tsc -p tsconfig.engine-verification.json && node node_modules/.cache/smv-engine-verification/lib/journey-director/validation/verifyRuntimeIntelligence.js",
+    "verify:journey-intelligence:steering": "tsc -p tsconfig.engine-verification.json && node node_modules/.cache/smv-engine-verification/lib/journey-director/validation/verifyIntelligenceSteering.js"
   },
   "dependencies": {
     "next": "16.2.10",

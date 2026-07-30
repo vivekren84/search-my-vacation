@@ -10,6 +10,8 @@ export type RuntimeCatalogueMetadata = {
   operationalSnapshotId: string;
   neutralLogisticalFit: number;
   confidentApprovalCandidateIds: readonly string[];
+  generatedCandidateCount: number;
+  generatedRegionCount: number;
 };
 
 export type ExcludedPortfolioDestination = {

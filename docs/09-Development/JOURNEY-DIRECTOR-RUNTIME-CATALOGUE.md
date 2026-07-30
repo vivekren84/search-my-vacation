@@ -5,18 +5,18 @@
 | Document field | Value |
 | --- | --- |
 | **Document** | `JOURNEY-DIRECTOR-RUNTIME-CATALOGUE.md` |
-| **Version** | v1.0.1 |
+| **Version** | v1.1.0 |
 | **Status** | Implemented for Release 1 |
 | **Owner** | Search My Vacation — Product, Operations, and Engineering |
 | **Module** | Journey Director |
-| **Last updated** | 29 July 2026 |
-| **Purpose** | Define the governed runtime-catalogue boundary, temporary Release 1 mappings, validation rules, and known limitations used by the deterministic Journey Director engine. |
+| **Last updated** | 30 July 2026 |
+| **Purpose** | Define the generated runtime-intelligence boundary, catalogue adapter, validation rules, and known limitations used by the deterministic Journey Director engine. |
 
 ---
 
 ## 1. Purpose
 
-The runtime catalogue is the typed decision-domain representation of the approved Destination Knowledge Base.
+The runtime catalogue is the typed decision-domain representation of the generated Journey Intelligence package.
 
 It supplies the deterministic Journey Director engine with stable candidate identity, eligibility traits, traveller suitability, themes, emotions, pace, comfort, regional intelligence, explainable evidence, and governed exclusions.
 
@@ -28,20 +28,23 @@ The implementation lives in:
 web/lib/journey-director/catalogue/
 ```
 
-The canonical product source remains:
+The runtime source is:
 
 ```text
-docs/02-Product/DESTINATION-KNOWLEDGE-BASE.md
+web/generated/intelligence-manifest.json
 ```
 
-Source version: `v1.0.1`, last updated 22 July 2026.
+The manifest traces every artifact to the canonical enriched workbook and its SHA-256 checksum. The runtime never reads the workbook directly.
 
 ---
 
 ## 2. Runtime Boundary
 
 ```text
-Destination Knowledge Base
+Canonical enriched workbook
+        │
+        ▼
+Generated and verified JSON package
         │
         ▼
 Governed Runtime Candidate Catalogue
@@ -73,14 +76,14 @@ The engine consumes the catalogue through the existing `JourneyCandidate` contra
 
 ## 3. Catalogue Composition
 
-Release 1 contains:
+The generated Release 1 package currently contains:
 
-- 24 active destination or collection candidates;
-- one configured governed region for each active candidate;
+- 22 active destination or collection candidates with at least one approved Journey Base;
+- 89 generated Journey Base region records;
 - four coming-soon portfolio entries held in a separate exclusion registry;
 - no verification fixture reused or re-exported at runtime.
 
-The active set contains the 17 domestic and seven international entries approved by the Destination Knowledge Base.
+The adapter groups Journey DNA records by their generated destination ID. Review-only records, attractions, experience clusters, and destinations without an approved Journey Base do not enter the candidate array.
 
 The following records remain outside the engine candidate array:
 
@@ -97,13 +100,12 @@ These records lack the approved destination and region matching fields required 
 
 | Field | Release 1 value |
 | --- | --- |
-| Catalogue version | `release-1.0.0` |
-| Effective from | 23 July 2026 |
-| Review valid until | 22 August 2026 |
-| Source document | `docs/02-Product/DESTINATION-KNOWLEDGE-BASE.md` |
-| Source version | `v1.0.1` |
-| Source last updated | 22 July 2026 |
-| Operational snapshot | `release-1-supported-baseline-2026-07-23` |
+| Catalogue version | `journey-intelligence-<generator-version>-<workbook-checksum-prefix>` |
+| Effective from | Manifest generation date |
+| Review valid until | 30 days after the manifest generation date |
+| Source document | `web/generated/intelligence-manifest.json` |
+| Source version | Manifest generator version |
+| Operational snapshot | Stable workbook-checksum-derived identifier |
 
 The 30-day validity window follows the monthly destination-status review cadence in the Knowledge Base. It is a catalogue-level governance window, not evidence that each destination was independently reviewed on a different date.
 
@@ -146,11 +148,11 @@ Destination portfolio status and operational service confidence are separate gov
 | `LIMITED` | `LIMITED` |
 | `PAUSED` or `INACTIVE` | `PAUSED` |
 
-`ACTIVE` means that Product has included the destination in the approved Release 1 portfolio. `SUPPORTED` is the temporary Release 1 operational baseline. It does not mean that Operations has approved the destination at the highest confidence level.
+`ACTIVE` means that the destination has at least one generated, recommendation-eligible Journey Base. `SUPPORTED` is the temporary Release 1 operational baseline. It does not mean that Operations has approved the destination at the highest confidence level.
 
 **No destination is classified as CONFIDENT in Release 1 unless it has separate explicit approval provenance.**
 
-Catalogue version `release-1.0.0` records explicit confidence approval provenance for:
+The generated catalogue adapter retains explicit confidence approval provenance for:
 
 - Bali;
 - Goa;
@@ -173,21 +175,17 @@ This is a release-governance mapping. It is not a claim about live destination c
 
 ### 6.3 Catalogue review window
 
-Every active candidate and configured region references the same 23 July–22 August 2026 catalogue governance window. No historic destination-specific review date has been invented.
+Every active candidate and generated Journey Base references the same manifest-derived 30-day catalogue governance window. No historic destination-specific review date is invented.
 
 ### 6.4 Seasonality defaults and approved guidance
 
-The Knowledge Base provides broad prose and repeatedly requires live date-specific validation. The runtime catalogue therefore defaults all 12 months to `UNKNOWN` for every candidate and region.
-
-Bali, Kerala, and Sri Lanka are explicit Release 1 exceptions: their candidate and configured region records carry the governed `PREFERRED` seasonality set used by the current runtime. Goa and Vizag retain the `UNKNOWN` default.
+The workbook provides broad prose rather than month-by-month operating guarantees. The runtime catalogue therefore defaults all 12 months to `UNKNOWN` outside the five existing confidence-approved candidates. Bali, Goa, Kerala, Sri Lanka, and Vizag retain the existing governed `PREFERRED` compatibility treatment.
 
 Fixed-date Passport inputs remain subject to the engine's existing unknown-seasonality eligibility rule. Flexible timing receives the engine's existing neutral treatment. The catalogue does not translate broad prose into monthly suitability.
 
 ### 6.5 Logistical-fit default and approved values
 
-The engine contract requires a number and has no `UNKNOWN` value. Release 1 therefore defaults every configured region to `0.5`.
-
-Four explicitly approved region records carry governed values: Bali — Ubud (`0.9`), Goa — South Goa (`0.8`), Kerala — Alappuzha (`0.95`), and Sri Lanka — Bentota and Galle (`0.85`). Vizag retains the neutral `0.5` baseline. Candidates outside the explicit approval provenance list cannot receive differentiated logistical values.
+The engine contract requires a number and has no `UNKNOWN` value. Release 1 therefore defaults generated regions to `0.5`. Regions in the five existing confidence-approved destination groups retain the governed `0.9` confident baseline. Candidates outside that approval provenance cannot receive a differentiated value.
 
 ### 6.6 Evidence readiness
 
@@ -326,7 +324,7 @@ npm run verify:journey-catalogue
 
 The verification asserts:
 
-1. all 24 active candidates and four portfolio exclusions are represented;
+1. every generated destination with a Journey Base and all four portfolio exclusions are represented;
 2. candidate identifiers are unique and deterministically ordered;
 3. no `ACTIVE → CONFIDENT` implicit mapping exists;
 4. no candidate is `CONFIDENT` without explicit approval provenance;
@@ -351,7 +349,7 @@ The verification asserts:
 - The Hidden Gem may therefore draw only from that approval list and may be absent when no remaining approved candidate meets its gates.
 - Monthly suitability remains unknown outside the explicit Bali, Kerala, and Sri Lanka guidance.
 - Logistical fit remains neutral outside the four explicitly approved regional values.
-- Only one source-supported region per active destination is configured in this catalogue version.
+- All 89 generated Journey Bases are represented; hierarchy corrections marked `REVIEW_REQUIRED` remain excluded until business approval.
 - Honeymoon, multi-generation, senior, educational, and interest-led traveller profiles are not represented by the engine traveller-type contract.
 - Accessibility, visa, safety, budget, duration, inventory, and price are not recommendation inputs.
 - Presentation-asset readiness is explicitly approved for only five candidates and is not inferred from destination knowledge.
@@ -374,12 +372,11 @@ These limitations are intentional. Unknown information remains unknown, weak res
 
 To update the catalogue:
 
-1. approve the source change in the Destination Knowledge Base;
+1. approve the source change in the canonical enriched workbook;
 2. record any separate Operations confidence approval;
-3. update candidate data through the shared mappings;
-4. increment the catalogue version or operational snapshot;
-5. update the review-validity window;
-6. run catalogue, engine, presentation, TypeScript, lint, and build validation;
-7. record the change through normal repository review.
+3. run the Journey Intelligence Generator to atomically replace `web/generated/`;
+4. verify the manifest and deterministic artifact checksums;
+5. run runtime integration, catalogue, engine, presentation, TypeScript, lint, and build validation;
+6. record the change through normal repository review.
 
 The runtime catalogue must never become an informal substitute for Product or Operations approval.

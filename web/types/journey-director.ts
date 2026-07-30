@@ -19,6 +19,7 @@ export type JourneyPassportSnapshot = {
   endDate: string;
   destinationMode: "known" | "discovery";
   destination: string;
+  travelScope?: "DOMESTIC" | "INTERNATIONAL" | "ANY";
   entryContext?: JourneyPassportEntryContext;
   completedAt: string;
   source: "journey-passport" | "demo";
@@ -75,10 +76,24 @@ export type JourneyPossibility = {
   confidence: "high" | "moderate" | "low" | "insufficient";
   matchStrength: number;
   cautions: string[];
+  experiences: string[];
+  recommendedTravelStyle: string;
+  recommendedSeason?: string;
+  confidenceNote: string;
   ctaLabel: string;
   handoffHeadline: string;
   handoffMessage: string;
 };
+
+export type JourneyDestinationResolution =
+  | { status: "discovery"; message: string }
+  | {
+      status: "served";
+      requestedText: string;
+      matchedDestination: string;
+      message: string;
+    }
+  | { status: "unserved"; requestedText: string; message: string };
 
 export type JourneyRecommendationState =
   | "success"
@@ -114,6 +129,7 @@ export type JourneyRecommendationSet = {
   qualities: string[];
   insights: TravellerInsight[];
   possibilities: JourneyPossibility[];
+  destinationResolution: JourneyDestinationResolution;
   excludedCandidateIds: string[];
   recoveryMessage: string;
   versions?: {

@@ -37,8 +37,8 @@ export type RecommendationAdapterInput = {
 
 const personalityDescriptions = {
   "perfect-match": "Closest to the strongest signals in your Journey Passport.",
-  "different-rhythm": "A strong fit with a thoughtful contrast, trade-off, or unexpected dimension.",
-  "pleasant-surprise": "A less obvious, well-supported journey that still aligns meaningfully.",
+  "different-rhythm": "A thoughtful contrast that answers your story from another angle.",
+  "pleasant-surprise": "A less obvious journey that reveals another side of what you shared.",
 } as const;
 
 function stateFor(result: EngineResult): JourneyRecommendationState {
@@ -59,7 +59,7 @@ function evidenceReference(evidence: CandidateEvidence): JourneyEvidenceReferenc
   return {
     source: "engine-evidence",
     id: evidence.id,
-    explanation: evidence.explanation,
+    explanation: travellerFriendlyCopy(evidence.explanation),
   };
 }
 
@@ -71,22 +71,80 @@ function factorReference(factor: ScoreFactor): JourneyEvidenceReference {
   };
 }
 
-function reasonTitle(evidence: CandidateEvidence) {
-  if (evidence.companions?.length) return "Designed for who is travelling";
-  if (evidence.memoryGoals?.length) return "Memories that matter";
-  if (evidence.emotions?.length) return "The feeling behind the journey";
-  if (evidence.themes?.length) return "Experiences aligned with you";
-  return "A considered fit";
+function travellerFriendlyCopy(value: string) {
+  return value
+    .replace(
+      /The approved region themes support these governed experience and memory classifications\./gi,
+      "This area brings together experiences and memories that reflect what matters to you.",
+    )
+    .replace(
+      /The approved destination themes support these governed experience and memory classifications\./gi,
+      "This destination brings together experiences and memories that reflect what matters to you.",
+    )
+    .replace(/\bis approved for\b/gi, "is especially well suited to")
+    .replace(/\bThe approved combination\b/gi, "This combination")
+    .replace(/\bapproved\b/gi, "considered")
+    .replace(/\bgoverned\b/gi, "carefully reviewed")
+    .replace(/\bautomatic\b/gi, "initial")
+    .replace(/\bthreshold\b/gi, "standard");
+}
+
+function reasonCategory(evidence: CandidateEvidence) {
+  if (evidence.companions?.length) return "companion";
+  if (evidence.memoryGoals?.length) return "memory";
+  if (evidence.emotions?.length) return "emotion";
+  if (evidence.themes?.length) return "themes";
+  return "fit";
+}
+
+const reasonTitles = {
+  companion: ["Made for who is travelling", "Room for everyone to enjoy"],
+  memory: ["The memories you want to make", "What could stay with you"],
+  emotion: ["The feeling you want", "A rhythm that supports it"],
+  themes: ["Experiences that belong here", "How the place comes alive"],
+  fit: ["A detail that supports the match", "Another reason it feels right"],
+} as const;
+
+function confidenceNote(confidence: EnginePossibility["confidence"]) {
+  switch (confidence) {
+    case "high":
+      return "This is a particularly strong reading of the story in your Journey Passport.";
+    case "moderate":
+      return "This is a thoughtful fit; a Journey Designer can refine the details with you.";
+    case "low":
+      return "This journey shares meaningful qualities with your story, with room to shape the finer details.";
+    case "insufficient":
+      return "This is the closest fit from the journeys we currently serve, ready for a more personal conversation.";
+  }
 }
 
 function mapReasons(possibility: EnginePossibility): JourneyReason[] {
-  const evidenceReasons = possibility.fitEvidence.slice(0, 4).map((evidence, index) => ({
-    id: evidence.id,
-    cue: String(index + 1).padStart(2, "0"),
-    title: reasonTitle(evidence),
-    description: evidence.explanation,
-    evidence: [evidenceReference(evidence)],
-  }));
+  const categoryCount: Record<keyof typeof reasonTitles, number> = {
+    companion: 0,
+    memory: 0,
+    emotion: 0,
+    themes: 0,
+    fit: 0,
+  };
+  const usedTitles = new Set<string>();
+  const evidenceReasons = possibility.fitEvidence.slice(0, 4).map((evidence, index) => {
+    const category = reasonCategory(evidence);
+    const titles = reasonTitles[category];
+    const categoryIndex = categoryCount[category]++;
+    const preferredTitle = titles[Math.min(categoryIndex, titles.length - 1)];
+    const title = usedTitles.has(preferredTitle)
+      ? `Another detail for ${possibility.destinationName}`
+      : preferredTitle;
+    usedTitles.add(title);
+
+    return {
+      id: evidence.id,
+      cue: String(index + 1).padStart(2, "0"),
+      title,
+      description: travellerFriendlyCopy(evidence.explanation),
+      evidence: [evidenceReference(evidence)],
+    };
+  });
 
   if (evidenceReasons.length > 0) return evidenceReasons;
 
@@ -97,7 +155,7 @@ function mapReasons(possibility: EnginePossibility): JourneyReason[] {
       id: factor.factorId,
       cue: String(index + 1).padStart(2, "0"),
       title: factor.label,
-      description: `This possibility carries forward the matching ${factor.label.toLowerCase()} evidence.`,
+      description: `This possibility reflects the ${factor.label.toLowerCase()} you shared.`,
       evidence: [factorReference(factor)],
     }));
 }
@@ -124,10 +182,11 @@ function mapPossibility(
     metadata.candidateId === possibility.candidateId &&
     metadata.regionId === possibility.regionId &&
     metadataIsSupported(metadata.supportingEvidenceIds, evidenceIds);
-  const summary =
+  const summary = travellerFriendlyCopy(
     (canUseMetadata ? metadata.summary : undefined) ??
     possibility.fitEvidence[0]?.explanation ??
-    `${possibility.destinationName} and ${possibility.regionName} met the governed recommendation threshold.`;
+    `${possibility.destinationName} and ${possibility.regionName} bring together several qualities from your Journey Passport.`,
+  );
   const moments = canUseMetadata
     ? metadata.moments
         .filter((moment) =>
@@ -165,6 +224,10 @@ function mapPossibility(
     confidence: possibility.confidence,
     matchStrength: possibility.totalScore,
     cautions: [...possibility.cautions],
+    experiences: [...possibility.experienceHighlights],
+    recommendedTravelStyle: possibility.recommendedTravelStyle,
+    recommendedSeason: possibility.recommendedSeason,
+    confidenceNote: confidenceNote(possibility.confidence),
     ctaLabel:
       (canUseMetadata ? metadata.ctaLabel : undefined) ??
       DEFAULT_JOURNEY_PRESENTATION.ctaLabel,
@@ -182,13 +245,37 @@ function recoveryMessage(state: JourneyRecommendationState, result: EngineResult
     case "success":
       return "";
     case "partial":
-      return "We found fewer than three possibilities that met the automatic recommendation standard. A Journey Director can refine the shortlist with you.";
+      return "This collection currently contains fewer than three served possibilities. A Journey Director can still help you continue.";
     case "insufficient":
       return "A little more traveller context is needed before we can recommend responsibly.";
     case "unavailable":
       return result.status === "invalid-input"
         ? "This Journey Passport needs review before recommendations can be prepared."
-        : "The current destination collection did not produce a confident automatic match. A Journey Director can help with the next step.";
+        : "The current destination collection is not ready to present. A Journey Director can help with the next step.";
+  }
+}
+
+function destinationResolution(result: EngineResult) {
+  switch (result.destinationResolution.status) {
+    case "discovery":
+      return {
+        status: "discovery" as const,
+        message:
+          "You left the map open, so these possibilities are shaped entirely around the story in your Journey Passport.",
+      };
+    case "served":
+      return {
+        status: "served" as const,
+        requestedText: result.destinationResolution.requestedText,
+        matchedDestination: result.destinationResolution.matchedCandidateName,
+        message: `You mentioned ${result.destinationResolution.requestedText}. We found it among the journeys we currently serve, so ${result.destinationResolution.matchedCandidateName} leads your shortlist while the other two offer complementary possibilities.`,
+      };
+    case "unserved":
+      return {
+        status: "unserved" as const,
+        requestedText: result.destinationResolution.requestedText,
+        message: `We do not currently serve ${result.destinationResolution.requestedText}, but your journey does not stop here. These are the three closest served possibilities based on what you told us.`,
+      };
   }
 }
 
@@ -231,6 +318,7 @@ export function adaptJourneyRecommendations({
     qualities: buildMatchingQualities(passport),
     insights: buildTravellerInsights(passport),
     possibilities,
+    destinationResolution: destinationResolution(engineResult),
     excludedCandidateIds,
     recoveryMessage: recoveryMessage(state, engineResult),
     versions: {
@@ -248,7 +336,7 @@ const unavailableReflection: TravellerReflection = {
   travelCharacter:
     "Its answers remain available for the recommendation process.",
   recommendationTransition:
-    "A governed engine result is required before journey possibilities can be presented.",
+    "A complete recommendation result is required before journey possibilities can be presented.",
   outcomeMessage: "Recommendations are not available in this preview state.",
 };
 
@@ -287,6 +375,10 @@ export function getJourneyRecommendations(
     qualities: [],
     insights: [],
     possibilities: [],
+    destinationResolution: {
+      status: "discovery",
+      message: "Complete your Journey Passport to begin exploring possibilities.",
+    },
     excludedCandidateIds: [],
     recoveryMessage:
       "The recommendation engine has not yet been connected to this presentation route.",

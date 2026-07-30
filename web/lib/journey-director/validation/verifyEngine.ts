@@ -36,6 +36,7 @@ function stableResult(result: EngineResult) {
     versions: result.versions,
     normalizedInputSummary: result.normalizedInputSummary,
     possibilities: result.possibilities,
+    destinationResolution: result.destinationResolution,
     exclusions: result.exclusions,
     recovery: result.recovery,
     trace: result.trace,
@@ -134,6 +135,27 @@ function verifyProfile(name: string, profile: (typeof representativeProfiles)[ke
     `${name} result does not depend on catalogue insertion order`,
   );
   assert(first.status !== "invalid-input" && first.status !== "insufficient-input", `${name} is a valid v1.0 profile`);
+  assert(first.possibilities.length <= 3, `${name} returns at most three qualified recommendations`);
+  const rejectedIds = new Set(
+    first.trace.rejectedBeforeScoring.map((candidate) => candidate.candidateId),
+  );
+  assert(
+    first.trace.rankedCandidates.every(
+      (candidate) => !rejectedIds.has(candidate.candidate.id),
+    ),
+    `${name} never scores an eligibility or contradiction rejection`,
+  );
+  assert(
+    first.possibilities.every((possibility) =>
+      first.trace.shortlistDecisions.some(
+        (decision) =>
+          decision.candidateId === possibility.candidateId &&
+          decision.qualified &&
+          decision.selectedPersonality === possibility.personality,
+      ),
+    ),
+    `${name} shortlists only explicitly qualified candidates`,
+  );
   assert(
     first.exclusions.some((candidate) =>
       candidate.candidateId === "japan" &&
@@ -152,17 +174,21 @@ function runVerification() {
   const relaxedFamily = verifyProfile("relaxed family", representativeProfiles.relaxedFamily);
   const cultureCouple = verifyProfile("culture couple", representativeProfiles.cultureCouple);
   const activeFriends = verifyProfile("active friends", representativeProfiles.activeFriends);
+  const knownServedDestination = verifyProfile(
+    "served known destination",
+    representativeProfiles.knownServedDestination,
+  );
   const unsupportedRequest = verifyProfile(
     "unsupported known destination",
     representativeProfiles.knownUnsupportedDestination,
   );
 
-  assert(relaxedFamily.status === "success", "relaxed family produces a qualified three-possibility result");
-  assert(relaxedFamily.possibilities.length === 3, "normal qualified result contains three possibilities");
+  assert(relaxedFamily.possibilities.length > 0, "relaxed family produces at least one qualified possibility");
+  assert(relaxedFamily.possibilities.length <= 3, "normal qualified result contains at most three possibilities");
   assert(
-    relaxedFamily.possibilities.map((possibility) => possibility.personality).join("|") ===
-      "perfect-match|different-rhythm|pleasant-surprise",
-    "the three approved personalities are distinct and ordered",
+    new Set(relaxedFamily.possibilities.map((possibility) => possibility.personality)).size ===
+      relaxedFamily.possibilities.length,
+    "returned personalities are distinct",
   );
   assert(
     new Set(relaxedFamily.possibilities.map((possibility) => possibility.candidateId)).size ===
@@ -175,6 +201,20 @@ function runVerification() {
   );
   assert(JSON.stringify(representativeProfiles.relaxedFamily) === passportBefore, "Passport input remains immutable");
   assert(JSON.stringify(verificationCandidates) === candidatesBefore, "candidate catalogue remains immutable");
+  assert(
+    knownServedDestination.destinationResolution.status === "served" &&
+      knownServedDestination.destinationResolution.matchedCandidateName === "Kerala",
+    "a served free-text destination is acknowledged",
+  );
+  assert(
+    knownServedDestination.possibilities[0]?.candidateId === "kerala",
+    "a served free-text destination leads the recommendation set",
+  );
+  assert(
+    unsupportedRequest.destinationResolution.status === "unserved" &&
+      unsupportedRequest.possibilities.length <= 3,
+    "an unserved free-text destination receives only qualified served alternatives",
+  );
 
   const normalized = normalizeJourneyPassport(representativeProfiles.relaxedFamily, executionContext.evaluationDate);
   assert(normalized.status === "valid", "valid Passport normalizes successfully");
@@ -317,8 +357,8 @@ function runVerification() {
   assert(insufficient.status === "insufficient-candidates", "no eligible candidates returns a typed insufficient state");
   assert(insufficient.possibilities.length === 0, "insufficient result does not duplicate or fabricate candidates");
 
-  assert(cultureCouple.possibilities.length <= 3, "couple profile returns at most three governed possibilities");
-  assert(activeFriends.possibilities.length <= 3, "active friends profile returns at most three governed possibilities");
+  assert(cultureCouple.possibilities.length <= 3, "couple profile returns at most three qualified roles");
+  assert(activeFriends.possibilities.length <= 3, "active friends profile returns at most three qualified roles");
   assert(
     unsupportedRequest.exclusions.some((candidate) => candidate.candidateId === "japan"),
     "unsupported requested destination remains visible in the internal exclusion trace",

@@ -12,7 +12,10 @@ function guidanceForMonths(
   seasonality: readonly { month: number; guidance: SeasonalGuidance }[],
   months: readonly number[],
 ) {
-  return months.map((month) => seasonality.find((entry) => entry.month === month)?.guidance ?? "UNKNOWN");
+  return months.map(
+    (month) =>
+      seasonality.find((entry) => entry.month === month)?.guidance ?? "UNKNOWN",
+  );
 }
 
 function isReviewExpired(reviewValidUntil: string, evaluationDate: string) {
@@ -25,7 +28,9 @@ function companionIsUnsuitable(
 ) {
   return passport.companions.some((companion) =>
     bestFor.some(
-      (suitability) => suitability.travellerType === companion.id && suitability.level === "UNSUITABLE",
+      (suitability) =>
+        suitability.travellerType === companion.id &&
+        suitability.level === "UNSUITABLE",
     ),
   );
 }
@@ -46,7 +51,10 @@ function destinationReasons(
     });
   }
 
-  if (candidate.serviceConfidence === "LIMITED" || candidate.serviceConfidence === "PAUSED") {
+  if (
+    candidate.serviceConfidence === "LIMITED" ||
+    candidate.serviceConfidence === "PAUSED"
+  ) {
     reasons.push({
       code: "SERVICE_CONFIDENCE_BELOW_AUTOMATIC_THRESHOLD",
       scope: "destination",
@@ -64,7 +72,10 @@ function destinationReasons(
     });
   }
 
-  if (candidate.dataQuality === "STALE" || isReviewExpired(candidate.reviewValidUntil, evaluationDate)) {
+  if (
+    candidate.dataQuality === "STALE" ||
+    isReviewExpired(candidate.reviewValidUntil, evaluationDate)
+  ) {
     reasons.push({
       code: "DESTINATION_DATA_STALE",
       scope: "destination",
@@ -75,7 +86,9 @@ function destinationReasons(
 
   if (
     passport.timing.months.length > 0 &&
-    guidanceForMonths(candidate.seasonality, passport.timing.months).includes("NOT_RECOMMENDED")
+    guidanceForMonths(candidate.seasonality, passport.timing.months).includes(
+      "NOT_RECOMMENDED",
+    )
   ) {
     reasons.push({
       code: "DESTINATION_SEASON_NOT_RECOMMENDED",
@@ -87,7 +100,9 @@ function destinationReasons(
 
   if (
     passport.timing.fixed &&
-    guidanceForMonths(candidate.seasonality, passport.timing.months).includes("UNKNOWN")
+    guidanceForMonths(candidate.seasonality, passport.timing.months).includes(
+      "UNKNOWN",
+    )
   ) {
     reasons.push({
       code: "DESTINATION_SEASON_UNKNOWN_FOR_FIXED_DATES",
@@ -134,7 +149,10 @@ function regionReasons(
     });
   }
 
-  if (region.dataQuality === "STALE" || isReviewExpired(region.reviewValidUntil, evaluationDate)) {
+  if (
+    region.dataQuality === "STALE" ||
+    isReviewExpired(region.reviewValidUntil, evaluationDate)
+  ) {
     reasons.push({
       code: "REGION_DATA_STALE",
       scope: "region",
@@ -145,7 +163,9 @@ function regionReasons(
 
   if (
     passport.timing.months.length > 0 &&
-    guidanceForMonths(region.seasonality, passport.timing.months).includes("NOT_RECOMMENDED")
+    guidanceForMonths(region.seasonality, passport.timing.months).includes(
+      "NOT_RECOMMENDED",
+    )
   ) {
     reasons.push({
       code: "REGION_SEASON_NOT_RECOMMENDED",
@@ -157,7 +177,9 @@ function regionReasons(
 
   if (
     passport.timing.fixed &&
-    guidanceForMonths(region.seasonality, passport.timing.months).includes("UNKNOWN")
+    guidanceForMonths(region.seasonality, passport.timing.months).includes(
+      "UNKNOWN",
+    )
   ) {
     reasons.push({
       code: "REGION_SEASON_UNKNOWN_FOR_FIXED_DATES",

@@ -1,0 +1,74 @@
+{
+  "artifacts": {
+    "compatibilityMatrix": {
+      "checksum": "9150b2d9f532a98c88b13ce3b8c03f0f31bfe6ad530a8c14f8e107a22d82fa53",
+      "path": "generated/compatibility-matrix.json"
+    },
+    "constraintLibrary": {
+      "checksum": "786f5ac4e30aad09e1bc092d109a204018121001aee7bb84024cb9f35ebc1f8e",
+      "path": "generated/constraint-library.json"
+    },
+    "journeyDNA": {
+      "checksum": "62fe9a15eac5e1fcb4a2163fe95fe6a34f620142f901c8ddc2e8bcd54f8d583a",
+      "path": "generated/journey-dna.json"
+    },
+    "journeySeeds": {
+      "checksum": "9b61447b3ddc5ac1866a3484c9b828e7f087b3877f9375379614a1aa59f4da70",
+      "path": "generated/journey-seeds.json"
+    },
+    "journeyTemplates": {
+      "checksum": "d9b718487562e524cc63e4392123d6ddfbd5dd0c84717c3926340238f8c64281",
+      "path": "generated/journey-templates.json"
+    },
+    "metadata": {
+      "checksum": "9fb0505ee9fc1252883531d2da6dfdf9ec0991be7aa479e378baef06b28f594d",
+      "path": "generated/metadata.json"
+    },
+    "reasonLibrary": {
+      "checksum": "48a1452098775f05c889314a26abcd574d7d555d1486575f54b57b92bbcc31b9",
+      "path": "generated/reason-library.json"
+    }
+  },
+  "generatedAt": "2026-07-30T13:55:15.295Z",
+  "generatedFromWorkbook": "Journey Director Intelligence Enriched.xlsx",
+  "generation": {
+    "compatibilityRulesGenerated": 3382,
+    "contradictionsGenerated": 244,
+    "durationMilliseconds": 98,
+    "recordsProcessed": 107,
+    "validationRulesExecuted": 12925
+  },
+  "generatorVersion": "1.0.0",
+  "recordCounts": {
+    "attractions": 4,
+    "compatibilityRecords": 3382,
+    "constraintRecords": 1566,
+    "desiredExperiences": 15,
+    "destinationRegions": 107,
+    "emotionalGoals": 11,
+    "experienceClusters": 2,
+    "islands": 8,
+    "journeyBases": 89,
+    "journeyDNARecords": 89,
+    "journeySeedRecords": 89,
+    "journeyTemplateRecords": 89,
+    "reasonCodes": 18,
+    "travellerTypes": 5
+  },
+  "schemaVersion": "1.0",
+  "validation": {
+    "checksExecuted": 12925,
+    "checksFailed": 0,
+    "checksPassed": 12925,
+    "reviewRequiredRecords": 15,
+    "status": "PASS",
+    "warnings": 16
+  },
+  "workbookChecksum": "b90a6af3d661197dcdebe75b941eb060788fbe2cb209b67ae4167560d5a1f8a8",
+  "workbookMetadata": {
+    "createdAt": null,
+    "filename": "Journey Director Intelligence Enriched.xlsx",
+    "modifiedAt": null,
+    "version": null
+  }
+}

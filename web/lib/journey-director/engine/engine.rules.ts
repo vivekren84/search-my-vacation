@@ -1,7 +1,9 @@
 import type { JourneyFeeling } from "../../../types/journey-passport.types";
 
 import type {
+  CandidateCapabilities,
   ComfortLevel,
+  CoreIntent,
   DestinationScoreDimension,
   EmotionId,
   MemoryGoalId,
@@ -12,15 +14,50 @@ import type {
   TravellerType,
 } from "./engine.types";
 
+export const CORE_INTENT_CAPABILITY: Readonly<
+  Record<CoreIntent, keyof CandidateCapabilities>
+> = {
+  MOUNTAIN: "mountain",
+  BEACH: "beach",
+  WILDLIFE: "wildlife",
+  CITY: "city",
+  HERITAGE: "heritage",
+  WELLNESS: "wellness",
+  NATURE: "nature",
+  ADVENTURE: "adventure",
+};
+
+export const DREAM_CORE_INTENT_MAP: Readonly<
+  Partial<Record<string, CoreIntent>>
+> = {
+  "Tropical Escape": "BEACH",
+  "Mountain Retreat": "MOUNTAIN",
+  "City Discovery": "CITY",
+  "Winter Wonderland": "MOUNTAIN",
+  "Wildlife Adventure": "WILDLIFE",
+};
+
+export const TRAVEL_STYLE_CORE_INTENT_MAP: Readonly<
+  Partial<Record<string, CoreIntent>>
+> = {
+  Relaxation: "WELLNESS",
+  Adventure: "ADVENTURE",
+  "Culture & Heritage": "HERITAGE",
+  Nature: "NATURE",
+  Wildlife: "WILDLIFE",
+  "Beaches & Islands": "BEACH",
+};
+
 export const DESTINATION_SCORE_WEIGHTS: Readonly<Record<DestinationScoreDimension, number>> = {
-  "emotional-alignment": 24,
-  "theme-experience-alignment": 16,
-  "traveller-companion-suitability": 12,
-  "travel-pace-alignment": 10,
-  "comfort-alignment": 10,
-  "season-timing-suitability": 10,
+  "core-intent-alignment": 20,
+  "emotional-alignment": 18,
+  "theme-experience-alignment": 12,
+  "traveller-companion-suitability": 10,
+  "travel-pace-alignment": 8,
+  "comfort-alignment": 8,
+  "season-timing-suitability": 8,
   "region-match-quality": 8,
-  "memory-goal-alignment": 6,
+  "memory-goal-alignment": 4,
   "operational-confidence": 4,
 };
 
@@ -41,10 +78,10 @@ export const PENALTY_POINTS: Readonly<Record<PenaltySeverity, number>> = {
 };
 
 export const PERSONALITY_THRESHOLDS = {
-  perfectMatch: { destination: 78, region: 75 },
-  differentRhythm: { destination: 70, region: 68 },
-  pleasantSurprise: { destination: 68, region: 68 },
-  humanReview: { destination: 60, region: 60 },
+  perfectMatch: { destination: 60, region: 40 },
+  differentRhythm: { destination: 56, region: 35 },
+  pleasantSurprise: { destination: 54, region: 35 },
+  humanReview: { destination: 50, region: 40 },
 } as const;
 
 export const PACE_ORDER: readonly TravelPace[] = ["relaxed", "balanced", "explorer", "fast-paced"];

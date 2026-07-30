@@ -1,0 +1,193 @@
+{
+  "generatorVersion": "1.0.0",
+  "records": [
+    {
+      "category": "Comfort",
+      "context": [
+        "Compatibility",
+        "Constraint",
+        "Recommendation"
+      ],
+      "description": "The requested comfort level is not explicitly present in the workbook comfort range.",
+      "reasonCode": "COMFORT_LIMITED",
+      "summary": "Comfort Limited"
+    },
+    {
+      "category": "Comfort",
+      "context": [
+        "Compatibility",
+        "Recommendation"
+      ],
+      "description": "The requested comfort level is explicitly present in the workbook comfort range.",
+      "reasonCode": "COMFORT_SUPPORTED",
+      "summary": "Comfort Supported"
+    },
+    {
+      "category": "Experience",
+      "context": [
+        "Compatibility",
+        "Constraint",
+        "Recommendation"
+      ],
+      "description": "The workbook identifies an incompatible fit that must be rejected before ranking.",
+      "reasonCode": "CONTRADICTION_EXPERIENCE_MISMATCH",
+      "summary": "Contradiction Experience Mismatch"
+    },
+    {
+      "category": "Emotion",
+      "context": [
+        "Compatibility",
+        "Recommendation"
+      ],
+      "description": "The workbook records this as a defining emotion fit for the region.",
+      "reasonCode": "EMOTION_DIRECT_MATCH",
+      "summary": "Emotion Direct Match"
+    },
+    {
+      "category": "Emotion",
+      "context": [
+        "Compatibility",
+        "Recommendation"
+      ],
+      "description": "The workbook records a suitable emotion fit with appropriate journey design.",
+      "reasonCode": "EMOTION_SUPPORTING_MATCH",
+      "summary": "Emotion Supporting Match"
+    },
+    {
+      "category": "Emotion",
+      "context": [
+        "Compatibility",
+        "Constraint",
+        "Recommendation"
+      ],
+      "description": "The workbook records a weak emotion fit for this region.",
+      "reasonCode": "EMOTION_WEAK_MATCH",
+      "summary": "Emotion Weak Match"
+    },
+    {
+      "category": "Experience",
+      "context": [
+        "Compatibility",
+        "Recommendation"
+      ],
+      "description": "The workbook records this as a defining experience fit for the region.",
+      "reasonCode": "EXPERIENCE_PRIMARY_MATCH",
+      "summary": "Experience Primary Match"
+    },
+    {
+      "category": "Experience",
+      "context": [
+        "Compatibility",
+        "Recommendation"
+      ],
+      "description": "The workbook records a strong supporting experience fit for the region.",
+      "reasonCode": "EXPERIENCE_SECONDARY_MATCH",
+      "summary": "Experience Secondary Match"
+    },
+    {
+      "category": "Experience",
+      "context": [
+        "Compatibility",
+        "Constraint",
+        "Recommendation"
+      ],
+      "description": "The workbook records a weak experience fit for this region.",
+      "reasonCode": "EXPERIENCE_WEAK_MATCH",
+      "summary": "Experience Weak Match"
+    },
+    {
+      "category": "Operational",
+      "context": [
+        "Constraint",
+        "Recommendation"
+      ],
+      "description": "The workbook marks this record for business or operational review before primary recommendation use.",
+      "reasonCode": "OPERATIONAL_REVIEW_REQUIRED",
+      "summary": "Operational Review Required"
+    },
+    {
+      "category": "Pace",
+      "context": [
+        "Compatibility",
+        "Constraint",
+        "Recommendation"
+      ],
+      "description": "The requested journey pace is not explicitly present in the workbook pace range.",
+      "reasonCode": "PACE_LIMITED",
+      "summary": "Pace Limited"
+    },
+    {
+      "category": "Pace",
+      "context": [
+        "Compatibility",
+        "Recommendation"
+      ],
+      "description": "The requested journey pace is explicitly present in the workbook pace range.",
+      "reasonCode": "PACE_SUPPORTED",
+      "summary": "Pace Supported"
+    },
+    {
+      "category": "Operational",
+      "context": [
+        "Constraint",
+        "Recommendation"
+      ],
+      "description": "The record is an attraction or experience cluster and cannot become a primary Journey Director recommendation.",
+      "reasonCode": "PRIMARY_RECOMMENDATION_NOT_ALLOWED",
+      "summary": "Primary Recommendation Not Allowed"
+    },
+    {
+      "category": "Constraint",
+      "context": [
+        "Constraint",
+        "Recommendation"
+      ],
+      "description": "International destinations are excluded when the traveller explicitly requests domestic journeys only.",
+      "reasonCode": "TRAVEL_SCOPE_DOMESTIC_REQUIRED",
+      "summary": "Travel Scope Domestic Required"
+    },
+    {
+      "category": "Constraint",
+      "context": [
+        "Constraint",
+        "Recommendation"
+      ],
+      "description": "Domestic destinations are excluded when the traveller explicitly requests international journeys only.",
+      "reasonCode": "TRAVEL_SCOPE_INTERNATIONAL_REQUIRED",
+      "summary": "Travel Scope International Required"
+    },
+    {
+      "category": "Traveller",
+      "context": [
+        "Compatibility",
+        "Constraint",
+        "Recommendation"
+      ],
+      "description": "The workbook records a limited traveller fit that requires adjustment.",
+      "reasonCode": "TRAVELLER_LIMITED",
+      "summary": "Traveller Limited"
+    },
+    {
+      "category": "Traveller",
+      "context": [
+        "Compatibility",
+        "Recommendation"
+      ],
+      "description": "The workbook records a strong supporting traveller fit for the region.",
+      "reasonCode": "TRAVELLER_STRONG_MATCH",
+      "summary": "Traveller Strong Match"
+    },
+    {
+      "category": "Traveller",
+      "context": [
+        "Compatibility",
+        "Recommendation"
+      ],
+      "description": "The workbook records a suitable traveller fit with appropriate journey design.",
+      "reasonCode": "TRAVELLER_SUITABLE",
+      "summary": "Traveller Suitable"
+    }
+  ],
+  "schemaVersion": "1.0",
+  "workbookChecksum": "b90a6af3d661197dcdebe75b941eb060788fbe2cb209b67ae4167560d5a1f8a8"
+}

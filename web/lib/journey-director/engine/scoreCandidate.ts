@@ -1,5 +1,6 @@
 import {
   COMFORT_ORDER,
+  CORE_INTENT_CAPABILITY,
   DESTINATION_SCORE_WEIGHTS,
   PACE_ORDER,
   PENALTY_POINTS,
@@ -8,7 +9,7 @@ import {
 import type {
   AppliedPenalty,
   CandidateConcern,
-  CandidateEligibility,
+  CandidateContradictionEvaluation,
   CandidateEvidence,
   ComfortLevel,
   DestinationScoreDimension,
@@ -29,6 +30,7 @@ import type {
 } from "./engine.types";
 
 const SCORE_LABELS: Record<DestinationScoreDimension | RegionScoreDimension, string> = {
+  "core-intent-alignment": "Core journey intent alignment",
   "emotional-alignment": "Emotional alignment",
   "theme-experience-alignment": "Theme and experience alignment",
   "traveller-companion-suitability": "Traveller and companion suitability",
@@ -369,12 +371,18 @@ function scoreRegionComparator(left: RegionScore, right: RegionScore) {
 }
 
 export function scoreEligibleCandidate(
-  eligibility: CandidateEligibility,
+  evaluation: CandidateContradictionEvaluation,
   passport: NormalizedJourneyPassport,
 ): RankedCandidate {
+  if (!evaluation.passed) {
+    throw new Error(
+      `Candidate ${evaluation.eligibility.candidate.id} reached scoring after a contradiction failure.`,
+    );
+  }
+
+  const eligibility = evaluation.eligibility;
   const candidate = eligibility.candidate;
-  const regionScores = eligibility.regions
-    .filter((region) => region.eligible)
+  const regionScores = evaluation.compatibleRegions
     .map((region) => scoreRegion(region, passport))
     .sort(scoreRegionComparator);
   const selectedRegion = regionScores[0];
@@ -392,8 +400,25 @@ export function scoreEligibleCandidate(
   const region = selectedRegion.score / 100;
   const memory = memoryMatch(passport.memoryGoals, candidate.memoryGoals, candidate.signatureExperiences);
   const operational = operationalMatch(candidate.serviceConfidence);
+  const coreIntentCapability = passport.coreIntent.intent
+    ? CORE_INTENT_CAPABILITY[passport.coreIntent.intent]
+    : undefined;
 
   const breakdown: ScoreFactor[] = [
+    createFactor(
+      "core-intent-alignment",
+      1,
+      DESTINATION_SCORE_WEIGHTS["core-intent-alignment"],
+      passport.coreIntent.evidence,
+      coreIntentCapability
+        ? [
+            `${selectedRegion.region.id}:${coreIntentCapability}`,
+          ]
+        : ["no-strong-core-intent"],
+      coreIntentCapability
+        ? undefined
+        : "No strong physical core intent was detected; neutral credit applied.",
+    ),
     createFactor(
       "emotional-alignment",
       emotional.match,

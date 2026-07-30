@@ -44,6 +44,34 @@ function adapt(
   });
 }
 
+function hasValidPublicPossibilityFields(
+  possibility: ReturnType<typeof adaptJourneyRecommendations>["possibilities"][number],
+  index: number,
+) {
+  return (
+    possibility.id.length > 0 &&
+    possibility.candidateId.length > 0 &&
+    possibility.regionId.length > 0 &&
+    possibility.destination.length > 0 &&
+    possibility.region.length > 0 &&
+    possibility.summary.length > 0 &&
+    possibility.heroImage.length > 0 &&
+    possibility.heroImageAlt.length > 0 &&
+    possibility.recommendationOrder === index + 1 &&
+    possibility.personalityLabel.length > 0 &&
+    possibility.personalityDescription.length > 0 &&
+    Number.isFinite(possibility.matchStrength) &&
+    possibility.reasons.length > 0 &&
+    possibility.supportingEvidence.length > 0 &&
+    possibility.experiences.length > 0 &&
+    possibility.recommendedTravelStyle.length > 0 &&
+    possibility.confidenceNote.length > 0 &&
+    possibility.ctaLabel.length > 0 &&
+    possibility.handoffHeadline.length > 0 &&
+    possibility.handoffMessage.length > 0
+  );
+}
+
 function verifyPurePresentationBoundary() {
   const files = [
     "recommendation-adapter.ts",
@@ -135,6 +163,27 @@ function runVerification() {
     "presented reasons retain explicit engine evidence references",
   );
   assert(
+    first.possibilities.every(
+      (item) =>
+        item.experiences.length > 0 &&
+        Boolean(item.recommendedTravelStyle) &&
+        Boolean(item.confidenceNote),
+    ),
+    "every recommendation includes experiences, travel style and confidence context",
+  );
+  assert(
+    first.possibilities.every(
+      (item) => new Set(item.reasons.map((reason) => reason.title)).size === item.reasons.length,
+    ),
+    "recommendation sections do not repeat reason headings",
+  );
+  assert(
+    !/\b(approved|governed classifications|recommendation threshold)\b/i.test(
+      JSON.stringify(first.possibilities),
+    ),
+    "traveller-facing recommendation copy contains no internal terminology",
+  );
+  assert(
     first.reflection.includes(passport.name) &&
       first.reflection.toLowerCase().includes("family") &&
       first.reflection.toLowerCase().includes("tropical escape"),
@@ -147,20 +196,75 @@ function runVerification() {
     "uncollected Release 1 details remain unknown",
   );
 
-  const partialCandidateId = engineResult.possibilities[0]?.candidateId;
-  assert(Boolean(partialCandidateId), "success fixture exposes a qualified candidate");
-  const partialEngineResult = generateJourneyRecommendations(
-    passport,
-    verificationCandidates.filter(
-      (candidate) => candidate.id === partialCandidateId,
-    ),
+  const knownServed = adapt(representativeProfiles.knownServedDestination);
+  assert(
+    knownServed.destinationResolution.status === "served" &&
+      knownServed.possibilities[0]?.destination === "Kerala",
+    "served free-text destination is acknowledged and leads the shortlist",
+  );
+  const knownUnservedEngineResult = generateJourneyRecommendations(
+    representativeProfiles.knownUnsupportedDestination,
+    verificationCandidates,
     executionContext,
   );
-  const partial = adapt(passport, partialEngineResult);
-  assert(
-    partial.state === "partial" && partial.possibilities.length === 1,
-    "partial results remain partial without fabricated possibilities",
+  const knownUnserved = adapt(
+    representativeProfiles.knownUnsupportedDestination,
+    knownUnservedEngineResult,
   );
+  assert(
+    knownUnserved.destinationResolution.status === "unserved" &&
+      knownUnserved.possibilities.length ===
+        knownUnservedEngineResult.possibilities.length &&
+      knownUnserved.possibilities.map((item) => item.candidateId).join("|") ===
+        knownUnservedEngineResult.possibilities
+          .map((item) => item.candidateId)
+          .join("|"),
+    "unserved free-text destination preserves only qualified served alternatives",
+  );
+
+  const qualifiedCandidateIds = engineResult.possibilities.map(
+    (possibility) => possibility.candidateId,
+  );
+  [1, 2, 3].forEach((expectedCount) => {
+    const qualifiedIds = new Set(qualifiedCandidateIds.slice(0, expectedCount));
+    const qualifiedEngineResult = generateJourneyRecommendations(
+      passport,
+      verificationCandidates.filter((candidate) =>
+        qualifiedIds.has(candidate.id),
+      ),
+      executionContext,
+    );
+    const adapted = adapt(passport, qualifiedEngineResult);
+    const serializedAdapted = JSON.stringify(adapted);
+
+    assert(
+      qualifiedEngineResult.possibilities.length === expectedCount,
+      `${expectedCount}-recommendation fixture contains exactly ${expectedCount} qualified engine possibilities`,
+    );
+    assert(
+      adapted.state === (expectedCount === 3 ? "success" : "partial") &&
+        adapted.possibilities.length === expectedCount,
+      `${expectedCount}-recommendation engine output maps to the correct public state without manufacturing possibilities`,
+    );
+    assert(
+      adapted.possibilities.map((item) => item.candidateId).join("|") ===
+        qualifiedEngineResult.possibilities
+          .map((item) => item.candidateId)
+          .join("|"),
+      `${expectedCount}-recommendation output preserves exact engine order`,
+    );
+    assert(
+      adapted.possibilities.every(hasValidPublicPossibilityFields),
+      `${expectedCount}-recommendation output contains valid public possibility fields`,
+    );
+    assert(
+      !Object.prototype.hasOwnProperty.call(adapted, "trace") &&
+        !serializedAdapted.includes("\"trace\"") &&
+        !serializedAdapted.includes("\"rankedCandidates\"") &&
+        !serializedAdapted.includes("\"shortlistDecisions\""),
+      `${expectedCount}-recommendation output exposes no internal decision trace`,
+    );
+  });
 
   const insufficientInputResult = generateJourneyRecommendations(
     representativeProfiles.incomplete,

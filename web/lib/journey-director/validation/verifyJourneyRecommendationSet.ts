@@ -15,6 +15,7 @@ import {
   generateJourneyRecommendations,
   type EngineExecutionContext,
   type EngineResult,
+  type JourneyCandidate,
 } from "../engine";
 import { adaptJourneyRecommendations } from "../recommendation-adapter";
 import { representativeProfiles } from "./representativeProfiles";
@@ -73,6 +74,29 @@ function expectedRecommendationSet(
     recommendationSet: adaptJourneyRecommendations({
       passport,
       engineResult,
+    }),
+  };
+}
+
+function candidateWithReviewWindow(
+  candidate: JourneyCandidate,
+  reviewValidUntil: string,
+  omitOptionalRegionCapabilities = false,
+): JourneyCandidate {
+  return {
+    ...candidate,
+    reviewValidUntil,
+    regions: candidate.regions.map((region) => {
+      const reviewedRegion = {
+        ...region,
+        reviewValidUntil,
+      };
+
+      if (omitOptionalRegionCapabilities) {
+        delete reviewedRegion.capabilities;
+      }
+
+      return reviewedRegion;
     }),
   };
 }
@@ -174,7 +198,11 @@ function verifyDeterministicEngineAdapterFlow() {
   );
   assert(first.isFallback === false, "production orchestration never marks output as a demo fallback");
 
-  const afterReviewTimestamp = "2026-08-23T09:00:00.000Z";
+  const reviewExpiry = new Date(
+    `${RELEASE1_CATALOGUE_METADATA.catalogueReviewValidUntil}T09:00:00.000Z`,
+  );
+  reviewExpiry.setUTCDate(reviewExpiry.getUTCDate() + 1);
+  const afterReviewTimestamp = reviewExpiry.toISOString();
   const afterReview = createJourneyRecommendationSet(passport, afterReviewTimestamp);
   const expectedAfterReview = expectedRecommendationSet(passport, afterReviewTimestamp);
 
@@ -186,7 +214,122 @@ function verifyDeterministicEngineAdapterFlow() {
   assert(
     afterReview.state === "unavailable" &&
       afterReview.possibilities.length === 0,
-    "an execution date beyond the catalogue review window cannot surface stale candidates",
+    "expired catalogue review metadata suppresses stale recommendations",
+  );
+  assert(
+    expectedAfterReview.engineResult.trace.eligibilityEvaluations.length ===
+      release1JourneyCandidates.length &&
+      expectedAfterReview.engineResult.trace.eligibilityEvaluations.every(
+        (candidate) =>
+          !candidate.passed &&
+          candidate.failedReasons.some(
+            (reason) => reason.code === "DESTINATION_DATA_STALE",
+          ),
+      ),
+    "expired review metadata is recorded as an eligibility failure for every stale destination",
+  );
+  assert(
+    expectedAfterReview.engineResult.trace.rejectedBeforeScoring.length ===
+      release1JourneyCandidates.length &&
+      expectedAfterReview.engineResult.trace.rejectedBeforeScoring.every(
+        (candidate) =>
+          candidate.stage === "ELIGIBILITY_FAILURE" &&
+          candidate.reasonCodes.includes("DESTINATION_DATA_STALE"),
+      ),
+    "the internal trace records stale destinations as rejected before scoring",
+  );
+  assert(
+    expectedAfterReview.engineResult.trace.rankedCandidates.length === 0 &&
+      expectedAfterReview.engineResult.trace.shortlistDecisions.length === 0,
+    "stale destinations never reach ranking or shortlist decisions",
+  );
+}
+
+function verifyReviewFreshnessAndOptionalMetadata() {
+  const staleCandidate = release1JourneyCandidates.find(
+    (candidate) => candidate.id === "kerala",
+  );
+  const reviewedAlternative = release1JourneyCandidates.find(
+    (candidate) => candidate.id === "bali",
+  );
+
+  assert(staleCandidate !== undefined, "stale-review fixture includes Kerala");
+  assert(reviewedAlternative !== undefined, "reviewed-alternative fixture includes Bali");
+
+  const staleCandidateId = staleCandidate.id;
+  const reviewedAlternativeId = reviewedAlternative.id;
+  const reviewedAlternativeWithoutCapabilities = candidateWithReviewWindow(
+    reviewedAlternative,
+    "2026-09-30",
+    true,
+  );
+  const controlledResult = generateJourneyRecommendations(
+    representativeProfiles.relaxedFamily,
+    [
+      candidateWithReviewWindow(staleCandidate, "2026-08-22"),
+      reviewedAlternativeWithoutCapabilities,
+    ],
+    context("2026-08-23T09:00:00.000Z"),
+  );
+  const controlledPresentation = adaptJourneyRecommendations({
+    passport: representativeProfiles.relaxedFamily,
+    engineResult: controlledResult,
+  });
+  const staleEligibility = controlledResult.trace.eligibilityEvaluations.find(
+    (candidate) => candidate.candidateId === staleCandidateId,
+  );
+  const activeEligibility = controlledResult.trace.eligibilityEvaluations.find(
+    (candidate) => candidate.candidateId === reviewedAlternativeId,
+  );
+
+  assert(
+    staleEligibility?.passed === false &&
+      staleEligibility.failedReasons.some(
+        (reason) => reason.code === "DESTINATION_DATA_STALE",
+      ),
+    "an expired destination is rejected by the freshness eligibility gate",
+  );
+  assert(
+    controlledResult.trace.rejectedBeforeScoring.some(
+      (candidate) =>
+        candidate.candidateId === staleCandidateId &&
+        candidate.stage === "ELIGIBILITY_FAILURE" &&
+        candidate.reasonCodes.includes("DESTINATION_DATA_STALE"),
+    ),
+    "the controlled trace explains the stale destination rejection",
+  );
+  assert(
+    !controlledResult.trace.rankedCandidates.some(
+      (candidate) => candidate.candidate.id === staleCandidateId,
+    ) &&
+      !controlledResult.trace.shortlistDecisions.some(
+        (candidate) => candidate.candidateId === staleCandidateId,
+    ),
+    "the stale destination is neither scored nor considered for the shortlist",
+  );
+  assert(
+    controlledPresentation.excludedCandidateIds.includes(staleCandidateId) &&
+      controlledPresentation.possibilities.every(
+        (candidate) => candidate.candidateId !== staleCandidateId,
+      ),
+    "presentation mapping preserves the stale exclusion without reintroducing the rejected destination",
+  );
+  assert(
+    activeEligibility?.passed === true &&
+      controlledResult.trace.rankedCandidates.some(
+        (candidate) => candidate.candidate.id === reviewedAlternativeId,
+      ) &&
+      controlledResult.possibilities.some(
+        (candidate) => candidate.candidateId === reviewedAlternativeId,
+      ),
+    "an active sufficiently reviewed alternative remains eligible, ranked, and presentable",
+  );
+  assert(
+    reviewedAlternativeWithoutCapabilities.regions.every(
+      (region) => region.capabilities === undefined,
+    ) &&
+      activeEligibility?.regions.every((region) => region.passed) === true,
+    "omitting optional non-critical region capability metadata does not automatically reject an otherwise valid alternative",
   );
 }
 
@@ -195,6 +338,8 @@ function verifyStateSafetyAndPresentationGaps() {
     representativeProfiles.relaxedFamily,
     representativeProfiles.cultureCouple,
     representativeProfiles.activeFriends,
+    representativeProfiles.knownServedDestination,
+    representativeProfiles.knownUnsupportedDestination,
   ];
   const results = validProfiles.map((passport) => ({
     passport,
@@ -219,8 +364,13 @@ function verifyStateSafetyAndPresentationGaps() {
     "the governed production catalogue produces three qualified relaxed-family possibilities",
   );
   assert(
-    relaxedFamily?.possibilities.every((possibility) => possibility.moments.length > 0),
-    "the qualified runtime recommendations retain dedicated traveller-facing journey moments",
+    relaxedFamily?.possibilities.every(
+      (possibility) =>
+        possibility.supportingEvidence.length >= 2 &&
+        Boolean(possibility.summary) &&
+        Boolean(possibility.heroImage),
+    ),
+    "generated runtime recommendations retain explainability and approved image fallbacks",
   );
 
   const insufficient = createJourneyRecommendationSet(
@@ -272,6 +422,7 @@ function verifyOutputBoundary() {
   );
   const allowedRootKeys = [
     "excludedCandidateIds",
+    "destinationResolution",
     "insights",
     "isFallback",
     "possibilities",
@@ -340,6 +491,7 @@ function verifyInvalidExecutionTime() {
 function runVerification() {
   verifyProductionDependencyBoundary();
   verifyDeterministicEngineAdapterFlow();
+  verifyReviewFreshnessAndOptionalMetadata();
   verifyStateSafetyAndPresentationGaps();
   verifyOutputBoundary();
   verifyInvalidExecutionTime();
