@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "brand:export": "node scripts/brand/export-brand-assets.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -12,12 +13,18 @@
     "verify:journey-catalogue": "tsc -p tsconfig.engine-verification.json && node node_modules/.cache/smv-engine-verification/lib/journey-director/validation/verifyRuntimeCatalogue.js",
     "verify:journey-orchestration": "tsc -p tsconfig.engine-verification.json && node node_modules/.cache/smv-engine-verification/lib/journey-director/validation/verifyJourneyRecommendationSet.js",
     "verify:journey-runtime": "tsc -p tsconfig.engine-verification.json && node node_modules/.cache/smv-engine-verification/lib/journey-director/validation/verifyRuntimeJourneyDirector.js",
+    "verify:journey-scenarios": "tsc -p tsconfig.engine-verification.json && node node_modules/.cache/smv-engine-verification/lib/journey-director/validation/verifyJourneyScenarios.js",
+    "verify:journey-leads": "tsc -p tsconfig.lead-verification.json && node node_modules/.cache/smv-lead-verification/lib/journey-leads/validation/verifyJourneyLeads.js",
     "build:journey-intelligence-generator": "tsc -p scripts/journey-intelligence/tsconfig.json",
     "generate:journey-intelligence": "npm run build:journey-intelligence-generator && node node_modules/.cache/smv-journey-intelligence/index.js",
     "verify:journey-intelligence": "npm run build:journey-intelligence-generator && node node_modules/.cache/smv-journey-intelligence/verifyArtifacts.js",
     "verify:journey-intelligence:determinism": "npm run build:journey-intelligence-generator && node node_modules/.cache/smv-journey-intelligence/verifyDeterminism.js",
     "verify:journey-intelligence:runtime": "tsc -p tsconfig.engine-verification.json && node node_modules/.cache/smv-engine-verification/lib/journey-director/validation/verifyRuntimeIntelligence.js",
-    "verify:journey-intelligence:steering": "tsc -p tsconfig.engine-verification.json && node node_modules/.cache/smv-engine-verification/lib/journey-director/validation/verifyIntelligenceSteering.js"
+    "verify:journey-intelligence:steering": "tsc -p tsconfig.engine-verification.json && node node_modules/.cache/smv-engine-verification/lib/journey-director/validation/verifyIntelligenceSteering.js",
+    "build:journey-itinerary-generator": "tsc -p scripts/journey-itineraries/tsconfig.json",
+    "generate:journey-itineraries": "npm run build:journey-itinerary-generator && node node_modules/.cache/smv-journey-itineraries/scripts/journey-itineraries/generate.js",
+    "verify:journey-itineraries": "npm run build:journey-itinerary-generator && node node_modules/.cache/smv-journey-itineraries/scripts/journey-itineraries/verify.js && tsc -p tsconfig.itinerary-verification.json && node node_modules/.cache/smv-itinerary-verification/lib/journey-itineraries/validation/verifyItineraryRuntime.js",
+    "verify:destination-itineraries": "tsc -p tsconfig.itinerary-verification.json && node node_modules/.cache/smv-itinerary-verification/lib/journey-itineraries/validation/verifyDestinationItineraries.js"
   },
   "dependencies": {
     "next": "16.2.10",
@@ -31,6 +38,9 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
+    "fast-xml-parser": "^5.10.1",
+    "fflate": "^0.8.3",
+    "sharp": "^0.34.5",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

@@ -12,10 +12,10 @@ export const JOURNEY_PASSPORT_ENTRY_KEY = "smv:journey-passport:entry:v1";
 const MAX_DRAFT_AGE = 24 * 60 * 60 * 1000;
 
 export const createInitialJourneyPassportState = (entryContext: JourneyPassportEntryContext = {}): JourneyPassportState => ({
-  schemaVersion: JOURNEY_PASSPORT_SCHEMA_VERSION, currentMoment: "welcome", name: "", companion: "", dreamJourney: "", travelStyles: [], timing: "", startDate: "", endDate: "", destinationMode: entryContext.destination ? "known" : "", destination: entryContext.destination ?? "", entryContext, visitedMoments: ["welcome"], completion: "idle", navigationDirection: "none", updatedAt: Date.now(),
+  schemaVersion: JOURNEY_PASSPORT_SCHEMA_VERSION, currentMoment: "welcome", name: "", companion: "", dreamJourney: "", travelStyles: [], timing: "", startDate: "", endDate: "", destinationMode: entryContext.destination ? "known" : "", destination: entryContext.destination ?? "", mobile: "", journeyReference: "", entryContext, visitedMoments: ["welcome"], completion: "idle", navigationDirection: "none", updatedAt: Date.now(),
 });
 
-type UpdateValue = Partial<Pick<JourneyPassportState, "name" | "companion" | "dreamJourney" | "timing" | "startDate" | "endDate" | "destination">>;
+type UpdateValue = Partial<Pick<JourneyPassportState, "name" | "companion" | "dreamJourney" | "timing" | "startDate" | "endDate" | "destination" | "mobile" | "journeyReference">>;
 type Action =
   | { type: "update"; value: UpdateValue }
   | { type: "toggle-style"; value: string }
@@ -76,6 +76,8 @@ function sanitiseDraft(value: unknown): JourneyPassportDraft | null {
     startDate: typeof raw.startDate === "string" ? raw.startDate : "", endDate: typeof raw.endDate === "string" ? raw.endDate : "",
     destinationMode: raw.destinationMode === "known" || raw.destinationMode === "discovery" ? raw.destinationMode : "",
     destination: typeof raw.destination === "string" ? raw.destination.slice(0, 100) : "",
+    mobile: typeof raw.mobile === "string" ? raw.mobile.slice(0, 24) : "",
+    journeyReference: typeof raw.journeyReference === "string" ? raw.journeyReference.slice(0, 12) : "",
     visitedMoments: Array.isArray(raw.visitedMoments) ? raw.visitedMoments.filter((id): id is JourneyMomentId => momentValues.has(id as JourneyMomentId)) : ["welcome"],
     completion: "idle", navigationDirection: "none", updatedAt: typeof raw.updatedAt === "number" ? raw.updatedAt : draft.savedAt,
   };
@@ -107,7 +109,7 @@ export function useJourneyPassport(initialEntryContext: JourneyPassportEntryCont
   }, []); // Initial browser hydration only.
 
   useEffect(() => {
-    if (!hydrated || state.completion === "complete" || state.currentMoment === "welcome") return;
+    if (!hydrated || state.completion !== "idle" || state.currentMoment === "welcome") return;
     try { const draft: JourneyPassportDraft = { schemaVersion: JOURNEY_PASSPORT_SCHEMA_VERSION, state, savedAt: Date.now() }; sessionStorage.setItem(JOURNEY_PASSPORT_SESSION_KEY, JSON.stringify(draft)); } catch { /* In-memory flow remains available. */ }
   }, [hydrated, state]);
 

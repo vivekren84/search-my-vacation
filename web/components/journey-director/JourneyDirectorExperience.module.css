@@ -40,7 +40,7 @@
   align-items: center;
   width: 100%;
   min-height: 6.5rem;
-  padding-inline: max(1rem, calc((100% - 90rem) / 2));
+  padding-inline: max(var(--layout-gutter), calc((100% - var(--layout-wide)) / 2));
   border-bottom: 1px solid rgb(255 255 255 / 18%);
   background: #20150f;
   color: white;
@@ -61,12 +61,12 @@
 }
 
 .logoLink {
-  width: fit-content;
+  width: clamp(9.25rem, 22vw, 12.5rem);
 }
 
 .logoLink img {
-  width: auto;
-  height: 3.75rem;
+  width: 100%;
+  height: auto;
   object-fit: contain;
 }
 
@@ -237,15 +237,13 @@
 }
 
 .reflectionIntro {
-  display: grid;
-  max-width: 72rem;
-  grid-template-columns: 0.8fr 2fr;
-  gap: 2rem 5rem;
-  align-items: start;
+  max-width: 58rem;
+  margin-inline: auto;
+  text-align: center;
 }
 
 .reflectionIntro h2 {
-  grid-column: 2;
+  margin-top: 1.25rem;
   font-family: Georgia, "Times New Roman", serif;
   font-size: clamp(2.8rem, 6vw, 6rem);
   font-weight: 400;
@@ -254,8 +252,8 @@
 }
 
 .reflectionIntro > p:last-child {
-  grid-column: 2;
   max-width: 48rem;
+  margin: 1.75rem auto 0;
   color: rgb(255 255 255 / 68%);
   font-size: 1.08rem;
   line-height: 1.8;
@@ -270,8 +268,8 @@
 }
 
 .insightCard {
-  min-height: 22rem;
-  padding: 2rem;
+  min-height: 24rem;
+  padding: clamp(2rem, 3vw, 2.75rem);
   border-right: 1px solid rgb(255 255 255 / 14%);
   border-bottom: 1px solid rgb(255 255 255 / 14%);
 }
@@ -320,6 +318,42 @@
   border-bottom: 1px solid rgb(255 255 255 / 35%);
   color: white;
   font-weight: 700;
+}
+
+.destinationNotice {
+  max-width: 72rem;
+  margin: clamp(3.5rem, 7vw, 6rem) auto;
+  padding: clamp(2rem, 5vw, 4rem);
+  border: 1px solid rgb(154 100 46 / 24%);
+  border-radius: 2rem;
+  background:
+    radial-gradient(circle at 92% 8%, rgb(231 183 101 / 20%), transparent 16rem),
+    #fffaf2;
+  box-shadow: 0 24px 70px rgb(62 39 23 / 8%);
+}
+
+.destinationNoticeAlternative {
+  background:
+    radial-gradient(circle at 92% 8%, rgb(231 183 101 / 16%), transparent 16rem),
+    #f7ecdd;
+}
+
+.destinationNotice h2 {
+  max-width: 18ch;
+  margin-top: 0.8rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.1rem, 4vw, 4rem);
+  font-weight: 400;
+  letter-spacing: -0.045em;
+  line-height: 1;
+  text-wrap: balance;
+}
+
+.destinationNotice > p:last-child {
+  max-width: 48rem;
+  margin-top: 1.25rem;
+  color: rgb(43 28 19 / 65%);
+  line-height: 1.8;
 }
 
 .qualities {
@@ -377,8 +411,7 @@
 }
 
 .possibilities:focus-visible {
-  outline: 3px solid var(--journey-copper);
-  outline-offset: -0.75rem;
+  outline: none;
 }
 
 .sectionHeading {
@@ -430,6 +463,8 @@
   box-shadow: 0 20px 60px rgb(62 39 23 / 16%);
   color: white;
   isolation: isolate;
+  display: flex;
+  align-items: flex-end;
   transition: transform 400ms ease, box-shadow 400ms ease, outline-color 400ms ease;
 }
 
@@ -489,7 +524,7 @@
 .cardTopline {
   position: absolute;
   z-index: 2;
-  inset: 1.4rem 1.4rem auto;
+  inset: 1.75rem 1.75rem auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -521,10 +556,11 @@
 }
 
 .cardContent {
-  position: absolute;
+  position: relative;
   z-index: 2;
-  inset: auto 0 0;
-  padding: 2rem;
+  width: 100%;
+  margin-top: auto;
+  padding: clamp(2.25rem, 4vw, 3rem);
 }
 
 .cardContent > p:first-child {
@@ -541,7 +577,7 @@
   font-size: clamp(2.6rem, 4vw, 4rem);
   font-weight: 400;
   letter-spacing: -0.055em;
-  line-height: 0.95;
+  line-height: 1.02;
 }
 
 .possibilityGridThree .supportingCard .cardContent h3 {
@@ -561,10 +597,10 @@
 }
 
 .cardContent > p:nth-of-type(2) {
-  margin-top: 1rem;
+  margin-top: 1.25rem;
   color: rgb(255 255 255 / 72%);
   font-size: 0.85rem;
-  line-height: 1.7;
+  line-height: 1.8;
 }
 
 .cardContent button {
@@ -573,7 +609,7 @@
   min-height: 3.25rem;
   align-items: center;
   justify-content: space-between;
-  margin-top: 1.5rem;
+  margin-top: 2rem;
   padding: 0.75rem 1rem;
   border: 1px solid rgb(255 255 255 / 32%);
   border-radius: 999px;
@@ -796,6 +832,72 @@
   line-height: 1.65;
 }
 
+.journeyProfile {
+  display: grid;
+  margin-top: 3rem;
+  padding: 2rem;
+  border: 1px solid rgb(154 100 46 / 20%);
+  border-radius: 1.5rem;
+  background: #fffaf2;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem 2rem;
+}
+
+.profileHeading,
+.confidenceNote {
+  grid-column: 1 / -1;
+}
+
+.profileHeading h3 {
+  max-width: 20ch;
+  margin-top: 0.55rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.75rem;
+  font-weight: 400;
+  letter-spacing: -0.025em;
+}
+
+.profileItem h4 {
+  color: rgb(43 28 19 / 54%);
+  font-size: 0.63rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.profileItem p,
+.experienceList {
+  margin-top: 0.65rem;
+  color: var(--journey-ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.05rem;
+  line-height: 1.55;
+}
+
+.experienceList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  list-style: none;
+}
+
+.experienceList li {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid rgb(154 100 46 / 22%);
+  border-radius: 999px;
+  background: white;
+  font-family: var(--font-primary), sans-serif;
+  font-size: 0.72rem;
+}
+
+.confidenceNote {
+  padding-top: 1.25rem;
+  border-top: 1px solid rgb(43 28 19 / 12%);
+  color: rgb(43 28 19 / 58%);
+  font-size: 0.78rem;
+  line-height: 1.65;
+}
+
 .cautionList {
   margin-top: 2.5rem;
   padding: 1.25rem 1.5rem;
@@ -821,11 +923,13 @@
 }
 
 .sectionHeadingLeft {
-  max-width: 66rem;
+  max-width: 58rem;
+  margin-inline: auto;
+  text-align: center;
 }
 
 .sectionHeadingLeft > p:last-child {
-  margin-inline: 0;
+  margin-inline: auto;
   color: rgb(255 255 255 / 58%);
 }
 
@@ -834,6 +938,7 @@
   width: 100%;
   margin-top: clamp(3rem, 6vw, 5rem);
   gap: 1rem;
+  margin-inline: auto;
 }
 
 .momentGridOne {
@@ -863,6 +968,8 @@
   border-radius: 1.5rem;
   background: #1d130d;
   isolation: isolate;
+  display: flex;
+  align-items: flex-end;
 }
 
 .momentGridThree .featuredMoment,
@@ -886,10 +993,11 @@
 }
 
 .momentGrid article > div:last-child {
-  position: absolute;
+  position: relative;
   z-index: 2;
-  inset: auto 0 0;
-  padding: 1.5rem;
+  width: 100%;
+  margin-top: auto;
+  padding: clamp(2rem, 4vw, 2.75rem);
 }
 
 .momentGrid article > div span {
@@ -899,19 +1007,287 @@
 }
 
 .momentGrid h3 {
-  margin-top: 0.6rem;
+  margin-top: 0.85rem;
   font-family: Georgia, "Times New Roman", serif;
   font-size: clamp(1.55rem, 2.6vw, 2.5rem);
   font-weight: 400;
   letter-spacing: -0.035em;
-  line-height: 1.05;
+  line-height: 1.12;
 }
 
 .momentGrid p {
-  margin-top: 0.7rem;
+  margin-top: 1rem;
   color: rgb(255 255 255 / 66%);
   font-size: 0.78rem;
-  line-height: 1.55;
+  line-height: 1.7;
+}
+
+.itinerarySection,
+.itineraryFallback {
+  padding: clamp(5rem, 9vw, 8rem) max(1rem, calc((100vw - 78rem) / 2));
+  overflow: hidden;
+  background: linear-gradient(180deg, #fffaf3, #f5eadc);
+}
+
+.itinerarySectionDestination,
+.itineraryFallbackDestination {
+  padding: clamp(2.75rem, 6vw, 4.5rem) clamp(1rem, 4vw, 3rem);
+}
+
+.itinerarySectionDestination .itineraryIntro h2,
+.itineraryFallbackDestination h2 {
+  font-size: clamp(2.35rem, 5vw, 4.35rem);
+}
+
+.itineraryIntro {
+  display: grid;
+  align-items: end;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2rem;
+}
+
+.itineraryIntro h2,
+.itineraryFallback h2 {
+  max-width: 12ch;
+  margin-top: 0.85rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.8rem, 6vw, 5.8rem);
+  font-weight: 400;
+  letter-spacing: -0.055em;
+  line-height: 0.98;
+  text-wrap: balance;
+}
+
+.itineraryRoute {
+  margin-top: 1.25rem;
+  color: rgb(43 28 19 / 60%);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.itineraryDuration {
+  display: grid;
+  min-width: 13rem;
+  gap: 0.45rem;
+  padding: 1.4rem;
+  border: 1px solid rgb(154 100 46 / 24%);
+  border-radius: 1.25rem;
+  background: rgb(255 255 255 / 65%);
+}
+
+.itineraryDuration span {
+  color: var(--journey-copper);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.itineraryDuration strong {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.35rem;
+  font-weight: 400;
+}
+
+.itineraryStartingPoint {
+  max-width: 64rem;
+  margin-top: 2.5rem;
+  padding: 1.25rem 1.4rem;
+  border-left: 3px solid var(--journey-copper);
+  background: rgb(255 255 255 / 58%);
+  color: var(--journey-brown);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1rem, 1.7vw, 1.2rem);
+  line-height: 1.75;
+}
+
+.itinerarySummary {
+  max-width: 55rem;
+  margin-top: 1.5rem;
+  color: rgb(43 28 19 / 64%);
+  line-height: 1.8;
+}
+
+.itineraryHighlights {
+  display: grid;
+  margin-top: 3.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgb(43 28 19 / 14%);
+  grid-template-columns: minmax(11rem, 0.55fr) minmax(0, 1.45fr);
+  gap: 2rem;
+}
+
+.itineraryHighlights h3,
+.itinerarySubheading h3,
+.itineraryList h3,
+.itineraryImportant h3 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: -0.025em;
+}
+
+.itineraryHighlights ul {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem 1.5rem;
+  list-style: none;
+}
+
+.itineraryHighlights li {
+  position: relative;
+  padding-left: 1.4rem;
+  color: rgb(43 28 19 / 72%);
+  line-height: 1.6;
+}
+
+.itineraryHighlights li::before {
+  position: absolute;
+  left: 0;
+  color: var(--journey-copper);
+  content: "✦";
+}
+
+.itineraryDays {
+  margin-top: clamp(4rem, 7vw, 6rem);
+}
+
+.itinerarySubheading h3 {
+  margin-top: 0.65rem;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+}
+
+.dayGrid {
+  display: grid;
+  margin-top: 2rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.dayCard {
+  min-width: 0;
+  padding: clamp(1.25rem, 2.5vw, 1.75rem);
+  border: 1px solid rgb(154 100 46 / 18%);
+  border-radius: 1.25rem;
+  background: rgb(255 255 255 / 74%);
+  overflow-wrap: anywhere;
+}
+
+.dayCard > p:first-child {
+  color: var(--journey-copper);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.dayCard h4 {
+  margin-top: 0.65rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.25rem;
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+.dayCard > p:nth-of-type(2) {
+  margin-top: 1rem;
+  color: rgb(43 28 19 / 70%);
+  font-size: 0.84rem;
+  line-height: 1.72;
+}
+
+.dayMeta,
+.dayNote {
+  margin-top: 1rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid rgb(43 28 19 / 10%);
+  color: rgb(43 28 19 / 58%);
+  font-size: 0.72rem;
+  line-height: 1.6;
+}
+
+.itineraryCollapsed {
+  display: none;
+}
+
+.itineraryExpanded {
+  margin-top: 1rem;
+}
+
+.itineraryDetailGrid {
+  display: grid;
+  margin-top: 2rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.itineraryList,
+.itineraryImportant {
+  padding: 1.5rem;
+  border: 1px solid rgb(154 100 46 / 18%);
+  border-radius: 1.25rem;
+  background: rgb(255 255 255 / 70%);
+}
+
+.itineraryList ul,
+.itineraryImportant ul {
+  display: grid;
+  gap: 0.65rem;
+  margin-top: 1rem;
+  padding-left: 1.15rem;
+  color: rgb(43 28 19 / 66%);
+  font-size: 0.8rem;
+  line-height: 1.65;
+}
+
+.inclusionNote {
+  margin-top: 1.25rem;
+  color: rgb(43 28 19 / 58%);
+  font-size: 0.75rem;
+  line-height: 1.6;
+}
+
+.itineraryToggle {
+  display: flex;
+  width: min(100%, 28rem);
+  min-height: 3.5rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2rem;
+  padding: 0.8rem 1.25rem;
+  border: 1px solid var(--journey-brown);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--journey-brown);
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.itineraryToggle span {
+  font-size: 1.3rem;
+}
+
+.itineraryFallback {
+  text-align: center;
+}
+
+.itineraryFallback h2,
+.itineraryFallback p {
+  margin-inline: auto;
+}
+
+.itineraryFallback > p:not(.eyebrow) {
+  max-width: 48rem;
+  margin-top: 1.25rem;
+  color: rgb(43 28 19 / 66%);
+  line-height: 1.75;
+}
+
+.itineraryLoading {
+  padding: 4rem 1.25rem;
+  background: #f5eadc;
+  color: var(--journey-brown);
+  text-align: center;
 }
 
 .handoff {
@@ -1207,6 +1583,19 @@
     grid-column: 1 / -1;
     grid-row: auto;
   }
+
+  .itineraryIntro,
+  .itineraryHighlights {
+    grid-template-columns: 1fr;
+  }
+
+  .itineraryDuration {
+    width: min(100%, 22rem);
+  }
+
+  .dayGrid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 620px) {
@@ -1220,11 +1609,26 @@
   }
 
   .reflection,
+  .destinationNotice,
   .qualities,
   .possibilities,
   .imagineSection {
     padding-top: 5rem;
     padding-bottom: 5rem;
+  }
+
+  .destinationNotice {
+    margin-inline: 1rem;
+  }
+
+  .journeyProfile {
+    grid-template-columns: 1fr;
+    padding: 1.4rem;
+  }
+
+  .profileHeading,
+  .confidenceNote {
+    grid-column: 1;
   }
 
   .insightGrid,
@@ -1291,15 +1695,20 @@
   .handoffActions button {
     width: 100%;
   }
+
+  .itineraryHighlights ul,
+  .itineraryDetailGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .itineraryToggle {
+    border-radius: 1rem;
+  }
 }
 
 @media (max-width: 360px) {
-  .logoLink img {
-    height: 3.2rem;
-  }
-
   .cardContent {
-    padding: 1.4rem;
+    padding: 1.6rem;
   }
 }
 

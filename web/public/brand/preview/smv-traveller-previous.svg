@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Search My Vacation traveller and rainbow icon</title>
+  <desc id="desc">A traveller seen from behind, wearing a hat and backpack beneath a layered warm-colour rainbow arch.</desc>
+  <g id="smv-icon">
+    <g id="master-rainbow" data-layer-count="7">
+      <path id="master-band-1-outer-magenta" fill="#B7268F" d="M32 486V242C32 121.6 132.3 24 256 24s224 97.6 224 218v244Z"/>
+      <path id="master-band-2-golden-orange" fill="#FE9717" d="M58 486V243C58 137.4 146.7 50 256 50s198 87.4 198 193v243Z"/>
+      <path id="master-band-3-bright-orange" fill="#FA6918" d="M84 486V244C84 152.2 161.3 76 256 76s172 76.2 172 168v242Z"/>
+      <path id="master-band-4-deep-crimson" fill="#C22224" d="M110 486V245c0-77.4 65.7-143 146-143s146 65.6 146 143v241Z"/>
+      <path id="master-band-5-medium-purple" fill="#472063" d="M136 486V247c0-63.6 53.7-119 120-119s120 55.4 120 119v239Z"/>
+      <path id="master-band-6-deep-aubergine" fill="#401856" d="M162 486V249c0-49.5 41.8-95 94-95s94 45.5 94 95v237Z"/>
+      <path id="master-band-7-inner-tunnel" fill="#230334" d="M188 486V252c0-35.8 30.2-72 68-72s68 36.2 68 72v234Z"/>
+      <path id="master-ground" fill="#2B1A12" d="M188 456h136v30H188Z"/>
+    </g>
+    <g id="master-traveller" stroke="#2B1A12" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+      <path id="master-raised-arm" fill="#F7E6C4" d="M286 315c15-12 26-27 34-45 5-12 7-22 2-30-4-6-13-13-23-21l-17 19c8 7 13 12 16 16-4 12-12 23-24 32Z"/>
+      <path id="master-left-arm" fill="#F7E6C4" d="M219 320c-12 25-21 48-23 69-1 8 2 15 9 20l13-15c-3-4-3-7-2-11 4-17 13-34 22-49Z"/>
+      <path fill="#FF9718" d="M198 322c-4-18 8-35 26-38l10 33c-13 10-24 11-36 5Z"/>
+      <path fill="#FF9718" d="M278 286c18 3 29 20 25 38-12 6-24 5-36-6Z"/>
+      <path id="master-torso" fill="#F7E6C4" d="M218 301c7-19 22-29 38-29s31 10 38 29l-9 128h-58Z"/>
+      <path id="master-neck" fill="#C38A61" d="M242 270v22h28v-22Z"/>
+      <path id="master-head" fill="#C38A61" d="M229 235c0-24 12-42 27-42s27 18 27 42c0 25-12 43-27 43s-27-18-27-43Z"/>
+      <path id="master-hat-crown" fill="#F7E6C4" d="M224 235c4-35 15-53 32-53s29 18 33 53c-17 13-48 13-65 0Z"/>
+      <path id="master-hat-band" fill="none" stroke="#F05A24" stroke-width="10" d="M229 224c16 9 38 9 54 0"/>
+      <ellipse id="master-hat-brim" cx="256" cy="240" rx="48" ry="16" fill="#F7E6C4"/>
+      <path id="master-backpack" fill="#C38A61" d="M209 310c0-17 13-29 30-29h34c17 0 30 12 30 29v124c0 15-12 27-27 27h-40c-15 0-27-12-27-27Z"/>
+      <path fill="#9B6248" d="M212 348h88v67h-88z" opacity=".72"/>
+      <path id="master-pack-pocket" fill="#C38A61" d="M222 395h68v54h-68z"/>
+      <path fill="none" stroke-width="7" d="M231 292v92M281 292v92"/>
+      <path fill="none" stroke-width="6" d="M235 381v21M277 381v21"/>
+      <path fill="none" stroke-width="5" d="M212 351h88"/>
+      <path id="master-legs" fill="#F7E6C4" d="M226 454h25v32h-34l4-26Zm35 0h25l5 26-34 6Z"/>
+      <path fill="#2B1A12" stroke="none" d="M215 480h38v6h-38zm44 0h38v6h-38z"/>
+    </g>
+  </g>
+</svg>

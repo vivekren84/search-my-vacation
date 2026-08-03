@@ -49,26 +49,27 @@ export const TRAVEL_STYLE_CORE_INTENT_MAP: Readonly<
 };
 
 export const DESTINATION_SCORE_WEIGHTS: Readonly<Record<DestinationScoreDimension, number>> = {
-  "core-intent-alignment": 20,
-  "emotional-alignment": 18,
-  "theme-experience-alignment": 12,
-  "traveller-companion-suitability": 10,
-  "travel-pace-alignment": 8,
-  "comfort-alignment": 8,
+  "core-intent-alignment": 28,
+  "emotional-alignment": 16,
+  "theme-experience-alignment": 10,
+  "traveller-companion-suitability": 9,
+  "travel-pace-alignment": 7,
+  "comfort-alignment": 7,
   "season-timing-suitability": 8,
-  "region-match-quality": 8,
+  "region-match-quality": 7,
   "memory-goal-alignment": 4,
   "operational-confidence": 4,
 };
 
 export const REGION_SCORE_WEIGHTS: Readonly<Record<RegionScoreDimension, number>> = {
-  "emotional-fit": 30,
-  "theme-signature-experience-fit": 20,
-  "pace-fit": 15,
-  "companion-suitability": 10,
-  "memory-goal-fit": 10,
-  "logistical-fit": 10,
-  "comfort-fit": 5,
+  "core-intent-fit": 25,
+  "emotional-fit": 22,
+  "theme-signature-experience-fit": 16,
+  "pace-fit": 11,
+  "companion-suitability": 8,
+  "memory-goal-fit": 8,
+  "logistical-fit": 7,
+  "comfort-fit": 3,
 };
 
 export const PENALTY_POINTS: Readonly<Record<PenaltySeverity, number>> = {

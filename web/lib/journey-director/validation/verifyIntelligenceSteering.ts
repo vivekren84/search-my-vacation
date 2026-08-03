@@ -66,17 +66,52 @@ function assertRejectedBeforeScoring(
   });
 }
 
-function verifyCoreIntentExclusions() {
+function verifyDominantIntentScoring() {
   const mountain = generate(representativeProfiles.mountainCelebration);
   assert(
     mountain.trace.detectedCoreIntent.intent === "MOUNTAIN" &&
       mountain.trace.detectedCoreIntent.strength === "STRONG",
     "mountain celebration detects a strong mountain intent",
   );
-  assertRejectedBeforeScoring(
-    mountain,
-    ["goa", "dubai", "singapore", "pondicherry"],
-    "mountain",
+  const mountainRankings = new Map(
+    mountain.trace.rankedCandidates.map((candidate) => [
+      candidate.candidate.id,
+      candidate,
+    ]),
+  );
+  const mountainGoa = mountainRankings.get("goa");
+  assert(
+    mountainGoa !== undefined &&
+      !mountain.trace.rejectedBeforeScoring.some(
+        (candidate) => candidate.candidateId === "goa",
+      ),
+    "mountain intent keeps Goa eligible for scoring rather than hard-excluding it",
+  );
+  ["kashmir", "himachal-pradesh", "kerala", "tamil-nadu", "northeast"].forEach(
+    (candidateId) => {
+      const mountainCandidate = mountainRankings.get(candidateId);
+      assert(
+        mountainCandidate !== undefined &&
+          mountainCandidate.rank < mountainGoa.rank,
+        `mountain intent ranks ${candidateId} ahead of Goa`,
+      );
+      assert(
+        mountainCandidate.breakdown.find(
+          (factor) => factor.factorId === "core-intent-alignment",
+        )?.finalContribution === 28,
+        `mountain intent awards ${candidateId} the governed dominant-intent contribution`,
+      );
+    },
+  );
+  assert(
+    mountainGoa.breakdown.find(
+      (factor) => factor.factorId === "core-intent-alignment",
+    )?.finalContribution === 0,
+    "mountain intent gives Goa no mountain-alignment contribution",
+  );
+  assert(
+    mountain.possibilities.every((candidate) => candidate.candidateId !== "goa"),
+    "mountain intent keeps Goa out of the qualified shortlist through scoring",
   );
 
   const beach = generate(representativeProfiles.beachExplorer);
@@ -85,10 +120,14 @@ function verifyCoreIntentExclusions() {
       beach.trace.detectedCoreIntent.strength === "STRONG",
     "beach exploration detects a strong beach intent",
   );
-  assertRejectedBeforeScoring(
-    beach,
-    ["kashmir", "himachal-pradesh"],
-    "beach",
+  assert(
+    beach.trace.rankedCandidates.slice(0, 10).every(
+      (candidate) =>
+        candidate.breakdown.find(
+          (factor) => factor.factorId === "core-intent-alignment",
+        )?.finalContribution === 28,
+    ),
+    "beach-capable destinations lead through dominant-intent scoring",
   );
 
   const wildlife = generate(representativeProfiles.activeFriends);
@@ -97,10 +136,14 @@ function verifyCoreIntentExclusions() {
     "wildlife profile detects wildlife as the dominant specific intent",
   );
   assert(
-    wildlife.trace.rankedCandidates.every(
-      (candidate) => candidate.selectedRegion.region.capabilities?.wildlife,
+    wildlife.trace.rankedCandidates.slice(0, 5).every(
+      (candidate) =>
+        candidate.selectedRegion.region.capabilities?.wildlife &&
+        candidate.selectedRegion.breakdown.find(
+          (factor) => factor.factorId === "core-intent-fit",
+        )?.finalContribution === 25,
     ),
-    "wildlife ranking contains only regions with meaningful wildlife capability",
+    "wildlife-capable regions lead through regional dominant-intent scoring",
   );
 }
 
@@ -170,10 +213,11 @@ function verifyGeographicScope() {
 
   const anyWildlife = generate(representativeProfiles.activeFriends);
   assert(
-    anyWildlife.trace.rankedCandidates.length > 0 &&
-      anyWildlife.trace.rankedCandidates.every(
-        (candidate) => candidate.candidate.category === "DOMESTIC",
-      ) &&
+    anyWildlife.trace.rankedCandidates.slice(0, 5).every(
+      (candidate) =>
+        candidate.candidate.category === "DOMESTIC" &&
+        candidate.selectedRegion.region.capabilities?.wildlife,
+    ) &&
       anyWildlife.possibilities.every((candidate) =>
         release1JourneyCandidates.some(
           (catalogueCandidate) =>
@@ -408,7 +452,15 @@ function verifyKnownDestinationAndDeterminism() {
       !incompatible.trace.knownDestinationHandling.preferenceApplied,
     "incompatible known Goa receives no preference for a mountain request",
   );
-  assertRejectedBeforeScoring(incompatible, ["goa"], "known destination");
+  assert(
+    incompatible.trace.rankedCandidates.some(
+      (candidate) => candidate.candidate.id === "goa",
+    ) &&
+      !incompatible.trace.rejectedBeforeScoring.some(
+        (candidate) => candidate.candidateId === "goa",
+      ),
+    "incompatible known Goa remains scored instead of receiving a core-intent exclusion",
+  );
   assert(
     incompatible.possibilities[0]?.candidateId !== "goa",
     "incompatible known destination cannot lead the shortlist",
@@ -423,7 +475,7 @@ function verifyKnownDestinationAndDeterminism() {
 }
 
 function runVerification() {
-  verifyCoreIntentExclusions();
+  verifyDominantIntentScoring();
   verifyGeographicScope();
   verifyOperationalEligibility();
   verifyRegionResolution();
@@ -433,7 +485,7 @@ function runVerification() {
     `Journey Director intelligence steering verification passed (${checks} checks).`,
   );
   console.log(
-    "Stages: eligibility → contradictions → ranking → qualified shortlist.",
+    "Stages: eligibility → scope contradictions → dominant-intent ranking → qualified shortlist.",
   );
 }
 

@@ -1,3 +1,5 @@
+import { siteBrand } from "./brand.config";
+
 /**
  * Global Site Configuration
  *
@@ -8,14 +10,10 @@
  */
 
 export const siteConfig = {
-  name: "Search My Vacation",
-
-  tagline: "More Than a Trip. It's an Experience.",
+  ...siteBrand,
 
   description:
     "Every traveller is unique. Every journey should be too.",
-
-  logo: "/logos/smv-logo.png",
 
   navigation: [
     { label: "Destinations", href: "/destinations" },

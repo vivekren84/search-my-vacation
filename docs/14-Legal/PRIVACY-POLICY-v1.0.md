@@ -105,15 +105,4 @@ We may update this policy when our practices, legal obligations or services chan
 
 ## 12. Contact us
 
-**Search My Vacation**  
-No. 2, First Floor, Plot No. 1  
-Ponniamman Koil Street  
-Madipakkam  
-Chennai – 600091  
-India
-
-Email: [bookings@searchmyvacation.com](mailto:bookings@searchmyvacation.com)  
-WhatsApp: [+91 89258 38541](https://wa.me/918925838541)
-
-Service hours: Monday–Saturday, 10:00 AM – 7:00 PM IST  
-Typical response time: Within four business hours
+{{SMV_PUBLIC_CONTACT}}

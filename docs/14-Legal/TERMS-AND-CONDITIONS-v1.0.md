@@ -21,7 +21,7 @@
 10. [Insurance and travel assistance](#10-insurance-and-travel-assistance)
 11. [International SIM and e-SIM assistance](#11-international-sim-and-e-sim-assistance)
 12. [Service charges](#12-service-charges)
-13. [Force majeure](#13-force-majeure)
+13. [Events Beyond Our Control](#13-events-beyond-our-control)
 14. [Liability](#14-liability)
 15. [Governing law and jurisdiction](#15-governing-law-and-jurisdiction)
 16. [Contact us](#16-contact-us)
@@ -120,7 +120,7 @@ Search My Vacation may assist with international SIM or e-SIM options through re
 
 Service charges may be included within the quoted price. If a service fee is separately chargeable, Search My Vacation will disclose it before booking confirmation.
 
-## 13. Force majeure
+## 13. Events Beyond Our Control
 
 Search My Vacation is not responsible for a delay, change, loss or failure caused by events outside our reasonable control, including severe weather, natural disaster, epidemic or public-health event, war, civil disturbance, terrorism, government action, border closure, strike, transport disruption or supplier operational failure.
 
@@ -138,15 +138,4 @@ These terms are governed by the laws of India. Courts in Chennai, Tamil Nadu hav
 
 ## 16. Contact us
 
-**Search My Vacation**  
-No. 2, First Floor, Plot No. 1  
-Ponniamman Koil Street  
-Madipakkam  
-Chennai – 600091  
-India
-
-Email: [bookings@searchmyvacation.com](mailto:bookings@searchmyvacation.com)  
-WhatsApp: [+91 89258 38541](https://wa.me/918925838541)
-
-Service hours: Monday–Saturday, 10:00 AM – 7:00 PM IST  
-Typical response time: Within four business hours
+{{SMV_PUBLIC_CONTACT}}

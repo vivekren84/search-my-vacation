@@ -1,0 +1,53 @@
+{
+  "generated": true,
+  "doNotEdit": "Generated from the business-maintained itinerary workbook. Do not edit manually.",
+  "schemaVersion": 1,
+  "generatorVersion": "1.0.0",
+  "generatedAt": "2026-08-02T00:00:00.000Z",
+  "sourceWorkbook": "SMV-Journey-Itinerary-Knowledge-Base-v1.xlsx",
+  "sourceWorkbookSha256": "05aa54863376d159fcc4684305aeb4a18b963f1053e0693122e719c172fa1312",
+  "totalWorkbookSheets": 52,
+  "totalControlSheets": 3,
+  "totalItinerarySheets": 49,
+  "indexRows": 49,
+  "includedRecords": 49,
+  "excludedArchivedRecords": 0,
+  "statusDistribution": {
+    "draft": 48,
+    "review": 0,
+    "approved": 1,
+    "archived": 0
+  },
+  "errors": 0,
+  "reviewRequired": 48,
+  "warnings": 0,
+  "inclusionPolicy": {
+    "mode": "release-1",
+    "includedStatuses": [
+      "draft",
+      "review",
+      "approved"
+    ],
+    "excludedStatuses": [
+      "archived"
+    ],
+    "note": "Draft records are temporarily included for Release 1 and retained as internal status; strict Approved-only generation is available but not active."
+  },
+  "artifacts": {
+    "itinerary-catalogue.json": {
+      "path": "web/generated/journey-itineraries/itinerary-catalogue.json",
+      "sha256": "c136d1f1a482e59ed7598ed4629a64bea4c2cb27dc73471a545ef06593d872a8",
+      "bytes": 312396
+    },
+    "itinerary-index.json": {
+      "path": "web/generated/journey-itineraries/itinerary-index.json",
+      "sha256": "2b2a4b379cfa8ff8ff566dcf40338baab4a888ee4e65129d340291d1ca797bb1",
+      "bytes": 41049
+    },
+    "itinerary-aliases.json": {
+      "path": "web/generated/journey-itineraries/itinerary-aliases.json",
+      "sha256": "6eda1153ca1f895977c6532024285147cdb5b6119df477acf63a011b6129ccaa",
+      "bytes": 29734
+    }
+  }
+}

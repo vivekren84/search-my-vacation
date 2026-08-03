@@ -2,12 +2,15 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 
+import SiteBrand from "@/components/brand/SiteBrand";
+import { siteContact } from "@/config/contact.config";
 import { useJourneySession } from "@/context/JourneySessionContext";
 import { createJourneyRecommendationSet } from "@/lib/journey-director";
 import { createJourneyReference, createJourneySynopsis } from "@/lib/journey-director/journey-synopsis";
 import { callbackDateValidationMessage, callbackTimeWindows, currentLocalDate, isCallbackTimeWindow, isValidCallbackDate } from "@/lib/callback-preferences";
+import { recordJourneyPassportEvent, submitJourneyCallbackPreference } from "@/lib/journey-leads/client";
 import type {
   JourneyPassportSnapshot,
   JourneyPossibility,
@@ -16,6 +19,8 @@ import type {
 } from "@/types/journey-director";
 
 import styles from "./JourneyDirectorExperience.module.css";
+
+const SuggestedItinerarySection = lazy(() => import("./SuggestedItinerarySection"));
 
 export default function JourneyDirectorExperience() {
   const { passport, journeySession, isHydrated, saveJourneySession } = useJourneySession();
@@ -80,7 +85,7 @@ function JourneyRecommendationBoundary({ passport, journeySession, saveJourneySe
     case "unavailable":
       return (
         <UnavailableJourneyDirector
-          heading="Your Journey Director needs another way forward."
+          heading="Let’s review your Journey Passport."
           message={creation.recommendationSet.recoveryMessage}
         />
       );
@@ -223,8 +228,8 @@ function JourneyDirectorContent({
     const active = recommendationSet.possibilities.find((possibility) => possibility.id === activeId);
     const preferred = recommendationSet.possibilities.find((possibility) => possibility.id === preferredId);
     if (!active) return;
-    saveJourneySession({ version: 2, passport: recommendationSet.traveller, journeyReference: restored?.journeyReference ?? createJourneyReference(), journeySynopsis: synopsis, activePossibilityId: activeId, activeRecommendationPersonality: active.personality, preferredPossibilityId: preferredId, selectedRecommendationPersonality: preferred?.personality ?? null, visitedPossibilityIds: [...visitedIds], handoffConsent, callbackPreference });
-  }, [activeId, callbackPreference, handoffConsent, preferredId, recommendationSet, restored, saveJourneySession, visitedIds]);
+    saveJourneySession({ version: 2, passport: recommendationSet.traveller, journeyReference: restored?.journeyReference ?? journeySession?.journeyReference ?? recommendationSet.traveller.journeyReference ?? createJourneyReference(), journeySynopsis: synopsis, activePossibilityId: activeId, activeRecommendationPersonality: active.personality, preferredPossibilityId: preferredId, selectedRecommendationPersonality: preferred?.personality ?? null, visitedPossibilityIds: [...visitedIds], handoffConsent, callbackPreference });
+  }, [activeId, callbackPreference, handoffConsent, journeySession?.journeyReference, preferredId, recommendationSet, restored, saveJourneySession, visitedIds]);
 
   if (!activePossibility) {
     return (
@@ -321,6 +326,31 @@ function JourneyDirectorContent({
         </div>
       </section>
 
+      <section
+        className={`${styles.destinationNotice} ${
+          recommendationSet.destinationResolution.status === "unserved"
+            ? styles.destinationNoticeAlternative
+            : ""
+        }`}
+        aria-labelledby="destination-response-heading"
+      >
+        <p className={styles.eyebrow}>
+          {recommendationSet.destinationResolution.status === "served"
+            ? "Your chosen destination"
+            : recommendationSet.destinationResolution.status === "unserved"
+              ? "A thoughtful alternative"
+              : "An open map"}
+        </p>
+        <h2 id="destination-response-heading">
+          {recommendationSet.destinationResolution.status === "served"
+            ? `${recommendationSet.destinationResolution.matchedDestination} is part of your story.`
+            : recommendationSet.destinationResolution.status === "unserved"
+              ? "Your journey still has somewhere beautiful to go."
+              : "We followed the feeling, not a pin on the map."}
+        </h2>
+        <p>{recommendationSet.destinationResolution.message}</p>
+      </section>
+
       {recommendationSet.qualities.length > 0 ? (
         <section className={styles.qualities} aria-labelledby="qualities-heading">
           <div>
@@ -366,6 +396,11 @@ function JourneyDirectorContent({
         {activePossibility.moments.length > 0 ? (
           <ImagineYourJourney possibility={activePossibility} />
         ) : null}
+        {visitedIds.has(activePossibility.id) ? (
+          <Suspense fallback={<div className={styles.itineraryLoading} role="status">Preparing a suggested journey…</div>}>
+            <SuggestedItinerarySection key={activePossibility.id} possibility={activePossibility} />
+          </Suspense>
+        ) : null}
         <JourneyDirectorHandoff
           possibility={activePossibility}
           canExploreAnother={recommendationSet.possibilities.length > 1}
@@ -373,8 +408,10 @@ function JourneyDirectorContent({
           preferredPossibility={recommendationSet.possibilities.find(
             (possibility) => possibility.id === preferredId,
           )}
-          journeyReference={restored?.journeyReference ?? journeySession?.journeyReference}
+          journeyReference={restored?.journeyReference ?? journeySession?.journeyReference ?? recommendationSet.traveller?.journeyReference}
           journeySynopsis={restored?.journeySynopsis ?? journeySession?.journeySynopsis}
+          travellerName={recommendationSet.traveller?.name}
+          travellerMobile={recommendationSet.traveller?.mobile}
           handoffConsent={handoffConsent}
           callbackPreference={callbackPreference}
           callbackPreferenceRequiresReselection={callbackPreferenceRequiresReselection}
@@ -391,15 +428,7 @@ function JourneyDirectorContent({
 function JourneyDirectorHeader() {
   return (
     <header className={styles.header}>
-      <Link href="/" aria-label="Search My Vacation home" className={styles.logoLink}>
-        <Image
-          src="/logos/smv-logo.png"
-          alt="Search My Vacation"
-          width={78}
-          height={70}
-          priority
-        />
-      </Link>
+      <SiteBrand variant="compact" surface="dark" preload className={styles.logoLink} />
       <p>Journey Director</p>
       <Link href="/">Back to Home</Link>
     </header>
@@ -453,9 +482,9 @@ function JourneyPossibilities({
         <h2 id="possibilities-heading">{countLabel}</h2>
         {isPartial ? (
           <p>
-            We are showing only the {possibilities.length === 1 ? "possibility" : "possibilities"}{" "}
-            that met our confidence standard. A human Journey Director can help refine the
-            shortlist with you.
+            This served collection currently contains only the{" "}
+            {possibilities.length === 1 ? "possibility" : "possibilities"} shown here. A human
+            Journey Director can help broaden the conversation with you.
           </p>
         ) : (
           <p>
@@ -610,6 +639,32 @@ function WhyThisFits({
           </div>
         ) : null}
 
+        <div className={styles.journeyProfile}>
+          <div className={styles.profileHeading}>
+            <p className={styles.eyebrow}>How this journey could unfold</p>
+            <h3>A practical shape for the story.</h3>
+          </div>
+          <div className={styles.profileItem}>
+            <h4>Experiences you’ll enjoy</h4>
+            <ul className={styles.experienceList}>
+              {possibility.experiences.map((experience) => (
+                <li key={experience}>{experience}</li>
+              ))}
+            </ul>
+          </div>
+          <div className={styles.profileItem}>
+            <h4>Recommended travel style</h4>
+            <p>{possibility.recommendedTravelStyle}</p>
+          </div>
+          {possibility.recommendedSeason ? (
+            <div className={styles.profileItem}>
+              <h4>Recommended season</h4>
+              <p>{possibility.recommendedSeason}</p>
+            </div>
+          ) : null}
+          <p className={styles.confidenceNote}>{possibility.confidenceNote}</p>
+        </div>
+
         {possibility.cautions.length > 0 ? (
           <aside className={styles.cautionList} aria-label="Planning considerations">
             <p className={styles.eyebrow}>Worth considering</p>
@@ -682,6 +737,8 @@ function JourneyDirectorHandoff({
   preferredPossibility,
   journeyReference,
   journeySynopsis,
+  travellerName,
+  travellerMobile,
   handoffConsent,
   callbackPreference,
   callbackPreferenceRequiresReselection,
@@ -696,6 +753,8 @@ function JourneyDirectorHandoff({
   preferredPossibility?: JourneyPossibility;
   journeyReference?: string;
   journeySynopsis?: JourneySessionSnapshot["journeySynopsis"];
+  travellerName?: string;
+  travellerMobile?: string;
   handoffConsent: boolean;
   callbackPreference: JourneySessionSnapshot["callbackPreference"];
   callbackPreferenceRequiresReselection: boolean;
@@ -714,18 +773,36 @@ function JourneyDirectorHandoff({
     return callbackPreference ? callbackDateValidationMessage(callbackPreference.preferredDate, today) : "";
   });
   const callbackReady = Boolean(callbackPreference?.preferredDate && callbackPreference?.preferredTimeWindow && !callbackDateError);
-  const [callbackNotice, setCallbackNotice] = useState(false);
+  const [callbackNotice, setCallbackNotice] = useState<"idle" | "saving" | "notified" | "notification-failed" | "storage-failed">("idle");
 
   function updateCallbackDate(preferredDate: string) {
     const error = callbackDateValidationMessage(preferredDate, today);
     if (error) {
       setCallbackDateError(error);
-      setCallbackNotice(false);
+      setCallbackNotice("idle");
       return;
     }
     setCallbackDateError("");
     onCallbackPreferenceChange({ preferredDate, preferredTimeWindow: callbackPreference?.preferredTimeWindow ?? "" });
-    setCallbackNotice(false);
+    setCallbackNotice("idle");
+  }
+
+  async function saveCallbackPreference() {
+    if (!journeyReference || !travellerName || !travellerMobile || !callbackPreference || !callbackReady || !canContinue) return;
+    setCallbackNotice("saving");
+    try {
+      const status = await submitJourneyCallbackPreference({
+        passportReference: journeyReference,
+        guestName: travellerName,
+        mobileNumber: travellerMobile,
+        preferredDate: callbackPreference.preferredDate,
+        preferredTimeWindow: callbackPreference.preferredTimeWindow,
+        additionalComments: "",
+      });
+      setCallbackNotice(status === "sent" || status === "duplicate" ? "notified" : "notification-failed");
+    } catch {
+      setCallbackNotice("storage-failed");
+    }
   }
 
   function continueOnWhatsApp() {
@@ -746,7 +823,8 @@ function JourneyDirectorHandoff({
       "",
       "Please help me continue the conversation with my Journey Designer.",
     ].join("\n");
-    window.location.assign(`https://wa.me/918925838541?text=${encodeURIComponent(message)}`);
+    void recordJourneyPassportEvent(journeyReference, "whatsapp_handoff_opened");
+    window.location.assign(`${siteContact.whatsappHref}?text=${encodeURIComponent(message)}`);
   }
 
   return (
@@ -797,10 +875,10 @@ function JourneyDirectorHandoff({
                 <p>Prefer a callback?</p>
                 <div className={styles.callbackFields}>
                   <label>Preferred date<input type="date" min={today} value={callbackPreference?.preferredDate ?? ""} aria-invalid={Boolean(callbackDateError)} aria-describedby={callbackDateError ? "journey-callback-date-error" : undefined} onChange={(event) => updateCallbackDate(event.target.value)} />{callbackDateError ? <span id="journey-callback-date-error" className={styles.callbackError}>{callbackDateError}</span> : null}</label>
-                  <label>Preferred time window<select value={callbackPreference?.preferredTimeWindow ?? ""} onChange={(event) => { onCallbackPreferenceChange({ preferredDate: callbackPreference?.preferredDate ?? "", preferredTimeWindow: event.target.value }); setCallbackNotice(false); }}><option value="">Choose a time</option>{callbackTimeWindows.map((window) => <option key={window} value={window}>{window}</option>)}</select></label>
+                  <label>Preferred time window<select value={callbackPreference?.preferredTimeWindow ?? ""} onChange={(event) => { onCallbackPreferenceChange({ preferredDate: callbackPreference?.preferredDate ?? "", preferredTimeWindow: event.target.value }); setCallbackNotice("idle"); }}><option value="">Choose a time</option>{callbackTimeWindows.map((window) => <option key={window} value={window}>{window}</option>)}</select></label>
                 </div>
-                <button type="button" className={styles.secondaryAction} disabled={!canContinue || !callbackReady} onClick={() => setCallbackNotice(true)}>Save Callback Preference</button>
-                {callbackNotice ? <p className={styles.honestNotice} role="status">Your preference is saved in this current journey only; no callback request has been sent to Search My Vacation. You can use WhatsApp above to contact the team immediately.</p> : <p className={styles.preferenceNote}>Your callback preference can be saved only after you agree to share your Journey Synopsis. It is not transmitted as a callback request.</p>}
+                <button type="button" className={styles.secondaryAction} disabled={!canContinue || !callbackReady || !travellerName || !travellerMobile || callbackNotice === "saving"} onClick={saveCallbackPreference}>{callbackNotice === "saving" ? "Saving Callback Preference…" : "Save Callback Preference"}</button>
+                {callbackNotice === "notified" ? <p className={styles.honestNotice} role="status">Your callback preference has been saved. Our travel team has been notified and will try to contact you during your preferred time whenever possible.</p> : callbackNotice === "notification-failed" ? <p className={styles.honestNotice} role="status">Your callback preference has been saved successfully. We couldn&apos;t notify our team just now, but your request has been securely recorded and will be processed shortly.</p> : callbackNotice === "storage-failed" ? <p className={styles.honestNotice} role="status">We couldn&apos;t securely record your callback preference just now. Your journey is still here—please try saving it again.</p> : <p className={styles.preferenceNote}>{callbackNotice === "saving" ? "Securely adding this request to your existing Journey Passport…" : "Your callback preference can be sent after you agree to share your Journey Synopsis."}</p>}
               </div>
             </div>
           </div>

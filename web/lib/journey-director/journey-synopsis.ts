@@ -9,7 +9,15 @@ function referencePart(length: number) {
 }
 
 export function createJourneyReference() {
-  return `JY-${referencePart(4)}-${referencePart(4)}`;
+  return `SMV-${referencePart(8)}`;
+}
+
+export function isJourneyReference(value: unknown): value is string {
+  return typeof value === "string" && /^SMV-[A-Z2-9]{8}$/.test(value);
+}
+
+function isRecoverableJourneyReference(value: unknown): value is string {
+  return isJourneyReference(value) || (typeof value === "string" && /^JY-[A-Z2-9]{4}-[A-Z2-9]{4}$/.test(value));
 }
 
 export function createJourneySynopsis(set: JourneyRecommendationSet, activePossibilityId: string): JourneySynopsis | null {
@@ -34,5 +42,5 @@ export function isJourneySessionSnapshot(value: unknown): value is JourneySessio
   // Journey Session recoverable even when an older or malformed preference needs
   // to be discarded by the presentation layer.
   const hasRecoverableCallback = callback === null || (typeof callback === "object" && !Array.isArray(callback));
-  return session.version === 2 && Boolean(session.passport) && typeof session.journeyReference === "string" && /^JY-[A-Z2-9]{4}-[A-Z2-9]{4}$/.test(session.journeyReference) && Boolean(session.journeySynopsis) && typeof session.journeySynopsis?.travellerFirstName === "string" && typeof session.journeySynopsis?.recommendedPossibility?.id === "string" && typeof session.activePossibilityId === "string" && (session.activeRecommendationPersonality === "perfect-match" || session.activeRecommendationPersonality === "different-rhythm" || session.activeRecommendationPersonality === "pleasant-surprise") && (session.selectedRecommendationPersonality === null || session.selectedRecommendationPersonality === "perfect-match" || session.selectedRecommendationPersonality === "different-rhythm" || session.selectedRecommendationPersonality === "pleasant-surprise") && Array.isArray(session.visitedPossibilityIds) && session.visitedPossibilityIds.every((id) => typeof id === "string") && typeof session.handoffConsent === "boolean" && hasRecoverableCallback;
+  return session.version === 2 && Boolean(session.passport) && isRecoverableJourneyReference(session.journeyReference) && Boolean(session.journeySynopsis) && typeof session.journeySynopsis?.travellerFirstName === "string" && typeof session.journeySynopsis?.recommendedPossibility?.id === "string" && typeof session.activePossibilityId === "string" && (session.activeRecommendationPersonality === "perfect-match" || session.activeRecommendationPersonality === "different-rhythm" || session.activeRecommendationPersonality === "pleasant-surprise") && (session.selectedRecommendationPersonality === null || session.selectedRecommendationPersonality === "perfect-match" || session.selectedRecommendationPersonality === "different-rhythm" || session.selectedRecommendationPersonality === "pleasant-surprise") && Array.isArray(session.visitedPossibilityIds) && session.visitedPossibilityIds.every((id) => typeof id === "string") && typeof session.handoffConsent === "boolean" && hasRecoverableCallback;
 }

@@ -59,6 +59,8 @@ function completedPassportState(
     endDate: "",
     destinationMode: "discovery",
     destination: "",
+    mobile: "+91 98765 43210",
+    journeyReference: "SMV-ABCD2345",
     entryContext: {
       ...(feeling ? { feeling } : {}),
       source: feeling ? "homepage" : "direct",
@@ -68,8 +70,7 @@ function completedPassportState(
       "about-you",
       "companions",
       "dream-journey",
-      "travel-style",
-      "timing",
+      "pace-and-timing",
       "destination",
       "discover",
     ],
@@ -207,8 +208,9 @@ function runVerification() {
     "a served free-text destination is acknowledged",
   );
   assert(
-    knownServedDestination.possibilities[0]?.candidateId === "kerala",
-    "a served free-text destination leads the recommendation set",
+    knownServedDestination.destinationResolution.status === "served" &&
+      (!knownServedDestination.destinationResolution.recommended || knownServedDestination.possibilities[0]?.candidateId === "kerala"),
+    "a served free-text destination leads only when it is recommended for the primary intent",
   );
   assert(
     unsupportedRequest.destinationResolution.status === "unserved" &&

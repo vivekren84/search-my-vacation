@@ -63,6 +63,15 @@ function resolveExplicitCoreIntent(
 }
 
 function detectCoreIntent(snapshot: JourneyPassportSnapshot): CoreIntentDetection {
+  const dreamIntent = DREAM_CORE_INTENT_MAP[snapshot.dreamJourney];
+  if (dreamIntent) {
+    return {
+      intent: dreamIntent,
+      strength: "STRONG",
+      evidence: [snapshot.dreamJourney],
+    };
+  }
+
   const explicitIntents = snapshot.travelStyles.flatMap((style) => {
     const intent = TRAVEL_STYLE_CORE_INTENT_MAP[style];
     return intent ? [intent] : [];
@@ -85,15 +94,6 @@ function detectCoreIntent(snapshot: JourneyPassportSnapshot): CoreIntentDetectio
       evidence: snapshot.travelStyles.filter(
         (style) => TRAVEL_STYLE_CORE_INTENT_MAP[style] !== undefined,
       ),
-    };
-  }
-
-  const dreamIntent = DREAM_CORE_INTENT_MAP[snapshot.dreamJourney];
-  if (dreamIntent) {
-    return {
-      intent: dreamIntent,
-      strength: "STRONG",
-      evidence: [snapshot.dreamJourney],
     };
   }
 

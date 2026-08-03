@@ -299,6 +299,7 @@ export type JourneyCandidate = {
   primaryEmotion: EmotionId;
   supportingEmotions: readonly EmotionId[];
   themes: readonly ThemeId[];
+  capabilities?: CandidateCapabilities;
   bestFor: readonly TravellerSuitability[];
   paces: readonly TravelPace[];
   comforts: readonly ComfortLevel[];
@@ -385,6 +386,7 @@ export type DestinationScoreDimension =
   | "operational-confidence";
 
 export type RegionScoreDimension =
+  | "core-intent-fit"
   | "emotional-fit"
   | "theme-signature-experience-fit"
   | "pace-fit"
@@ -469,6 +471,7 @@ export type EngineDestinationResolution =
       requestedText: string;
       matchedCandidateId: string;
       matchedCandidateName: string;
+      recommended: boolean;
     }
   | { status: "unserved"; requestedText: string };
 

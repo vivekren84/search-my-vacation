@@ -1,0 +1,20 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "allowJs": false,
+    "incremental": false,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "noEmit": false,
+    "outDir": "../../node_modules/.cache/smv-journey-itineraries",
+    "plugins": [],
+    "rootDir": "../..",
+    "target": "ES2022",
+    "types": ["node"]
+  },
+  "include": [
+    "./**/*.ts",
+    "../../lib/journey-itineraries/types.ts"
+  ],
+  "exclude": ["../../node_modules"]
+}

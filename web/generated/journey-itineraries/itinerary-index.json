@@ -1,0 +1,1973 @@
+{
+  "generated": true,
+  "doNotEdit": "Generated from the business-maintained itinerary workbook. Do not edit manually.",
+  "schemaVersion": 1,
+  "generatorVersion": "1.0.0",
+  "sourceWorkbookSha256": "05aa54863376d159fcc4684305aeb4a18b963f1053e0693122e719c172fa1312",
+  "records": [
+    {
+      "id": "andaman-islands",
+      "destinationCode": "AN-AND",
+      "regionCode": "IN-AN",
+      "destination": "Port Blair, Havelock",
+      "region": "Andaman & Nicobar Islands, India",
+      "duration": "6 Days / 5 Nights",
+      "journeyBases": [
+        "Port Blair",
+        "Havelock",
+        "Neil Island"
+      ],
+      "emotions": [
+        "Serenity",
+        "Wonder",
+        "Romance",
+        "Adventure"
+      ],
+      "experiences": [
+        "Beaches",
+        "Snorkelling",
+        "Diving",
+        "Islands",
+        "Marine Life",
+        "Relaxation"
+      ],
+      "companions": [
+        "Couples",
+        "Honeymooners",
+        "Families",
+        "Solo Travellers"
+      ],
+      "months": [
+        "October",
+        "November",
+        "December",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "andhra-pradesh-visakhapatnam-araku",
+      "destinationCode": "AP-VIZ",
+      "regionCode": "IN-AP",
+      "destination": "Visakhapatnam & Araku Valley",
+      "region": "Andhra Pradesh, South India",
+      "duration": "3 Days / 2 Nights",
+      "journeyBases": [
+        "Visakhapatnam",
+        "Araku Valley"
+      ],
+      "emotions": [
+        "Discovery",
+        "Wonder",
+        "Relaxation"
+      ],
+      "experiences": [
+        "Beaches",
+        "Nature",
+        "Caves",
+        "Naval Heritage",
+        "Scenic Train"
+      ],
+      "companions": [
+        "Families",
+        "Couples",
+        "Nature Lovers",
+        "Heritage Enthusiasts"
+      ],
+      "months": [
+        "October",
+        "November",
+        "December",
+        "January",
+        "February",
+        "March"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "assam-heritage-city-tour",
+      "destinationCode": "AS-HER",
+      "regionCode": "IN-AS",
+      "destination": "Guwahati, Sivasagar & Majuli",
+      "region": "Assam, Northeast India",
+      "duration": "4 Days / 3 Nights",
+      "journeyBases": [
+        "Guwahati",
+        "Sivasagar",
+        "Majuli"
+      ],
+      "emotions": [
+        "Wonder",
+        "Devotion",
+        "Discovery",
+        "Reflection"
+      ],
+      "experiences": [
+        "Heritage",
+        "Culture",
+        "Temples",
+        "River Island",
+        "Tribal Culture"
+      ],
+      "companions": [
+        "Families",
+        "Seniors",
+        "Culture Enthusiasts",
+        "Solo Travellers"
+      ],
+      "months": [
+        "October",
+        "November",
+        "December",
+        "January",
+        "February",
+        "March",
+        "April"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "assam-wildlife-tour",
+      "destinationCode": "AS-WLD",
+      "regionCode": "IN-AS",
+      "destination": "Kaziranga National Park",
+      "region": "Assam, Northeast India",
+      "duration": "4 Days / 3 Nights",
+      "journeyBases": [
+        "Kaziranga National Park"
+      ],
+      "emotions": [
+        "Wonder",
+        "Adventure",
+        "Discovery"
+      ],
+      "experiences": [
+        "Wildlife",
+        "Safari",
+        "Nature",
+        "Birdwatching",
+        "Tea Gardens"
+      ],
+      "companions": [
+        "Families",
+        "Wildlife Enthusiasts",
+        "Photographers",
+        "Seniors"
+      ],
+      "months": [
+        "November",
+        "December",
+        "January",
+        "February",
+        "March",
+        "April"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "bali",
+      "destinationCode": "ID-BAL",
+      "regionCode": "ID",
+      "destination": "Ubud, Seminyak/Kuta & Uluwatu",
+      "region": "Bali, Indonesia",
+      "duration": "6 Days / 5 Nights",
+      "journeyBases": [
+        "Ubud",
+        "Seminyak",
+        "Kuta",
+        "Uluwatu"
+      ],
+      "emotions": [
+        "Romance",
+        "Serenity",
+        "Joy",
+        "Wonder"
+      ],
+      "experiences": [
+        "Beaches",
+        "Temples",
+        "Nature",
+        "Wellness",
+        "Culture"
+      ],
+      "companions": [
+        "Couples",
+        "Honeymooners",
+        "Families",
+        "Friends Groups"
+      ],
+      "months": [
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "dubai",
+      "destinationCode": "AE-DXB",
+      "regionCode": "AE",
+      "destination": "Dubai",
+      "region": "United Arab Emirates",
+      "duration": "5 Days / 4 Nights",
+      "journeyBases": [
+        "Dubai"
+      ],
+      "emotions": [
+        "Wonder",
+        "Excitement",
+        "Luxury"
+      ],
+      "experiences": [
+        "City Life",
+        "Desert Safari",
+        "Shopping",
+        "Architecture",
+        "Adventure"
+      ],
+      "companions": [
+        "Couples",
+        "Families",
+        "Friends Groups",
+        "First-time International Travellers"
+      ],
+      "months": [
+        "November",
+        "December",
+        "January",
+        "February",
+        "March"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "goa",
+      "destinationCode": "GA-GOA",
+      "regionCode": "IN-GA",
+      "destination": "Goa",
+      "region": "Goa, West India",
+      "duration": "4 Days / 3 Nights",
+      "journeyBases": [
+        "Goa"
+      ],
+      "emotions": [
+        "Relaxation",
+        "Joy",
+        "Romance",
+        "Freedom"
+      ],
+      "experiences": [
+        "Beaches",
+        "Nightlife",
+        "Heritage",
+        "Water Sports",
+        "Food",
+        "Coastal"
+      ],
+      "companions": [
+        "Couples",
+        "Honeymooners",
+        "Families",
+        "Friends Groups"
+      ],
+      "months": [
+        "November",
+        "December",
+        "January",
+        "February",
+        "October",
+        "March"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "gujarat-gir-forest",
+      "destinationCode": "GJ-GIR",
+      "regionCode": "IN-GJ",
+      "destination": "Gir Forest",
+      "region": "Gujarat, West India",
+      "duration": "3 Days / 2 Nights",
+      "journeyBases": [
+        "Gir Forest"
+      ],
+      "emotions": [
+        "Wonder",
+        "Adventure",
+        "Discovery"
+      ],
+      "experiences": [
+        "Wildlife",
+        "Safari",
+        "Nature",
+        "Birdwatching",
+        "Heritage"
+      ],
+      "companions": [
+        "Families",
+        "Wildlife Enthusiasts",
+        "Photographers",
+        "Seniors"
+      ],
+      "months": [
+        "October",
+        "November",
+        "December",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "gujarat-panch-dwarka",
+      "destinationCode": "GJ-DWK",
+      "regionCode": "IN-GJ",
+      "destination": "Dwarka, Bet Dwarka, Nageshwar & Rukmini Devi Temple",
+      "region": "Gujarat, West India",
+      "duration": "3 Days / 2 Nights",
+      "journeyBases": [
+        "Dwarka",
+        "Bet Dwarka",
+        "Nageshwar",
+        "Rukmini Devi Temple"
+      ],
+      "emotions": [
+        "Devotion",
+        "Serenity",
+        "Reverence"
+      ],
+      "experiences": [
+        "Pilgrimage",
+        "Temples",
+        "Heritage",
+        "Coastal"
+      ],
+      "companions": [
+        "Families",
+        "Seniors",
+        "Pilgrims"
+      ],
+      "months": [
+        "October",
+        "November",
+        "December",
+        "January",
+        "February",
+        "March"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "gujarat-rann-of-kutch",
+      "destinationCode": "GJ-RAK",
+      "regionCode": "IN-GJ",
+      "destination": "Rann of Kutch",
+      "region": "Gujarat, West India",
+      "duration": "3 Days / 2 Nights",
+      "journeyBases": [
+        "Rann of Kutch"
+      ],
+      "emotions": [
+        "Wonder",
+        "Serenity",
+        "Discovery"
+      ],
+      "experiences": [
+        "Desert",
+        "Culture",
+        "Handicrafts",
+        "Festival",
+        "Photography"
+      ],
+      "companions": [
+        "Couples",
+        "Families",
+        "Photographers",
+        "Culture Enthusiasts"
+      ],
+      "months": [
+        "November",
+        "December",
+        "January",
+        "February"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "himachal-pradesh-dharamshala-dalhousie",
+      "destinationCode": "HP-DHD",
+      "regionCode": "IN-HP",
+      "destination": "Dharamshala",
+      "region": "Himachal Pradesh, North India",
+      "duration": "5 Days / 4 Nights",
+      "journeyBases": [
+        "Dharamshala",
+        "Dalhousie"
+      ],
+      "emotions": [
+        "Serenity",
+        "Wonder",
+        "Reflection",
+        "Romance"
+      ],
+      "experiences": [
+        "Mountains",
+        "Spirituality",
+        "Trekking",
+        "Colonial Heritage",
+        "Scenic Drives"
+      ],
+      "companions": [
+        "Couples",
+        "Families",
+        "Honeymooners",
+        "Solo Travellers"
+      ],
+      "months": [
+        "March",
+        "April",
+        "May",
+        "June",
+        "September",
+        "October",
+        "November",
+        "December",
+        "January",
+        "February"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "himachal-pradesh-shimla-manali",
+      "destinationCode": "HP-SHM",
+      "regionCode": "IN-HP",
+      "destination": "Shimla & Manali",
+      "region": "Himachal Pradesh, North India",
+      "duration": "6 Days / 5 Nights",
+      "journeyBases": [
+        "Shimla",
+        "Manali"
+      ],
+      "emotions": [
+        "Wonder",
+        "Romance",
+        "Adventure",
+        "Renewal"
+      ],
+      "experiences": [
+        "Mountains",
+        "Snow",
+        "Adventure Sports",
+        "Scenic Drives",
+        "Honeymoon"
+      ],
+      "companions": [
+        "Couples",
+        "Honeymooners",
+        "Families",
+        "Groups"
+      ],
+      "months": [
+        "March",
+        "April",
+        "May",
+        "June",
+        "September",
+        "October",
+        "November",
+        "December",
+        "January",
+        "February"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "jammu-kashmir-srinagar-gulmarg-pahalgam",
+      "destinationCode": "JK-KMR",
+      "regionCode": "IN-JK",
+      "destination": "Srinagar, Gulmarg & Pahalgam",
+      "region": "Jammu & Kashmir, North India",
+      "duration": "6 Days / 5 Nights",
+      "journeyBases": [
+        "Srinagar",
+        "Gulmarg",
+        "Pahalgam"
+      ],
+      "emotions": [
+        "Wonder",
+        "Romance",
+        "Serenity",
+        "Awe"
+      ],
+      "experiences": [
+        "Mountains",
+        "Lakes",
+        "Meadows",
+        "Honeymoon",
+        "Photography"
+      ],
+      "companions": [
+        "Couples",
+        "Honeymooners",
+        "Families",
+        "Photographers"
+      ],
+      "months": [
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "December",
+        "January",
+        "February"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "karnataka-bandipur",
+      "destinationCode": "KA-BND",
+      "regionCode": "IN-KA",
+      "destination": "Bandipur",
+      "region": "Karnataka, South India",
+      "duration": "2 Days / 1 Night",
+      "journeyBases": [
+        "Bandipur"
+      ],
+      "emotions": [
+        "Wonder",
+        "Adventure",
+        "Discovery"
+      ],
+      "experiences": [
+        "Wildlife",
+        "Safari",
+        "Nature",
+        "Tiger Reserve",
+        "Birdwatching"
+      ],
+      "companions": [
+        "Families",
+        "Wildlife Enthusiasts",
+        "Photographers",
+        "Couples"
+      ],
+      "months": [
+        "October",
+        "November",
+        "December",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "karnataka-bengaluru",
+      "destinationCode": "KA-BLR",
+      "regionCode": "IN-KA",
+      "destination": "Bengaluru",
+      "region": "Karnataka, South India",
+      "duration": "2 Days / 1 Night",
+      "journeyBases": [
+        "Bengaluru"
+      ],
+      "emotions": [
+        "Discovery",
+        "Relaxation",
+        "Curiosity"
+      ],
+      "experiences": [
+        "City Life",
+        "Gardens",
+        "Food",
+        "Craft Beer",
+        "Shopping"
+      ],
+      "companions": [
+        "Couples",
+        "Families",
+        "Business Travellers",
+        "Friends Groups"
+      ],
+      "months": [
+        "January",
+        "February",
+        "March",
+        "April",
+        "October",
+        "November",
+        "December"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "karnataka-coorg",
+      "destinationCode": "KA-COR",
+      "regionCode": "IN-KA",
+      "destination": "Coorg",
+      "region": "Karnataka, South India",
+      "duration": "3 Days / 2 Nights",
+      "journeyBases": [
+        "Coorg"
+      ],
+      "emotions": [
+        "Serenity",
+        "Romance",
+        "Renewal"
+      ],
+      "experiences": [
+        "Coffee Plantations",
+        "Nature",
+        "Waterfalls",
+        "Culture",
+        "Wellness"
+      ],
+      "companions": [
+        "Couples",
+        "Honeymooners",
+        "Families",
+        "Nature Lovers"
+      ],
+      "months": [
+        "October",
+        "November",
+        "December",
+        "January",
+        "February",
+        "March"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "karnataka-hampi",
+      "destinationCode": "KA-HMP",
+      "regionCode": "IN-KA",
+      "destination": "Hampi",
+      "region": "Karnataka, South India",
+      "duration": "2 Days / 1 Night",
+      "journeyBases": [
+        "Hampi"
+      ],
+      "emotions": [
+        "Wonder",
+        "Discovery",
+        "Awe"
+      ],
+      "experiences": [
+        "Heritage",
+        "Ruins",
+        "Photography",
+        "Boulders",
+        "Culture"
+      ],
+      "companions": [
+        "Couples",
+        "Backpackers",
+        "Photographers",
+        "Heritage Enthusiasts"
+      ],
+      "months": [
+        "October",
+        "November",
+        "December",
+        "January",
+        "February",
+        "March"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "karnataka-kabini",
+      "destinationCode": "KA-KBN",
+      "regionCode": "IN-KA",
+      "destination": "Kabini",
+      "region": "Karnataka, South India",
+      "duration": "2 Days / 1 Night",
+      "journeyBases": [
+        "Kabini"
+      ],
+      "emotions": [
+        "Wonder",
+        "Adventure",
+        "Discovery"
+      ],
+      "experiences": [
+        "Wildlife",
+        "Safari",
+        "Birdwatching",
+        "Nature",
+        "Boat Safari"
+      ],
+      "companions": [
+        "Couples",
+        "Families",
+        "Wildlife Enthusiasts",
+        "Photographers"
+      ],
+      "months": [
+        "October",
+        "November",
+        "December",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "kerala-munnar",
+      "destinationCode": "KL-MUN",
+      "regionCode": "IN-KL",
+      "destination": "Munnar",
+      "region": "Kerala, South India",
+      "duration": "5 Days / 4 Nights",
+      "journeyBases": [
+        "Munnar"
+      ],
+      "emotions": [
+        "Serenity",
+        "Wonder",
+        "Connection",
+        "Renewal"
+      ],
+      "experiences": [
+        "Tea",
+        "Hills",
+        "Nature",
+        "Wildlife",
+        "Waterfalls",
+        "Scenic Drives",
+        "Wellness"
+      ],
+      "companions": [
+        "Couples",
+        "Families",
+        "Seniors",
+        "Solo Travellers"
+      ],
+      "months": [
+        "September",
+        "October",
+        "November",
+        "December",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May"
+      ],
+      "status": "approved"
+    },
+    {
+      "id": "kerala-munnar-alleppey-kochi",
+      "destinationCode": "KL-MAC",
+      "regionCode": "IN-KL",
+      "destination": "Munnar, Alleppey & Cochin",
+      "region": "Kerala, South India",
+      "duration": "6 Days / 5 Nights",
+      "journeyBases": [
+        "Munnar",
+        "Alleppey",
+        "Kochi"
+      ],
+      "emotions": [
+        "Serenity",
+        "Wonder",
+        "Romance",
+        "Connection",
+        "Renewal"
+      ],
+      "experiences": [
+        "Tea",
+        "Hills",
+        "Backwaters",
+        "Houseboat",
+        "Heritage",
+        "Nature",
+        "Wildlife",
+        "Waterfalls",
+        "Scenic Drives",
+        "Culture"
+      ],
+      "companions": [
+        "Couples",
+        "Families",
+        "Seniors",
+        "Honeymooners",
+        "Solo Travellers"
+      ],
+      "months": [
+        "September",
+        "October",
+        "November",
+        "December",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "kerala-wayanad",
+      "destinationCode": "KL-WAY",
+      "regionCode": "IN-KL",
+      "destination": "Wayanad",
+      "region": "Kerala, South India",
+      "duration": "3 Days / 2 Nights",
+      "journeyBases": [
+        "Wayanad"
+      ],
+      "emotions": [
+        "Serenity",
+        "Wonder",
+        "Adventure"
+      ],
+      "experiences": [
+        "Nature",
+        "Trekking",
+        "Wildlife",
+        "Waterfalls",
+        "Plantations"
+      ],
+      "companions": [
+        "Couples",
+        "Families",
+        "Trekkers",
+        "Nature Lovers"
+      ],
+      "months": [
+        "October",
+        "November",
+        "December",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "malaysia-kuala-lumpur",
+      "destinationCode": "MY-KUL",
+      "regionCode": "MY",
+      "destination": "Kuala Lumpur",
+      "region": "Malaysia",
+      "duration": "4 Days / 3 Nights",
+      "journeyBases": [
+        "Kuala Lumpur"
+      ],
+      "emotions": [
+        "Discovery",
+        "Wonder",
+        "Joy"
+      ],
+      "experiences": [
+        "City Life",
+        "Culture",
+        "Food",
+        "Shopping",
+        "Theme Parks"
+      ],
+      "companions": [
+        "Couples",
+        "Families",
+        "Friends Groups",
+        "First-time International Travellers"
+      ],
+      "months": [
+        "December",
+        "January",
+        "February",
+        "June",
+        "July",
+        "August"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "malaysia-kuala-lumpur-langkawi",
+      "destinationCode": "MY-KLL",
+      "regionCode": "MY",
+      "destination": "Kuala Lumpur & Langkawi",
+      "region": "Malaysia",
+      "duration": "6 Days / 5 Nights",
+      "journeyBases": [
+        "Kuala Lumpur",
+        "Langkawi"
+      ],
+      "emotions": [
+        "Discovery",
+        "Romance",
+        "Relaxation",
+        "Joy"
+      ],
+      "experiences": [
+        "City Life",
+        "Beaches",
+        "Nature",
+        "Culture",
+        "Island Hopping"
+      ],
+      "companions": [
+        "Couples",
+        "Honeymooners",
+        "Families",
+        "Friends Groups"
+      ],
+      "months": [
+        "December",
+        "January",
+        "February",
+        "June",
+        "July",
+        "August"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "northeast-meghalaya",
+      "destinationCode": "ML-SHL",
+      "regionCode": "IN-ML",
+      "destination": "Shillong, Cherrapunji",
+      "region": "Meghalaya, Northeast India",
+      "duration": "5 Days / 4 Nights",
+      "journeyBases": [
+        "Shillong",
+        "Cherrapunji",
+        "Dawki",
+        "Mawlynnong"
+      ],
+      "emotions": [
+        "Wonder",
+        "Adventure",
+        "Serenity"
+      ],
+      "experiences": [
+        "Trekking",
+        "Nature",
+        "Waterfalls",
+        "Root Bridges",
+        "Culture"
+      ],
+      "companions": [
+        "Couples",
+        "Trekkers",
+        "Photographers",
+        "Families with older children"
+      ],
+      "months": [
+        "October",
+        "November",
+        "December",
+        "January",
+        "February",
+        "March",
+        "April"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "northeast-sikkim",
+      "destinationCode": "SK-GTK",
+      "regionCode": "IN-SK",
+      "destination": "Gangtok, Lachen/Lachung",
+      "region": "Sikkim, Northeast India",
+      "duration": "6 Days / 5 Nights",
+      "journeyBases": [
+        "Gangtok",
+        "Lachen",
+        "Lachung",
+        "Pelling"
+      ],
+      "emotions": [
+        "Wonder",
+        "Serenity",
+        "Awe"
+      ],
+      "experiences": [
+        "Mountains",
+        "Lakes",
+        "Monasteries",
+        "Photography",
+        "High Altitude"
+      ],
+      "companions": [
+        "Couples",
+        "Families with older children",
+        "Photographers",
+        "Nature Lovers"
+      ],
+      "months": [
+        "March",
+        "April",
+        "May",
+        "June",
+        "September",
+        "October",
+        "November",
+        "December"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "pondicherry",
+      "destinationCode": "PY-PON",
+      "regionCode": "IN-PY",
+      "destination": "Pondicherry",
+      "region": "Puducherry, South India",
+      "duration": "3 Days / 2 Nights",
+      "journeyBases": [
+        "Pondicherry"
+      ],
+      "emotions": [
+        "Serenity",
+        "Romance",
+        "Reflection"
+      ],
+      "experiences": [
+        "Heritage",
+        "Beaches",
+        "Culture",
+        "Wellness",
+        "Café Culture"
+      ],
+      "companions": [
+        "Couples",
+        "Honeymooners",
+        "Solo Travellers",
+        "Culture Enthusiasts"
+      ],
+      "months": [
+        "October",
+        "November",
+        "December",
+        "January",
+        "February",
+        "March"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "punjab-amritsar",
+      "destinationCode": "PB-AMR",
+      "regionCode": "IN-PB",
+      "destination": "Amritsar",
+      "region": "Punjab, North India",
+      "duration": "2 Days / 1 Night",
+      "journeyBases": [
+        "Amritsar"
+      ],
+      "emotions": [
+        "Devotion",
+        "Wonder",
+        "Pride",
+        "Connection"
+      ],
+      "experiences": [
+        "Pilgrimage",
+        "Heritage",
+        "History",
+        "Culture",
+        "Food"
+      ],
+      "companions": [
+        "Families",
+        "Groups",
+        "Seniors",
+        "Solo Travellers"
+      ],
+      "months": [
+        "October",
+        "November",
+        "December",
+        "January",
+        "February",
+        "March"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "rajasthan-jaipur-jodhpur-jaisalmer",
+      "destinationCode": "RJ-JJJ",
+      "regionCode": "IN-RJ",
+      "destination": "Jaipur, Jodhpur & Jaisalmer",
+      "region": "Rajasthan, North India",
+      "duration": "7 Days / 6 Nights",
+      "journeyBases": [
+        "Jaipur",
+        "Jodhpur",
+        "Jaisalmer"
+      ],
+      "emotions": [
+        "Wonder",
+        "Adventure",
+        "Romance",
+        "Awe"
+      ],
+      "experiences": [
+        "Desert",
+        "Heritage",
+        "Forts",
+        "Culture",
+        "Camel Safari"
+      ],
+      "companions": [
+        "Couples",
+        "Honeymooners",
+        "Families",
+        "Adventure Enthusiasts"
+      ],
+      "months": [
+        "October",
+        "November",
+        "December",
+        "January",
+        "February",
+        "March"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "rajasthan-jaipur-jodhpur-udaipur",
+      "destinationCode": "RJ-JJU",
+      "regionCode": "IN-RJ",
+      "destination": "Jaipur, Jodhpur & Udaipur",
+      "region": "Rajasthan, North India",
+      "duration": "7 Days / 6 Nights",
+      "journeyBases": [
+        "Jaipur",
+        "Jodhpur",
+        "Udaipur"
+      ],
+      "emotions": [
+        "Wonder",
+        "Romance",
+        "Awe",
+        "Discovery"
+      ],
+      "experiences": [
+        "Heritage",
+        "Forts",
+        "Palaces",
+        "Culture",
+        "Photography"
+      ],
+      "companions": [
+        "Couples",
+        "Honeymooners",
+        "Families",
+        "Heritage Enthusiasts"
+      ],
+      "months": [
+        "October",
+        "November",
+        "December",
+        "January",
+        "February",
+        "March"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "rajasthan-udaipur-kumbhalgarh-mount-abu",
+      "destinationCode": "RJ-UKM",
+      "regionCode": "IN-RJ",
+      "destination": "Udaipur, Kumbhalgarh & Mount Abu",
+      "region": "Rajasthan, North India",
+      "duration": "5 Days / 4 Nights",
+      "journeyBases": [
+        "Udaipur",
+        "Kumbhalgarh",
+        "Mount Abu"
+      ],
+      "emotions": [
+        "Wonder",
+        "Romance",
+        "Serenity"
+      ],
+      "experiences": [
+        "Heritage",
+        "Forts",
+        "Temples",
+        "Nature",
+        "Hill Station"
+      ],
+      "companions": [
+        "Couples",
+        "Honeymooners",
+        "Families",
+        "Heritage Enthusiasts"
+      ],
+      "months": [
+        "October",
+        "November",
+        "December",
+        "January",
+        "February",
+        "March"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "singapore",
+      "destinationCode": "SG-SIN",
+      "regionCode": "SG",
+      "destination": "Singapore",
+      "region": "Singapore",
+      "duration": "5 Days / 4 Nights",
+      "journeyBases": [
+        "Singapore"
+      ],
+      "emotions": [
+        "Wonder",
+        "Joy",
+        "Discovery"
+      ],
+      "experiences": [
+        "City Life",
+        "Theme Parks",
+        "Food",
+        "Shopping",
+        "Wildlife"
+      ],
+      "companions": [
+        "Families",
+        "Couples",
+        "Friends Groups",
+        "First-time International Travellers"
+      ],
+      "months": [
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "sri-lanka-north-east-circuit",
+      "destinationCode": "LK-SJT",
+      "regionCode": "LK",
+      "destination": "Sigiriya, Trincomalee & Jaffna",
+      "region": "Sri Lanka",
+      "duration": "6 Days / 5 Nights",
+      "journeyBases": [
+        "Sigiriya",
+        "Trincomalee",
+        "Jaffna"
+      ],
+      "emotions": [
+        "Wonder",
+        "Discovery",
+        "Awe"
+      ],
+      "experiences": [
+        "Heritage",
+        "Beaches",
+        "Snorkelling",
+        "Culture",
+        "Ancient Ruins"
+      ],
+      "companions": [
+        "Couples",
+        "Photographers",
+        "Heritage Enthusiasts",
+        "Culture-focused Travellers"
+      ],
+      "months": [
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "sri-lanka-ramayana-trail",
+      "destinationCode": "LK-RAM",
+      "regionCode": "LK",
+      "destination": "Chilaw, Kandy, Nuwara Eliya, Ella & Colombo",
+      "region": "Sri Lanka",
+      "duration": "7 Days / 6 Nights",
+      "journeyBases": [
+        "Chilaw",
+        "Kandy",
+        "Nuwara Eliya",
+        "Ella",
+        "Colombo"
+      ],
+      "emotions": [
+        "Devotion",
+        "Wonder",
+        "Reflection"
+      ],
+      "experiences": [
+        "Pilgrimage",
+        "Legend",
+        "Temples",
+        "Nature",
+        "Culture"
+      ],
+      "companions": [
+        "Pilgrims",
+        "Families",
+        "Seniors",
+        "Spiritual Seekers"
+      ],
+      "months": [
+        "December",
+        "January",
+        "February",
+        "March"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "sri-lanka-southern-circuit",
+      "destinationCode": "LK-KNB",
+      "regionCode": "LK",
+      "destination": "Kandy, Nuwara Eliya, Bentota, Galle & Colombo",
+      "region": "Sri Lanka",
+      "duration": "7 Days / 6 Nights",
+      "journeyBases": [
+        "Kandy",
+        "Nuwara Eliya",
+        "Bentota",
+        "Galle",
+        "Colombo"
+      ],
+      "emotions": [
+        "Romance",
+        "Serenity",
+        "Wonder"
+      ],
+      "experiences": [
+        "Beaches",
+        "Tea Country",
+        "Heritage",
+        "Nature",
+        "Culture"
+      ],
+      "companions": [
+        "Couples",
+        "Honeymooners",
+        "Families",
+        "Nature Lovers"
+      ],
+      "months": [
+        "December",
+        "January",
+        "February",
+        "March"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "tamil-nadu-chennai",
+      "destinationCode": "TN-CHE",
+      "regionCode": "IN-TN",
+      "destination": "Chennai",
+      "region": "Tamil Nadu, South India",
+      "duration": "2 Days / 1 Night",
+      "journeyBases": [
+        "Chennai"
+      ],
+      "emotions": [
+        "Discovery",
+        "Curiosity",
+        "Nostalgia"
+      ],
+      "experiences": [
+        "Heritage",
+        "Beaches",
+        "Culture",
+        "Food",
+        "Museums"
+      ],
+      "companions": [
+        "Families",
+        "Couples",
+        "First-time Visitors",
+        "Culture Enthusiasts"
+      ],
+      "months": [
+        "November",
+        "December",
+        "January",
+        "February"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "tamil-nadu-kodaikanal",
+      "destinationCode": "TN-KDK",
+      "regionCode": "IN-TN",
+      "destination": "Kodaikanal",
+      "region": "Tamil Nadu, South India",
+      "duration": "3 Days / 2 Nights",
+      "journeyBases": [
+        "Kodaikanal"
+      ],
+      "emotions": [
+        "Serenity",
+        "Romance",
+        "Relaxation"
+      ],
+      "experiences": [
+        "Lakes",
+        "Nature",
+        "Viewpoints",
+        "Trekking",
+        "Hill Station"
+      ],
+      "companions": [
+        "Couples",
+        "Honeymooners",
+        "Families",
+        "Nature Lovers"
+      ],
+      "months": [
+        "September",
+        "October",
+        "November",
+        "December",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "tamil-nadu-kotagiri",
+      "destinationCode": "TN-KTG",
+      "regionCode": "IN-TN",
+      "destination": "Kotagiri",
+      "region": "Tamil Nadu, South India",
+      "duration": "3 Days / 2 Nights",
+      "journeyBases": [
+        "Kotagiri"
+      ],
+      "emotions": [
+        "Serenity",
+        "Relaxation",
+        "Renewal"
+      ],
+      "experiences": [
+        "Tea Estates",
+        "Nature",
+        "Waterfalls",
+        "Birdwatching",
+        "Hill Station"
+      ],
+      "companions": [
+        "Couples",
+        "Families",
+        "Nature Lovers",
+        "Seniors"
+      ],
+      "months": [
+        "September",
+        "October",
+        "November",
+        "December",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "tamil-nadu-masinagudi",
+      "destinationCode": "TN-MSN",
+      "regionCode": "IN-TN",
+      "destination": "Masinagudi",
+      "region": "Tamil Nadu, South India",
+      "duration": "2 Days / 1 Night",
+      "journeyBases": [
+        "Masinagudi"
+      ],
+      "emotions": [
+        "Wonder",
+        "Adventure",
+        "Discovery"
+      ],
+      "experiences": [
+        "Wildlife",
+        "Safari",
+        "Nature",
+        "Birdwatching",
+        "Tribal Culture"
+      ],
+      "companions": [
+        "Couples",
+        "Families",
+        "Wildlife Enthusiasts"
+      ],
+      "months": [
+        "October",
+        "November",
+        "December",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "tamil-nadu-ooty",
+      "destinationCode": "TN-OOT",
+      "regionCode": "IN-TN",
+      "destination": "Ooty",
+      "region": "Tamil Nadu, South India",
+      "duration": "3 Days / 2 Nights",
+      "journeyBases": [
+        "Ooty"
+      ],
+      "emotions": [
+        "Nostalgia",
+        "Romance",
+        "Relaxation"
+      ],
+      "experiences": [
+        "Hill Station",
+        "Tea Estates",
+        "Heritage Railway",
+        "Nature",
+        "Gardens"
+      ],
+      "companions": [
+        "Couples",
+        "Honeymooners",
+        "Families",
+        "Heritage Enthusiasts"
+      ],
+      "months": [
+        "September",
+        "October",
+        "November",
+        "December",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "tamil-nadu-temple-tour",
+      "destinationCode": "TN-TMP",
+      "regionCode": "IN-TN",
+      "destination": "Thanjavur, Chidambaram/Kumbakonam, Madurai & Rameswaram",
+      "region": "Tamil Nadu, South India",
+      "duration": "6 Days / 5 Nights",
+      "journeyBases": [
+        "Thanjavur",
+        "Chidambaram",
+        "Kumbakonam",
+        "Madurai",
+        "Rameswaram"
+      ],
+      "emotions": [
+        "Devotion",
+        "Wonder",
+        "Reverence"
+      ],
+      "experiences": [
+        "Pilgrimage",
+        "Temples",
+        "Heritage",
+        "Culture",
+        "Architecture"
+      ],
+      "companions": [
+        "Pilgrims",
+        "Families",
+        "Seniors",
+        "Heritage Enthusiasts"
+      ],
+      "months": [
+        "October",
+        "November",
+        "December",
+        "January",
+        "February",
+        "March"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "telangana-hyderabad",
+      "destinationCode": "TG-HYD",
+      "regionCode": "IN-TG",
+      "destination": "Hyderabad",
+      "region": "Telangana, South India",
+      "duration": "3 Days / 2 Nights",
+      "journeyBases": [
+        "Hyderabad"
+      ],
+      "emotions": [
+        "Wonder",
+        "Discovery",
+        "Nostalgia"
+      ],
+      "experiences": [
+        "Heritage",
+        "Nizami Architecture",
+        "Food",
+        "Culture",
+        "Museums"
+      ],
+      "companions": [
+        "Families",
+        "Couples",
+        "Seniors",
+        "Food Enthusiasts"
+      ],
+      "months": [
+        "October",
+        "November",
+        "December",
+        "January",
+        "February",
+        "March"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "thailand-bangkok-pattaya",
+      "destinationCode": "TH-BKP",
+      "regionCode": "TH",
+      "destination": "Bangkok & Pattaya",
+      "region": "Thailand",
+      "duration": "6 Days / 5 Nights",
+      "journeyBases": [
+        "Bangkok",
+        "Pattaya"
+      ],
+      "emotions": [
+        "Joy",
+        "Wonder",
+        "Excitement"
+      ],
+      "experiences": [
+        "Temples",
+        "Beaches",
+        "Culture",
+        "Nightlife",
+        "Food"
+      ],
+      "companions": [
+        "Couples",
+        "Families",
+        "Friends Groups",
+        "First-time International Travellers"
+      ],
+      "months": [
+        "November",
+        "December",
+        "January",
+        "February"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "thailand-phuket-krabi",
+      "destinationCode": "TH-PHK",
+      "regionCode": "TH",
+      "destination": "Phuket & Krabi",
+      "region": "Thailand",
+      "duration": "6 Days / 5 Nights",
+      "journeyBases": [
+        "Phuket",
+        "Krabi"
+      ],
+      "emotions": [
+        "Romance",
+        "Joy",
+        "Adventure"
+      ],
+      "experiences": [
+        "Beaches",
+        "Islands",
+        "Snorkelling",
+        "Nature",
+        "Adventure"
+      ],
+      "companions": [
+        "Couples",
+        "Honeymooners",
+        "Friends Groups",
+        "Families"
+      ],
+      "months": [
+        "November",
+        "December",
+        "January",
+        "February",
+        "March",
+        "April"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "uttar-pradesh-agra",
+      "destinationCode": "UP-AGR",
+      "regionCode": "IN-UP",
+      "destination": "Agra",
+      "region": "Uttar Pradesh, North India",
+      "duration": "2 Days / 1 Night",
+      "journeyBases": [
+        "Agra"
+      ],
+      "emotions": [
+        "Wonder",
+        "Awe",
+        "Romance",
+        "Reflection"
+      ],
+      "experiences": [
+        "Heritage",
+        "Mughal Architecture",
+        "Photography",
+        "Monuments",
+        "Culture"
+      ],
+      "companions": [
+        "Couples",
+        "Families",
+        "Seniors",
+        "Solo Travellers"
+      ],
+      "months": [
+        "October",
+        "November",
+        "December",
+        "January",
+        "February",
+        "March"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "uttarakhand-corbett-national-park",
+      "destinationCode": "UK-CBT",
+      "regionCode": "IN-UK",
+      "destination": "Jim Corbett National Park",
+      "region": "Uttarakhand, North India",
+      "duration": "3 Days / 2 Nights",
+      "journeyBases": [
+        "Corbett"
+      ],
+      "emotions": [
+        "Wonder",
+        "Adventure",
+        "Discovery"
+      ],
+      "experiences": [
+        "Wildlife",
+        "Safari",
+        "Tiger Reserve",
+        "Nature",
+        "Birdwatching"
+      ],
+      "companions": [
+        "Families",
+        "Wildlife Enthusiasts",
+        "Photographers",
+        "Couples"
+      ],
+      "months": [
+        "November",
+        "December",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "vietnam-da-nang",
+      "destinationCode": "VN-DAD",
+      "regionCode": "VN",
+      "destination": "Da Nang & Hoi An",
+      "region": "Vietnam",
+      "duration": "4 Days / 3 Nights",
+      "journeyBases": [
+        "Da Nang",
+        "Hoi An"
+      ],
+      "emotions": [
+        "Wonder",
+        "Joy",
+        "Romance"
+      ],
+      "experiences": [
+        "Beaches",
+        "Heritage",
+        "Culture",
+        "Photography",
+        "Shopping"
+      ],
+      "companions": [
+        "Couples",
+        "Families",
+        "Friends Groups",
+        "Photographers"
+      ],
+      "months": [
+        "February",
+        "March",
+        "April",
+        "May"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "vietnam-hanoi",
+      "destinationCode": "VN-HAN",
+      "regionCode": "VN",
+      "destination": "Hanoi & Halong Bay",
+      "region": "Vietnam",
+      "duration": "4 Days / 3 Nights",
+      "journeyBases": [
+        "Hanoi",
+        "Halong Bay"
+      ],
+      "emotions": [
+        "Wonder",
+        "Discovery",
+        "Awe"
+      ],
+      "experiences": [
+        "Heritage",
+        "Nature",
+        "Culture",
+        "Food",
+        "Cruise"
+      ],
+      "companions": [
+        "Couples",
+        "Families",
+        "Friends Groups",
+        "First-time International Travellers"
+      ],
+      "months": [
+        "October",
+        "November",
+        "December"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "vietnam-ho-chi-minh-city",
+      "destinationCode": "VN-SGN",
+      "regionCode": "VN",
+      "destination": "Ho Chi Minh City & Mekong Delta",
+      "region": "Vietnam",
+      "duration": "4 Days / 3 Nights",
+      "journeyBases": [
+        "Ho Chi Minh City",
+        "Mekong Delta"
+      ],
+      "emotions": [
+        "Discovery",
+        "Reflection",
+        "Wonder"
+      ],
+      "experiences": [
+        "History",
+        "Culture",
+        "River Life",
+        "Food",
+        "Heritage"
+      ],
+      "companions": [
+        "Couples",
+        "Families",
+        "Friends Groups",
+        "History Enthusiasts"
+      ],
+      "months": [
+        "December",
+        "January",
+        "February",
+        "March",
+        "April"
+      ],
+      "status": "draft"
+    },
+    {
+      "id": "vietnam-phu-quoc",
+      "destinationCode": "VN-PQC",
+      "regionCode": "VN",
+      "destination": "Phu Quoc Island",
+      "region": "Vietnam",
+      "duration": "4 Days / 3 Nights",
+      "journeyBases": [
+        "Phu Quoc"
+      ],
+      "emotions": [
+        "Relaxation",
+        "Romance",
+        "Joy"
+      ],
+      "experiences": [
+        "Beaches",
+        "Islands",
+        "Snorkelling",
+        "Nature",
+        "Theme Parks"
+      ],
+      "companions": [
+        "Couples",
+        "Honeymooners",
+        "Families",
+        "Beach Lovers"
+      ],
+      "months": [
+        "November",
+        "December",
+        "January",
+        "February",
+        "March",
+        "April"
+      ],
+      "status": "draft"
+    }
+  ]
+}

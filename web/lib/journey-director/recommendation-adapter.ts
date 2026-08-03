@@ -256,19 +256,28 @@ function recoveryMessage(state: JourneyRecommendationState, result: EngineResult
 }
 
 function destinationResolution(result: EngineResult) {
+  const usedInternationalMountainFallback =
+    result.trace.normalizedTravelScope === "INTERNATIONAL" &&
+    result.trace.detectedCoreIntent.intent === "MOUNTAIN" &&
+    result.trace.internationalPolicy.decision.includes("transparent fallback");
+
   switch (result.destinationResolution.status) {
     case "discovery":
       return {
         status: "discovery" as const,
-        message:
-          "You left the map open, so these possibilities are shaped entirely around the story in your Journey Passport.",
+        message: usedInternationalMountainFallback
+          ? "You asked to keep this journey international. None of the served international options currently supports the mountain-retreat experience strongly enough, so we have explicitly widened this shortlist to the strongest genuine domestic mountain alternatives instead of inserting a weaker international match."
+          : "You left the map open, so these possibilities are shaped entirely around the story in your Journey Passport.",
       };
     case "served":
       return {
         status: "served" as const,
         requestedText: result.destinationResolution.requestedText,
         matchedDestination: result.destinationResolution.matchedCandidateName,
-        message: `You mentioned ${result.destinationResolution.requestedText}. We found it among the journeys we currently serve, so ${result.destinationResolution.matchedCandidateName} leads your shortlist while the other two offer complementary possibilities.`,
+        recommended: result.destinationResolution.recommended,
+        message: result.destinationResolution.recommended
+          ? `You mentioned ${result.destinationResolution.requestedText}. We serve it, and ${result.destinationResolution.matchedCandidateName} fits your primary experience strongly enough to lead this shortlist.`
+          : `You mentioned ${result.destinationResolution.requestedText}. We do serve it, but it is not the strongest match for the primary experience in your Passport. The possibilities below protect that priority; we can still curate ${result.destinationResolution.matchedCandidateName} with clear trade-offs if you prefer it.`,
       };
     case "unserved":
       return {

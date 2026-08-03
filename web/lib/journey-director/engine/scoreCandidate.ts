@@ -17,6 +17,7 @@ import type {
   MemoryGoalId,
   NormalizedJourneyPassport,
   RankedCandidate,
+  RegionCandidate,
   RegionEligibility,
   RegionScore,
   RegionScoreDimension,
@@ -40,6 +41,7 @@ const SCORE_LABELS: Record<DestinationScoreDimension | RegionScoreDimension, str
   "region-match-quality": "Region match quality",
   "memory-goal-alignment": "Memory goal alignment",
   "operational-confidence": "Operational confidence",
+  "core-intent-fit": "Regional core journey intent fit",
   "emotional-fit": "Regional emotional fit",
   "theme-signature-experience-fit": "Regional theme and signature experience fit",
   "pace-fit": "Regional pace fit",
@@ -209,6 +211,18 @@ function operationalMatch(serviceConfidence: ServiceConfidence) {
   return 0;
 }
 
+function coreIntentMatch(
+  passport: NormalizedJourneyPassport,
+  region: RegionCandidate,
+) {
+  if (passport.coreIntent.strength !== "STRONG" || !passport.coreIntent.intent) {
+    return 0.5;
+  }
+
+  const capability = CORE_INTENT_CAPABILITY[passport.coreIntent.intent];
+  return region.capabilities?.[capability] ? 1 : 0;
+}
+
 function createFactor(
   factorId: DestinationScoreDimension | RegionScoreDimension,
   rawMatch: number,
@@ -292,6 +306,10 @@ function scoreRegion(
   passport: NormalizedJourneyPassport,
 ): RegionScore {
   const region = eligibility.region;
+  const dominantIntent = coreIntentMatch(passport, region);
+  const coreIntentCapability = passport.coreIntent.intent
+    ? CORE_INTENT_CAPABILITY[passport.coreIntent.intent]
+    : undefined;
   const emotional = emotionalMatch(passport.emotions, region.primaryEmotion, region.supportingEmotions);
   const theme = themeMatch(passport.themes, region.themes, region.signatureExperiences);
   const pace = orderedMatch(passport.pacePreferences, region.paces, PACE_ORDER, 0);
@@ -300,6 +318,18 @@ function scoreRegion(
   const comfort = comfortMatch(passport.comfortPreferences, region.comforts);
 
   const breakdown: ScoreFactor[] = [
+    createFactor(
+      "core-intent-fit",
+      dominantIntent,
+      REGION_SCORE_WEIGHTS["core-intent-fit"],
+      passport.coreIntent.evidence,
+      coreIntentCapability
+        ? [`${region.id}:${coreIntentCapability}:${dominantIntent === 1 ? "supported" : "not-supported"}`]
+        : ["no-strong-core-intent"],
+      coreIntentCapability
+        ? undefined
+        : "No strong physical core intent was detected; neutral credit applied.",
+    ),
     createFactor(
       "emotional-fit",
       emotional.match,
@@ -370,6 +400,16 @@ function scoreRegionComparator(left: RegionScore, right: RegionScore) {
   return idCompare(left.region.id, right.region.id);
 }
 
+function intentAreaPriority(passport: NormalizedJourneyPassport, region: RegionScore) {
+  if (passport.coreIntent.strength !== "STRONG") return 0;
+  const name = `${region.region.id} ${region.region.name}`.toLocaleLowerCase("en-US");
+  if (passport.coreIntent.intent === "WELLNESS" && name.includes("ubud")) return 10;
+  if (passport.coreIntent.intent === "BEACH" && name.includes("nusa dua")) return 10;
+  if (passport.coreIntent.intent === "BEACH" && name.includes("uluwatu")) return 9;
+  if (passport.coreIntent.intent === "BEACH" && name.includes("seminyak")) return 8;
+  return 0;
+}
+
 export function scoreEligibleCandidate(
   evaluation: CandidateContradictionEvaluation,
   passport: NormalizedJourneyPassport,
@@ -384,7 +424,7 @@ export function scoreEligibleCandidate(
   const candidate = eligibility.candidate;
   const regionScores = evaluation.compatibleRegions
     .map((region) => scoreRegion(region, passport))
-    .sort(scoreRegionComparator);
+    .sort((left, right) => intentAreaPriority(passport, right) - intentAreaPriority(passport, left) || scoreRegionComparator(left, right));
   const selectedRegion = regionScores[0];
 
   if (!selectedRegion) {
@@ -403,16 +443,17 @@ export function scoreEligibleCandidate(
   const coreIntentCapability = passport.coreIntent.intent
     ? CORE_INTENT_CAPABILITY[passport.coreIntent.intent]
     : undefined;
+  const dominantIntent = coreIntentMatch(passport, selectedRegion.region);
 
   const breakdown: ScoreFactor[] = [
     createFactor(
       "core-intent-alignment",
-      1,
+      dominantIntent,
       DESTINATION_SCORE_WEIGHTS["core-intent-alignment"],
       passport.coreIntent.evidence,
       coreIntentCapability
         ? [
-            `${selectedRegion.region.id}:${coreIntentCapability}`,
+            `${selectedRegion.region.id}:${coreIntentCapability}:${dominantIntent === 1 ? "supported" : "not-supported"}`,
           ]
         : ["no-strong-core-intent"],
       coreIntentCapability

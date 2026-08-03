@@ -1,20 +1,26 @@
 # EBC-003C-B — Journey Intelligence Generator
-Version: 1.0
-Status: Approved for Implementation
-Canonical Implementation Specification
-Project: Search My Vacation (SMV)
-Component: Journey Director Intelligence Platform
-Phase: Runtime Intelligence Generation
+
+**Canonical Implementation Specification**
+
+**Version:** 1.0
+
+**Status:** Approved for Implementation
+
+**Project:** Search My Vacation (SMV)
+
+**Component:** Journey Director Intelligence Platform
+
+**Phase:** Runtime Intelligence Generation
 
 # Implementation Card: EBC-003C-B
 ## 1. Objective
 Implement the Journey Intelligence Generator, a deterministic generation pipeline that converts the approved business-authored Journey Intelligence workbook into production-ready runtime intelligence consumed by the Journey Director.
 This component establishes a strict separation between:
-Business Knowledge
-Generated Runtime Intelligence
-Traveller Experience
-The Journey Director runtime must never depend directly on Excel workbooks.
-Instead, the workbook becomes the single business-maintained source from which deterministic runtime artifacts are generated.
+- Business Knowledge
+- Generated Runtime Intelligence
+- Traveller Experience
+- The Journey Director runtime must never depend directly on Excel workbooks.
+- Instead, the workbook becomes the single business-maintained source from which deterministic runtime artifacts are generated.
 
 ## 2. Repository
 Work exclusively inside:
@@ -32,7 +38,9 @@ Preserve the existing working tree exactly as it exists before this task.
 
 ## 3. Inputs
 Use the approved business workbook:
+```text
 Journey Director Intelligence Enriched.xlsx
+```
 This workbook is now the canonical Release 1 business intelligence source.
 It must be treated as read-only.
 The generator must never modify the workbook.
@@ -68,32 +76,32 @@ The workbook must never become a runtime dependency.
 The implementation shall satisfy the following architectural principles.
 ### 5.1 Deterministic
 Given:
-identical workbook
-identical generator version
-the output must always be identical.
-No randomness.
-No AI-generated runtime content.
-No probabilistic generation.
+- identical workbook
+- identical generator version
+- the output must always be identical.
+- No randomness.
+- No AI-generated runtime content.
+- No probabilistic generation.
 ### 5.2 Explainable
-Every recommendation must remain explainable.
-Every compatibility score must be traceable.
-Every contradiction must have a reason.
-Every runtime artifact must map back to workbook data.
+- Every recommendation must remain explainable.
+- Every compatibility score must be traceable.
+- Every contradiction must have a reason.
+- Every runtime artifact must map back to workbook data.
 ### 5.3 Business Owned
 Business users own:
-destinations
-traveller types
-emotional goals
-experiences
-Journey DNA
-compatibility
-constraints
+- destinations
+- traveller types
+- emotional goals
+- experiences
+- Journey DNA
+- compatibility
+- constraints
 Developers own:
-parsing
-validation
-generation
-runtime loading
-schemas
+- parsing
+- validation
+- generation
+- runtime loading
+- schemas
 ### 5.4 Runtime Independence
 The production website must never read Excel files.
 Runtime consumes generated JSON only.
@@ -167,22 +175,22 @@ Responsibilities must remain separated.
 ## 8. Phase 1 — Workbook Loader
 Implement a deterministic workbook loader.
 Responsibilities:
-open workbook
-locate required sheets
-validate required sheets exist
-validate headers
-validate row integrity
-normalize values
-produce typed internal objects
+- open workbook
+- locate required sheets
+- validate required sheets exist
+- validate headers
+- validate row integrity
+- normalize values
+- produce typed internal objects
 The loader must fail immediately if:
-workbook missing
-sheet missing
-mandatory header missing
-duplicate IDs
-malformed rows
-incompatible schema
-No silent recovery.
-No ignored rows.
+- workbook missing
+- sheet missing
+- mandatory header missing
+- duplicate IDs
+- malformed rows
+- incompatible schema
+- No silent recovery.
+- No ignored rows.
 
 ## 9. Required Workbook Sheets
 Validate the existence of all required sheets.
@@ -207,41 +215,41 @@ Generation must stop.
 
 ## 10. Workbook Validation
 Validate at minimum:
-Traveller Types
-unique names
-unique IDs
-no blanks
-Emotional Goals
-unique values
-required header
-no empty records
+- Traveller Types
+- unique names
+- unique IDs
+- no blanks
+- Emotional Goals
+- unique values
+- required header
+- no empty records
 Desired Experiences
-unique values
-required header
+- unique values
+- required header
 Destination Catalogue
 Validate:
-unique destination IDs
-unique region IDs
-destination names
-region names
-travel scope
+- unique destination IDs
+- unique region IDs
+- destination names
+- region names
+- travel scope
 Destination Intelligence
 Validate:
-Journey Base classification
-Record Type
-Journey DNA
-Comfort
-Pace
-Suggested Duration
-Best Season
-Operational Confidence
+- Journey Base classification
+- Record Type
+- Journey DNA
+- Comfort
+- Pace
+- Suggested Duration
+- Best Season
+- Operational Confidence
 Required fields must not be blank unless explicitly marked:
 REVIEW_REQUIRED
 Compatibility Matrix
 Validate:
-traveller compatibility
-emotional compatibility
-experience compatibility
+- traveller compatibility
+- emotional compatibility
+- experience compatibility
 Score range:
 0
 

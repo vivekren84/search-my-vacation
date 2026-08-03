@@ -1,50 +1,32 @@
-import { CORE_INTENT_CAPABILITY } from "./engine.rules";
 import type {
-  CandidateCapabilities,
   CandidateContradictionEvaluation,
   CandidateEligibility,
   ContradictionReason,
   NormalizedJourneyPassport,
-  RegionCandidate,
   RegionEligibility,
+  CandidateCapabilities,
+  CoreIntent,
   ThemeId,
 } from "./engine.types";
 
-function capabilitiesFromThemes(
-  themes: readonly ThemeId[],
-): CandidateCapabilities {
-  const has = (...values: readonly ThemeId[]) =>
-    values.some((value) => themes.includes(value));
+const CAPABILITY_FOR_INTENT: Readonly<Record<CoreIntent, keyof CandidateCapabilities>> = {
+  MOUNTAIN: "mountain", BEACH: "beach", WILDLIFE: "wildlife", CITY: "city",
+  HERITAGE: "heritage", WELLNESS: "wellness", NATURE: "nature", ADVENTURE: "adventure",
+};
 
-  return {
-    mountain: has("mountains", "hills", "snow-experiences"),
-    beach: has("beaches"),
-    wildlife: has("wildlife", "safari"),
-    city: has("city-break"),
-    heritage: has("heritage"),
-    wellness: has("wellness"),
-    nature: has(
-      "nature",
-      "forests",
-      "hills",
-      "mountains",
-      "backwaters",
-      "lakes",
-      "rivers",
-      "islands",
-    ),
-    adventure: has(
-      "adventure",
-      "water-sports",
-      "safari",
-      "road-trips",
-      "snow-experiences",
-    ),
-  };
-}
+const capabilityThemes: Readonly<Record<keyof CandidateCapabilities, readonly ThemeId[]>> = {
+  mountain: ["mountains", "hills", "snow-experiences"],
+  beach: ["beaches", "islands"],
+  wildlife: ["wildlife", "safari"],
+  city: ["city-break", "architecture"],
+  heritage: ["heritage", "culture", "spiritual"],
+  wellness: ["wellness", "slow-travel"],
+  nature: ["nature", "forests", "hills", "mountains", "backwaters", "lakes", "rivers", "islands"],
+  adventure: ["adventure", "water-sports", "safari", "road-trips", "snow-experiences"],
+};
 
-function regionCapabilities(region: RegionCandidate): CandidateCapabilities {
-  return region.capabilities ?? capabilitiesFromThemes(region.themes);
+function hasCapability(region: RegionEligibility, capability: keyof CandidateCapabilities) {
+  return region.region.capabilities?.[capability] ?? capabilityThemes[capability].some((theme) => region.region.themes.includes(theme));
 }
 
 function travelScopeContradiction(
@@ -114,30 +96,23 @@ export function evaluateCandidateContradictions(
     }
   }
 
-  const detectedIntent =
-    passport.coreIntent.strength === "STRONG"
-      ? passport.coreIntent.intent
-      : undefined;
-
-  if (detectedIntent) {
-    evaluatedRules.push(`CORE_INTENT_${detectedIntent}`);
-    const capability = CORE_INTENT_CAPABILITY[detectedIntent];
-    const capableRegions = consideredRegions.filter(
-      ({ region }) => regionCapabilities(region)[capability],
-    );
-
-    if (capableRegions.length === 0) {
+  if (passport.coreIntent.strength === "STRONG" && passport.coreIntent.intent) {
+    evaluatedRules.push("CORE_INTENT_CAPABILITY");
+    const requiredCapability = CAPABILITY_FOR_INTENT[passport.coreIntent.intent];
+    const capabilityRegions = consideredRegions.filter((region) => hasCapability(region, requiredCapability));
+    if (capabilityRegions.length === 0) {
       contradictions.push({
         code: "CORE_INTENT_CAPABILITY_MISSING",
         scope: requestedRegionId ? "region" : "destination",
         candidateId: requestedRegionId ?? eligibility.candidate.id,
-        explanation: `${eligibility.candidate.name} has no eligible region with the required ${capability} capability.`,
-        relevantInput: detectedIntent,
-        requiredCapability: capability,
+        explanation: `${requestedRegionId ? "The requested region" : eligibility.candidate.name} does not support the traveller’s primary ${passport.coreIntent.intent.toLowerCase()} experience.`,
+        relevantInput: passport.coreIntent.evidence.join(", "),
+        requiredCapability,
       });
+      consideredRegions = [];
+    } else {
+      consideredRegions = capabilityRegions;
     }
-
-    consideredRegions = capableRegions;
   }
 
   const passed = contradictions.length === 0 && consideredRegions.length > 0;

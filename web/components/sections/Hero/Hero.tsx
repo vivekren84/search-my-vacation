@@ -29,7 +29,7 @@ export default function Hero() {
         <Container>
           <div className="max-w-2xl py-36 sm:py-40 lg:py-44 lg:pl-8 xl:pl-14">
             <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#f3c681] sm:text-sm">
-              More Than a Trip. It&apos;s an Experience.
+              More Than a Trip. It’s an Experience.
             </p>
 
             <h1 id="hero-heading" className="mt-5 max-w-[39rem] text-balance font-serif text-5xl font-normal leading-[0.98] tracking-[-0.045em] text-white md:text-6xl lg:text-7xl">

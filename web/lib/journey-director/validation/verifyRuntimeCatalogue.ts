@@ -156,8 +156,9 @@ function verifyEngineConsumption() {
   );
   assert(first.status === "success" && first.possibilities.length === 3, "approved runtime evidence produces a complete qualified shortlist");
   assert(
-    first.trace.rankedCandidates.length === release1JourneyCandidates.length,
-    "every served Release 1 destination is scored and ranked",
+    first.trace.rankedCandidates.length > 0 &&
+      first.trace.rankedCandidates.length === first.trace.contradictionEvaluations.filter((candidate) => candidate.passed).length,
+    "every contradiction-free Release 1 destination is scored and ranked",
   );
   assert(
     first.possibilities.map((possibility) => possibility.personality).join("|") === "perfect-match|different-rhythm|pleasant-surprise",

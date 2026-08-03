@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import SiteBrand from "@/components/brand/SiteBrand";
 import Header from "@/components/layout/Header";
 
 export default function NotFound() {
@@ -8,7 +8,7 @@ export default function NotFound() {
       <Header />
       <main className="grid min-h-screen place-items-center overflow-hidden bg-[#20150f] px-6 py-16 text-center text-white">
         <section className="relative max-w-2xl rounded-[2rem] border border-white/15 bg-white/[.06] px-7 py-12 shadow-2xl shadow-black/20 backdrop-blur-sm sm:px-14">
-          <Image src="/logos/smv-logo.png" alt="Search My Vacation" width={82} height={76} priority className="mx-auto h-16 w-auto" />
+          <SiteBrand variant="compact" surface="dark" linked={false} preload className="mx-auto max-w-56" />
           <p className="mt-9 text-xs font-bold uppercase tracking-[.2em] text-[#f3c681]">A small detour</p>
           <h1 className="mt-4 font-serif text-4xl leading-tight tracking-[-.045em] sm:text-5xl">Looks like this journey took an unexpected turn.</h1>
           <p className="mx-auto mt-5 max-w-lg leading-8 text-white/70">The page you were looking for is not here, but a thoughtful journey can always begin again.</p>

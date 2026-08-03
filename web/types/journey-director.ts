@@ -11,6 +11,8 @@ export type JourneyPossibilityPersonality =
 
 export type JourneyPassportSnapshot = {
   name: string;
+  mobile?: string;
+  journeyReference?: string;
   companion: string;
   dreamJourney: string;
   travelStyles: string[];
@@ -91,6 +93,7 @@ export type JourneyDestinationResolution =
       status: "served";
       requestedText: string;
       matchedDestination: string;
+      recommended: boolean;
       message: string;
     }
   | { status: "unserved"; requestedText: string; message: string };

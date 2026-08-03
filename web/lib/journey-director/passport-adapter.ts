@@ -24,6 +24,8 @@ export function isJourneyPassportSnapshot(value: unknown): value is JourneyPassp
 
   return (
     typeof value.name === "string" &&
+    (value.mobile === undefined || typeof value.mobile === "string") &&
+    (value.journeyReference === undefined || typeof value.journeyReference === "string") &&
     typeof value.companion === "string" &&
     typeof value.dreamJourney === "string" &&
     Array.isArray(value.travelStyles) &&
@@ -44,6 +46,8 @@ export function createJourneyPassportSnapshot(
 ): JourneyPassportSnapshot {
   return {
     name: state.name.trim(),
+    ...(state.mobile.trim() ? { mobile: state.mobile.trim() } : {}),
+    ...(state.journeyReference ? { journeyReference: state.journeyReference } : {}),
     companion: state.companion,
     dreamJourney: state.dreamJourney,
     travelStyles: [...state.travelStyles],

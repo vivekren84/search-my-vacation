@@ -130,6 +130,10 @@ function destinationValueMatches(value: string, requestedText: string) {
   );
 }
 
+function destinationValueEquals(value: string, requestedText: string) {
+  return normalizeDestinationName(value) === normalizeDestinationName(requestedText);
+}
+
 type DestinationRequestMatch = {
   candidateId: string;
   candidateName: string;
@@ -144,10 +148,12 @@ function matchDestinationRequest(
   const requestedText = passport.destinationIntent.rawText.trim();
 
   for (const candidate of catalogue) {
+    if (candidate.status !== "ACTIVE" || candidate.serviceConfidence === "LIMITED" || candidate.serviceConfidence === "PAUSED") continue;
     const region = candidate.regions.find(
       (item) =>
-        destinationValueMatches(item.id, requestedText) ||
-        destinationValueMatches(item.name, requestedText),
+        item.status === "ACTIVE" &&
+        (destinationValueEquals(item.id, requestedText) ||
+          destinationValueEquals(item.name, requestedText)),
     );
     if (region) {
       return {
@@ -159,9 +165,10 @@ function matchDestinationRequest(
   }
 
   const candidate = catalogue.find((item) =>
-    [item.id, item.name, ...item.aliases].some((value) =>
-      destinationValueMatches(value, requestedText),
-    ),
+    item.status === "ACTIVE" &&
+    item.serviceConfidence !== "LIMITED" &&
+    item.serviceConfidence !== "PAUSED" &&
+    [item.id, item.name, ...item.aliases].some((value) => destinationValueMatches(value, requestedText)),
   );
 
   return candidate
@@ -217,24 +224,34 @@ function applyKnownDestinationPreference(
       )
     : undefined;
 
-  if (!requestMatch || !matched || !knownPreferenceQualified(matched)) {
+  if (!requestMatch) {
     return {
       resolution: { status: "unserved", requestedText },
       rankedCandidates,
       trace: {
         requestedText,
-        ...(requestMatch
-          ? {
-              matchedCandidateId: requestMatch.candidateId,
-              ...(requestMatch.regionId
-                ? { matchedRegionId: requestMatch.regionId }
-                : {}),
-            }
-          : {}),
         preferenceApplied: false,
-        explanation: requestMatch
-          ? "The known destination did not pass every gate and Perfect Match qualification, so it received no preference."
-          : "The known destination was not found in the served catalogue.",
+        explanation: "The known destination was not found in the served catalogue.",
+      },
+    };
+  }
+
+  if (!matched || !knownPreferenceQualified(matched)) {
+    return {
+      resolution: {
+        status: "served",
+        requestedText,
+        matchedCandidateId: requestMatch.candidateId,
+        matchedCandidateName: requestMatch.candidateName,
+        recommended: false,
+      },
+      rankedCandidates,
+      trace: {
+        requestedText,
+        matchedCandidateId: requestMatch.candidateId,
+        ...(requestMatch.regionId ? { matchedRegionId: requestMatch.regionId } : {}),
+        preferenceApplied: false,
+        explanation: "The destination is served, but it is advisory rather than recommended for the traveller’s primary intent.",
       },
     };
   }
@@ -246,7 +263,7 @@ function applyKnownDestinationPreference(
 
   if (!canLead) {
     return {
-      resolution: { status: "unserved", requestedText },
+      resolution: { status: "served", requestedText, matchedCandidateId: matched.candidate.id, matchedCandidateName: matched.candidate.name, recommended: false },
       rankedCandidates,
       trace: {
         requestedText,
@@ -274,6 +291,7 @@ function applyKnownDestinationPreference(
       requestedText,
       matchedCandidateId: matched.candidate.id,
       matchedCandidateName: matched.candidate.name,
+      recommended: true,
     },
     rankedCandidates: prioritised,
     trace: {
@@ -333,7 +351,8 @@ export function generateJourneyRecommendations(
       stage: "ELIGIBILITY_FAILURE",
       reasons: candidate.reasons,
     }));
-  const contradictionEvaluations: CandidateContradictionEvaluation[] = eligibility
+  let effectivePassport = passport;
+  let contradictionEvaluations: CandidateContradictionEvaluation[] = eligibility
     .filter((candidate) => candidate.eligible)
     .map((candidate) =>
       evaluateCandidateContradictions(
@@ -344,6 +363,17 @@ export function generateJourneyRecommendations(
           : undefined,
       ),
     );
+  const internationalMountainFallback =
+    contradictionEvaluations.every((candidate) => !candidate.passed) &&
+    passport.travelScope === "INTERNATIONAL" &&
+    passport.coreIntent.strength === "STRONG" &&
+    passport.coreIntent.intent === "MOUNTAIN";
+  if (internationalMountainFallback) {
+    effectivePassport = { ...passport, travelScope: "ANY" };
+    contradictionEvaluations = eligibility
+      .filter((candidate) => candidate.eligible)
+      .map((candidate) => evaluateCandidateContradictions(candidate, effectivePassport));
+  }
   const contradictionExclusions: CandidateExclusionSummary[] =
     contradictionEvaluations
       .filter((candidate) => !candidate.passed)
@@ -360,7 +390,8 @@ export function generateJourneyRecommendations(
   const initiallyRankedCandidates = rankCandidates(
     contradictionEvaluations
       .filter((candidate) => candidate.passed)
-      .map((candidate) => scoreEligibleCandidate(candidate, passport)),
+      .map((candidate) => scoreEligibleCandidate(candidate, effectivePassport)),
+    effectivePassport,
   );
   const destination = applyKnownDestinationPreference(
     passport,
@@ -368,7 +399,7 @@ export function generateJourneyRecommendations(
     initiallyRankedCandidates,
   );
   const rankedCandidates = destination.rankedCandidates;
-  const shortlist = selectJourneyPossibilities(rankedCandidates, passport);
+  const shortlist = selectJourneyPossibilities(rankedCandidates, effectivePassport);
   const possibilities = shortlist.possibilities;
   const status = possibilities.length === 3
     ? "success"
@@ -438,7 +469,12 @@ export function generateJourneyRecommendations(
       exclusions,
       rankedCandidates,
       knownDestinationHandling: destination.trace,
-      internationalPolicy: shortlist.internationalPolicy,
+      internationalPolicy: internationalMountainFallback
+        ? {
+            scope: "INTERNATIONAL",
+            decision: "No served international candidate satisfied the mountain capability gate, so the explicit transparent fallback returned only genuine domestic mountain options instead of padding the shortlist with a contradictory international choice.",
+          }
+        : shortlist.internationalPolicy,
       shortlistDecisions: shortlist.decisions,
       personalityAssignments: possibilities.map((possibility) => ({
         possibilityId: possibility.possibilityId,

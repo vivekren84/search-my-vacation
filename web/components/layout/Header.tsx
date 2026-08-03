@@ -1,44 +1,31 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 
+import SiteBrand from "@/components/brand/SiteBrand";
 import { siteConfig } from "@/config/site.config";
+import Container from "./Container";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
 
   return (
-    <>
     <header
       className="sticky inset-x-0 top-0 z-50 border-b border-white/15 bg-[#20150f]/95 shadow-[0_4px_18px_rgba(32,21,15,.12)] backdrop-blur-md"
     >
-      <div className="mx-auto flex min-h-28 max-w-7xl flex-wrap items-center justify-between gap-x-4 px-5 py-3 sm:px-6 md:h-24 md:min-h-0 md:flex-nowrap md:py-0 lg:px-10">
-        <Link href="/" aria-label="Search My Vacation home" className="flex shrink-0 items-center">
-          <Image
-            src={siteConfig.logo}
-            alt={siteConfig.name}
-            width={78}
-            height={70}
-            priority
-            className="h-[3.75rem] w-auto object-contain"
-          />
-        </Link>
+      <Container className="flex min-h-[5.5rem] items-center justify-between gap-4 py-3 xl:min-h-32 xl:py-2">
+        <SiteBrand
+          variant="header"
+          surface="dark"
+          preload
+          className="w-[clamp(11rem,48vw,14rem)] shrink-0 text-white xl:w-[clamp(19rem,24vw,21rem)]"
+        />
 
-        <div className="order-3 flex w-full min-w-0 flex-col border-t border-white/25 pt-2 text-left md:order-none md:w-auto md:shrink-0 md:border-l md:border-t-0 md:py-0 md:pl-4">
-          <p className="whitespace-nowrap text-[0.68rem] font-bold uppercase tracking-[0.14em] text-white min-[360px]:text-[0.74rem] min-[360px]:tracking-[0.17em] md:text-[0.8rem]">
-            {siteConfig.name}
-          </p>
-          <p className="mt-0.5 whitespace-nowrap text-[0.62rem] font-medium tracking-[0.02em] text-[#f3c681] min-[360px]:text-[0.67rem] min-[360px]:tracking-[0.035em]">
-            {siteConfig.tagline}
-          </p>
-        </div>
-
-        <nav aria-label="Primary navigation" className="hidden flex-1 justify-end lg:flex xl:justify-center">
-          <ul className="flex items-center gap-8 md:gap-12">
+        <nav aria-label="Primary navigation" className="hidden flex-1 justify-center xl:flex">
+          <ul className="flex items-center gap-6 2xl:gap-8">
             {siteConfig.navigation.map((item) => (
               <li key={`${item.label}-${item.href}`}>
                 <Link
@@ -53,11 +40,11 @@ export default function Header() {
           </ul>
         </nav>
 
-        <Link href="/journey-passport" className="hidden rounded-full bg-[#f3c681] px-4 py-2 text-xs font-bold uppercase tracking-[0.1em] text-[#20150f] transition hover:bg-[#ffe0a5] lg:inline-flex">
+        <Link href="/journey-passport" className="hidden shrink-0 rounded-full bg-[#f3c681] px-4 py-2 text-xs font-bold uppercase tracking-[0.1em] text-[#20150f] transition hover:bg-[#ffe0a5] xl:inline-flex">
           Plan My Experience
         </Link>
 
-        <div className="relative ml-auto lg:hidden">
+        <div className="relative ml-auto xl:hidden">
           <button
             type="button"
             aria-expanded={isMenuOpen}
@@ -73,7 +60,7 @@ export default function Header() {
             <nav
               id="mobile-primary-navigation"
               aria-label="Mobile primary navigation"
-              className="absolute right-0 top-[calc(100%+3.25rem)] w-60 rounded-2xl border border-white/15 bg-[#20150f]/95 p-2 shadow-xl shadow-black/25 backdrop-blur-md md:top-[calc(100%+0.75rem)]"
+              className="absolute right-0 top-[calc(100%+0.75rem)] w-60 rounded-2xl border border-white/15 bg-[#20150f]/95 p-2 shadow-xl shadow-black/25 backdrop-blur-md"
             >
               <ul>
                 {siteConfig.navigation.map((item) => (
@@ -93,8 +80,7 @@ export default function Header() {
             </nav>
           ) : null}
         </div>
-      </div>
+      </Container>
     </header>
-    </>
   );
 }

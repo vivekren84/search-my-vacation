@@ -296,7 +296,8 @@ export function selectJourneyPossibilities(
     if (qualifiesForPleasantSurprise(candidate)) roles.push("pleasant-surprise");
     return roles;
   };
-  const perfectMatch = rankedCandidates.find(qualifiesForPerfectMatch);
+  const qualifiedPerfectMatch = rankedCandidates.find(qualifiesForPerfectMatch);
+  const perfectMatch = qualifiedPerfectMatch ?? rankedCandidates[0];
 
   if (!perfectMatch) {
     return {
@@ -305,11 +306,11 @@ export function selectJourneyPossibilities(
         candidateId: candidate.candidate.id,
         qualified: false,
         eligiblePersonalities: qualificationRoles(candidate),
-        explanation: "The candidate did not meet the minimum Perfect Match qualification.",
+        explanation: "No contradiction-free candidate was available for a responsible shortlist.",
       })),
       internationalPolicy: {
         scope: passport.travelScope,
-        decision: "No candidate met the minimum shortlist qualification.",
+        decision: "No contradiction-free candidate was available.",
       },
     };
   }
@@ -323,14 +324,19 @@ export function selectJourneyPossibilities(
     }),
   ];
 
-  const rhythm = rankedCandidates
-    .filter((candidate) => candidate.candidate.id !== perfectMatch.candidate.id)
-    .filter(qualifiesForDifferentRhythm)
+  const rhythmPool = rankedCandidates.filter((candidate) => candidate.candidate.id !== perfectMatch.candidate.id);
+  const qualifiedRhythmPool = rhythmPool.filter(qualifiesForDifferentRhythm);
+  const rhythmCandidates = passport.coreIntent.strength === "STRONG"
+    ? rhythmPool
+    : qualifiedRhythmPool.length > 0 ? qualifiedRhythmPool : rhythmPool;
+  const rhythm = rhythmCandidates
     .map((candidate) => {
       const diversity = diversityScore(perfectMatch, candidate);
       return {
         ranked: candidate,
-        selectionValue: normalizedScore(candidate.totalScore) * 0.75 + diversity * 0.25,
+        selectionValue: passport.coreIntent.strength === "STRONG"
+          ? 1 - candidate.rank / 100
+          : normalizedScore(candidate.totalScore) * 0.75 + diversity * 0.25,
         differentiators: differentiatorsFrom(perfectMatch, candidate),
       };
     })
@@ -341,21 +347,25 @@ export function selectJourneyPossibilities(
     possibilities.push(createPossibility("different-rhythm", rhythm));
   }
 
-  const surprise = rankedCandidates
-    .filter(
+  const surprisePool = rankedCandidates.filter(
       (candidate) =>
         !selected.some(
           (selectedCandidate) =>
             selectedCandidate.candidate.id === candidate.candidate.id,
         ),
-    )
-    .filter(qualifiesForPleasantSurprise)
+    );
+  const qualifiedSurprisePool = surprisePool.filter(qualifiesForPleasantSurprise);
+  const surpriseCandidates = passport.coreIntent.strength === "STRONG"
+    ? surprisePool
+    : qualifiedSurprisePool.length > 0 ? qualifiedSurprisePool : surprisePool;
+  const surprise = surpriseCandidates
     .map((candidate) => ({
       ranked: candidate,
-      selectionValue:
-        normalizedScore(candidate.totalScore) * 0.7 +
-        noveltyScore(passport, candidate, selected) * 0.2 +
-        evidenceReadiness(candidate) * 0.1,
+      selectionValue: passport.coreIntent.strength === "STRONG"
+        ? 1 - candidate.rank / 100
+        : normalizedScore(candidate.totalScore) * 0.7 +
+          noveltyScore(passport, candidate, selected) * 0.2 +
+          evidenceReadiness(candidate) * 0.1,
       differentiators: selected
         .flatMap((item) => differentiatorsFrom(item, candidate))
         .filter((value, index, values) => values.indexOf(value) === index),
@@ -461,11 +471,13 @@ export function selectJourneyPossibilities(
       const selectedPersonality = selectedByCandidate.get(candidate.candidate.id);
       return {
         candidateId: candidate.candidate.id,
-        qualified: eligiblePersonalities.length > 0,
+        qualified: eligiblePersonalities.length > 0 || Boolean(selectedPersonality),
         eligiblePersonalities,
         ...(selectedPersonality ? { selectedPersonality } : {}),
         explanation: selectedPersonality
-          ? `${PERSONALITY_LABELS[selectedPersonality]} assigned after all gates and minimum qualification checks passed.`
+          ? eligiblePersonalities.includes(selectedPersonality)
+            ? `${PERSONALITY_LABELS[selectedPersonality]} assigned after all gates and minimum qualification checks passed.`
+            : `${PERSONALITY_LABELS[selectedPersonality]} assigned as the closest contradiction-free option with a lower confidence band.`
           : eligiblePersonalities.length > 0
             ? "Qualified but not selected by the fit-led shortlist and diversity policy."
             : "Did not meet any personality's minimum score, evidence, region, or operational safeguards.",

@@ -1,0 +1,1064 @@
+{
+  "generated": true,
+  "schemaVersion": 1,
+  "sourceWorkbook": "SMV-Journey-Itinerary-Knowledge-Base-v1.xlsx",
+  "sourceWorkbookSha256": "05aa54863376d159fcc4684305aeb4a18b963f1053e0693122e719c172fa1312",
+  "mappings": [
+    {
+      "worksheet": "Andaman Islands",
+      "indexDestination": "Port Blair, Havelock",
+      "indexRegion": "Andaman & Nicobar Islands, India",
+      "runtimeId": "andaman-islands",
+      "destinationCode": "AN-AND",
+      "regionCode": "IN-AN",
+      "parentDestination": "Andaman Islands",
+      "journeyBases": [
+        "Port Blair",
+        "Havelock",
+        "Neil Island"
+      ],
+      "journeyDirectorCandidateIds": [
+        "andaman"
+      ],
+      "journeyDirectorRegionIds": [
+        "india-andaman-port-blair",
+        "india-andaman-havelock",
+        "india-andaman-neil-island"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Vizag",
+      "indexDestination": "Visakhapatnam & Araku Valley",
+      "indexRegion": "Andhra Pradesh, South India",
+      "runtimeId": "andhra-pradesh-visakhapatnam-araku",
+      "destinationCode": "AP-VIZ",
+      "regionCode": "IN-AP",
+      "parentDestination": "Andhra Pradesh",
+      "journeyBases": [
+        "Visakhapatnam",
+        "Araku Valley"
+      ],
+      "journeyDirectorCandidateIds": [
+        "vizag"
+      ],
+      "journeyDirectorRegionIds": [
+        "india-andhra-pradesh-vizag"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Assam - Heritage & City Tour",
+      "indexDestination": "Guwahati, Sivasagar & Majuli",
+      "indexRegion": "Assam, Northeast India",
+      "runtimeId": "assam-heritage-city-tour",
+      "destinationCode": "AS-HER",
+      "regionCode": "IN-AS",
+      "parentDestination": "Assam",
+      "journeyBases": [
+        "Guwahati",
+        "Sivasagar",
+        "Majuli"
+      ],
+      "journeyDirectorCandidateIds": [],
+      "journeyDirectorRegionIds": [],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Assam - Wildlife Tour",
+      "indexDestination": "Kaziranga National Park",
+      "indexRegion": "Assam, Northeast India",
+      "runtimeId": "assam-wildlife-tour",
+      "destinationCode": "AS-WLD",
+      "regionCode": "IN-AS",
+      "parentDestination": "Assam",
+      "journeyBases": [
+        "Kaziranga National Park"
+      ],
+      "journeyDirectorCandidateIds": [
+        "wildlife"
+      ],
+      "journeyDirectorRegionIds": [],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Bali",
+      "indexDestination": "Ubud, Seminyak/Kuta & Uluwatu",
+      "indexRegion": "Bali, Indonesia",
+      "runtimeId": "bali",
+      "destinationCode": "ID-BAL",
+      "regionCode": "ID",
+      "parentDestination": "Bali",
+      "journeyBases": [
+        "Ubud",
+        "Seminyak",
+        "Kuta",
+        "Uluwatu"
+      ],
+      "journeyDirectorCandidateIds": [
+        "bali"
+      ],
+      "journeyDirectorRegionIds": [
+        "indonesia-bali-ubud",
+        "indonesia-bali-seminyak",
+        "indonesia-bali-uluwatu",
+        "indonesia-bali-nusa-dua"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Dubai",
+      "indexDestination": "Dubai",
+      "indexRegion": "United Arab Emirates",
+      "runtimeId": "dubai",
+      "destinationCode": "AE-DXB",
+      "regionCode": "AE",
+      "parentDestination": "United Arab Emirates",
+      "journeyBases": [
+        "Dubai"
+      ],
+      "journeyDirectorCandidateIds": [
+        "dubai"
+      ],
+      "journeyDirectorRegionIds": [
+        "united-arab-emirates-dubai"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Goa",
+      "indexDestination": "Goa",
+      "indexRegion": "Goa, West India",
+      "runtimeId": "goa",
+      "destinationCode": "GA-GOA",
+      "regionCode": "IN-GA",
+      "parentDestination": "Goa",
+      "journeyBases": [
+        "Goa"
+      ],
+      "journeyDirectorCandidateIds": [
+        "goa"
+      ],
+      "journeyDirectorRegionIds": [
+        "india-goa-north-goa",
+        "india-goa-south-goa",
+        "india-goa-baga",
+        "india-goa-calangute",
+        "india-goa-anjuna"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Gujarat - Gir Forest",
+      "indexDestination": "Gir Forest",
+      "indexRegion": "Gujarat, West India",
+      "runtimeId": "gujarat-gir-forest",
+      "destinationCode": "GJ-GIR",
+      "regionCode": "IN-GJ",
+      "parentDestination": "Gujarat",
+      "journeyBases": [
+        "Gir Forest"
+      ],
+      "journeyDirectorCandidateIds": [
+        "gujarat",
+        "wildlife"
+      ],
+      "journeyDirectorRegionIds": [
+        "india-gujarat-gir-national-park",
+        "india-wildlife-tours-gir-national-park"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Gujarat - Panch Dwarka",
+      "indexDestination": "Dwarka, Bet Dwarka, Nageshwar & Rukmini Devi Temple",
+      "indexRegion": "Gujarat, West India",
+      "runtimeId": "gujarat-panch-dwarka",
+      "destinationCode": "GJ-DWK",
+      "regionCode": "IN-GJ",
+      "parentDestination": "Gujarat",
+      "journeyBases": [
+        "Dwarka",
+        "Bet Dwarka",
+        "Nageshwar",
+        "Rukmini Devi Temple"
+      ],
+      "journeyDirectorCandidateIds": [
+        "gujarat"
+      ],
+      "journeyDirectorRegionIds": [
+        "india-gujarat-porbandar"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Gujarat - Rann of Kutch",
+      "indexDestination": "Rann of Kutch",
+      "indexRegion": "Gujarat, West India",
+      "runtimeId": "gujarat-rann-of-kutch",
+      "destinationCode": "GJ-RAK",
+      "regionCode": "IN-GJ",
+      "parentDestination": "Gujarat",
+      "journeyBases": [
+        "Rann of Kutch"
+      ],
+      "journeyDirectorCandidateIds": [
+        "gujarat"
+      ],
+      "journeyDirectorRegionIds": [
+        "india-gujarat-rann-of-kutch"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Himachal - Dharamshala & Dal",
+      "indexDestination": "Dharamshala",
+      "indexRegion": "Himachal Pradesh, North India",
+      "runtimeId": "himachal-pradesh-dharamshala-dalhousie",
+      "destinationCode": "HP-DHD",
+      "regionCode": "IN-HP",
+      "parentDestination": "Himachal Pradesh",
+      "journeyBases": [
+        "Dharamshala",
+        "Dalhousie"
+      ],
+      "journeyDirectorCandidateIds": [
+        "himachal-pradesh"
+      ],
+      "journeyDirectorRegionIds": [
+        "india-himachal-pradesh-dharamshala",
+        "india-himachal-pradesh-dalhousie"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Himachal - Shimla-Manali",
+      "indexDestination": "Shimla & Manali",
+      "indexRegion": "Himachal Pradesh, North India",
+      "runtimeId": "himachal-pradesh-shimla-manali",
+      "destinationCode": "HP-SHM",
+      "regionCode": "IN-HP",
+      "parentDestination": "Himachal Pradesh",
+      "journeyBases": [
+        "Shimla",
+        "Manali"
+      ],
+      "journeyDirectorCandidateIds": [
+        "himachal-pradesh"
+      ],
+      "journeyDirectorRegionIds": [
+        "india-himachal-pradesh-shimla",
+        "india-himachal-pradesh-manali"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Kashmir",
+      "indexDestination": "Srinagar, Gulmarg & Pahalgam",
+      "indexRegion": "Jammu & Kashmir, North India",
+      "runtimeId": "jammu-kashmir-srinagar-gulmarg-pahalgam",
+      "destinationCode": "JK-KMR",
+      "regionCode": "IN-JK",
+      "parentDestination": "Jammu & Kashmir",
+      "journeyBases": [
+        "Srinagar",
+        "Gulmarg",
+        "Pahalgam"
+      ],
+      "journeyDirectorCandidateIds": [
+        "kashmir"
+      ],
+      "journeyDirectorRegionIds": [
+        "india-kashmir-srinagar",
+        "india-kashmir-gulmarg",
+        "india-kashmir-pahalgam"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Karnataka - Bandipur",
+      "indexDestination": "Bandipur",
+      "indexRegion": "Karnataka, South India",
+      "runtimeId": "karnataka-bandipur",
+      "destinationCode": "KA-BND",
+      "regionCode": "IN-KA",
+      "parentDestination": "Karnataka",
+      "journeyBases": [
+        "Bandipur"
+      ],
+      "journeyDirectorCandidateIds": [
+        "karnataka",
+        "wildlife"
+      ],
+      "journeyDirectorRegionIds": [
+        "india-karnataka-bandipur",
+        "india-wildlife-tours-bandipur"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Karnataka - Bengaluru",
+      "indexDestination": "Bengaluru",
+      "indexRegion": "Karnataka, South India",
+      "runtimeId": "karnataka-bengaluru",
+      "destinationCode": "KA-BLR",
+      "regionCode": "IN-KA",
+      "parentDestination": "Karnataka",
+      "journeyBases": [
+        "Bengaluru"
+      ],
+      "journeyDirectorCandidateIds": [
+        "karnataka"
+      ],
+      "journeyDirectorRegionIds": [
+        "india-karnataka-bangalore"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Karnataka - Coorg",
+      "indexDestination": "Coorg",
+      "indexRegion": "Karnataka, South India",
+      "runtimeId": "karnataka-coorg",
+      "destinationCode": "KA-COR",
+      "regionCode": "IN-KA",
+      "parentDestination": "Karnataka",
+      "journeyBases": [
+        "Coorg"
+      ],
+      "journeyDirectorCandidateIds": [
+        "karnataka"
+      ],
+      "journeyDirectorRegionIds": [
+        "india-karnataka-coorg"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Karnataka - Hampi",
+      "indexDestination": "Hampi",
+      "indexRegion": "Karnataka, South India",
+      "runtimeId": "karnataka-hampi",
+      "destinationCode": "KA-HMP",
+      "regionCode": "IN-KA",
+      "parentDestination": "Karnataka",
+      "journeyBases": [
+        "Hampi"
+      ],
+      "journeyDirectorCandidateIds": [
+        "karnataka"
+      ],
+      "journeyDirectorRegionIds": [
+        "india-karnataka-hampi"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Karnataka - Kabini",
+      "indexDestination": "Kabini",
+      "indexRegion": "Karnataka, South India",
+      "runtimeId": "karnataka-kabini",
+      "destinationCode": "KA-KBN",
+      "regionCode": "IN-KA",
+      "parentDestination": "Karnataka",
+      "journeyBases": [
+        "Kabini"
+      ],
+      "journeyDirectorCandidateIds": [
+        "karnataka",
+        "wildlife"
+      ],
+      "journeyDirectorRegionIds": [
+        "india-karnataka-kabini",
+        "india-wildlife-tours-kabini"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Kerala - Munnar",
+      "indexDestination": "Munnar",
+      "indexRegion": "Kerala, South India",
+      "runtimeId": "kerala-munnar",
+      "destinationCode": "KL-MUN",
+      "regionCode": "IN-KL",
+      "parentDestination": "Kerala",
+      "journeyBases": [
+        "Munnar"
+      ],
+      "journeyDirectorCandidateIds": [
+        "kerala"
+      ],
+      "journeyDirectorRegionIds": [
+        "india-kerala-munnar"
+      ],
+      "status": "approved",
+      "validationResult": "PASS"
+    },
+    {
+      "worksheet": "Kerala - Munnar-Alleppey-Kochi",
+      "indexDestination": "Munnar, Alleppey & Cochin",
+      "indexRegion": "Kerala, South India",
+      "runtimeId": "kerala-munnar-alleppey-kochi",
+      "destinationCode": "KL-MAC",
+      "regionCode": "IN-KL",
+      "parentDestination": "Kerala",
+      "journeyBases": [
+        "Munnar",
+        "Alleppey",
+        "Kochi"
+      ],
+      "journeyDirectorCandidateIds": [
+        "kerala"
+      ],
+      "journeyDirectorRegionIds": [
+        "india-kerala-kochi"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Kerala - Wayanad",
+      "indexDestination": "Wayanad",
+      "indexRegion": "Kerala, South India",
+      "runtimeId": "kerala-wayanad",
+      "destinationCode": "KL-WAY",
+      "regionCode": "IN-KL",
+      "parentDestination": "Kerala",
+      "journeyBases": [
+        "Wayanad"
+      ],
+      "journeyDirectorCandidateIds": [
+        "kerala"
+      ],
+      "journeyDirectorRegionIds": [
+        "india-kerala-wayanad"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Malaysia - Kuala Lumpur",
+      "indexDestination": "Kuala Lumpur",
+      "indexRegion": "Malaysia",
+      "runtimeId": "malaysia-kuala-lumpur",
+      "destinationCode": "MY-KUL",
+      "regionCode": "MY",
+      "parentDestination": "Malaysia",
+      "journeyBases": [
+        "Kuala Lumpur"
+      ],
+      "journeyDirectorCandidateIds": [
+        "malaysia"
+      ],
+      "journeyDirectorRegionIds": [
+        "malaysia-kuala-lumpur"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Malaysia - KL + Langkawi",
+      "indexDestination": "Kuala Lumpur & Langkawi",
+      "indexRegion": "Malaysia",
+      "runtimeId": "malaysia-kuala-lumpur-langkawi",
+      "destinationCode": "MY-KLL",
+      "regionCode": "MY",
+      "parentDestination": "Malaysia",
+      "journeyBases": [
+        "Kuala Lumpur",
+        "Langkawi"
+      ],
+      "journeyDirectorCandidateIds": [
+        "malaysia"
+      ],
+      "journeyDirectorRegionIds": [
+        "malaysia-kuala-lumpur",
+        "malaysia-langkawi"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Northeast - Meghalaya",
+      "indexDestination": "Shillong, Cherrapunji",
+      "indexRegion": "Meghalaya, Northeast India",
+      "runtimeId": "northeast-meghalaya",
+      "destinationCode": "ML-SHL",
+      "regionCode": "IN-ML",
+      "parentDestination": "Northeast India",
+      "journeyBases": [
+        "Shillong",
+        "Cherrapunji",
+        "Dawki",
+        "Mawlynnong"
+      ],
+      "journeyDirectorCandidateIds": [
+        "northeast"
+      ],
+      "journeyDirectorRegionIds": [
+        "india-northeast-meghalaya"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Northeast - Sikkim",
+      "indexDestination": "Gangtok, Lachen/Lachung",
+      "indexRegion": "Sikkim, Northeast India",
+      "runtimeId": "northeast-sikkim",
+      "destinationCode": "SK-GTK",
+      "regionCode": "IN-SK",
+      "parentDestination": "Northeast India",
+      "journeyBases": [
+        "Gangtok",
+        "Lachen",
+        "Lachung",
+        "Pelling"
+      ],
+      "journeyDirectorCandidateIds": [
+        "northeast"
+      ],
+      "journeyDirectorRegionIds": [
+        "india-northeast-sikkim"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Pondicherry",
+      "indexDestination": "Pondicherry",
+      "indexRegion": "Puducherry, South India",
+      "runtimeId": "pondicherry",
+      "destinationCode": "PY-PON",
+      "regionCode": "IN-PY",
+      "parentDestination": "Puducherry",
+      "journeyBases": [
+        "Pondicherry"
+      ],
+      "journeyDirectorCandidateIds": [
+        "pondicherry"
+      ],
+      "journeyDirectorRegionIds": [
+        "india-pondicherry-pondicherry"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Punjab - Amritsar",
+      "indexDestination": "Amritsar",
+      "indexRegion": "Punjab, North India",
+      "runtimeId": "punjab-amritsar",
+      "destinationCode": "PB-AMR",
+      "regionCode": "IN-PB",
+      "parentDestination": "Punjab",
+      "journeyBases": [
+        "Amritsar"
+      ],
+      "journeyDirectorCandidateIds": [],
+      "journeyDirectorRegionIds": [],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Rajasthan - JJJ",
+      "indexDestination": "Jaipur, Jodhpur & Jaisalmer",
+      "indexRegion": "Rajasthan, North India",
+      "runtimeId": "rajasthan-jaipur-jodhpur-jaisalmer",
+      "destinationCode": "RJ-JJJ",
+      "regionCode": "IN-RJ",
+      "parentDestination": "Rajasthan",
+      "journeyBases": [
+        "Jaipur",
+        "Jodhpur",
+        "Jaisalmer"
+      ],
+      "journeyDirectorCandidateIds": [
+        "rajasthan"
+      ],
+      "journeyDirectorRegionIds": [
+        "india-rajasthan-jaipur",
+        "india-rajasthan-jodhpur",
+        "india-rajasthan-jaisalmer"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Rajasthan - JJU",
+      "indexDestination": "Jaipur, Jodhpur & Udaipur",
+      "indexRegion": "Rajasthan, North India",
+      "runtimeId": "rajasthan-jaipur-jodhpur-udaipur",
+      "destinationCode": "RJ-JJU",
+      "regionCode": "IN-RJ",
+      "parentDestination": "Rajasthan",
+      "journeyBases": [
+        "Jaipur",
+        "Jodhpur",
+        "Udaipur"
+      ],
+      "journeyDirectorCandidateIds": [
+        "rajasthan"
+      ],
+      "journeyDirectorRegionIds": [
+        "india-rajasthan-jaipur",
+        "india-rajasthan-jodhpur",
+        "india-rajasthan-udaipur"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Rajasthan - UKM",
+      "indexDestination": "Udaipur, Kumbhalgarh & Mount Abu",
+      "indexRegion": "Rajasthan, North India",
+      "runtimeId": "rajasthan-udaipur-kumbhalgarh-mount-abu",
+      "destinationCode": "RJ-UKM",
+      "regionCode": "IN-RJ",
+      "parentDestination": "Rajasthan",
+      "journeyBases": [
+        "Udaipur",
+        "Kumbhalgarh",
+        "Mount Abu"
+      ],
+      "journeyDirectorCandidateIds": [
+        "rajasthan"
+      ],
+      "journeyDirectorRegionIds": [
+        "india-rajasthan-udaipur",
+        "india-rajasthan-mount-abu"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Singapore",
+      "indexDestination": "Singapore",
+      "indexRegion": "Singapore",
+      "runtimeId": "singapore",
+      "destinationCode": "SG-SIN",
+      "regionCode": "SG",
+      "parentDestination": "Singapore",
+      "journeyBases": [
+        "Singapore"
+      ],
+      "journeyDirectorCandidateIds": [
+        "singapore"
+      ],
+      "journeyDirectorRegionIds": [
+        "singapore-singapore"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Sri Lanka - North-East Circuit",
+      "indexDestination": "Sigiriya, Trincomalee & Jaffna",
+      "indexRegion": "Sri Lanka",
+      "runtimeId": "sri-lanka-north-east-circuit",
+      "destinationCode": "LK-SJT",
+      "regionCode": "LK",
+      "parentDestination": "Sri Lanka",
+      "journeyBases": [
+        "Sigiriya",
+        "Trincomalee",
+        "Jaffna"
+      ],
+      "journeyDirectorCandidateIds": [
+        "sri-lanka"
+      ],
+      "journeyDirectorRegionIds": [
+        "sri-lanka-sigiriya",
+        "sri-lanka-jaffna"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Sri Lanka - Ramayana Trail",
+      "indexDestination": "Chilaw, Kandy, Nuwara Eliya, Ella & Colombo",
+      "indexRegion": "Sri Lanka",
+      "runtimeId": "sri-lanka-ramayana-trail",
+      "destinationCode": "LK-RAM",
+      "regionCode": "LK",
+      "parentDestination": "Sri Lanka",
+      "journeyBases": [
+        "Chilaw",
+        "Kandy",
+        "Nuwara Eliya",
+        "Ella",
+        "Colombo"
+      ],
+      "journeyDirectorCandidateIds": [
+        "sri-lanka"
+      ],
+      "journeyDirectorRegionIds": [
+        "sri-lanka-kandy",
+        "sri-lanka-colombo"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Sri Lanka - Southern Circuit",
+      "indexDestination": "Kandy, Nuwara Eliya, Bentota, Galle & Colombo",
+      "indexRegion": "Sri Lanka",
+      "runtimeId": "sri-lanka-southern-circuit",
+      "destinationCode": "LK-KNB",
+      "regionCode": "LK",
+      "parentDestination": "Sri Lanka",
+      "journeyBases": [
+        "Kandy",
+        "Nuwara Eliya",
+        "Bentota",
+        "Galle",
+        "Colombo"
+      ],
+      "journeyDirectorCandidateIds": [
+        "sri-lanka"
+      ],
+      "journeyDirectorRegionIds": [
+        "sri-lanka-kandy",
+        "sri-lanka-bentota",
+        "sri-lanka-galle",
+        "sri-lanka-colombo"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "TamilNadu - Chennai City Tour",
+      "indexDestination": "Chennai",
+      "indexRegion": "Tamil Nadu, South India",
+      "runtimeId": "tamil-nadu-chennai",
+      "destinationCode": "TN-CHE",
+      "regionCode": "IN-TN",
+      "parentDestination": "Tamil Nadu",
+      "journeyBases": [
+        "Chennai"
+      ],
+      "journeyDirectorCandidateIds": [
+        "tamil-nadu"
+      ],
+      "journeyDirectorRegionIds": [],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "TamilNadu - Kodaikanal",
+      "indexDestination": "Kodaikanal",
+      "indexRegion": "Tamil Nadu, South India",
+      "runtimeId": "tamil-nadu-kodaikanal",
+      "destinationCode": "TN-KDK",
+      "regionCode": "IN-TN",
+      "parentDestination": "Tamil Nadu",
+      "journeyBases": [
+        "Kodaikanal"
+      ],
+      "journeyDirectorCandidateIds": [
+        "tamil-nadu"
+      ],
+      "journeyDirectorRegionIds": [
+        "india-tamilnadu-kodaikanal"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "TamilNadu - Kotagiri",
+      "indexDestination": "Kotagiri",
+      "indexRegion": "Tamil Nadu, South India",
+      "runtimeId": "tamil-nadu-kotagiri",
+      "destinationCode": "TN-KTG",
+      "regionCode": "IN-TN",
+      "parentDestination": "Tamil Nadu",
+      "journeyBases": [
+        "Kotagiri"
+      ],
+      "journeyDirectorCandidateIds": [
+        "tamil-nadu"
+      ],
+      "journeyDirectorRegionIds": [
+        "india-tamilnadu-kotagiri"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "TamilNadu - Masinagudi",
+      "indexDestination": "Masinagudi",
+      "indexRegion": "Tamil Nadu, South India",
+      "runtimeId": "tamil-nadu-masinagudi",
+      "destinationCode": "TN-MSN",
+      "regionCode": "IN-TN",
+      "parentDestination": "Tamil Nadu",
+      "journeyBases": [
+        "Masinagudi"
+      ],
+      "journeyDirectorCandidateIds": [
+        "tamil-nadu",
+        "wildlife"
+      ],
+      "journeyDirectorRegionIds": [
+        "india-tamilnadu-masinagudi",
+        "india-wildlife-tours-masinagudi"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "TamilNadu - Ooty",
+      "indexDestination": "Ooty",
+      "indexRegion": "Tamil Nadu, South India",
+      "runtimeId": "tamil-nadu-ooty",
+      "destinationCode": "TN-OOT",
+      "regionCode": "IN-TN",
+      "parentDestination": "Tamil Nadu",
+      "journeyBases": [
+        "Ooty"
+      ],
+      "journeyDirectorCandidateIds": [
+        "tamil-nadu"
+      ],
+      "journeyDirectorRegionIds": [
+        "india-tamilnadu-ooty"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "TamilNadu - Temple Tour",
+      "indexDestination": "Thanjavur, Chidambaram/Kumbakonam, Madurai & Rameswaram",
+      "indexRegion": "Tamil Nadu, South India",
+      "runtimeId": "tamil-nadu-temple-tour",
+      "destinationCode": "TN-TMP",
+      "regionCode": "IN-TN",
+      "parentDestination": "Tamil Nadu",
+      "journeyBases": [
+        "Thanjavur",
+        "Chidambaram",
+        "Kumbakonam",
+        "Madurai",
+        "Rameswaram"
+      ],
+      "journeyDirectorCandidateIds": [
+        "tamil-nadu"
+      ],
+      "journeyDirectorRegionIds": [
+        "india-tamilnadu-chidambaram",
+        "india-tamilnadu-madurai",
+        "india-tamilnadu-trichy"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Hyderabad",
+      "indexDestination": "Hyderabad",
+      "indexRegion": "Telangana, South India",
+      "runtimeId": "telangana-hyderabad",
+      "destinationCode": "TG-HYD",
+      "regionCode": "IN-TG",
+      "parentDestination": "Telangana",
+      "journeyBases": [
+        "Hyderabad"
+      ],
+      "journeyDirectorCandidateIds": [
+        "hyderabad"
+      ],
+      "journeyDirectorRegionIds": [
+        "india-telangana-hyderabad"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Thailand - Bangkok & Pattaya",
+      "indexDestination": "Bangkok & Pattaya",
+      "indexRegion": "Thailand",
+      "runtimeId": "thailand-bangkok-pattaya",
+      "destinationCode": "TH-BKP",
+      "regionCode": "TH",
+      "parentDestination": "Thailand",
+      "journeyBases": [
+        "Bangkok",
+        "Pattaya"
+      ],
+      "journeyDirectorCandidateIds": [
+        "thailand"
+      ],
+      "journeyDirectorRegionIds": [
+        "thailand-bangkok",
+        "thailand-pattaya"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Thailand - Phuket & Krabi",
+      "indexDestination": "Phuket & Krabi",
+      "indexRegion": "Thailand",
+      "runtimeId": "thailand-phuket-krabi",
+      "destinationCode": "TH-PHK",
+      "regionCode": "TH",
+      "parentDestination": "Thailand",
+      "journeyBases": [
+        "Phuket",
+        "Krabi"
+      ],
+      "journeyDirectorCandidateIds": [
+        "thailand"
+      ],
+      "journeyDirectorRegionIds": [
+        "thailand-phuket",
+        "thailand-krabi"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Uttar Pradesh - Agra",
+      "indexDestination": "Agra",
+      "indexRegion": "Uttar Pradesh, North India",
+      "runtimeId": "uttar-pradesh-agra",
+      "destinationCode": "UP-AGR",
+      "regionCode": "IN-UP",
+      "parentDestination": "Uttar Pradesh",
+      "journeyBases": [
+        "Agra"
+      ],
+      "journeyDirectorCandidateIds": [
+        "agra"
+      ],
+      "journeyDirectorRegionIds": [
+        "india-agra-agra"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Corbett National Park",
+      "indexDestination": "Jim Corbett National Park",
+      "indexRegion": "Uttarakhand, North India",
+      "runtimeId": "uttarakhand-corbett-national-park",
+      "destinationCode": "UK-CBT",
+      "regionCode": "IN-UK",
+      "parentDestination": "Uttarakhand",
+      "journeyBases": [
+        "Corbett"
+      ],
+      "journeyDirectorCandidateIds": [
+        "wildlife"
+      ],
+      "journeyDirectorRegionIds": [],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Vietnam - Da Nang",
+      "indexDestination": "Da Nang & Hoi An",
+      "indexRegion": "Vietnam",
+      "runtimeId": "vietnam-da-nang",
+      "destinationCode": "VN-DAD",
+      "regionCode": "VN",
+      "parentDestination": "Vietnam",
+      "journeyBases": [
+        "Da Nang",
+        "Hoi An"
+      ],
+      "journeyDirectorCandidateIds": [
+        "vietnam"
+      ],
+      "journeyDirectorRegionIds": [
+        "vietnam-da-nang"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Vietnam - Hanoi",
+      "indexDestination": "Hanoi & Halong Bay",
+      "indexRegion": "Vietnam",
+      "runtimeId": "vietnam-hanoi",
+      "destinationCode": "VN-HAN",
+      "regionCode": "VN",
+      "parentDestination": "Vietnam",
+      "journeyBases": [
+        "Hanoi",
+        "Halong Bay"
+      ],
+      "journeyDirectorCandidateIds": [
+        "vietnam"
+      ],
+      "journeyDirectorRegionIds": [
+        "vietnam-hanoi"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Vietnam - Ho Chi Minh City",
+      "indexDestination": "Ho Chi Minh City & Mekong Delta",
+      "indexRegion": "Vietnam",
+      "runtimeId": "vietnam-ho-chi-minh-city",
+      "destinationCode": "VN-SGN",
+      "regionCode": "VN",
+      "parentDestination": "Vietnam",
+      "journeyBases": [
+        "Ho Chi Minh City",
+        "Mekong Delta"
+      ],
+      "journeyDirectorCandidateIds": [
+        "vietnam"
+      ],
+      "journeyDirectorRegionIds": [
+        "vietnam-ho-chi-minh-city"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    },
+    {
+      "worksheet": "Vietnam - Phu Quoc",
+      "indexDestination": "Phu Quoc Island",
+      "indexRegion": "Vietnam",
+      "runtimeId": "vietnam-phu-quoc",
+      "destinationCode": "VN-PQC",
+      "regionCode": "VN",
+      "parentDestination": "Vietnam",
+      "journeyBases": [
+        "Phu Quoc"
+      ],
+      "journeyDirectorCandidateIds": [
+        "vietnam"
+      ],
+      "journeyDirectorRegionIds": [
+        "vietnam-phu-quoc"
+      ],
+      "status": "draft",
+      "validationResult": "REVIEW_REQUIRED"
+    }
+  ],
+  "unmatchedWorkbookRecords": [
+    "assam-heritage-city-tour",
+    "punjab-amritsar"
+  ],
+  "unmatchedJourneyDirectorCandidateIds": []
+}

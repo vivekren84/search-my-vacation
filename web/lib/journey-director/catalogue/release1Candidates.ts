@@ -41,6 +41,11 @@ const CANDIDATE_NAMES: Readonly<Record<string, string>> = {
   "united-arab-emirates": "Dubai",
 };
 
+const CANDIDATE_ALIASES: Readonly<Record<string, readonly string[]>> = {
+  kerala: ["Kerala", "Cochin", "Thekkady", "Alleppey", "Alappuzha", "Kovalam", "Kumarakom"],
+  bali: ["Bali", "Ubud", "Nusa Dua", "Seminyak", "Uluwatu"],
+};
+
 const CONFIDENT_APPROVAL_CANDIDATE_IDS = [
   "bali",
   "goa",
@@ -324,6 +329,7 @@ function buildCandidate(
       first.destination,
       destinationId,
       ...records.map((record) => record.region),
+      ...(CANDIDATE_ALIASES[candidateId] ?? []),
     ]),
     category: first.travelScope === "Domestic" ? "DOMESTIC" : "INTERNATIONAL",
     status: "ACTIVE",
@@ -333,6 +339,7 @@ function buildCandidate(
     primaryEmotion: emotions[0] ?? "discovery",
     supportingEmotions: emotions.slice(1),
     themes,
+    capabilities: capabilitiesForThemes(themes),
     bestFor: mergeBestFor(regions),
     paces: unique(regions.flatMap((region) => region.paces)),
     comforts: unique(regions.flatMap((region) => region.comforts)),

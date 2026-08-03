@@ -66,10 +66,17 @@ export const journeyMoments: JourneyMoment[] = [
   { id: "about-you", number: 2, navigationLabel: "About You", title: "First, tell us about you.", description: "We’ll use your name to make every conversation feel personal.", type: "name", nextLabel: "Continue", validate: hasValidName },
   { id: "companions", number: 3, navigationLabel: "Companions", title: "Who will be sharing this journey with you?", description: "Every journey feels different depending on who is beside you.", type: "single-select", nextLabel: "Continue", options: companionOptions, validate: (state) => Boolean(state.companion) },
   { id: "dream-journey", number: 4, navigationLabel: "Dream Journey", title: "What kind of journey has been living in your heart lately?", description: "Choose the one that excites you most right now.", type: "single-select", nextLabel: "Continue", options: dreamJourneyOptions, validate: (state) => Boolean(state.dreamJourney) },
-  { id: "travel-style", number: 5, navigationLabel: "Travel Style", title: "What kind of memories would you love to bring back?", description: "Choose up to three. We’ll use them to keep your possibilities beautifully focused.", type: "multi-select", nextLabel: "Continue", options: travelStyleOptions, validate: (state) => state.travelStyles.length >= 1 && state.travelStyles.length <= 3 },
-  { id: "timing", number: 6, navigationLabel: "Timing", title: "When would you love this journey to begin?", description: "An exact date is wonderful. A general idea is enough too.", type: "timing", nextLabel: "Continue", options: timingOptions, validate: (state) => Boolean(state.timing) && hasValidDates(state) },
-  { id: "destination", number: 7, navigationLabel: "Destination", title: "Is there somewhere already calling you?", description: "Tell us what you have in mind, or invite us to help you discover somewhere special.", type: "destination", nextLabel: "Continue", validate: hasValidDestination },
-  { id: "discover", number: 8, navigationLabel: "Discover", title: "Wonderful. We have everything we need to begin crafting your journey.", description: "We’ll bring together possibilities shaped around what matters most to you.", type: "discover", nextLabel: "✨ Discover My Possibilities", validate: (state) => journeyMoments.slice(1, 7).every((moment) => moment.validate(state)) },
+  { id: "pace-and-timing", number: 5, navigationLabel: "Pace & Timing", title: "How should this journey feel—and when might it begin?", description: "Choose up to three travel styles, then share the timing that feels right.", type: "pace-and-timing", nextLabel: "Continue", options: timingOptions, validate: (state) => state.travelStyles.length >= 1 && state.travelStyles.length <= 3 && Boolean(state.timing) && hasValidDates(state) },
+  { id: "destination", number: 6, navigationLabel: "Destination", title: "Is there somewhere already calling you?", description: "Tell us what you have in mind, or invite us to help you discover somewhere special.", type: "destination", nextLabel: "Continue", validate: hasValidDestination },
+  { id: "discover", number: 7, navigationLabel: "Review", title: "Wonderful. We have everything we need to begin crafting your journey.", description: "Review your Passport before we stamp it and begin discovering your possibilities.", type: "discover", nextLabel: "Stamp My Journey Passport", validate: (state) => journeyMoments.slice(1, -1).every((moment) => moment.validate(state)) },
 ];
 
 export const journeyMomentIndex = (id: JourneyPassportState["currentMoment"]) => journeyMoments.findIndex((moment) => moment.id === id);
+
+const requiredPassportMoments = journeyMoments.slice(1);
+
+export const journeyProgressForMoment = (id: JourneyPassportState["currentMoment"]) => {
+  if (id === "welcome") return 0;
+  const completedMilestoneCount = requiredPassportMoments.findIndex((moment) => moment.id === id) + 1;
+  return Math.round((completedMilestoneCount / requiredPassportMoments.length) * 96);
+};

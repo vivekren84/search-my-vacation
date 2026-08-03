@@ -12,8 +12,7 @@ export type JourneyMomentId =
   | "about-you"
   | "companions"
   | "dream-journey"
-  | "travel-style"
-  | "timing"
+  | "pace-and-timing"
   | "destination"
   | "discover";
 
@@ -21,8 +20,7 @@ export type JourneyMomentType =
   | "welcome"
   | "name"
   | "single-select"
-  | "multi-select"
-  | "timing"
+  | "pace-and-timing"
   | "destination"
   | "discover";
 
@@ -55,6 +53,8 @@ export type JourneyPassportState = {
   endDate: string;
   destinationMode: DestinationMode;
   destination: string;
+  mobile: string;
+  journeyReference: string;
   entryContext: JourneyPassportEntryContext;
   visitedMoments: JourneyMomentId[];
   completion: CompletionState;
