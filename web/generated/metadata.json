@@ -1,0 +1,28 @@
+{
+  "generatedAt": "2026-07-30T13:55:15.295Z",
+  "generatedFrom": "Journey Director Intelligence Enriched.xlsx",
+  "generatorVersion": "1.0.0",
+  "recordCounts": {
+    "attractions": 4,
+    "compatibilityRecords": 3382,
+    "constraintRecords": 1566,
+    "desiredExperiences": 15,
+    "destinationRegions": 107,
+    "emotionalGoals": 11,
+    "experienceClusters": 2,
+    "islands": 8,
+    "journeyBases": 89,
+    "journeyDNARecords": 89,
+    "journeySeedRecords": 89,
+    "journeyTemplateRecords": 89,
+    "reasonCodes": 18,
+    "travellerTypes": 5
+  },
+  "schemaVersion": "1.0",
+  "validation": {
+    "reviewRequiredRecords": 15,
+    "status": "PASS",
+    "warnings": 16
+  },
+  "workbookChecksum": "b90a6af3d661197dcdebe75b941eb060788fbe2cb209b67ae4167560d5a1f8a8"
+}

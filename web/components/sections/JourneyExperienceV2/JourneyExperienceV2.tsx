@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import styles from "./JourneyExperienceV2.module.css";
 
@@ -49,20 +49,23 @@ export default function JourneyExperienceV2({ isOpen, onClose, emotion }: Journe
   const [selections, setSelections] = useState({ companion: "", timing: "", style: "" });
   const [previewIndex, setPreviewIndex] = useState(0);
 
-  useEffect(() => {
-    if (!isOpen) return;
-
+  const resetAndClose = useCallback(() => {
     setScene(1);
     setSelections({ companion: "", timing: "", style: "" });
     setPreviewIndex(0);
+    onClose();
+  }, [onClose]);
+
+  useEffect(() => {
+    if (!isOpen) return;
 
     const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape") resetAndClose();
     };
 
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
-  }, [isOpen, onClose]);
+  }, [isOpen, resetAndClose]);
 
   if (!isOpen) return null;
 
@@ -84,13 +87,13 @@ export default function JourneyExperienceV2({ isOpen, onClose, emotion }: Journe
       aria-modal="true"
       aria-labelledby="journey-experience-v2-heading"
       onMouseDown={(event) => {
-        if (event.target === event.currentTarget) onClose();
+        if (event.target === event.currentTarget) resetAndClose();
       }}
     >
       <div className="relative max-h-[94svh] w-full max-w-7xl overflow-y-auto rounded-[2rem] border border-white/60 bg-[#fffaf3]/95 shadow-[0_32px_120px_rgba(35,20,10,0.35)] backdrop-blur-2xl sm:rounded-[2.75rem]">
         <div className="flex items-center justify-between px-6 py-6 sm:px-10 sm:py-8">
           <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#9a642e]">A journey shaped around you{emotion ? ` · ${emotion}` : ""}</p>
-          <button type="button" onClick={onClose} aria-label="Close journey experience" className="rounded-full p-2 text-[#725137] transition hover:bg-[#f4e3ce] hover:text-[#2b1c13] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9a642e]">
+          <button type="button" onClick={resetAndClose} aria-label="Close journey experience" className="rounded-full p-2 text-[#725137] transition hover:bg-[#f4e3ce] hover:text-[#2b1c13] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9a642e]">
             <span aria-hidden="true" className="text-2xl leading-none">×</span>
           </button>
         </div>
@@ -104,11 +107,11 @@ export default function JourneyExperienceV2({ isOpen, onClose, emotion }: Journe
             {scene === 1 ? <ChoiceScene title="Who’s joining you?" options={companions} selected={selectedValue} onSelect={setSelectedValue} /> : null}
             {scene === 2 ? <ChoiceScene title="When does this happen?" options={timing} selected={selectedValue} onSelect={setSelectedValue} /> : null}
             {scene === 3 ? <ChoiceScene title="What kind of experience feels right?" options={stylesOfTravel} selected={selectedValue} onSelect={setSelectedValue} compact /> : null}
-            {scene === 4 ? <DestinationScene destination={activeDestination} index={previewIndex} onPrevious={() => setPreviewIndex((current) => (current + destinations.length - 1) % destinations.length)} onNext={() => setPreviewIndex((current) => (current + 1) % destinations.length)} onExplore={onClose} /> : null}
+            {scene === 4 ? <DestinationScene destination={activeDestination} index={previewIndex} onPrevious={() => setPreviewIndex((current) => (current + destinations.length - 1) % destinations.length)} onNext={() => setPreviewIndex((current) => (current + 1) % destinations.length)} onExplore={resetAndClose} /> : null}
           </div>
 
           <div className="mt-8 flex items-center justify-between gap-5">
-            <button type="button" onClick={scene === 1 ? onClose : previousScene} className="text-sm font-semibold text-[#725137] transition hover:text-[#2b1c13] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#9a642e]">
+            <button type="button" onClick={scene === 1 ? resetAndClose : previousScene} className="text-sm font-semibold text-[#725137] transition hover:text-[#2b1c13] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#9a642e]">
               ← {scene === 1 ? "Back to journey" : "Back"}
             </button>
             {scene < 4 ? (

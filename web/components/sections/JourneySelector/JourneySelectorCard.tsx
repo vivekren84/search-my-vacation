@@ -17,7 +17,7 @@ export default function JourneySelectorCard() {
 
   const beginJourney = () => {
     if (selectedEmotion) {
-      router.push(`/journey?feeling=${selectedEmotion.toLowerCase()}`);
+      router.push(`/journey-passport?feeling=${encodeURIComponent(selectedEmotion.toLowerCase())}`);
     }
   };
 

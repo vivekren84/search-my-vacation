@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SMV Brand Identity v1.0 — Review</title>
+  <style>
+    :root { --brown:#2b1a12; --footer:#20150f; --cream:#f7e6c4; --paper:#fffdf8; --muted:#766457; --line:#e7d7bf; }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--brown); background:#efe6d8; font:16px/1.55 ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    header { padding:64px 24px 44px; text-align:center; background:linear-gradient(145deg,#fffdf8,#f7e6c4); }
+    h1 { margin:0; font-size:clamp(2rem,5vw,4rem); letter-spacing:-.045em; }
+    header p { max-width:720px; margin:16px auto 0; color:var(--muted); }
+    main { width:min(1240px,calc(100% - 32px)); margin:32px auto 72px; display:grid; gap:24px; }
+    section { overflow:hidden; border:1px solid var(--line); border-radius:24px; background:var(--paper); box-shadow:0 12px 36px rgba(43,26,18,.08); }
+    h2 { margin:0; padding:20px 24px 0; font-size:1.1rem; }
+    .note { margin:6px 24px 20px; color:var(--muted); font-size:.9rem; }
+    .stage { min-height:260px; padding:32px; display:grid; place-items:center; }
+    .cream { background:var(--cream); }
+    .dark { background:var(--footer); }
+    .white { background:#fff; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); }
+    .avatar { width:min(260px,70vw); aspect-ratio:1; object-fit:contain; }
+    .horizontal { width:min(100%,980px); height:auto; }
+    .photo { position:relative; min-height:420px; background-position:center; background-size:cover; }
+    .photo::after { content:""; position:absolute; inset:0; background:linear-gradient(180deg,transparent 30%,rgba(18,8,5,.65)); }
+    .photo.light-photo { background-image:linear-gradient(90deg,rgba(255,255,255,.12),rgba(255,255,255,.12)),url("../../../images/journey-director/kerala-alleppey-golden-hour.jpg"); }
+    .photo.dark-photo { background-image:linear-gradient(90deg,rgba(20,10,8,.38),rgba(20,10,8,.5)),url("../../../images/journey-director/bali-ubud-golden-hour.jpg"); }
+    .photo img { position:absolute; z-index:1; right:5%; bottom:6%; width:min(50%,520px); }
+    .sizes { display:flex; flex-wrap:wrap; align-items:end; justify-content:center; gap:32px; }
+    .sizes figure { margin:0; text-align:center; color:var(--muted); font-size:.8rem; }
+    .sizes img { display:block; margin:0 auto 8px; image-rendering:auto; }
+    .chrome { width:100%; padding:16px 22px; display:flex; align-items:center; justify-content:space-between; gap:24px; border:1px solid var(--line); border-radius:16px; background:#fff; }
+    .chrome img { width:300px; max-width:55%; }
+    .chrome span { color:var(--muted); font-size:.85rem; }
+    .footer-preview { width:100%; padding:28px; display:flex; align-items:center; gap:32px; border-radius:16px; background:var(--footer); color:white; }
+    .footer-preview img { width:min(430px,60%); }
+    .print img { width:min(100%,1120px); }
+    .clear-space { padding:48px; background:repeating-linear-gradient(45deg,#f8ecd7,#f8ecd7 12px,#fff9ee 12px,#fff9ee 24px); }
+    .clear-space-box { position:relative; padding:72px; border:2px dashed #a71c79; background:rgba(255,255,255,.72); }
+    .clear-space-box::before { content:"minimum 1x clear space"; position:absolute; top:18px; left:22px; color:#a71c79; font-weight:700; font-size:.8rem; text-transform:uppercase; letter-spacing:.08em; }
+    .clear-space-box img { width:min(100%,820px); }
+    .fidelity-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .fidelity-grid figure, .arch-compare figure { margin:0; }
+    .fidelity-grid figcaption, .arch-compare figcaption { padding:14px 20px 18px; text-align:center; color:var(--muted); font-size:.85rem; }
+    .trusted-reference { width:min(320px,80%); aspect-ratio:1; object-fit:contain; }
+    .arch-compare { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); border-top:1px solid var(--line); }
+    .arch-crop { height:208px; overflow:hidden; display:grid; place-items:start center; background:#fff; }
+    .arch-crop img { width:min(520px,94%); transform:translateY(-16px); }
+    .arch-only { height:208px; overflow:hidden; display:grid; place-items:start center; background:var(--cream); }
+    .arch-only img { width:min(520px,94%); transform:translateY(-16px); }
+    .swatches { display:grid; grid-template-columns:repeat(4,minmax(140px,1fr)); gap:12px; padding:24px; border-top:1px solid var(--line); }
+    .swatch { min-height:92px; padding:14px; border-radius:14px; color:white; display:flex; flex-direction:column; justify-content:flex-end; box-shadow:inset 0 0 0 1px rgba(255,255,255,.18); }
+    .swatch b { font-size:.84rem; }
+    .swatch code { color:inherit; font-size:.78rem; }
+    .fidelity-sizes { border-top:1px solid var(--line); }
+    .fidelity-lockups { display:grid; grid-template-columns:1fr 1fr; border-top:1px solid var(--line); }
+    .fidelity-lockups .stage { min-height:260px; }
+    .fidelity-lockups img { width:min(100%,560px); }
+    .traveller-review { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); }
+    .traveller-review figure, .detail-grid figure, .identity-grid figure { margin:0; border-top:1px solid var(--line); border-right:1px solid var(--line); }
+    .traveller-review .stage { min-height:310px; padding:24px; }
+    .traveller-review img { width:min(230px,88%); max-height:270px; object-fit:contain; }
+    .traveller-review .crop-reference { image-rendering:auto; }
+    .traveller-review figcaption, .detail-grid figcaption, .identity-grid figcaption { padding:12px 14px 16px; text-align:center; color:var(--muted); font-size:.82rem; }
+    .subhead { margin:0; padding:20px 24px 8px; border-top:1px solid var(--line); font-size:.98rem; }
+    .detail-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); }
+    .detail-pair { display:grid; grid-template-columns:1fr 1fr; gap:8px; padding:14px; background:#fff; }
+    .detail-window { position:relative; height:150px; overflow:hidden; border-radius:12px; background:#230334; }
+    .detail-window::after { position:absolute; right:7px; bottom:5px; padding:2px 6px; border-radius:8px; color:#fff; background:rgba(43,26,18,.78); font-size:.63rem; }
+    .detail-window.reference::after { content:"Reference"; }
+    .detail-window.vector::after { content:"Vector"; }
+    .detail-window img { width:100%; height:100%; object-fit:cover; }
+    .detail-window.hat img { object-position:center 4%; }
+    .detail-window.raised img { object-position:78% 18%; }
+    .detail-window.hanging img { object-position:18% 67%; }
+    .detail-window.pack img { object-position:center 56%; }
+    .detail-window.clothing img { object-position:center 34%; }
+    .detail-window.legs img { object-position:center 100%; }
+    .identity-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .identity-grid .stage { min-height:220px; }
+    .identity-grid img { width:min(100%,520px); max-height:240px; object-fit:contain; }
+    .badge { display:inline-block; margin-left:8px; padding:2px 8px; border-radius:999px; color:#fff; background:#472063; font-size:.7rem; font-weight:700; vertical-align:middle; }
+    .silhouette-lock-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); }
+    .silhouette-lock-grid figure { margin:0; border-top:1px solid var(--line); border-right:1px solid var(--line); }
+    .silhouette-lock-grid figcaption { min-height:72px; padding:12px 14px 16px; text-align:center; color:var(--muted); font-size:.82rem; }
+    .lock-stage { height:340px; padding:20px; display:flex; align-items:center; justify-content:center; overflow:hidden; background:#fff; }
+    .lock-stage.checker { background:repeating-conic-gradient(#f6ead6 0 25%,#fffdf8 0 50%) 50%/24px 24px; }
+    .lock-stage img { width:auto; height:300px; object-fit:contain; image-rendering:auto; }
+    .lock-stage.mask img { height:300px; border:1px solid #eee2cf; }
+    .lock-metrics { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:1px; padding:1px 24px 24px; background:var(--line); }
+    .lock-metric { padding:16px; background:#fff; text-align:center; }
+    .lock-metric b { display:block; font-size:1.2rem; }
+    .lock-metric span { color:var(--muted); font-size:.76rem; }
+    .approval-icon { min-height:420px; }
+    .approval-icon img { width:min(360px,80vw); }
+    .wordmark-review { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); }
+    .wordmark-review figure { margin:0; border-top:1px solid var(--line); border-right:1px solid var(--line); }
+    .wordmark-review .stage { min-height:260px; padding:24px; }
+    .wordmark-review img { width:min(100%,520px); max-height:220px; object-fit:contain; }
+    .wordmark-review .reference-wordmark { width:min(100%,360px); max-height:240px; }
+    .wordmark-review figcaption { min-height:76px; padding:12px 16px 18px; text-align:center; color:var(--muted); font-size:.82rem; }
+    .passport-unavailable { align-content:center; gap:10px; text-align:center; }
+    .passport-unavailable strong { display:block; }
+    .passport-unavailable span { max-width:360px; color:var(--muted); font-size:.8rem; }
+    .swoosh-zoom { position:relative; height:170px; overflow:hidden; border-top:1px solid var(--line); background:#fff; }
+    .swoosh-zoom img { position:absolute; top:-270px; left:50%; width:1440px; max-width:none; transform:translateX(-50%); }
+    .swoosh-caption { margin:0; padding:12px 24px 20px; color:var(--muted); text-align:center; font-size:.82rem; }
+    @media (max-width:900px) { .traveller-review,.silhouette-lock-grid,.wordmark-review{grid-template-columns:repeat(2,minmax(0,1fr))}.detail-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.lock-metrics{grid-template-columns:repeat(2,minmax(0,1fr))} }
+    @media (max-width:760px) { .fidelity-grid,.arch-compare,.fidelity-lockups,.identity-grid{grid-template-columns:1fr}.swatches{grid-template-columns:repeat(2,minmax(120px,1fr))} }
+    @media (max-width:640px) { .stage{padding:22px}.photo{min-height:320px}.photo img{width:76%}.clear-space{padding:20px}.clear-space-box{padding:52px 18px 18px}.footer-preview{align-items:flex-start;flex-direction:column}.footer-preview img{width:100%;max-width:520px}.arch-crop,.arch-only{height:180px}.swatches{grid-template-columns:1fr 1fr;padding:16px}.wordmark-review{grid-template-columns:1fr}.swoosh-zoom img{left:43%} }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>SMV Brand Identity v1.0</h1>
+    <p>Isolated review board for proportions, typography, contrast, small-size recognition, and clear space. Nothing on this page activates the new identity on the live website.</p>
+  </header>
+  <main>
+    <section id="colour-layer-fidelity">
+      <h2>Original Colour-Layer Fidelity</h2>
+      <p class="note">The tracked 500×500 pre-vector logo is the trusted source. The corrected master preserves seven distinct nested layers and keeps the dark ground separate from the inner tunnel.</p>
+      <div class="fidelity-grid">
+        <figure><div class="stage white"><img class="trusted-reference" src="../../logos/smv-logo.png" alt="Trusted original Search My Vacation icon reference"></div><figcaption>Trusted original — tracked raster source</figcaption></figure>
+        <figure><div class="stage white"><img class="avatar" src="../master/smv-icon-master.svg" alt="Corrected seven-layer vector master"></div><figcaption>Corrected vector master — seven arch layers plus separate ground</figcaption></figure>
+      </div>
+      <div class="arch-compare">
+        <figure><div class="arch-crop"><img src="../../logos/smv-logo.png" alt="Enlarged upper arch crop from the original reference"></div><figcaption>Original upper-arch crop</figcaption></figure>
+        <figure><div class="arch-only"><img src="smv-arch-layers.svg" alt="Enlarged corrected arch without the traveller"></div><figcaption>Corrected arch-only geometry</figcaption></figure>
+      </div>
+      <div class="swatches" aria-label="Outside-to-inside colour sequence">
+        <div class="swatch" style="background:#B7268F"><b>1 · Outer magenta</b><code>#B7268F</code></div>
+        <div class="swatch" style="background:#FE9717;color:#2B1A12"><b>2 · Golden orange</b><code>#FE9717</code></div>
+        <div class="swatch" style="background:#FA6918;color:#2B1A12"><b>3 · Bright orange</b><code>#FA6918</code></div>
+        <div class="swatch" style="background:#C22224"><b>4 · Deep crimson</b><code>#C22224</code></div>
+        <div class="swatch" style="background:#472063"><b>5 · Medium purple</b><code>#472063</code></div>
+        <div class="swatch" style="background:#401856"><b>6 · Deep aubergine</b><code>#401856</code></div>
+        <div class="swatch" style="background:#230334"><b>7 · Inner tunnel</b><code>#230334</code></div>
+        <div class="swatch" style="background:#2B1A12"><b>Separate ground</b><code>#2B1A12</code></div>
+      </div>
+      <div class="stage white sizes fidelity-sizes"><figure><img src="../exports/png/smv-icon-32x32.png" width="32" height="32" alt="Corrected icon at 32 pixels"><figcaption>32px</figcaption></figure><figure><img src="../exports/png/smv-icon-64x64.png" width="64" height="64" alt="Corrected icon at 64 pixels"><figcaption>64px</figcaption></figure><figure><img src="../exports/png/smv-icon-256x256.png" width="256" height="256" alt="Corrected icon at 256 pixels"><figcaption>256px</figcaption></figure></div>
+      <div class="fidelity-lockups"><div class="stage white"><img src="../logos/smv-logo-horizontal-dark.svg" alt="Corrected horizontal logo on white"></div><div class="stage dark"><img src="../logos/smv-logo-horizontal-light.svg" alt="Corrected horizontal logo on footer brown"></div></div>
+    </section>
+    <section id="explorer-silhouette-lock">
+      <h2>SMV Explorer Silhouette Lock — Final Approval</h2>
+      <p class="note">A and B use the same 98×148 canvas, 123 px traveller height, x=9 placement, y=12 placement, common feet line, common body centre, and common hat centre. The approved visual-guideline traveller is the authority; no previous generated SVG is used.</p>
+      <div class="silhouette-lock-grid">
+        <figure><div class="lock-stage"><img src="smv-traveller-reference.png" alt="A — approved visual-guideline traveller"></div><figcaption><strong>A · Approved traveller</strong><br>Only silhouette and internal-detail authority</figcaption></figure>
+        <figure><div class="lock-stage checker"><img src="smv-traveller-vector-lock.svg" alt="B — source-traced editable vector traveller"></div><figcaption><strong>B · New traveller</strong><br>Editable paths traced from the approved mascot source</figcaption></figure>
+        <figure><div class="lock-stage mask"><img src="smv-traveller-silhouette-overlay-lock.png" alt="C — overlapping black reference and vector silhouettes"></div><figcaption><strong>C · Black silhouette overlap</strong><br>Both silhouettes at 50%; black is shared coverage, grey is single coverage</figcaption></figure>
+        <figure><div class="lock-stage mask"><img src="smv-traveller-difference-lock.png" alt="D — red-only silhouette difference mask"></div><figcaption><strong>D · Red difference mask</strong><br>Only differing pixels are red; white pixels agree</figcaption></figure>
+      </div>
+      <h3 class="subhead">Measured acceptance gate</h3>
+      <div class="lock-metrics">
+        <div class="lock-metric"><b>97.65%</b><span>silhouette intersection-over-union</span></div>
+        <div class="lock-metric"><b>98.81%</b><span>silhouette F1 match</span></div>
+        <div class="lock-metric"><b>1.00 px</b><span>95th-percentile boundary deviation</span></div>
+        <div class="lock-metric"><b>1.41 px</b><span>maximum rendered boundary deviation</span></div>
+      </div>
+      <h3 class="subhead">Full icon inside the unchanged approved arch</h3>
+      <div class="stage white approval-icon"><img src="../master/smv-icon-master.svg" alt="Silhouette-locked traveller inside the unchanged approved seven-layer arch"></div>
+      <h3 class="subhead">Small-size acceptance <span class="badge">64px pose gate</span></h3>
+      <div class="stage white sizes"><figure><img src="../favicon/favicon-16x16.png" width="16" height="16" alt="Locked traveller at 16 pixels"><figcaption>16px</figcaption></figure><figure><img src="../favicon/favicon-32x32.png" width="32" height="32" alt="Locked traveller at 32 pixels"><figcaption>32px</figcaption></figure><figure><img src="../exports/png/smv-icon-64x64.png" width="64" height="64" alt="Locked traveller at 64 pixels"><figcaption>64px · pose gate</figcaption></figure><figure><img src="../exports/png/smv-icon-128x128.png" width="128" height="128" alt="Locked traveller at 128 pixels"><figcaption>128px</figcaption></figure><figure><img src="../exports/png/smv-icon-256x256.png" width="256" height="256" alt="Locked traveller at 256 pixels"><figcaption>256px</figcaption></figure><figure><img src="../exports/png/smv-icon-512x512.png" width="256" height="256" alt="Locked traveller exported at 512 pixels"><figcaption>512px source</figcaption></figure></div>
+    </section>
+    <section id="final-wordmark-approval">
+      <h2>Final Wordmark Approval — Signature Swoosh</h2>
+      <p class="note">The owner-supplied wordmark is the sole swoosh authority. The new editable path preserves its tapered visual weight and rising curve while the outlined typography, spacing, explorer, seven-layer portal, colours, and tagline remain locked.</p>
+      <div class="wordmark-review">
+        <figure><div class="stage white"><img class="reference-wordmark" src="smv-wordmark-swoosh-reference.png" alt="A — owner-approved Search My Vacation wordmark with signature swoosh"></div><figcaption><strong>A · Authoritative reference</strong><br>Approved underline shape and visual weight</figcaption></figure>
+        <figure><div class="stage white"><img src="smv-logo-horizontal-previous.svg" alt="Previous horizontal master without the signature swoosh"></div><figcaption><strong>Previous wordmark</strong><br>Frozen pre-change comparison</figcaption></figure>
+        <figure><div class="stage white"><img src="../master/smv-logo-horizontal-master.svg" alt="Updated canonical horizontal master with the signature swoosh"></div><figcaption><strong>Updated canonical master</strong><br>One native path added beneath Vacation</figcaption></figure>
+        <figure><div class="stage white"><img src="../logos/smv-logo-horizontal-dark.svg" alt="Updated horizontal logo with swoosh on white"></div><figcaption><strong>Horizontal on white</strong><br>Primary dark-lettering lockup</figcaption></figure>
+        <figure><div class="stage dark"><img src="../logos/smv-logo-horizontal-light.svg" alt="Updated horizontal logo with swoosh on footer brown"></div><figcaption><strong>Horizontal on footer brown</strong><br>Existing light-lettering lockup</figcaption></figure>
+        <figure><div class="stage white passport-unavailable"><img class="reference-wordmark" src="smv-passport-wordmark-reference.png" alt="Owner-supplied passport stamp visual reference"><strong>Passport reference checked</strong><span>No editable production passport artwork exists under the brand asset tree, so no new stamp was fabricated from this raster reference.</span></div><figcaption><strong>Passport production status</strong><br>Not found · intentionally unchanged</figcaption></figure>
+      </div>
+      <h3 class="subhead">Enlarged canonical swoosh</h3>
+      <div class="swoosh-zoom"><img src="../master/smv-logo-horizontal-master.svg" alt="Enlarged view of the canonical orange signature swoosh"></div>
+      <p class="swoosh-caption">The path begins beneath the left of the V, follows a shallow upward cubic curve, passes beneath the full script, and tapers just beyond the final n without touching the unchanged tagline.</p>
+    </section>
+    <section><h2>Icon-only identities</h2><p class="note">Detailed transparent master and circular profile-safe treatment.</p><div class="grid"><div class="stage white"><img class="avatar" src="../icons/smv-icon-master.svg" alt="Detailed traveller and rainbow icon"></div><div class="stage cream"><img class="avatar" src="../icons/smv-icon-circle.svg" alt="Circular profile-safe traveller and rainbow icon"></div></div></section>
+    <section><h2>Horizontal logo on white</h2><p class="note">Primary dark-lettering variant for light surfaces.</p><div class="stage white"><img class="horizontal" src="../logos/smv-logo-horizontal-dark.svg" alt="Horizontal Search My Vacation logo on white"></div></section>
+    <section><h2>Horizontal logo on cream</h2><p class="note">Same master and spacing; no background box is embedded.</p><div class="stage cream"><img class="horizontal" src="../logos/smv-logo-horizontal-dark.svg" alt="Horizontal Search My Vacation logo on cream"></div></section>
+    <section><h2>Horizontal light logo on website footer brown</h2><p class="note">Contrast review against #20150F.</p><div class="stage dark"><img class="horizontal" src="../logos/smv-logo-horizontal-light.svg" alt="Horizontal light Search My Vacation logo on dark brown"></div></section>
+    <section><h2>Social watermark over travel photography</h2><p class="note">Existing local repository photography is used only as review context.</p><div class="grid"><div class="photo light-photo"><img src="../social/smv-watermark-compact.svg" alt="Compact watermark over a light travel photograph"></div><div class="photo dark-photo"><img src="../social/smv-watermark-horizontal.svg" alt="Horizontal watermark over a dark travel photograph"></div></div></section>
+    <section><h2>Website header-size preview</h2><p class="note">Placement simulation only; the live header is unchanged.</p><div class="stage cream"><div class="chrome"><img src="../logos/smv-logo-horizontal-dark.svg" alt="Header-sized horizontal logo"><span>Destinations&nbsp;&nbsp; Experiences&nbsp;&nbsp; Plan a journey</span></div></div></section>
+    <section><h2>Website footer-size preview</h2><p class="note">Placement simulation only; the live footer is unchanged.</p><div class="stage"><div class="footer-preview"><img src="../logos/smv-logo-horizontal-light.svg" alt="Footer-sized horizontal light logo"><span>Thoughtful travel planning begins with understanding the person taking the journey.</span></div></div></section>
+    <section><h2>Favicon recognition</h2><p class="note">The full approved traveller is used at 16px, 32px, and above; no alternative miniature character is substituted.</p><div class="stage white sizes"><figure><img src="../favicon/favicon-16x16.png" width="16" height="16" alt="16 pixel favicon"><figcaption>16px · full</figcaption></figure><figure><img src="../favicon/favicon-32x32.png" width="32" height="32" alt="32 pixel favicon"><figcaption>32px · full</figcaption></figure><figure><img src="../exports/png/smv-icon-64x64.png" width="64" height="64" alt="64 pixel icon"><figcaption>64px</figcaption></figure><figure><img src="../exports/png/smv-icon-128x128.png" width="128" height="128" alt="128 pixel icon"><figcaption>128px</figcaption></figure></div></section>
+    <section><h2>Large print scale</h2><p class="note">Vector source remains crisp at any size.</p><div class="stage white print"><img src="../master/smv-logo-horizontal-master.svg" alt="Large horizontal master logo"></div></section>
+    <section><h2>Clear-space demonstration</h2><p class="note">The dashed boundary represents the minimum 1x exclusion zone, where x equals the traveller hat-brim width.</p><div class="stage clear-space"><div class="clear-space-box"><img src="../logos/smv-logo-horizontal-dark.svg" alt="Logo with minimum clear space"></div></div></section>
+  </main>
+</body>
+</html>

@@ -6,17 +6,23 @@
  * across all pages and sections of the Search My Vacation website.
  */
 
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 type ContainerProps = {
   children: ReactNode;
+  className?: string;
+  variant?: "standard" | "wide" | "reading";
 };
 
 export default function Container({
   children,
+  className = "",
+  variant = "standard",
 }: ContainerProps) {
+  const variantClass = variant === "standard" ? "" : `layout-container--${variant}`;
+
   return (
-    <div className="mx-auto w-full max-w-7xl px-6 lg:px-8">
+    <div className={["layout-container", variantClass, className].filter(Boolean).join(" ")}>
       {children}
     </div>
   );

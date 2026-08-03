@@ -1,0 +1,21 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "allowJs": false,
+    "incremental": false,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "noEmit": false,
+    "outDir": "./node_modules/.cache/smv-itinerary-verification",
+    "plugins": [],
+    "rootDir": ".",
+    "target": "ES2022",
+    "types": ["node"]
+  },
+  "include": [
+    "config/public-destinations.config.ts",
+    "lib/journey-itineraries/**/*.ts",
+    "generated/journey-itineraries/*.json"
+  ],
+  "exclude": ["node_modules"]
+}

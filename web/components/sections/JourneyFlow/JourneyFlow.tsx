@@ -82,7 +82,7 @@ export default function JourneyFlow({ feeling }: JourneyFlowProps) {
     <main className="min-h-screen bg-[#fffaf3] text-[#2b1c13]">
       <section className="relative isolate min-h-[58svh] overflow-hidden" aria-labelledby="journey-heading">
         <Image
-          src="/images/hero/golden-hour1.png"
+          src="/images/golden-hour.png"
           alt="A family sharing a Golden Hour travel moment by the coast"
           fill
           priority
@@ -126,7 +126,7 @@ export default function JourneyFlow({ feeling }: JourneyFlowProps) {
               >
                 <div className={`relative ${index === 0 ? "aspect-[16/7]" : "aspect-[4/3]"}`}>
                   <Image
-                    src="/images/hero/golden-hour1.png"
+                    src="/images/golden-hour.png"
                     alt={`Golden Hour travel inspiration for ${experience.destination}`}
                     fill
                     sizes={index === 0 ? "(max-width: 1024px) 100vw, 80vw" : "(max-width: 1024px) 100vw, 40vw"}

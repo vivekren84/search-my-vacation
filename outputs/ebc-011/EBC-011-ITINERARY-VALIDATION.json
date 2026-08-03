@@ -1,0 +1,350 @@
+{
+  "generated": true,
+  "schemaVersion": 1,
+  "sourceWorkbook": "SMV-Journey-Itinerary-Knowledge-Base-v1.xlsx",
+  "sourceWorkbookSha256": "05aa54863376d159fcc4684305aeb4a18b963f1053e0693122e719c172fa1312",
+  "summary": {
+    "ERROR": 0,
+    "REVIEW_REQUIRED": 48,
+    "WARNING": 0,
+    "INFO": 0
+  },
+  "issues": [
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Kerala - Munnar-Alleppey-Kochi",
+      "runtimeId": "kerala-munnar-alleppey-kochi"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Uttar Pradesh - Agra",
+      "runtimeId": "uttar-pradesh-agra"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Punjab - Amritsar",
+      "runtimeId": "punjab-amritsar"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Andaman Islands",
+      "runtimeId": "andaman-islands"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Goa",
+      "runtimeId": "goa"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Gujarat - Gir Forest",
+      "runtimeId": "gujarat-gir-forest"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Gujarat - Panch Dwarka",
+      "runtimeId": "gujarat-panch-dwarka"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Himachal - Shimla-Manali",
+      "runtimeId": "himachal-pradesh-shimla-manali"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Himachal - Dharamshala & Dal",
+      "runtimeId": "himachal-pradesh-dharamshala-dalhousie"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Assam - Wildlife Tour",
+      "runtimeId": "assam-wildlife-tour"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Assam - Heritage & City Tour",
+      "runtimeId": "assam-heritage-city-tour"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Gujarat - Rann of Kutch",
+      "runtimeId": "gujarat-rann-of-kutch"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Hyderabad",
+      "runtimeId": "telangana-hyderabad"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Karnataka - Hampi",
+      "runtimeId": "karnataka-hampi"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Karnataka - Coorg",
+      "runtimeId": "karnataka-coorg"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Karnataka - Bengaluru",
+      "runtimeId": "karnataka-bengaluru"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Karnataka - Kabini",
+      "runtimeId": "karnataka-kabini"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Karnataka - Bandipur",
+      "runtimeId": "karnataka-bandipur"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Kashmir",
+      "runtimeId": "jammu-kashmir-srinagar-gulmarg-pahalgam"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Kerala - Wayanad",
+      "runtimeId": "kerala-wayanad"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Northeast - Meghalaya",
+      "runtimeId": "northeast-meghalaya"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Northeast - Sikkim",
+      "runtimeId": "northeast-sikkim"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Pondicherry",
+      "runtimeId": "pondicherry"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Rajasthan - JJU",
+      "runtimeId": "rajasthan-jaipur-jodhpur-udaipur"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Rajasthan - UKM",
+      "runtimeId": "rajasthan-udaipur-kumbhalgarh-mount-abu"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Rajasthan - JJJ",
+      "runtimeId": "rajasthan-jaipur-jodhpur-jaisalmer"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "TamilNadu - Temple Tour",
+      "runtimeId": "tamil-nadu-temple-tour"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "TamilNadu - Chennai City Tour",
+      "runtimeId": "tamil-nadu-chennai"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "TamilNadu - Kotagiri",
+      "runtimeId": "tamil-nadu-kotagiri"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "TamilNadu - Kodaikanal",
+      "runtimeId": "tamil-nadu-kodaikanal"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "TamilNadu - Ooty",
+      "runtimeId": "tamil-nadu-ooty"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "TamilNadu - Masinagudi",
+      "runtimeId": "tamil-nadu-masinagudi"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Vizag",
+      "runtimeId": "andhra-pradesh-visakhapatnam-araku"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Corbett National Park",
+      "runtimeId": "uttarakhand-corbett-national-park"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Bali",
+      "runtimeId": "bali"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Dubai",
+      "runtimeId": "dubai"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Malaysia - Kuala Lumpur",
+      "runtimeId": "malaysia-kuala-lumpur"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Malaysia - KL + Langkawi",
+      "runtimeId": "malaysia-kuala-lumpur-langkawi"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Singapore",
+      "runtimeId": "singapore"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Sri Lanka - Ramayana Trail",
+      "runtimeId": "sri-lanka-ramayana-trail"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Sri Lanka - Southern Circuit",
+      "runtimeId": "sri-lanka-southern-circuit"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Sri Lanka - North-East Circuit",
+      "runtimeId": "sri-lanka-north-east-circuit"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Thailand - Bangkok & Pattaya",
+      "runtimeId": "thailand-bangkok-pattaya"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Thailand - Phuket & Krabi",
+      "runtimeId": "thailand-phuket-krabi"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Vietnam - Hanoi",
+      "runtimeId": "vietnam-hanoi"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Vietnam - Phu Quoc",
+      "runtimeId": "vietnam-phu-quoc"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Vietnam - Da Nang",
+      "runtimeId": "vietnam-da-nang"
+    },
+    {
+      "severity": "REVIEW_REQUIRED",
+      "code": "DRAFT_INCLUDED",
+      "message": "Draft record is included by the active Release 1 policy",
+      "worksheet": "Vietnam - Ho Chi Minh City",
+      "runtimeId": "vietnam-ho-chi-minh-city"
+    }
+  ]
+}

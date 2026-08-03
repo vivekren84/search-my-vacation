@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Search My Vacation seven-layer arch</title>
+  <desc id="desc">Arch-only view of the seven nested colour layers from outer magenta to the near-black purple inner tunnel.</desc>
+  <g id="preview-rainbow" data-layer-count="7">
+    <path id="preview-band-1-outer-magenta" fill="#B7268F" d="M32 486V242C32 121.6 132.3 24 256 24s224 97.6 224 218v244Z"/>
+    <path id="preview-band-2-golden-orange" fill="#FE9717" d="M58 486V243C58 137.4 146.7 50 256 50s198 87.4 198 193v243Z"/>
+    <path id="preview-band-3-bright-orange" fill="#FA6918" d="M84 486V244C84 152.2 161.3 76 256 76s172 76.2 172 168v242Z"/>
+    <path id="preview-band-4-deep-crimson" fill="#C22224" d="M110 486V245c0-77.4 65.7-143 146-143s146 65.6 146 143v241Z"/>
+    <path id="preview-band-5-medium-purple" fill="#472063" d="M136 486V247c0-63.6 53.7-119 120-119s120 55.4 120 119v239Z"/>
+    <path id="preview-band-6-deep-aubergine" fill="#401856" d="M162 486V249c0-49.5 41.8-95 94-95s94 45.5 94 95v237Z"/>
+    <path id="preview-band-7-inner-tunnel" fill="#230334" d="M188 486V252c0-35.8 30.2-72 68-72s68 36.2 68 72v234Z"/>
+  </g>
+</svg>

@@ -33,16 +33,16 @@ The objective is to create a visual identity that communicates trust, warmth, pr
 
 ## Upstream
 
-- BRAND-IDENTITY.md
-- DESIGN-PRINCIPLES.md
-- HOMEPAGE-EXPERIENCE-ARCHITECTURE.md
+- `docs/07-Design/BRAND-IDENTITY.md`
+- `docs/07-Design/DESIGN-PRINCIPLES.md`
+- `docs/04-UX/HOMEPAGE-INFORMATION-ARCHITECTURE.md`
 
 ## Downstream
 
-- TYPOGRAPHY.md
-- IMAGERY-GUIDELINES.md
-- DESIGN-SYSTEM.md
-- COMPONENT-LIBRARY.md
+- `docs/04-UX/TYPOGRAPHY.md`
+- `docs/04-UX/IMAGERY-GUIDELINES.md`
+- `docs/04-UX/DESIGN-TOKENS.md`
+- `docs/04-UX/UI-COMPONENTS.md`
 - Figma Design Files
 
 ---

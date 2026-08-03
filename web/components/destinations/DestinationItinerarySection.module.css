@@ -1,0 +1,131 @@
+.shell {
+  --journey-ink: #2b1c13;
+  --journey-brown: #51331f;
+  --journey-copper: #9a642e;
+  --journey-gold: #e7b765;
+  --journey-cream: #fffaf3;
+  --journey-sand: #f2e4d2;
+  background: #f5eadc;
+}
+
+.selectorHeader {
+  padding: clamp(2rem, 5vw, 3.5rem) clamp(1rem, 4vw, 3rem) 0;
+}
+
+.selectorHeader h2 {
+  margin-top: 0.75rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 400;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  text-wrap: balance;
+}
+
+.selectorHeader > p:last-child {
+  max-width: 56rem;
+  margin-top: 1.25rem;
+  color: rgb(43 28 19 / 66%);
+  line-height: 1.75;
+}
+
+.eyebrow {
+  color: var(--journey-copper);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 2rem;
+}
+
+.chips button {
+  min-height: 3rem;
+  max-width: 100%;
+  padding: 0.65rem 1rem;
+  border: 1px solid rgb(81 51 31 / 30%);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 65%);
+  color: var(--journey-brown);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 750;
+  line-height: 1.35;
+  text-align: left;
+  cursor: pointer;
+}
+
+.chips button[aria-pressed="true"] {
+  border-color: var(--journey-brown);
+  background: var(--journey-brown);
+  color: white;
+}
+
+.chips button:focus-visible,
+.mobileSelect select:focus-visible,
+.cta:focus-visible {
+  outline: 3px solid var(--journey-copper);
+  outline-offset: 3px;
+}
+
+.mobileSelect {
+  display: none;
+  margin-top: 1.75rem;
+}
+
+.mobileSelect label {
+  display: block;
+  color: var(--journey-brown);
+  font-size: 0.75rem;
+  font-weight: 750;
+}
+
+.mobileSelect select {
+  width: 100%;
+  min-height: 3.25rem;
+  margin-top: 0.5rem;
+  padding: 0.7rem 2.5rem 0.7rem 0.85rem;
+  border: 1px solid rgb(81 51 31 / 35%);
+  border-radius: 0.9rem;
+  background: white;
+  color: var(--journey-ink);
+  font: inherit;
+}
+
+.announcement {
+  margin-top: 0.8rem;
+  color: rgb(43 28 19 / 58%);
+  font-size: 0.72rem;
+}
+
+.ctaRow {
+  padding: 0 clamp(1rem, 4vw, 3rem) clamp(3rem, 7vw, 5rem);
+}
+
+.cta {
+  display: inline-flex;
+  min-height: 3.5rem;
+  align-items: center;
+  margin-top: 1.5rem;
+  padding: 0.8rem 1.35rem;
+  border-radius: 999px;
+  background: var(--journey-brown);
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 750;
+}
+
+@media (max-width: 640px) {
+  .chips {
+    display: none;
+  }
+
+  .mobileSelect {
+    display: block;
+  }
+}

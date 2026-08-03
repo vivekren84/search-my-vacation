@@ -1,0 +1,1 @@
+import type { Metadata } from "next"; import LegalPage from "@/components/legal/LegalPage"; export const metadata:Metadata={title:"Privacy Policy",description:"How Search My Vacation handles personal information."}; export default function Page(){return <LegalPage file="PRIVACY-POLICY-v1.0.md" title="Privacy Policy"/>}

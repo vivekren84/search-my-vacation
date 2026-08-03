@@ -1,0 +1,247 @@
+export type RuntimeArtifactHeader = {
+  schemaVersion: string;
+  generatorVersion: string;
+  workbookChecksum: string;
+};
+
+export type JourneyDNARecord = {
+  sourceRow: number;
+  destinationId: string;
+  regionId: string;
+  destination: string;
+  region: string;
+  travelScope: "Domestic" | "International";
+  recordType: string;
+  journeyIdentity: string;
+  primaryExperiences: string[];
+  secondaryExperiences: string[];
+  signatureExperiences: string;
+  emotionalOutcomes: string[];
+  strengths: string;
+  avoidWhen: string;
+  comfortRange: string[];
+  journeyPace: string[];
+  suggestedDuration: {
+    minimum: string;
+    ideal: string;
+    display: string;
+  };
+  bestSeason: string;
+  shoulderSeason: string;
+  seasonalCautions: string;
+  operationalConfidence: string;
+  compatibilityReferenceId: string;
+};
+
+export type JourneyHierarchyNode = {
+  nodeId: string;
+  parentId: string | null;
+  nodeType: string;
+  name: string;
+  destinationId: string | null;
+  travelScope: "Domestic" | "International" | null;
+  recommendationEligible: boolean;
+  sourceRow: number | null;
+};
+
+export type JourneyDNAArtifact = RuntimeArtifactHeader & {
+  hierarchy: JourneyHierarchyNode[];
+  records: JourneyDNARecord[];
+};
+
+export type CompatibilityRecord = {
+  regionId: string;
+  category:
+    | "TravellerType"
+    | "EmotionalGoal"
+    | "DesiredExperience"
+    | "JourneyComfort"
+    | "JourneyPace";
+  key: string;
+  score: number;
+  reasonCode: string;
+  sourceRow: number;
+};
+
+export type CompatibilityArtifact = RuntimeArtifactHeader & {
+  scoreModel: Record<string, string>;
+  records: CompatibilityRecord[];
+};
+
+export type ConstraintRecord = {
+  constraintId: string;
+  type: string;
+  source: string;
+  target: string;
+  severity: string;
+  reasonCode: string;
+  sourceRow: number | null;
+};
+
+export type ConstraintArtifact = RuntimeArtifactHeader & {
+  records: ConstraintRecord[];
+};
+
+export type ReasonRecord = {
+  reasonCode: string;
+  category: string;
+  summary: string;
+  description: string;
+  context: string[];
+};
+
+export type ReasonArtifact = RuntimeArtifactHeader & {
+  records: ReasonRecord[];
+};
+
+export type JourneySeedRecord = {
+  sourceRow: number;
+  regionId: string;
+  arrival: string;
+  firstImpression: string;
+  sharedMoment: string;
+  signatureExperience: string;
+  relaxationMoment: string;
+  localDiscovery: string;
+  foodOrCulturalMoment: string;
+  journeyHighPoint: string;
+  journeyEnding: string;
+  whyThisRegion: string;
+  worthConsidering: string;
+  potentialTradeOff: string;
+};
+
+export type JourneySeedArtifact = RuntimeArtifactHeader & {
+  records: JourneySeedRecord[];
+};
+
+export type JourneyTemplateRecord = {
+  sourceRow: number;
+  regionId: string;
+  minimumDurationDays: number | "REVIEW_REQUIRED";
+  idealDurationDays: number | "REVIEW_REQUIRED";
+  journeyRhythm: string;
+  arrivalPhase: string;
+  discoveryPhase: string;
+  signaturePhase: string;
+  slowOrRecoveryPhase: string;
+  optionalExtension: string;
+  departurePhase: string;
+};
+
+export type JourneyTemplateArtifact = RuntimeArtifactHeader & {
+  records: JourneyTemplateRecord[];
+};
+
+export type RuntimeRecordCounts = {
+  destinationRegions: number;
+  journeyBases: number;
+  attractions: number;
+  experienceClusters: number;
+  islands: number;
+  travellerTypes: number;
+  emotionalGoals: number;
+  desiredExperiences: number;
+  journeyDNARecords: number;
+  compatibilityRecords: number;
+  constraintRecords: number;
+  reasonCodes: number;
+  journeySeedRecords: number;
+  journeyTemplateRecords: number;
+};
+
+export type MetadataArtifact = RuntimeArtifactHeader & {
+  generatedFrom: string;
+  generatedAt: string;
+  recordCounts: RuntimeRecordCounts;
+  validation: {
+    status: "PASS";
+    warnings: number;
+    reviewRequiredRecords: number;
+  };
+};
+
+export type RuntimeArtifactChecksum = {
+  path: string;
+  checksum: string;
+};
+
+export type IntelligenceManifest = RuntimeArtifactHeader & {
+  generatedAt: string;
+  generatedFromWorkbook: string;
+  workbookMetadata: {
+    filename: string;
+    version: string | null;
+    createdAt: string | null;
+    modifiedAt: string | null;
+  };
+  recordCounts: RuntimeRecordCounts;
+  artifacts: Record<RuntimeArtifactKey, RuntimeArtifactChecksum>;
+  generation: {
+    recordsProcessed: number;
+    compatibilityRulesGenerated: number;
+    contradictionsGenerated: number;
+    validationRulesExecuted: number;
+    durationMilliseconds: number;
+  };
+  validation: {
+    status: "PASS";
+    checksExecuted: number;
+    checksPassed: number;
+    checksFailed: number;
+    warnings: number;
+    reviewRequiredRecords: number;
+  };
+};
+
+export const RUNTIME_ARTIFACT_KEYS = [
+  "journeyDNA",
+  "compatibilityMatrix",
+  "constraintLibrary",
+  "reasonLibrary",
+  "journeySeeds",
+  "journeyTemplates",
+  "metadata",
+] as const;
+
+export type RuntimeArtifactKey = (typeof RUNTIME_ARTIFACT_KEYS)[number];
+
+export type RuntimeArtifactValues = {
+  journeyDNA: JourneyDNAArtifact;
+  compatibilityMatrix: CompatibilityArtifact;
+  constraintLibrary: ConstraintArtifact;
+  reasonLibrary: ReasonArtifact;
+  journeySeeds: JourneySeedArtifact;
+  journeyTemplates: JourneyTemplateArtifact;
+  metadata: MetadataArtifact;
+};
+
+export type RuntimeIntelligenceSource = RuntimeArtifactValues & {
+  manifest: IntelligenceManifest;
+};
+
+export type RuntimeIntelligenceIndexes = {
+  journeyDNAByRegionId: ReadonlyMap<string, JourneyDNARecord>;
+  journeyDNAByDestinationId: ReadonlyMap<string, readonly JourneyDNARecord[]>;
+  compatibilityByRegionId: ReadonlyMap<string, readonly CompatibilityRecord[]>;
+  constraintBySource: ReadonlyMap<string, readonly ConstraintRecord[]>;
+  constraintByTarget: ReadonlyMap<string, readonly ConstraintRecord[]>;
+  reasonByCode: ReadonlyMap<string, ReasonRecord>;
+  journeySeedByRegionId: ReadonlyMap<string, JourneySeedRecord>;
+  journeyTemplateByRegionId: ReadonlyMap<string, JourneyTemplateRecord>;
+  hierarchyByNodeId: ReadonlyMap<string, JourneyHierarchyNode>;
+};
+
+export type RuntimeVerificationReport = {
+  status: "PASS";
+  checksExecuted: number;
+  checksPassed: number;
+  artifactsVerified: number;
+  artifactChecksums: Readonly<Record<RuntimeArtifactKey, string>>;
+};
+
+export type RuntimeIntelligencePackage = RuntimeArtifactValues & {
+  manifest: IntelligenceManifest;
+  indexes: RuntimeIntelligenceIndexes;
+  verification: RuntimeVerificationReport;
+};

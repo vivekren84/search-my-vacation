@@ -1,0 +1,1322 @@
+{
+  "generated": true,
+  "doNotEdit": "Generated from the business-maintained itinerary workbook. Do not edit manually.",
+  "schemaVersion": 1,
+  "generatorVersion": "1.0.0",
+  "sourceWorkbookSha256": "05aa54863376d159fcc4684305aeb4a18b963f1053e0693122e719c172fa1312",
+  "aliases": {
+    "ae dxb": [
+      "dubai"
+    ],
+    "agra": [
+      "uttar-pradesh-agra"
+    ],
+    "alappuzha": [
+      "kerala-munnar-alleppey-kochi"
+    ],
+    "alleppey": [
+      "kerala-munnar-alleppey-kochi"
+    ],
+    "amritsar": [
+      "punjab-amritsar"
+    ],
+    "an and": [
+      "andaman-islands"
+    ],
+    "andaman": [
+      "andaman-islands"
+    ],
+    "andaman and nicobar islands india": [
+      "andaman-islands"
+    ],
+    "andaman islands": [
+      "andaman-islands"
+    ],
+    "andhra pradesh": [
+      "andhra-pradesh-visakhapatnam-araku"
+    ],
+    "andhra pradesh south india": [
+      "andhra-pradesh-visakhapatnam-araku"
+    ],
+    "andhra pradesh visakhapatnam araku": [
+      "andhra-pradesh-visakhapatnam-araku"
+    ],
+    "ap viz": [
+      "andhra-pradesh-visakhapatnam-araku"
+    ],
+    "araku": [
+      "andhra-pradesh-visakhapatnam-araku"
+    ],
+    "as her": [
+      "assam-heritage-city-tour"
+    ],
+    "as wld": [
+      "assam-wildlife-tour"
+    ],
+    "assam": [
+      "assam-heritage-city-tour",
+      "assam-wildlife-tour"
+    ],
+    "assam heritage and city tour": [
+      "assam-heritage-city-tour"
+    ],
+    "assam heritage city tour": [
+      "assam-heritage-city-tour"
+    ],
+    "assam northeast india": [
+      "assam-heritage-city-tour",
+      "assam-wildlife-tour"
+    ],
+    "assam wildlife tour": [
+      "assam-wildlife-tour"
+    ],
+    "bali": [
+      "bali"
+    ],
+    "bali indonesia": [
+      "bali"
+    ],
+    "bandipur": [
+      "karnataka-bandipur"
+    ],
+    "bangalore": [
+      "karnataka-bengaluru"
+    ],
+    "bangkok": [
+      "thailand-bangkok-pattaya"
+    ],
+    "bangkok and pattaya": [
+      "thailand-bangkok-pattaya"
+    ],
+    "bengaluru": [
+      "karnataka-bengaluru"
+    ],
+    "bentota": [
+      "sri-lanka-southern-circuit"
+    ],
+    "bet dwarka": [
+      "gujarat-panch-dwarka"
+    ],
+    "chennai": [
+      "tamil-nadu-chennai"
+    ],
+    "cherrapunji": [
+      "northeast-meghalaya"
+    ],
+    "chidambaram": [
+      "tamil-nadu-temple-tour"
+    ],
+    "chilaw": [
+      "sri-lanka-ramayana-trail"
+    ],
+    "chilaw kandy nuwara eliya ella and colombo": [
+      "sri-lanka-ramayana-trail"
+    ],
+    "city break": [
+      "malaysia-kuala-lumpur"
+    ],
+    "cochin": [
+      "kerala-munnar-alleppey-kochi"
+    ],
+    "coorg": [
+      "karnataka-coorg"
+    ],
+    "corbett": [
+      "uttarakhand-corbett-national-park"
+    ],
+    "corbett national park": [
+      "uttarakhand-corbett-national-park"
+    ],
+    "da nang": [
+      "vietnam-da-nang"
+    ],
+    "da nang and hoi an": [
+      "vietnam-da-nang"
+    ],
+    "dalhousie": [
+      "himachal-pradesh-dharamshala-dalhousie"
+    ],
+    "danang": [
+      "vietnam-da-nang"
+    ],
+    "dawki": [
+      "northeast-meghalaya"
+    ],
+    "dharamshala": [
+      "himachal-pradesh-dharamshala-dalhousie"
+    ],
+    "dubai": [
+      "dubai"
+    ],
+    "dwarka": [
+      "gujarat-panch-dwarka"
+    ],
+    "dwarka bet dwarka nageshwar and rukmini devi temple": [
+      "gujarat-panch-dwarka"
+    ],
+    "ella": [
+      "sri-lanka-ramayana-trail"
+    ],
+    "ga goa": [
+      "goa"
+    ],
+    "galle": [
+      "sri-lanka-southern-circuit"
+    ],
+    "gangtok": [
+      "northeast-sikkim"
+    ],
+    "gangtok lachen lachung": [
+      "northeast-sikkim"
+    ],
+    "gir": [
+      "gujarat-gir-forest"
+    ],
+    "gir forest": [
+      "gujarat-gir-forest"
+    ],
+    "gir national park": [
+      "gujarat-gir-forest"
+    ],
+    "gj dwk": [
+      "gujarat-panch-dwarka"
+    ],
+    "gj gir": [
+      "gujarat-gir-forest"
+    ],
+    "gj rak": [
+      "gujarat-rann-of-kutch"
+    ],
+    "goa": [
+      "goa"
+    ],
+    "goa west india": [
+      "goa"
+    ],
+    "golden temple": [
+      "punjab-amritsar"
+    ],
+    "gujarat": [
+      "gujarat-gir-forest",
+      "gujarat-panch-dwarka",
+      "gujarat-rann-of-kutch"
+    ],
+    "gujarat gir forest": [
+      "gujarat-gir-forest"
+    ],
+    "gujarat panch dwarka": [
+      "gujarat-panch-dwarka"
+    ],
+    "gujarat rann of kutch": [
+      "gujarat-rann-of-kutch"
+    ],
+    "gujarat west india": [
+      "gujarat-gir-forest",
+      "gujarat-panch-dwarka",
+      "gujarat-rann-of-kutch"
+    ],
+    "guwahati": [
+      "assam-heritage-city-tour"
+    ],
+    "guwahati sivasagar and majuli": [
+      "assam-heritage-city-tour"
+    ],
+    "ha long bay": [
+      "vietnam-hanoi"
+    ],
+    "halong bay": [
+      "vietnam-hanoi"
+    ],
+    "hampi": [
+      "karnataka-hampi"
+    ],
+    "hanoi": [
+      "vietnam-hanoi"
+    ],
+    "hanoi and halong bay": [
+      "vietnam-hanoi"
+    ],
+    "himachal dharamshala and dal": [
+      "himachal-pradesh-dharamshala-dalhousie"
+    ],
+    "himachal pradesh": [
+      "himachal-pradesh-dharamshala-dalhousie",
+      "himachal-pradesh-shimla-manali"
+    ],
+    "himachal pradesh dharamshala dalhousie": [
+      "himachal-pradesh-dharamshala-dalhousie"
+    ],
+    "himachal pradesh north india": [
+      "himachal-pradesh-dharamshala-dalhousie",
+      "himachal-pradesh-shimla-manali"
+    ],
+    "himachal pradesh shimla manali": [
+      "himachal-pradesh-shimla-manali"
+    ],
+    "himachal shimla manali": [
+      "himachal-pradesh-shimla-manali"
+    ],
+    "ho chi minh city": [
+      "vietnam-ho-chi-minh-city"
+    ],
+    "ho chi minh city and mekong delta": [
+      "vietnam-ho-chi-minh-city"
+    ],
+    "hoi an": [
+      "vietnam-da-nang"
+    ],
+    "hp dhd": [
+      "himachal-pradesh-dharamshala-dalhousie"
+    ],
+    "hp shm": [
+      "himachal-pradesh-shimla-manali"
+    ],
+    "hyderabad": [
+      "telangana-hyderabad"
+    ],
+    "id bal": [
+      "bali"
+    ],
+    "jaffna": [
+      "sri-lanka-north-east-circuit"
+    ],
+    "jaipur jodhpur and jaisalmer": [
+      "rajasthan-jaipur-jodhpur-jaisalmer"
+    ],
+    "jaipur jodhpur and udaipur": [
+      "rajasthan-jaipur-jodhpur-udaipur"
+    ],
+    "jaipur jodhpur jaisalmer": [
+      "rajasthan-jaipur-jodhpur-jaisalmer"
+    ],
+    "jaipur jodhpur udaipur": [
+      "rajasthan-jaipur-jodhpur-udaipur"
+    ],
+    "jammu and kashmir": [
+      "jammu-kashmir-srinagar-gulmarg-pahalgam"
+    ],
+    "jammu and kashmir north india": [
+      "jammu-kashmir-srinagar-gulmarg-pahalgam"
+    ],
+    "jammu kashmir srinagar gulmarg pahalgam": [
+      "jammu-kashmir-srinagar-gulmarg-pahalgam"
+    ],
+    "jim corbett": [
+      "uttarakhand-corbett-national-park"
+    ],
+    "jim corbett national park": [
+      "uttarakhand-corbett-national-park"
+    ],
+    "jjj": [
+      "rajasthan-jaipur-jodhpur-jaisalmer"
+    ],
+    "jju": [
+      "rajasthan-jaipur-jodhpur-udaipur"
+    ],
+    "jk kmr": [
+      "jammu-kashmir-srinagar-gulmarg-pahalgam"
+    ],
+    "ka blr": [
+      "karnataka-bengaluru"
+    ],
+    "ka bnd": [
+      "karnataka-bandipur"
+    ],
+    "ka cor": [
+      "karnataka-coorg"
+    ],
+    "ka hmp": [
+      "karnataka-hampi"
+    ],
+    "ka kbn": [
+      "karnataka-kabini"
+    ],
+    "kabini": [
+      "karnataka-kabini"
+    ],
+    "kandy nuwara eliya bentota galle and colombo": [
+      "sri-lanka-southern-circuit"
+    ],
+    "karnataka": [
+      "karnataka-bandipur",
+      "karnataka-bengaluru",
+      "karnataka-coorg",
+      "karnataka-hampi",
+      "karnataka-kabini"
+    ],
+    "karnataka bandipur": [
+      "karnataka-bandipur"
+    ],
+    "karnataka bengaluru": [
+      "karnataka-bengaluru"
+    ],
+    "karnataka coorg": [
+      "karnataka-coorg"
+    ],
+    "karnataka hampi": [
+      "karnataka-hampi"
+    ],
+    "karnataka kabini": [
+      "karnataka-kabini"
+    ],
+    "karnataka south india": [
+      "karnataka-bandipur",
+      "karnataka-bengaluru",
+      "karnataka-coorg",
+      "karnataka-hampi",
+      "karnataka-kabini"
+    ],
+    "kashmir": [
+      "jammu-kashmir-srinagar-gulmarg-pahalgam"
+    ],
+    "kaziranga": [
+      "assam-wildlife-tour"
+    ],
+    "kaziranga national park": [
+      "assam-wildlife-tour"
+    ],
+    "kerala": [
+      "kerala-munnar",
+      "kerala-munnar-alleppey-kochi",
+      "kerala-wayanad"
+    ],
+    "kerala backwaters": [
+      "kerala-munnar-alleppey-kochi"
+    ],
+    "kerala circuit": [
+      "kerala-munnar-alleppey-kochi"
+    ],
+    "kerala munnar": [
+      "kerala-munnar"
+    ],
+    "kerala munnar alleppey kochi": [
+      "kerala-munnar-alleppey-kochi"
+    ],
+    "kerala south india": [
+      "kerala-munnar",
+      "kerala-munnar-alleppey-kochi",
+      "kerala-wayanad"
+    ],
+    "kerala wayanad": [
+      "kerala-wayanad"
+    ],
+    "kl": [
+      "malaysia-kuala-lumpur"
+    ],
+    "kl and langkawi": [
+      "malaysia-kuala-lumpur-langkawi"
+    ],
+    "kl mac": [
+      "kerala-munnar-alleppey-kochi"
+    ],
+    "kl mun": [
+      "kerala-munnar"
+    ],
+    "kl way": [
+      "kerala-wayanad"
+    ],
+    "kochi": [
+      "kerala-munnar-alleppey-kochi"
+    ],
+    "kodagu": [
+      "karnataka-coorg"
+    ],
+    "kodaikanal": [
+      "tamil-nadu-kodaikanal"
+    ],
+    "kotagiri": [
+      "tamil-nadu-kotagiri"
+    ],
+    "krabi": [
+      "thailand-phuket-krabi"
+    ],
+    "kuala lumpur": [
+      "malaysia-kuala-lumpur"
+    ],
+    "kuala lumpur and langkawi": [
+      "malaysia-kuala-lumpur-langkawi"
+    ],
+    "kumbakonam": [
+      "tamil-nadu-temple-tour"
+    ],
+    "kuta": [
+      "bali"
+    ],
+    "kutch": [
+      "gujarat-rann-of-kutch"
+    ],
+    "lachen": [
+      "northeast-sikkim"
+    ],
+    "lachung": [
+      "northeast-sikkim"
+    ],
+    "langkawi": [
+      "malaysia-kuala-lumpur-langkawi"
+    ],
+    "lk knb": [
+      "sri-lanka-southern-circuit"
+    ],
+    "lk ram": [
+      "sri-lanka-ramayana-trail"
+    ],
+    "lk sjt": [
+      "sri-lanka-north-east-circuit"
+    ],
+    "madras": [
+      "tamil-nadu-chennai"
+    ],
+    "madurai": [
+      "tamil-nadu-temple-tour"
+    ],
+    "majuli": [
+      "assam-heritage-city-tour"
+    ],
+    "malaysia": [
+      "malaysia-kuala-lumpur",
+      "malaysia-kuala-lumpur-langkawi"
+    ],
+    "malaysia kl langkawi": [
+      "malaysia-kuala-lumpur-langkawi"
+    ],
+    "malaysia kuala lumpur": [
+      "malaysia-kuala-lumpur"
+    ],
+    "malaysia kuala lumpur langkawi": [
+      "malaysia-kuala-lumpur-langkawi"
+    ],
+    "masinagudi": [
+      "tamil-nadu-masinagudi"
+    ],
+    "mawlynnong": [
+      "northeast-meghalaya"
+    ],
+    "mcleod ganj": [
+      "himachal-pradesh-dharamshala-dalhousie"
+    ],
+    "meghalaya": [
+      "northeast-meghalaya"
+    ],
+    "meghalaya northeast india": [
+      "northeast-meghalaya"
+    ],
+    "mekong delta": [
+      "vietnam-ho-chi-minh-city"
+    ],
+    "ml shl": [
+      "northeast-meghalaya"
+    ],
+    "munnar": [
+      "kerala-munnar"
+    ],
+    "munnar alleppey and cochin": [
+      "kerala-munnar-alleppey-kochi"
+    ],
+    "munnar hill retreat": [
+      "kerala-munnar"
+    ],
+    "my kll": [
+      "malaysia-kuala-lumpur-langkawi"
+    ],
+    "my kul": [
+      "malaysia-kuala-lumpur"
+    ],
+    "northeast india": [
+      "northeast-meghalaya",
+      "northeast-sikkim"
+    ],
+    "northeast meghalaya": [
+      "northeast-meghalaya"
+    ],
+    "northeast sikkim": [
+      "northeast-sikkim"
+    ],
+    "nusa dua": [
+      "bali"
+    ],
+    "ooty": [
+      "tamil-nadu-ooty"
+    ],
+    "panch dwarka": [
+      "gujarat-panch-dwarka"
+    ],
+    "pattaya": [
+      "thailand-bangkok-pattaya"
+    ],
+    "pb amr": [
+      "punjab-amritsar"
+    ],
+    "pelling": [
+      "northeast-sikkim"
+    ],
+    "phu quoc": [
+      "vietnam-phu-quoc"
+    ],
+    "phu quoc island": [
+      "vietnam-phu-quoc"
+    ],
+    "phuket": [
+      "thailand-phuket-krabi"
+    ],
+    "phuket and krabi": [
+      "thailand-phuket-krabi"
+    ],
+    "pondicherry": [
+      "pondicherry"
+    ],
+    "port blair havelock": [
+      "andaman-islands"
+    ],
+    "puducherry": [
+      "pondicherry"
+    ],
+    "puducherry south india": [
+      "pondicherry"
+    ],
+    "punjab": [
+      "punjab-amritsar"
+    ],
+    "punjab amritsar": [
+      "punjab-amritsar"
+    ],
+    "punjab north india": [
+      "punjab-amritsar"
+    ],
+    "py pon": [
+      "pondicherry"
+    ],
+    "rajasthan": [
+      "rajasthan-jaipur-jodhpur-jaisalmer",
+      "rajasthan-jaipur-jodhpur-udaipur",
+      "rajasthan-udaipur-kumbhalgarh-mount-abu"
+    ],
+    "rajasthan jaipur jodhpur jaisalmer": [
+      "rajasthan-jaipur-jodhpur-jaisalmer"
+    ],
+    "rajasthan jaipur jodhpur udaipur": [
+      "rajasthan-jaipur-jodhpur-udaipur"
+    ],
+    "rajasthan jjj": [
+      "rajasthan-jaipur-jodhpur-jaisalmer"
+    ],
+    "rajasthan jju": [
+      "rajasthan-jaipur-jodhpur-udaipur"
+    ],
+    "rajasthan north india": [
+      "rajasthan-jaipur-jodhpur-jaisalmer",
+      "rajasthan-jaipur-jodhpur-udaipur",
+      "rajasthan-udaipur-kumbhalgarh-mount-abu"
+    ],
+    "rajasthan udaipur kumbhalgarh mount abu": [
+      "rajasthan-udaipur-kumbhalgarh-mount-abu"
+    ],
+    "rajasthan ukm": [
+      "rajasthan-udaipur-kumbhalgarh-mount-abu"
+    ],
+    "ramayana trail": [
+      "sri-lanka-ramayana-trail"
+    ],
+    "rameswaram": [
+      "tamil-nadu-temple-tour"
+    ],
+    "ramnagar": [
+      "uttarakhand-corbett-national-park"
+    ],
+    "rann": [
+      "gujarat-rann-of-kutch"
+    ],
+    "rann of kutch": [
+      "gujarat-rann-of-kutch"
+    ],
+    "rj jjj": [
+      "rajasthan-jaipur-jodhpur-jaisalmer"
+    ],
+    "rj jju": [
+      "rajasthan-jaipur-jodhpur-udaipur"
+    ],
+    "rj ukm": [
+      "rajasthan-udaipur-kumbhalgarh-mount-abu"
+    ],
+    "saigon": [
+      "vietnam-ho-chi-minh-city"
+    ],
+    "sasan gir": [
+      "gujarat-gir-forest"
+    ],
+    "seminyak": [
+      "bali"
+    ],
+    "sg sin": [
+      "singapore"
+    ],
+    "shaheed dweep": [
+      "andaman-islands"
+    ],
+    "shillong": [
+      "northeast-meghalaya"
+    ],
+    "shillong cherrapunji": [
+      "northeast-meghalaya"
+    ],
+    "shimla and manali": [
+      "himachal-pradesh-shimla-manali"
+    ],
+    "sigiriya": [
+      "sri-lanka-north-east-circuit"
+    ],
+    "sigiriya trincomalee and jaffna": [
+      "sri-lanka-north-east-circuit"
+    ],
+    "sikkim": [
+      "northeast-sikkim"
+    ],
+    "sikkim northeast india": [
+      "northeast-sikkim"
+    ],
+    "singapore": [
+      "singapore"
+    ],
+    "sivasagar": [
+      "assam-heritage-city-tour"
+    ],
+    "sk gtk": [
+      "northeast-sikkim"
+    ],
+    "sohra": [
+      "northeast-meghalaya"
+    ],
+    "southern circuit": [
+      "sri-lanka-southern-circuit"
+    ],
+    "sri lanka": [
+      "sri-lanka-north-east-circuit",
+      "sri-lanka-ramayana-trail",
+      "sri-lanka-southern-circuit"
+    ],
+    "sri lanka north east": [
+      "sri-lanka-north-east-circuit"
+    ],
+    "sri lanka north east circuit": [
+      "sri-lanka-north-east-circuit"
+    ],
+    "sri lanka ramayana trail": [
+      "sri-lanka-ramayana-trail"
+    ],
+    "sri lanka south": [
+      "sri-lanka-southern-circuit"
+    ],
+    "sri lanka southern circuit": [
+      "sri-lanka-southern-circuit"
+    ],
+    "srinagar gulmarg and pahalgam": [
+      "jammu-kashmir-srinagar-gulmarg-pahalgam"
+    ],
+    "swaraj dweep": [
+      "andaman-islands"
+    ],
+    "tamil nadu": [
+      "tamil-nadu-chennai",
+      "tamil-nadu-kodaikanal",
+      "tamil-nadu-kotagiri",
+      "tamil-nadu-masinagudi",
+      "tamil-nadu-ooty",
+      "tamil-nadu-temple-tour"
+    ],
+    "tamil nadu chennai": [
+      "tamil-nadu-chennai"
+    ],
+    "tamil nadu kodaikanal": [
+      "tamil-nadu-kodaikanal"
+    ],
+    "tamil nadu kotagiri": [
+      "tamil-nadu-kotagiri"
+    ],
+    "tamil nadu masinagudi": [
+      "tamil-nadu-masinagudi"
+    ],
+    "tamil nadu ooty": [
+      "tamil-nadu-ooty"
+    ],
+    "tamil nadu south india": [
+      "tamil-nadu-chennai",
+      "tamil-nadu-kodaikanal",
+      "tamil-nadu-kotagiri",
+      "tamil-nadu-masinagudi",
+      "tamil-nadu-ooty",
+      "tamil-nadu-temple-tour"
+    ],
+    "tamil nadu temple tour": [
+      "tamil-nadu-temple-tour"
+    ],
+    "tamil nadu temples": [
+      "tamil-nadu-temple-tour"
+    ],
+    "tamilnadu chennai city tour": [
+      "tamil-nadu-chennai"
+    ],
+    "tamilnadu kodaikanal": [
+      "tamil-nadu-kodaikanal"
+    ],
+    "tamilnadu kotagiri": [
+      "tamil-nadu-kotagiri"
+    ],
+    "tamilnadu masinagudi": [
+      "tamil-nadu-masinagudi"
+    ],
+    "tamilnadu ooty": [
+      "tamil-nadu-ooty"
+    ],
+    "tamilnadu temple tour": [
+      "tamil-nadu-temple-tour"
+    ],
+    "telangana": [
+      "telangana-hyderabad"
+    ],
+    "telangana hyderabad": [
+      "telangana-hyderabad"
+    ],
+    "telangana south india": [
+      "telangana-hyderabad"
+    ],
+    "tg hyd": [
+      "telangana-hyderabad"
+    ],
+    "th bkp": [
+      "thailand-bangkok-pattaya"
+    ],
+    "th phk": [
+      "thailand-phuket-krabi"
+    ],
+    "thailand": [
+      "thailand-bangkok-pattaya",
+      "thailand-phuket-krabi"
+    ],
+    "thailand bangkok and pattaya": [
+      "thailand-bangkok-pattaya"
+    ],
+    "thailand bangkok pattaya": [
+      "thailand-bangkok-pattaya"
+    ],
+    "thailand phuket and krabi": [
+      "thailand-phuket-krabi"
+    ],
+    "thailand phuket krabi": [
+      "thailand-phuket-krabi"
+    ],
+    "thanjavur": [
+      "tamil-nadu-temple-tour"
+    ],
+    "thanjavur chidambaram kumbakonam madurai and rameswaram": [
+      "tamil-nadu-temple-tour"
+    ],
+    "tn che": [
+      "tamil-nadu-chennai"
+    ],
+    "tn kdk": [
+      "tamil-nadu-kodaikanal"
+    ],
+    "tn ktg": [
+      "tamil-nadu-kotagiri"
+    ],
+    "tn msn": [
+      "tamil-nadu-masinagudi"
+    ],
+    "tn oot": [
+      "tamil-nadu-ooty"
+    ],
+    "tn tmp": [
+      "tamil-nadu-temple-tour"
+    ],
+    "trincomalee": [
+      "sri-lanka-north-east-circuit"
+    ],
+    "uae": [
+      "dubai"
+    ],
+    "ubud": [
+      "bali"
+    ],
+    "ubud seminyak kuta and uluwatu": [
+      "bali"
+    ],
+    "udaipur kumbhalgarh and mount abu": [
+      "rajasthan-udaipur-kumbhalgarh-mount-abu"
+    ],
+    "udaipur kumbhalgarh mount abu": [
+      "rajasthan-udaipur-kumbhalgarh-mount-abu"
+    ],
+    "udhagamandalam": [
+      "tamil-nadu-ooty"
+    ],
+    "uk cbt": [
+      "uttarakhand-corbett-national-park"
+    ],
+    "ukm": [
+      "rajasthan-udaipur-kumbhalgarh-mount-abu"
+    ],
+    "uluwatu": [
+      "bali"
+    ],
+    "united arab emirates": [
+      "dubai"
+    ],
+    "up agr": [
+      "uttar-pradesh-agra"
+    ],
+    "uttar pradesh": [
+      "uttar-pradesh-agra"
+    ],
+    "uttar pradesh agra": [
+      "uttar-pradesh-agra"
+    ],
+    "uttar pradesh north india": [
+      "uttar-pradesh-agra"
+    ],
+    "uttarakhand": [
+      "uttarakhand-corbett-national-park"
+    ],
+    "uttarakhand corbett national park": [
+      "uttarakhand-corbett-national-park"
+    ],
+    "uttarakhand north india": [
+      "uttarakhand-corbett-national-park"
+    ],
+    "vietnam": [
+      "vietnam-da-nang",
+      "vietnam-hanoi",
+      "vietnam-ho-chi-minh-city",
+      "vietnam-phu-quoc"
+    ],
+    "vietnam da nang": [
+      "vietnam-da-nang"
+    ],
+    "vietnam hanoi": [
+      "vietnam-hanoi"
+    ],
+    "vietnam ho chi minh city": [
+      "vietnam-ho-chi-minh-city"
+    ],
+    "vietnam phu quoc": [
+      "vietnam-phu-quoc"
+    ],
+    "visakhapatnam": [
+      "andhra-pradesh-visakhapatnam-araku"
+    ],
+    "visakhapatnam and araku valley": [
+      "andhra-pradesh-visakhapatnam-araku"
+    ],
+    "vizag": [
+      "andhra-pradesh-visakhapatnam-araku"
+    ],
+    "vn dad": [
+      "vietnam-da-nang"
+    ],
+    "vn han": [
+      "vietnam-hanoi"
+    ],
+    "vn pqc": [
+      "vietnam-phu-quoc"
+    ],
+    "vn sgn": [
+      "vietnam-ho-chi-minh-city"
+    ],
+    "wayanad": [
+      "kerala-wayanad"
+    ],
+    "white desert": [
+      "gujarat-rann-of-kutch"
+    ]
+  },
+  "destinationCodes": {
+    "AE-DXB": "dubai",
+    "AN-AND": "andaman-islands",
+    "AP-VIZ": "andhra-pradesh-visakhapatnam-araku",
+    "AS-HER": "assam-heritage-city-tour",
+    "AS-WLD": "assam-wildlife-tour",
+    "GA-GOA": "goa",
+    "GJ-DWK": "gujarat-panch-dwarka",
+    "GJ-GIR": "gujarat-gir-forest",
+    "GJ-RAK": "gujarat-rann-of-kutch",
+    "HP-DHD": "himachal-pradesh-dharamshala-dalhousie",
+    "HP-SHM": "himachal-pradesh-shimla-manali",
+    "ID-BAL": "bali",
+    "JK-KMR": "jammu-kashmir-srinagar-gulmarg-pahalgam",
+    "KA-BLR": "karnataka-bengaluru",
+    "KA-BND": "karnataka-bandipur",
+    "KA-COR": "karnataka-coorg",
+    "KA-HMP": "karnataka-hampi",
+    "KA-KBN": "karnataka-kabini",
+    "KL-MAC": "kerala-munnar-alleppey-kochi",
+    "KL-MUN": "kerala-munnar",
+    "KL-WAY": "kerala-wayanad",
+    "LK-KNB": "sri-lanka-southern-circuit",
+    "LK-RAM": "sri-lanka-ramayana-trail",
+    "LK-SJT": "sri-lanka-north-east-circuit",
+    "ML-SHL": "northeast-meghalaya",
+    "MY-KLL": "malaysia-kuala-lumpur-langkawi",
+    "MY-KUL": "malaysia-kuala-lumpur",
+    "PB-AMR": "punjab-amritsar",
+    "PY-PON": "pondicherry",
+    "RJ-JJJ": "rajasthan-jaipur-jodhpur-jaisalmer",
+    "RJ-JJU": "rajasthan-jaipur-jodhpur-udaipur",
+    "RJ-UKM": "rajasthan-udaipur-kumbhalgarh-mount-abu",
+    "SG-SIN": "singapore",
+    "SK-GTK": "northeast-sikkim",
+    "TG-HYD": "telangana-hyderabad",
+    "TH-BKP": "thailand-bangkok-pattaya",
+    "TH-PHK": "thailand-phuket-krabi",
+    "TN-CHE": "tamil-nadu-chennai",
+    "TN-KDK": "tamil-nadu-kodaikanal",
+    "TN-KTG": "tamil-nadu-kotagiri",
+    "TN-MSN": "tamil-nadu-masinagudi",
+    "TN-OOT": "tamil-nadu-ooty",
+    "TN-TMP": "tamil-nadu-temple-tour",
+    "UK-CBT": "uttarakhand-corbett-national-park",
+    "UP-AGR": "uttar-pradesh-agra",
+    "VN-DAD": "vietnam-da-nang",
+    "VN-HAN": "vietnam-hanoi",
+    "VN-PQC": "vietnam-phu-quoc",
+    "VN-SGN": "vietnam-ho-chi-minh-city"
+  },
+  "journeyDirectorCandidateIds": {
+    "agra": [
+      "uttar-pradesh-agra"
+    ],
+    "andaman": [
+      "andaman-islands"
+    ],
+    "bali": [
+      "bali"
+    ],
+    "dubai": [
+      "dubai"
+    ],
+    "goa": [
+      "goa"
+    ],
+    "gujarat": [
+      "gujarat-gir-forest",
+      "gujarat-panch-dwarka",
+      "gujarat-rann-of-kutch"
+    ],
+    "himachal-pradesh": [
+      "himachal-pradesh-dharamshala-dalhousie",
+      "himachal-pradesh-shimla-manali"
+    ],
+    "hyderabad": [
+      "telangana-hyderabad"
+    ],
+    "karnataka": [
+      "karnataka-bandipur",
+      "karnataka-bengaluru",
+      "karnataka-coorg",
+      "karnataka-hampi",
+      "karnataka-kabini"
+    ],
+    "kashmir": [
+      "jammu-kashmir-srinagar-gulmarg-pahalgam"
+    ],
+    "kerala": [
+      "kerala-munnar",
+      "kerala-munnar-alleppey-kochi",
+      "kerala-wayanad"
+    ],
+    "malaysia": [
+      "malaysia-kuala-lumpur",
+      "malaysia-kuala-lumpur-langkawi"
+    ],
+    "northeast": [
+      "northeast-meghalaya",
+      "northeast-sikkim"
+    ],
+    "pondicherry": [
+      "pondicherry"
+    ],
+    "rajasthan": [
+      "rajasthan-jaipur-jodhpur-jaisalmer",
+      "rajasthan-jaipur-jodhpur-udaipur",
+      "rajasthan-udaipur-kumbhalgarh-mount-abu"
+    ],
+    "singapore": [
+      "singapore"
+    ],
+    "sri-lanka": [
+      "sri-lanka-north-east-circuit",
+      "sri-lanka-ramayana-trail",
+      "sri-lanka-southern-circuit"
+    ],
+    "tamil-nadu": [
+      "tamil-nadu-chennai",
+      "tamil-nadu-kodaikanal",
+      "tamil-nadu-kotagiri",
+      "tamil-nadu-masinagudi",
+      "tamil-nadu-ooty",
+      "tamil-nadu-temple-tour"
+    ],
+    "thailand": [
+      "thailand-bangkok-pattaya",
+      "thailand-phuket-krabi"
+    ],
+    "vietnam": [
+      "vietnam-da-nang",
+      "vietnam-hanoi",
+      "vietnam-ho-chi-minh-city",
+      "vietnam-phu-quoc"
+    ],
+    "vizag": [
+      "andhra-pradesh-visakhapatnam-araku"
+    ],
+    "wildlife": [
+      "assam-wildlife-tour",
+      "gujarat-gir-forest",
+      "karnataka-bandipur",
+      "karnataka-kabini",
+      "tamil-nadu-masinagudi",
+      "uttarakhand-corbett-national-park"
+    ]
+  },
+  "journeyDirectorRegionIds": {
+    "india-agra-agra": [
+      "uttar-pradesh-agra"
+    ],
+    "india-andaman-havelock": [
+      "andaman-islands"
+    ],
+    "india-andaman-neil-island": [
+      "andaman-islands"
+    ],
+    "india-andaman-port-blair": [
+      "andaman-islands"
+    ],
+    "india-andhra-pradesh-vizag": [
+      "andhra-pradesh-visakhapatnam-araku"
+    ],
+    "india-goa-anjuna": [
+      "goa"
+    ],
+    "india-goa-baga": [
+      "goa"
+    ],
+    "india-goa-calangute": [
+      "goa"
+    ],
+    "india-goa-north-goa": [
+      "goa"
+    ],
+    "india-goa-south-goa": [
+      "goa"
+    ],
+    "india-gujarat-gir-national-park": [
+      "gujarat-gir-forest"
+    ],
+    "india-gujarat-porbandar": [
+      "gujarat-panch-dwarka"
+    ],
+    "india-gujarat-rann-of-kutch": [
+      "gujarat-rann-of-kutch"
+    ],
+    "india-himachal-pradesh-dalhousie": [
+      "himachal-pradesh-dharamshala-dalhousie"
+    ],
+    "india-himachal-pradesh-dharamshala": [
+      "himachal-pradesh-dharamshala-dalhousie"
+    ],
+    "india-himachal-pradesh-manali": [
+      "himachal-pradesh-shimla-manali"
+    ],
+    "india-himachal-pradesh-shimla": [
+      "himachal-pradesh-shimla-manali"
+    ],
+    "india-karnataka-bandipur": [
+      "karnataka-bandipur"
+    ],
+    "india-karnataka-bangalore": [
+      "karnataka-bengaluru"
+    ],
+    "india-karnataka-coorg": [
+      "karnataka-coorg"
+    ],
+    "india-karnataka-hampi": [
+      "karnataka-hampi"
+    ],
+    "india-karnataka-kabini": [
+      "karnataka-kabini"
+    ],
+    "india-kashmir-gulmarg": [
+      "jammu-kashmir-srinagar-gulmarg-pahalgam"
+    ],
+    "india-kashmir-pahalgam": [
+      "jammu-kashmir-srinagar-gulmarg-pahalgam"
+    ],
+    "india-kashmir-srinagar": [
+      "jammu-kashmir-srinagar-gulmarg-pahalgam"
+    ],
+    "india-kerala-kochi": [
+      "kerala-munnar-alleppey-kochi"
+    ],
+    "india-kerala-munnar": [
+      "kerala-munnar"
+    ],
+    "india-kerala-wayanad": [
+      "kerala-wayanad"
+    ],
+    "india-northeast-meghalaya": [
+      "northeast-meghalaya"
+    ],
+    "india-northeast-sikkim": [
+      "northeast-sikkim"
+    ],
+    "india-pondicherry-pondicherry": [
+      "pondicherry"
+    ],
+    "india-rajasthan-jaipur": [
+      "rajasthan-jaipur-jodhpur-jaisalmer",
+      "rajasthan-jaipur-jodhpur-udaipur"
+    ],
+    "india-rajasthan-jaisalmer": [
+      "rajasthan-jaipur-jodhpur-jaisalmer"
+    ],
+    "india-rajasthan-jodhpur": [
+      "rajasthan-jaipur-jodhpur-jaisalmer",
+      "rajasthan-jaipur-jodhpur-udaipur"
+    ],
+    "india-rajasthan-mount-abu": [
+      "rajasthan-udaipur-kumbhalgarh-mount-abu"
+    ],
+    "india-rajasthan-udaipur": [
+      "rajasthan-jaipur-jodhpur-udaipur",
+      "rajasthan-udaipur-kumbhalgarh-mount-abu"
+    ],
+    "india-tamilnadu-chidambaram": [
+      "tamil-nadu-temple-tour"
+    ],
+    "india-tamilnadu-kodaikanal": [
+      "tamil-nadu-kodaikanal"
+    ],
+    "india-tamilnadu-kotagiri": [
+      "tamil-nadu-kotagiri"
+    ],
+    "india-tamilnadu-madurai": [
+      "tamil-nadu-temple-tour"
+    ],
+    "india-tamilnadu-masinagudi": [
+      "tamil-nadu-masinagudi"
+    ],
+    "india-tamilnadu-ooty": [
+      "tamil-nadu-ooty"
+    ],
+    "india-tamilnadu-trichy": [
+      "tamil-nadu-temple-tour"
+    ],
+    "india-telangana-hyderabad": [
+      "telangana-hyderabad"
+    ],
+    "india-wildlife-tours-bandipur": [
+      "karnataka-bandipur"
+    ],
+    "india-wildlife-tours-gir-national-park": [
+      "gujarat-gir-forest"
+    ],
+    "india-wildlife-tours-kabini": [
+      "karnataka-kabini"
+    ],
+    "india-wildlife-tours-masinagudi": [
+      "tamil-nadu-masinagudi"
+    ],
+    "indonesia-bali-nusa-dua": [
+      "bali"
+    ],
+    "indonesia-bali-seminyak": [
+      "bali"
+    ],
+    "indonesia-bali-ubud": [
+      "bali"
+    ],
+    "indonesia-bali-uluwatu": [
+      "bali"
+    ],
+    "malaysia-kuala-lumpur": [
+      "malaysia-kuala-lumpur",
+      "malaysia-kuala-lumpur-langkawi"
+    ],
+    "malaysia-langkawi": [
+      "malaysia-kuala-lumpur-langkawi"
+    ],
+    "singapore-singapore": [
+      "singapore"
+    ],
+    "sri-lanka-bentota": [
+      "sri-lanka-southern-circuit"
+    ],
+    "sri-lanka-colombo": [
+      "sri-lanka-ramayana-trail",
+      "sri-lanka-southern-circuit"
+    ],
+    "sri-lanka-galle": [
+      "sri-lanka-southern-circuit"
+    ],
+    "sri-lanka-jaffna": [
+      "sri-lanka-north-east-circuit"
+    ],
+    "sri-lanka-kandy": [
+      "sri-lanka-ramayana-trail",
+      "sri-lanka-southern-circuit"
+    ],
+    "sri-lanka-sigiriya": [
+      "sri-lanka-north-east-circuit"
+    ],
+    "thailand-bangkok": [
+      "thailand-bangkok-pattaya"
+    ],
+    "thailand-krabi": [
+      "thailand-phuket-krabi"
+    ],
+    "thailand-pattaya": [
+      "thailand-bangkok-pattaya"
+    ],
+    "thailand-phuket": [
+      "thailand-phuket-krabi"
+    ],
+    "united-arab-emirates-dubai": [
+      "dubai"
+    ],
+    "vietnam-da-nang": [
+      "vietnam-da-nang"
+    ],
+    "vietnam-hanoi": [
+      "vietnam-hanoi"
+    ],
+    "vietnam-ho-chi-minh-city": [
+      "vietnam-ho-chi-minh-city"
+    ],
+    "vietnam-phu-quoc": [
+      "vietnam-phu-quoc"
+    ]
+  },
+  "parentDefaults": {
+    "andaman islands": "andaman-islands",
+    "andhra pradesh": "andhra-pradesh-visakhapatnam-araku",
+    "assam": "assam-heritage-city-tour",
+    "bali": "bali",
+    "goa": "goa",
+    "gujarat": "gujarat-rann-of-kutch",
+    "himachal pradesh": "himachal-pradesh-shimla-manali",
+    "jammu and kashmir": "jammu-kashmir-srinagar-gulmarg-pahalgam",
+    "karnataka": "karnataka-coorg",
+    "kerala": "kerala-munnar-alleppey-kochi",
+    "malaysia": "malaysia-kuala-lumpur",
+    "northeast india": "northeast-meghalaya",
+    "puducherry": "pondicherry",
+    "punjab": "punjab-amritsar",
+    "rajasthan": "rajasthan-jaipur-jodhpur-udaipur",
+    "singapore": "singapore",
+    "sri lanka": "sri-lanka-southern-circuit",
+    "tamil nadu": "tamil-nadu-temple-tour",
+    "telangana": "telangana-hyderabad",
+    "thailand": "thailand-bangkok-pattaya",
+    "united arab emirates": "dubai",
+    "uttar pradesh": "uttar-pradesh-agra",
+    "uttarakhand": "uttarakhand-corbett-national-park",
+    "vietnam": "vietnam-hanoi"
+  }
+}

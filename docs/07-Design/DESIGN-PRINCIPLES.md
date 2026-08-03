@@ -33,16 +33,16 @@ These principles ensure consistency across all customer touchpoints and guide fu
 
 ## Upstream
 
-- BRAND-IDENTITY.md
-- PRODUCT-ROADMAP.md
-- SRS.md
+- `docs/07-Design/BRAND-IDENTITY.md`
+- `docs/02-Product/PRODUCT-ROADMAP.md`
+- `docs/02-Product/SRS.md`
 
 ## Downstream
 
-- HOMEPAGE-EXPERIENCE-ARCHITECTURE.md
-- DESIGN-SYSTEM.md
-- COMPONENT-LIBRARY.md
-- MOOD-BOARD.md
+- `docs/04-UX/HOMEPAGE-INFORMATION-ARCHITECTURE.md`
+- `docs/04-UX/DESIGN-TOKENS.md`
+- `docs/04-UX/UI-COMPONENTS.md`
+- `docs/04-UX/IMAGERY-GUIDELINES.md`
 
 ---
 
