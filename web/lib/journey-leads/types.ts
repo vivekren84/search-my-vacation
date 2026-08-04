@@ -26,8 +26,11 @@ export type JourneyLeadPassportSummary = {
   travelScope?: "DOMESTIC" | "INTERNATIONAL" | "ANY";
   entryContext?: {
     feeling?: "relax" | "explore" | "celebrate" | "romance" | "escape";
+    experience?: "Memory Makers" | "Celebration Moments" | "Family Time" | "Weekend Getaways" | "Global Escapes" | "Nature & Serenity";
+    inspiration?: "Mountains" | "Beaches" | "Wildlife" | "Romance" | "Relaxation";
     destination?: string;
-    source?: "homepage" | "direct";
+    destinationTheme?: "Tropical Escape" | "Mountain Retreat" | "City Discovery" | "Wildlife Adventure";
+    source?: "homepage" | "direct" | "experience" | "mood" | "inspiration" | "destination";
   };
   completedAt: string;
   source: "journey-passport" | "demo";

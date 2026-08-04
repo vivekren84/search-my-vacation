@@ -31,7 +31,7 @@ export default function DestinationItinerarySection({ destinationId, destination
     return (
       <div className={styles.shell}>
         <SuggestedItineraryFallback mode="destination" id={destinationId} heading="A journey many travellers love" firstParagraph="A personalised day-by-day journey will be shaped around this destination." secondParagraph="Our team will adapt the experience to your dates, pace, interests, companions, and comfort preferences." />
-        <PlanningCta />
+        <PlanningCta destinationId={destinationId} />
       </div>
     );
   }
@@ -56,11 +56,11 @@ export default function DestinationItinerarySection({ destinationId, destination
         </div>
       ) : null}
       <SuggestedItineraryContent key={selected.id} mode="destination" itinerary={selected} heading={multiple ? publicItineraryLabel(selected) : "A journey many travellers love"} eyebrow={multiple ? "Your selected starting journey" : destinationName} startingPointCopy={multiple ? undefined : SINGLE_COPY} routeTitle={publicItineraryLabel(selected)} />
-      <PlanningCta />
+      <PlanningCta destinationId={destinationId} />
     </div>
   );
 }
 
-function PlanningCta() {
-  return <div className={styles.ctaRow}><Link href="/journey-passport" className={styles.cta}>Shape This Journey Around Me <span aria-hidden="true">→</span></Link></div>;
+function PlanningCta({ destinationId }: { destinationId: string }) {
+  return <div className={styles.ctaRow}><Link href={`/journey-passport?destination=${encodeURIComponent(destinationId)}`} className={styles.cta}>Shape This Journey Around Me <span aria-hidden="true">→</span></Link></div>;
 }

@@ -18,6 +18,8 @@
     "lib/journey-director/intelligence/**/*.ts",
     "lib/journey-director/validation/**/*.ts",
     "lib/journey-director/passport-adapter.ts",
+    "lib/journey-passport/entry-context.ts",
+    "config/public-destinations.config.ts",
     "types/journey-passport.types.ts",
     "types/journey-director.ts"
   ],

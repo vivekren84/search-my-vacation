@@ -44,7 +44,7 @@ export default function TravellerPassport({ isOpen, onClose, emotion }: Props) {
         {/* Progress */}
         <div className="h-[3px] w-full bg-gray-200">
           <div
-            className="h-full bg-gradient-to-r from-[#E6B980] to-[#EACDA3] transition-all duration-500"
+            className="h-full bg-gradient-to-r from-[#F5951C] to-[#EACDA3] transition-all duration-500"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -103,7 +103,7 @@ export default function TravellerPassport({ isOpen, onClose, emotion }: Props) {
                       `}
                     >
                       {/* Subtle Glow */}
-                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-br from-[#E6B980]/10 to-transparent transition" />
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-br from-[#F5951C]/10 to-transparent transition" />
 
                       <div className="relative z-10">
                         <div className="font-semibold text-lg">{item.label}</div>
@@ -194,7 +194,7 @@ export default function TravellerPassport({ isOpen, onClose, emotion }: Props) {
 
                 <button
                   onClick={onClose}
-                  className="mt-6 bg-gradient-to-r from-[#E6B980] to-[#EACDA3] text-black px-10 py-4 rounded-full hover:scale-105 transition shadow-lg"
+                  className="mt-6 bg-gradient-to-r from-[#F5951C] to-[#EACDA3] text-black px-10 py-4 rounded-full hover:scale-105 transition shadow-lg"
                 >
                   Continue
                 </button>

@@ -79,7 +79,7 @@ export default function JourneyFlow({ feeling }: JourneyFlowProps) {
   const content = journeyContent[selectedFeeling];
 
   return (
-    <main className="min-h-screen bg-[#fffaf3] text-[#2b1c13]">
+    <main className="min-h-screen bg-[#FFFDFC] text-[#2A211C]">
       <section className="relative isolate min-h-[58svh] overflow-hidden" aria-labelledby="journey-heading">
         <Image
           src="/images/golden-hour.png"
@@ -94,7 +94,7 @@ export default function JourneyFlow({ feeling }: JourneyFlowProps) {
 
         <div className="mx-auto flex min-h-[58svh] max-w-7xl items-end px-6 pb-20 pt-36 sm:px-8 sm:pb-24 lg:px-16">
           <div className="max-w-2xl">
-            <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#f3c681] sm:text-sm">
+            <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#F5951C] sm:text-sm">
               Your feeling: {content.label}
             </p>
             <h1 id="journey-heading" className="mt-4 font-serif text-5xl font-normal leading-[0.98] tracking-[-0.045em] text-white sm:text-6xl lg:text-7xl">
@@ -107,10 +107,10 @@ export default function JourneyFlow({ feeling }: JourneyFlowProps) {
         </div>
       </section>
 
-      <section className="bg-[linear-gradient(180deg,#f8dfb0_0%,#fff7ea_42%,#fffaf3_100%)] px-6 py-20 sm:px-8 lg:px-16 lg:py-28" aria-labelledby="curated-experiences-heading">
+      <section className="bg-[linear-gradient(180deg,#F5951C_0%,#FFFDFC_42%,#FFFDFC_100%)] px-6 py-20 sm:px-8 lg:px-16 lg:py-28" aria-labelledby="curated-experiences-heading">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-2xl">
-            <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#9a642e]">Curated for your mood</p>
+            <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#B72027]">Curated for your mood</p>
             <h2 id="curated-experiences-heading" className="mt-3 font-serif text-4xl font-normal tracking-[-0.035em] sm:text-5xl">
               A few beautiful ways to begin.
             </h2>
@@ -120,7 +120,7 @@ export default function JourneyFlow({ feeling }: JourneyFlowProps) {
             {content.experiences.map((experience, index) => (
               <article
                 key={experience.destination}
-                className={`group relative overflow-hidden rounded-[2rem] bg-[#2b1c13] shadow-[0_16px_45px_rgba(76,45,20,0.16)] ${
+                className={`group relative overflow-hidden rounded-[2rem] bg-[#2A211C] shadow-[0_16px_45px_rgba(76,45,20,0.16)] ${
                   index === 0 ? "lg:col-span-2" : ""
                 }`}
               >
@@ -137,7 +137,7 @@ export default function JourneyFlow({ feeling }: JourneyFlowProps) {
                 <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8">
                   <h3 className="font-serif text-3xl font-normal tracking-[-0.03em] text-white sm:text-4xl">{experience.destination}</h3>
                   <p className="mt-2 max-w-xl text-sm leading-6 text-white/85 sm:text-base">{experience.hook}</p>
-                  <Link href="#design-my-trip" className="mt-5 inline-flex items-center text-sm font-bold text-[#f3c681] transition hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#f3c681]">
+                  <Link href="#design-my-trip" className="mt-5 inline-flex items-center text-sm font-bold text-[#F5951C] transition hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F5951C]">
                     Explore More <span aria-hidden="true" className="ml-2">→</span>
                   </Link>
                 </div>
@@ -147,16 +147,16 @@ export default function JourneyFlow({ feeling }: JourneyFlowProps) {
         </div>
       </section>
 
-      <section id="design-my-trip" className="bg-[#fffaf3] px-6 pb-20 sm:px-8 lg:px-16 lg:pb-28">
+      <section id="design-my-trip" className="bg-[#FFFDFC] px-6 pb-20 sm:px-8 lg:px-16 lg:pb-28">
         <div className="mx-auto max-w-3xl rounded-[2rem] border border-[#ecd7bc] bg-white p-8 text-center shadow-[0_14px_40px_rgba(76,45,20,0.08)] sm:p-12">
-          <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#9a642e]">A little more personal</p>
+          <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#B72027]">A little more personal</p>
           <h2 className="mt-3 font-serif text-4xl font-normal tracking-[-0.035em]">Want us to tailor this further?</h2>
           <button type="button" disabled className="mt-7 inline-flex min-h-14 items-center justify-center rounded-full bg-[#cbb9a7] px-8 text-base font-bold text-white" title="Trip design will be available in a future release">
             Design My Trip
           </button>
-          <div className="mt-8 flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm font-semibold text-[#725137]">
-            <Link href="/#journey-selector" className="transition hover:text-[#9a642e] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#9a642e]">Change emotion</Link>
-            <Link href="/" className="transition hover:text-[#9a642e] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#9a642e]">Back to homepage</Link>
+          <div className="mt-8 flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm font-semibold text-[#2A211C]">
+            <Link href="/#journey-selector" className="transition hover:text-[#B72027] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B72027]">Change emotion</Link>
+            <Link href="/" className="transition hover:text-[#B72027] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B72027]">Back to homepage</Link>
           </div>
         </div>
       </section>

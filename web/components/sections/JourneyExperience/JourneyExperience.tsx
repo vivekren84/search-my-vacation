@@ -86,7 +86,7 @@ export default function JourneyExperience({ isOpen, onClose, emotion }: JourneyE
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-end justify-center bg-[#2b1c13]/45 px-3 py-3 backdrop-blur-lg sm:items-center sm:px-6 sm:py-8"
+      className="fixed inset-0 z-[100] flex items-end justify-center bg-[#2A211C]/45 px-3 py-3 backdrop-blur-lg sm:items-center sm:px-6 sm:py-8"
       role="dialog"
       aria-modal="true"
       aria-labelledby="journey-experience-heading"
@@ -94,15 +94,15 @@ export default function JourneyExperience({ isOpen, onClose, emotion }: JourneyE
         if (event.target === event.currentTarget) resetAndClose();
       }}
     >
-      <div className="relative max-h-[94svh] w-full max-w-6xl overflow-y-auto rounded-[2rem] border border-white/60 bg-[#fffaf3]/95 shadow-[0_28px_100px_rgba(37,24,15,0.32)] backdrop-blur-xl sm:rounded-[2.5rem]">
-        <div className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,#e3a25e,#f7d897,#e3a25e)]" aria-hidden="true" />
+      <div className="relative max-h-[94svh] w-full max-w-6xl overflow-y-auto rounded-[2rem] border border-white/60 bg-[#FFFDFC]/95 shadow-[0_28px_100px_rgba(37,24,15,0.32)] backdrop-blur-xl sm:rounded-[2.5rem]">
+        <div className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,#F36523,#F5951C,#F36523)]" aria-hidden="true" />
         <div className="flex items-center justify-between px-6 pb-2 pt-7 sm:px-10 sm:pt-9">
-          <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#9a642e]">Your journey, thoughtfully unfolding</p>
+          <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#B72027]">Your journey, thoughtfully unfolding</p>
           <button
             type="button"
             onClick={resetAndClose}
             aria-label="Close journey experience"
-            className="rounded-full p-2 text-[#725137] transition hover:bg-[#f3e5d2] hover:text-[#2b1c13] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9a642e]"
+            className="rounded-full p-2 text-[#2A211C] transition hover:bg-[#FFFDFC] hover:text-[#2A211C] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B72027]"
           >
             <span aria-hidden="true" className="text-2xl leading-none">×</span>
           </button>
@@ -111,7 +111,7 @@ export default function JourneyExperience({ isOpen, onClose, emotion }: JourneyE
         <div className="px-6 pb-8 sm:px-10 sm:pb-10">
           <div className="flex gap-2" aria-label={`Step ${step} of 4`}>
             {[1, 2, 3, 4].map((index) => (
-              <span key={index} className={`h-1 flex-1 rounded-full transition-colors duration-500 ${index <= step ? "bg-[#c7843d]" : "bg-[#ead8c0]"}`} />
+              <span key={index} className={`h-1 flex-1 rounded-full transition-colors duration-500 ${index <= step ? "bg-[#F36523]" : "bg-[#ead8c0]"}`} />
             ))}
           </div>
 
@@ -156,7 +156,7 @@ export default function JourneyExperience({ isOpen, onClose, emotion }: JourneyE
             <button
               type="button"
               onClick={goBack}
-              className="mt-7 text-sm font-semibold text-[#725137] transition hover:text-[#2b1c13] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#9a642e]"
+              className="mt-7 text-sm font-semibold text-[#2A211C] transition hover:text-[#2A211C] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B72027]"
             >
               ← Back
             </button>
@@ -180,8 +180,8 @@ function ChoiceStep({ eyebrow, heading, choices, selectedValue, onSelect, layout
   return (
     <section aria-labelledby="journey-experience-heading">
       <div className="mx-auto max-w-2xl text-center">
-        <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#9a642e]">{eyebrow}</p>
-        <h2 id="journey-experience-heading" className="mt-3 font-serif text-4xl font-normal tracking-[-0.04em] text-[#2b1c13] sm:text-5xl">{heading}</h2>
+        <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#B72027]">{eyebrow}</p>
+        <h2 id="journey-experience-heading" className="mt-3 font-serif text-4xl font-normal tracking-[-0.04em] text-[#2A211C] sm:text-5xl">{heading}</h2>
       </div>
 
       <div className={`mt-8 grid gap-4 ${layout === "four" ? "sm:grid-cols-2" : "md:grid-cols-3"}`}>
@@ -194,7 +194,7 @@ function ChoiceStep({ eyebrow, heading, choices, selectedValue, onSelect, layout
               type="button"
               aria-pressed={isSelected}
               onClick={() => onSelect(choice.title)}
-              className={`group relative min-h-48 overflow-hidden rounded-[1.5rem] border text-left shadow-[0_10px_30px_rgba(76,45,20,0.12)] transition duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#9a642e] sm:min-h-56 ${
+              className={`group relative min-h-48 overflow-hidden rounded-[1.5rem] border text-left shadow-[0_10px_30px_rgba(76,45,20,0.12)] transition duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B72027] sm:min-h-56 ${
                 isSelected ? "border-[#f2c680] ring-4 ring-[#f2c680]/50" : "border-white/70"
               }`}
             >
@@ -222,8 +222,8 @@ function PreviewStep({ emotion, onExplore }: { emotion?: string; onExplore: () =
   return (
     <section aria-labelledby="journey-experience-heading">
       <div className="mx-auto max-w-2xl text-center">
-        <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#9a642e]">Your first glimpse{emotion ? ` of a ${emotion} journey` : ""}</p>
-        <h2 id="journey-experience-heading" className="mt-3 font-serif text-4xl font-normal tracking-[-0.04em] text-[#2b1c13] sm:text-5xl">This could be your story.</h2>
+        <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#B72027]">Your first glimpse{emotion ? ` of a ${emotion} journey` : ""}</p>
+        <h2 id="journey-experience-heading" className="mt-3 font-serif text-4xl font-normal tracking-[-0.04em] text-[#2A211C] sm:text-5xl">This could be your story.</h2>
       </div>
 
       <div className="mt-8 grid gap-4 md:grid-cols-3">
@@ -249,7 +249,7 @@ function PreviewStep({ emotion, onExplore }: { emotion?: string; onExplore: () =
         <button
           type="button"
           onClick={onExplore}
-          className="inline-flex min-h-14 items-center justify-center rounded-full bg-[#9a642e] px-8 text-base font-bold text-white shadow-lg shadow-[#9a642e]/20 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-[#7d4f23] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#9a642e] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+          className="inline-flex min-h-14 items-center justify-center rounded-full bg-[#B72027] px-8 text-base font-bold text-white shadow-lg shadow-[#B72027]/20 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-[#4A2062] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B72027] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
         >
           Explore Your Journey <span aria-hidden="true" className="ml-2">→</span>
         </button>

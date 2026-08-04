@@ -11,6 +11,7 @@ import { createJourneyRecommendationSet } from "@/lib/journey-director";
 import { createJourneyReference, createJourneySynopsis } from "@/lib/journey-director/journey-synopsis";
 import { callbackDateValidationMessage, callbackTimeWindows, currentLocalDate, isCallbackTimeWindow, isValidCallbackDate } from "@/lib/callback-preferences";
 import { recordJourneyPassportEvent, submitJourneyCallbackPreference } from "@/lib/journey-leads/client";
+import { PassportStamp } from "@/components/journey-passport/PassportStamp";
 import type {
   JourneyPassportSnapshot,
   JourneyPossibility,
@@ -285,10 +286,7 @@ function JourneyDirectorContent({
       <section className={styles.completion} aria-labelledby="journey-complete-heading">
         <div className={styles.completionGlow} aria-hidden="true" />
         <div className={styles.completionInner}>
-          <div className={styles.passportStamp} aria-hidden="true">
-            <span className={styles.stampCompass}>✦</span>
-            <span>Next chapter</span>
-          </div>
+          <PassportStamp className={styles.passportStamp} />
           <p className={styles.eyebrowLight}>Your Journey Director</p>
           <h1 id="journey-complete-heading">Your story is ready.</h1>
           <p className={styles.completionCopy}>

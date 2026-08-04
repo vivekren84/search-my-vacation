@@ -14,7 +14,7 @@ export default function Header() {
 
   return (
     <header
-      className="sticky inset-x-0 top-0 z-50 border-b border-white/15 bg-[#20150f]/95 shadow-[0_4px_18px_rgba(32,21,15,.12)] backdrop-blur-md"
+      className="sticky inset-x-0 top-0 z-50 border-b border-white/15 bg-[#2A211C]/95 shadow-[0_4px_18px_rgba(32,21,15,.12)] backdrop-blur-md"
     >
       <Container className="flex min-h-[5.5rem] items-center justify-between gap-4 py-3 xl:min-h-32 xl:py-2">
         <SiteBrand
@@ -40,7 +40,7 @@ export default function Header() {
           </ul>
         </nav>
 
-        <Link href="/journey-passport" className="hidden shrink-0 rounded-full bg-[#f3c681] px-4 py-2 text-xs font-bold uppercase tracking-[0.1em] text-[#20150f] transition hover:bg-[#ffe0a5] xl:inline-flex">
+        <Link href="/journey-passport" className="hidden shrink-0 rounded-full bg-[#F5951C] px-4 py-2 text-xs font-bold uppercase tracking-[0.1em] text-[#2A211C] transition hover:bg-[#F5951C] xl:inline-flex">
           Plan My Experience
         </Link>
 
@@ -60,7 +60,7 @@ export default function Header() {
             <nav
               id="mobile-primary-navigation"
               aria-label="Mobile primary navigation"
-              className="absolute right-0 top-[calc(100%+0.75rem)] w-60 rounded-2xl border border-white/15 bg-[#20150f]/95 p-2 shadow-xl shadow-black/25 backdrop-blur-md"
+              className="absolute right-0 top-[calc(100%+0.75rem)] w-60 rounded-2xl border border-white/15 bg-[#2A211C]/95 p-2 shadow-xl shadow-black/25 backdrop-blur-md"
             >
               <ul>
                 {siteConfig.navigation.map((item) => (
@@ -75,7 +75,7 @@ export default function Header() {
                     </Link>
                   </li>
                 ))}
-                <li><Link href="/journey-passport" onClick={() => setIsMenuOpen(false)} className="mt-1 block rounded-xl bg-[#f3c681] px-4 py-3 text-sm font-bold text-[#20150f]">Plan My Experience</Link></li>
+                <li><Link href="/journey-passport" onClick={() => setIsMenuOpen(false)} className="mt-1 block rounded-xl bg-[#F5951C] px-4 py-3 text-sm font-bold text-[#2A211C]">Plan My Experience</Link></li>
               </ul>
             </nav>
           ) : null}

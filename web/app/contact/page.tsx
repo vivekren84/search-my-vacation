@@ -22,24 +22,24 @@ export default function ContactPage() {
     >
       <div className="layout-container layout-section">
         <div className="mx-auto grid max-w-5xl gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
-          <section className="rounded-[2rem] bg-[#f2e5d2] p-[clamp(2rem,5vw,3.25rem)] text-center">
+          <section className="rounded-[2rem] bg-[#FFFDFC] p-[clamp(2rem,5vw,3.25rem)] text-center">
             <WhatsAppLink href={whatsappHref} className="mx-auto" />
-            <div className="mt-10 space-y-8 text-[#705c47]">
+            <div className="mt-10 space-y-8 text-[#2A211C]">
               <div>
-                <h2 className="font-semibold text-[#2d2117]">Phone</h2>
-                <a className="mt-2 inline-flex min-h-11 items-center font-semibold text-[#2d2117] underline decoration-[#d5a665] underline-offset-4" href={siteContact.primaryPhoneHref}>{siteContact.phoneDisplay}</a>
+                <h2 className="font-semibold text-[#2A211C]">Phone</h2>
+                <a className="mt-2 inline-flex min-h-11 items-center font-semibold text-[#2A211C] underline decoration-[#F36523] underline-offset-4" href={siteContact.primaryPhoneHref}>{siteContact.phoneDisplay}</a>
               </div>
               <div>
-                <h2 className="font-semibold text-[#2d2117]">Email</h2>
+                <h2 className="font-semibold text-[#2A211C]">Email</h2>
                 <a className="mt-2 inline-flex min-h-11 items-center underline" href={siteContact.emailHref}>{siteContact.email}</a>
               </div>
               <div>
-                <h2 className="font-semibold text-[#2d2117]">Service hours</h2>
+                <h2 className="font-semibold text-[#2A211C]">Service hours</h2>
                 <p className="mt-2 leading-7">{siteContact.officeHours}</p>
                 <p className="mt-3 leading-7">We usually respond within four business hours.</p>
               </div>
               <div>
-                <h2 className="font-semibold text-[#2d2117]">Visit us</h2>
+                <h2 className="font-semibold text-[#2A211C]">Visit us</h2>
                 <SiteAddress className="mt-2 leading-7" />
               </div>
             </div>

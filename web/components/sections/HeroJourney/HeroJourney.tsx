@@ -106,12 +106,12 @@ export default function HeroJourney() {
         {/* CTA */}
         <button
           type="button"
-          onClick={() => selected && router.push(`/journey-passport?feeling=${encodeURIComponent(selected)}`)}
+          onClick={() => selected && router.push(`/journey-passport?mood=${encodeURIComponent(selected)}`)}
           disabled={!selected}
           className={`mt-10 rounded-full px-12 py-4 text-base font-semibold transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white disabled:cursor-not-allowed
             ${
               selected
-                ? "bg-[#E6B980] text-black hover:scale-105 shadow-xl"
+                ? "bg-[#F5951C] text-black hover:scale-105 shadow-xl"
                 : "bg-white/20 text-white/60 cursor-not-allowed"
             }
           `}
@@ -127,7 +127,7 @@ export default function HeroJourney() {
       </div>
 
       {/* Bottom Fade */}
-      <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-b from-transparent to-[#f8f5f0]" />
+      <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-b from-transparent to-[#FFFDFC]" />
 
     </section>
   );

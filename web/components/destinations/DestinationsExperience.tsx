@@ -39,9 +39,9 @@ export default function DestinationsExperience() {
         <section key={group.id} aria-labelledby={`${group.id}-destinations-heading`} className={index === 0 ? "pb-24" : "pb-24 pt-8"}>
           <Container>
             <div className="layout-section-heading mb-12">
-              <p className="text-xs font-bold uppercase tracking-[.18em] text-[#96652b]">{group.eyebrow}</p>
+              <p className="text-xs font-bold uppercase tracking-[.18em] text-[#B72027]">{group.eyebrow}</p>
               <h2 id={`${group.id}-destinations-heading`} className="mt-4 text-balance font-serif text-4xl leading-[1.08] tracking-[-.04em] sm:text-5xl">{group.title}</h2>
-              <p className="mx-auto mt-5 max-w-2xl leading-8 text-[#705c47]">{group.copy}</p>
+              <p className="mx-auto mt-5 max-w-2xl leading-8 text-[#2A211C]">{group.copy}</p>
             </div>
             <EditorialCardGrid items={group.cards.map(editorialCard)} selectedId={selectedDestinationId} onSelect={openDestination} detailId="destination-itinerary-modal" />
           </Container>

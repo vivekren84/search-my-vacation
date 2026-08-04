@@ -1,3 +1,5 @@
+import type { JourneyEntryDestinationTheme, JourneyPassportEntryContext } from "../types/journey-passport.types";
+
 export type PublicDestinationCard = {
   destinationId: string;
   title: string;
@@ -68,3 +70,41 @@ export const publicDestinationGroups: PublicDestinationGroup[] = [
     ].map(([destinationId, title, label, copy, imageKey]) => ({ destinationId, title, label, copy, imageKey })),
   },
 ];
+
+const destinationThemeKeywords: ReadonlyArray<{ keywords: readonly string[]; theme: JourneyEntryDestinationTheme }> = [
+  { keywords: ["wildlife", "forest", "nature-led"], theme: "Wildlife Adventure" },
+  { keywords: ["beaches", "beach", "islands", "island", "coast", "backwaters"], theme: "Tropical Escape" },
+  { keywords: ["mountains", "mountain", "hills", "hill", "valleys", "nilgiris"], theme: "Mountain Retreat" },
+  { keywords: ["heritage", "culture", "spiritual", "temple", "ritual", "cities", "city", "food", "desert", "gardens", "discovery", "renewal", "nature"], theme: "City Discovery" },
+];
+
+export function journeyThemeForDestinationCategory(label: string): JourneyEntryDestinationTheme | undefined {
+  const category = (label.split("·").at(-1) ?? label).toLowerCase();
+  const matches = destinationThemeKeywords.flatMap(({ keywords, theme }, ruleIndex) =>
+    keywords
+      .map((keyword) => ({ index: category.indexOf(keyword), ruleIndex, theme }))
+      .filter(({ index }) => index >= 0),
+  );
+  matches.sort((left, right) => left.index - right.index || left.ruleIndex - right.ruleIndex);
+  return matches[0]?.theme;
+}
+
+export function resolvePublicDestinationPassportContext(destinationId: string | null | undefined): JourneyPassportEntryContext | undefined {
+  const normalizedId = destinationId?.trim().toLowerCase();
+  if (!normalizedId) return undefined;
+
+  const match = publicDestinationGroups
+    .flatMap((group) => group.cards.map((card) => ({ card, groupId: group.id })))
+    .find(({ card }) => card.destinationId === normalizedId);
+  if (!match) return undefined;
+
+  const destinationTheme = match.groupId === "wildlife"
+    ? "Wildlife Adventure"
+    : journeyThemeForDestinationCategory(match.card.label);
+
+  return {
+    destination: match.card.title,
+    ...(destinationTheme ? { destinationTheme } : {}),
+    source: "destination",
+  };
+}

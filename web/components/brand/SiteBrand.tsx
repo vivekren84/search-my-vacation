@@ -11,8 +11,12 @@ type SiteBrandProps = {
   className?: string;
 };
 
-const fullDimensions = { width: 1440, height: 500 };
-const compactDimensions = { width: 980, height: 230 };
+const imageDetails = {
+  header: { width: 1384, height: 310 },
+  full: { width: 3232, height: 518 },
+  compact: { width: 2215, height: 380 },
+  footer: { width: 3232, height: 518 },
+} as const;
 
 export default function SiteBrand({
   variant = "full",
@@ -21,49 +25,47 @@ export default function SiteBrand({
   preload = false,
   className = "",
 }: SiteBrandProps) {
-  const isHeader = variant === "header";
-  const useCompact = variant === "compact";
-  const fullSource =
-    surface === "dark"
-      ? siteBrand.assets.lightLockup
-      : siteBrand.assets.primaryLockup;
-
+  const source = variant === "footer"
+    ? siteBrand.assets.fullDarkSurface
+    : variant === "header"
+      ? surface === "dark" ? siteBrand.assets.headerDarkSurface : siteBrand.assets.headerLightSurface
+      : variant === "compact"
+        ? surface === "dark" ? siteBrand.assets.compactDarkSurface : siteBrand.assets.compactLightSurface
+        : surface === "dark" ? siteBrand.assets.fullDarkSurface : siteBrand.assets.fullLightSurface;
+  const dimensions = imageDetails[variant];
   const imageAlt = linked ? "" : siteBrand.accessibleLabel;
-  const content = isHeader ? (
-    <>
-      <Image
-        src={siteBrand.assets.compactLockup}
-        alt={imageAlt}
-        {...compactDimensions}
-        preload={preload}
-        sizes="(max-width: 1279px) 224px, 0px"
-        className="h-auto w-full xl:hidden"
-      />
-      <Image
-        src={fullSource}
-        alt={imageAlt}
-        {...fullDimensions}
-        preload={preload}
-        sizes="(min-width: 1280px) 336px, 0px"
-        className="hidden h-auto w-full xl:block"
-      />
-    </>
-  ) : (
+  const content = (
     <Image
-      src={useCompact ? siteBrand.assets.compactLockup : fullSource}
+      src={source}
       alt={imageAlt}
-      {...(useCompact ? compactDimensions : fullDimensions)}
+      {...dimensions}
       preload={preload}
-      sizes={useCompact ? "224px" : "336px"}
+      sizes={variant === "footer" ? "240px" : variant === "header" ? "(max-width: 1279px) 224px, 336px" : "224px"}
       className="h-auto w-full"
     />
   );
-
   const sharedClassName = `block ${className}`.trim();
 
-  if (!linked) {
-    return <span className={sharedClassName}>{content}</span>;
+  if (variant === "footer") {
+    const footerLogo = linked ? (
+      <Link
+        href="/"
+        aria-label={`${siteBrand.name} home`}
+        className="block rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-current"
+      >
+        {content}
+      </Link>
+    ) : content;
+
+    return (
+      <span className={sharedClassName}>
+        {footerLogo}
+        <span className="mt-3 block font-serif text-base leading-6 tracking-[0.01em] text-white/85">{siteBrand.tagline}</span>
+      </span>
+    );
   }
+
+  if (!linked) return <span className={sharedClassName}>{content}</span>;
 
   return (
     <Link

@@ -1,7 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 
+import { siteBrand } from "@/config/brand.config";
 import { findBestItineraryForRecommendation } from "@/lib/journey-itineraries";
 import type { SuggestedItinerary } from "@/lib/journey-itineraries";
 import type { JourneyPossibility } from "@/types/journey-director";
@@ -44,6 +46,7 @@ export function SuggestedItineraryContent({ mode, itinerary, heading, eyebrow, s
 
   return (
     <section className={`${styles.itinerarySection} ${mode === "destination" ? styles.itinerarySectionDestination : ""}`} aria-labelledby={headingId} data-itinerary-mode={mode}>
+      <ItineraryWatermark />
       <div className={styles.itineraryIntro}>
         <div>
           <p className={styles.eyebrow}>{eyebrow}</p>
@@ -104,11 +107,25 @@ export function SuggestedItineraryFallback({ mode, id, heading, firstParagraph, 
   const headingId = `${mode}-suggested-itinerary-${id}`;
   return (
     <section className={`${styles.itineraryFallback} ${mode === "destination" ? styles.itineraryFallbackDestination : ""}`} aria-labelledby={headingId} data-itinerary-mode={mode}>
+      <ItineraryWatermark compact />
       <p className={styles.eyebrow}>A starting point, shaped with you</p>
       <h2 id={headingId}>{heading}</h2>
       <p>{firstParagraph}</p>
       <p>{secondParagraph}</p>
     </section>
+  );
+}
+
+function ItineraryWatermark({ compact = false }: { compact?: boolean }) {
+  const tileCount = compact ? 6 : 24;
+  return (
+    <div className={`${styles.itineraryWatermark} ${compact ? styles.itineraryWatermarkCompact : ""}`} aria-hidden="true">
+      {Array.from({ length: tileCount }, (_, index) => (
+        <span key={index}>
+          <Image src={siteBrand.assets.iconMark} alt="" width={2000} height={1787} sizes="96px" />
+        </span>
+      ))}
+    </div>
   );
 }
 

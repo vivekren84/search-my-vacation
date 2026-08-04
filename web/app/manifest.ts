@@ -9,19 +9,11 @@ export default function manifest(): MetadataRoute.Manifest {
     description: siteBrand.tagline,
     start_url: "/",
     display: "standalone",
-    background_color: "#fbf7ef",
-    theme_color: "#20150f",
+    background_color: siteBrand.colours.cream,
+    theme_color: siteBrand.colours.espresso,
     icons: [
-      {
-        src: siteBrand.assets.appIcon192,
-        sizes: "192x192",
-        type: "image/png",
-      },
-      {
-        src: siteBrand.assets.appIcon512,
-        sizes: "512x512",
-        type: "image/png",
-      },
+      { src: siteBrand.assets.appIcon192, sizes: "192x192", type: "image/png" },
+      { src: siteBrand.assets.appIcon512, sizes: "512x512", type: "image/png" },
     ],
   };
 }

@@ -1,11 +1,11 @@
 .shell {
-  --journey-ink: #2b1c13;
-  --journey-brown: #51331f;
-  --journey-copper: #9a642e;
-  --journey-gold: #e7b765;
-  --journey-cream: #fffaf3;
-  --journey-sand: #f2e4d2;
-  background: #f5eadc;
+  --journey-ink: #2A211C;
+  --journey-brown: #2A211C;
+  --journey-copper: #B72027;
+  --journey-gold: #F5951C;
+  --journey-cream: #FFFDFC;
+  --journey-sand: #fff7f0;
+  background: #fff7f0;
 }
 
 .selectorHeader {
@@ -25,7 +25,7 @@
 .selectorHeader > p:last-child {
   max-width: 56rem;
   margin-top: 1.25rem;
-  color: rgb(43 28 19 / 66%);
+  color: rgb(42 33 28 / 66%);
   line-height: 1.75;
 }
 
@@ -48,7 +48,7 @@
   min-height: 3rem;
   max-width: 100%;
   padding: 0.65rem 1rem;
-  border: 1px solid rgb(81 51 31 / 30%);
+  border: 1px solid rgb(42 33 28 / 30%);
   border-radius: 999px;
   background: rgb(255 255 255 / 65%);
   color: var(--journey-brown);
@@ -90,7 +90,7 @@
   min-height: 3.25rem;
   margin-top: 0.5rem;
   padding: 0.7rem 2.5rem 0.7rem 0.85rem;
-  border: 1px solid rgb(81 51 31 / 35%);
+  border: 1px solid rgb(42 33 28 / 35%);
   border-radius: 0.9rem;
   background: white;
   color: var(--journey-ink);
@@ -99,7 +99,7 @@
 
 .announcement {
   margin-top: 0.8rem;
-  color: rgb(43 28 19 / 58%);
+  color: rgb(42 33 28 / 58%);
   font-size: 0.72rem;
 }
 

@@ -1,10 +1,10 @@
 .page {
-  --journey-ink: #2b1c13;
-  --journey-brown: #51331f;
-  --journey-copper: #9a642e;
-  --journey-gold: #e7b765;
-  --journey-cream: #fffaf3;
-  --journey-sand: #f2e4d2;
+  --journey-ink: #2A211C;
+  --journey-brown: #2A211C;
+  --journey-copper: #B72027;
+  --journey-gold: #F5951C;
+  --journey-cream: #FFFDFC;
+  --journey-sand: #fff7f0;
   min-height: 100vh;
   background: var(--journey-cream);
   color: var(--journey-ink);
@@ -42,7 +42,7 @@
   min-height: 6.5rem;
   padding-inline: max(var(--layout-gutter), calc((100% - var(--layout-wide)) / 2));
   border-bottom: 1px solid rgb(255 255 255 / 18%);
-  background: #20150f;
+  background: #2A211C;
   color: white;
 }
 
@@ -92,7 +92,7 @@
 }
 
 .recoveryPrimary {
-  background: #f2c982;
+  background: #F5951C;
   color: var(--journey-ink);
 }
 
@@ -129,7 +129,7 @@
   z-index: -1;
   inset: auto 0 0;
   height: 30%;
-  background: linear-gradient(transparent, #2c1d14);
+  background: linear-gradient(transparent, #2A211C);
   content: "";
 }
 
@@ -152,32 +152,12 @@
 }
 
 .passportStamp {
-  display: grid;
   width: 8.75rem;
   height: 8.75rem;
   margin-bottom: 2.25rem;
-  place-content: center;
-  border: 1px solid rgb(255 255 255 / 58%);
-  border-radius: 50%;
-  outline: 1px solid rgb(231 183 101 / 70%);
-  outline-offset: 0.45rem;
-  background: rgb(45 28 17 / 30%);
-  color: #ffe2ac;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
+  object-fit: contain;
   transform: rotate(-4deg);
   animation: stamp-in 800ms cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-.passportStamp span:last-child {
-  margin-top: 0.35rem;
-  font-size: 0.57rem;
-  font-weight: 800;
-}
-
-.stampCompass {
-  font-size: 2.25rem;
-  line-height: 1;
 }
 
 .eyebrow,
@@ -193,7 +173,7 @@
 }
 
 .eyebrowLight {
-  color: #f1c77f;
+  color: #F5951C;
 }
 
 .completion h1 {
@@ -232,7 +212,7 @@
   padding: clamp(5.5rem, 11vw, 10rem) max(1.25rem, calc((100vw - 84rem) / 2));
   background:
     radial-gradient(circle at 85% 5%, rgb(231 183 101 / 14%), transparent 28rem),
-    #2c1d14;
+    #2A211C;
   color: white;
 }
 
@@ -276,7 +256,7 @@
 
 .insightCard > span {
   display: block;
-  color: #e7b765;
+  color: #F5951C;
   font-family: Georgia, "Times New Roman", serif;
   font-size: 2.5rem;
   font-style: italic;
@@ -328,14 +308,14 @@
   border-radius: 2rem;
   background:
     radial-gradient(circle at 92% 8%, rgb(231 183 101 / 20%), transparent 16rem),
-    #fffaf2;
-  box-shadow: 0 24px 70px rgb(62 39 23 / 8%);
+    #FFFDFC;
+  box-shadow: 0 24px 70px rgb(42 33 28 / 8%);
 }
 
 .destinationNoticeAlternative {
   background:
     radial-gradient(circle at 92% 8%, rgb(231 183 101 / 16%), transparent 16rem),
-    #f7ecdd;
+    #FFFDFC;
 }
 
 .destinationNotice h2 {
@@ -352,7 +332,7 @@
 .destinationNotice > p:last-child {
   max-width: 48rem;
   margin-top: 1.25rem;
-  color: rgb(43 28 19 / 65%);
+  color: rgb(42 33 28 / 65%);
   line-height: 1.8;
 }
 
@@ -378,7 +358,7 @@
 
 .qualities ul {
   display: grid;
-  border-top: 1px solid rgb(43 28 19 / 16%);
+  border-top: 1px solid rgb(42 33 28 / 16%);
   list-style: none;
 }
 
@@ -387,7 +367,7 @@
   min-height: 4.75rem;
   align-items: center;
   gap: 1rem;
-  border-bottom: 1px solid rgb(43 28 19 / 16%);
+  border-bottom: 1px solid rgb(42 33 28 / 16%);
   font-family: Georgia, "Times New Roman", serif;
   font-size: 1.35rem;
 }
@@ -400,14 +380,14 @@
   border: 1px solid rgb(154 100 46 / 35%);
   border-radius: 50%;
   color: var(--journey-copper);
-  font-family: var(--font-primary), sans-serif;
+  font-family: var(--font-utility), sans-serif;
   font-size: 0.7rem;
 }
 
 .possibilities {
   scroll-margin-top: 1.5rem;
   padding: clamp(5rem, 10vw, 9rem) max(1rem, calc((100vw - 90rem) / 2));
-  background: #efe1ce;
+  background: #fff7f0;
 }
 
 .possibilities:focus-visible {
@@ -424,7 +404,7 @@
 .sectionHeadingLeft > p:last-child {
   max-width: 43rem;
   margin: 1.5rem auto 0;
-  color: rgb(43 28 19 / 64%);
+  color: rgb(42 33 28 / 64%);
   line-height: 1.8;
 }
 
@@ -460,7 +440,7 @@
   border: 1px solid rgb(255 255 255 / 42%);
   border-radius: 2rem;
   background: var(--journey-ink);
-  box-shadow: 0 20px 60px rgb(62 39 23 / 16%);
+  box-shadow: 0 20px 60px rgb(42 33 28 / 16%);
   color: white;
   isolation: isolate;
   display: flex;
@@ -491,7 +471,7 @@
 
 @media (hover: hover) {
   .possibilityCard:hover {
-    box-shadow: 0 28px 70px rgb(62 39 23 / 25%);
+    box-shadow: 0 28px 70px rgb(42 33 28 / 25%);
     transform: translateY(-0.45rem);
   }
 
@@ -517,8 +497,8 @@
   z-index: 1;
   inset: 0;
   background:
-    linear-gradient(180deg, rgb(25 15 10 / 58%), transparent 32%),
-    linear-gradient(0deg, rgb(25 15 10 / 94%), rgb(25 15 10 / 5%) 70%);
+    linear-gradient(180deg, rgb(42 33 28 / 58%), transparent 32%),
+    linear-gradient(0deg, rgb(42 33 28 / 94%), rgb(42 33 28 / 5%) 70%);
 }
 
 .cardTopline {
@@ -544,7 +524,7 @@
   padding: 0.42rem 0.62rem;
   border: 1px solid rgb(255 255 255 / 34%);
   border-radius: 999px;
-  background: rgb(33 20 13 / 34%);
+  background: rgb(42 33 28 / 34%);
   font-style: normal;
   letter-spacing: 0.08em;
   backdrop-filter: blur(8px);
@@ -552,7 +532,7 @@
 
 .cardTopline strong {
   border-color: rgb(244 201 125 / 55%);
-  color: #f4c97d;
+  color: #F5951C;
 }
 
 .cardContent {
@@ -590,7 +570,7 @@
 
 .cardContent h4 {
   margin-top: 0.65rem;
-  color: #f0c57e;
+  color: #F5951C;
   font-size: 0.68rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -623,7 +603,7 @@
 }
 
 .cardContent button:hover {
-  background: #f2c982;
+  background: #F5951C;
   color: var(--journey-ink);
 }
 
@@ -641,9 +621,9 @@
   justify-content: space-between;
   gap: 2rem;
   padding: 0.75rem max(1rem, calc((100vw - 80rem) / 2));
-  border-bottom: 1px solid rgb(43 28 19 / 12%);
+  border-bottom: 1px solid rgb(42 33 28 / 12%);
   background: rgb(255 250 243 / 90%);
-  box-shadow: 0 8px 26px rgb(43 28 19 / 6%);
+  box-shadow: 0 8px 26px rgb(42 33 28 / 6%);
   backdrop-filter: blur(16px);
 }
 
@@ -697,7 +677,7 @@
   position: absolute;
   top: 0.3rem;
   right: 0.4rem;
-  color: #d79a42;
+  color: #F36523;
   font-size: 0.48rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -729,7 +709,7 @@
 }
 
 .whyDestination p {
-  color: #f2c982;
+  color: #F5951C;
   font-size: 0.65rem;
   font-weight: 800;
   letter-spacing: 0.16em;
@@ -764,9 +744,9 @@
   margin-bottom: 3rem;
   padding-block: 0.7rem;
   border: 0;
-  border-bottom: 1px solid rgb(43 28 19 / 25%);
+  border-bottom: 1px solid rgb(42 33 28 / 25%);
   background: transparent;
-  color: rgb(43 28 19 / 68%);
+  color: rgb(42 33 28 / 68%);
   font-size: 0.7rem;
   font-weight: 700;
   cursor: pointer;
@@ -794,14 +774,14 @@
 .whyLead {
   max-width: 42rem;
   margin-top: 1.5rem;
-  color: rgb(43 28 19 / 62%);
+  color: rgb(42 33 28 / 62%);
   line-height: 1.8;
 }
 
 .reasonGrid {
   display: grid;
   margin-top: 3rem;
-  border-top: 1px solid rgb(43 28 19 / 14%);
+  border-top: 1px solid rgb(42 33 28 / 14%);
 }
 
 .reasonGrid article {
@@ -809,7 +789,7 @@
   grid-template-columns: 2.5rem 1fr;
   gap: 1rem;
   padding: 1.35rem 0;
-  border-bottom: 1px solid rgb(43 28 19 / 14%);
+  border-bottom: 1px solid rgb(42 33 28 / 14%);
 }
 
 .reasonGrid article > span {
@@ -827,7 +807,7 @@
 
 .reasonGrid p {
   margin-top: 0.45rem;
-  color: rgb(43 28 19 / 58%);
+  color: rgb(42 33 28 / 58%);
   font-size: 0.8rem;
   line-height: 1.65;
 }
@@ -838,7 +818,7 @@
   padding: 2rem;
   border: 1px solid rgb(154 100 46 / 20%);
   border-radius: 1.5rem;
-  background: #fffaf2;
+  background: #FFFDFC;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.5rem 2rem;
 }
@@ -858,7 +838,7 @@
 }
 
 .profileItem h4 {
-  color: rgb(43 28 19 / 54%);
+  color: rgb(42 33 28 / 54%);
   font-size: 0.63rem;
   font-weight: 800;
   letter-spacing: 0.13em;
@@ -886,14 +866,14 @@
   border: 1px solid rgb(154 100 46 / 22%);
   border-radius: 999px;
   background: white;
-  font-family: var(--font-primary), sans-serif;
+  font-family: var(--font-utility), sans-serif;
   font-size: 0.72rem;
 }
 
 .confidenceNote {
   padding-top: 1.25rem;
-  border-top: 1px solid rgb(43 28 19 / 12%);
-  color: rgb(43 28 19 / 58%);
+  border-top: 1px solid rgb(42 33 28 / 12%);
+  color: rgb(42 33 28 / 58%);
   font-size: 0.78rem;
   line-height: 1.65;
 }
@@ -911,14 +891,14 @@
   gap: 0.65rem;
   margin-top: 0.9rem;
   padding-left: 1.15rem;
-  color: rgb(43 28 19 / 64%);
+  color: rgb(42 33 28 / 64%);
   font-size: 0.8rem;
   line-height: 1.65;
 }
 
 .imagineSection {
   padding: clamp(5.5rem, 10vw, 9rem) max(1rem, calc((100vw - 86rem) / 2));
-  background: #2c1d14;
+  background: #2A211C;
   color: white;
 }
 
@@ -966,7 +946,7 @@
   overflow: hidden;
   border: 1px solid rgb(255 255 255 / 15%);
   border-radius: 1.5rem;
-  background: #1d130d;
+  background: #2A211C;
   isolation: isolate;
   display: flex;
   align-items: flex-end;
@@ -1001,7 +981,7 @@
 }
 
 .momentGrid article > div span {
-  color: #efc378;
+  color: #F5951C;
   font-family: Georgia, "Times New Roman", serif;
   font-style: italic;
 }
@@ -1024,9 +1004,59 @@
 
 .itinerarySection,
 .itineraryFallback {
+  position: relative;
   padding: clamp(5rem, 9vw, 8rem) max(1rem, calc((100vw - 78rem) / 2));
   overflow: hidden;
-  background: linear-gradient(180deg, #fffaf3, #f5eadc);
+  background: linear-gradient(180deg, #FFFDFC, #fff7f0);
+  isolation: isolate;
+}
+
+.itinerarySection > :not(.itineraryWatermark),
+.itineraryFallback > :not(.itineraryWatermark) {
+  position: relative;
+  z-index: 1;
+}
+
+.itineraryWatermark {
+  position: absolute;
+  z-index: 0;
+  inset: clamp(1.25rem, 3vw, 2.5rem);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: repeat(8, minmax(0, 1fr));
+  gap: clamp(1rem, 2.5vw, 2.5rem);
+  opacity: .032;
+  pointer-events: none;
+  user-select: none;
+}
+
+.itineraryWatermarkCompact {
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+}
+
+.itineraryWatermark span {
+  display: grid;
+  min-width: 0;
+  min-height: 0;
+  place-items: center;
+}
+
+.itineraryWatermark img {
+  width: min(58%, 6rem);
+  height: auto;
+  max-height: 72%;
+  object-fit: contain;
+}
+
+@media (max-width: 40rem) {
+  .itineraryWatermark {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(12, minmax(0, 1fr));
+  }
+
+  .itineraryWatermarkCompact {
+    grid-template-rows: repeat(3, minmax(0, 1fr));
+  }
 }
 
 .itinerarySectionDestination,
@@ -1060,7 +1090,7 @@
 
 .itineraryRoute {
   margin-top: 1.25rem;
-  color: rgb(43 28 19 / 60%);
+  color: rgb(42 33 28 / 60%);
   font-size: 0.9rem;
   line-height: 1.6;
 }
@@ -1104,7 +1134,7 @@
 .itinerarySummary {
   max-width: 55rem;
   margin-top: 1.5rem;
-  color: rgb(43 28 19 / 64%);
+  color: rgb(42 33 28 / 64%);
   line-height: 1.8;
 }
 
@@ -1112,7 +1142,7 @@
   display: grid;
   margin-top: 3.5rem;
   padding-top: 2rem;
-  border-top: 1px solid rgb(43 28 19 / 14%);
+  border-top: 1px solid rgb(42 33 28 / 14%);
   grid-template-columns: minmax(11rem, 0.55fr) minmax(0, 1.45fr);
   gap: 2rem;
 }
@@ -1137,7 +1167,7 @@
 .itineraryHighlights li {
   position: relative;
   padding-left: 1.4rem;
-  color: rgb(43 28 19 / 72%);
+  color: rgb(42 33 28 / 72%);
   line-height: 1.6;
 }
 
@@ -1191,7 +1221,7 @@
 
 .dayCard > p:nth-of-type(2) {
   margin-top: 1rem;
-  color: rgb(43 28 19 / 70%);
+  color: rgb(42 33 28 / 70%);
   font-size: 0.84rem;
   line-height: 1.72;
 }
@@ -1200,8 +1230,8 @@
 .dayNote {
   margin-top: 1rem;
   padding-top: 0.8rem;
-  border-top: 1px solid rgb(43 28 19 / 10%);
-  color: rgb(43 28 19 / 58%);
+  border-top: 1px solid rgb(42 33 28 / 10%);
+  color: rgb(42 33 28 / 58%);
   font-size: 0.72rem;
   line-height: 1.6;
 }
@@ -1235,14 +1265,14 @@
   gap: 0.65rem;
   margin-top: 1rem;
   padding-left: 1.15rem;
-  color: rgb(43 28 19 / 66%);
+  color: rgb(42 33 28 / 66%);
   font-size: 0.8rem;
   line-height: 1.65;
 }
 
 .inclusionNote {
   margin-top: 1.25rem;
-  color: rgb(43 28 19 / 58%);
+  color: rgb(42 33 28 / 58%);
   font-size: 0.75rem;
   line-height: 1.6;
 }
@@ -1279,13 +1309,13 @@
 .itineraryFallback > p:not(.eyebrow) {
   max-width: 48rem;
   margin-top: 1.25rem;
-  color: rgb(43 28 19 / 66%);
+  color: rgb(42 33 28 / 66%);
   line-height: 1.75;
 }
 
 .itineraryLoading {
   padding: 4rem 1.25rem;
-  background: #f5eadc;
+  background: #fff7f0;
   color: var(--journey-brown);
   text-align: center;
 }
@@ -1299,7 +1329,7 @@
   padding: 6rem 1.25rem;
   background:
     radial-gradient(circle at 50% 40%, rgb(231 183 101 / 18%), transparent 28rem),
-    #25180f;
+    #2A211C;
   color: white;
   text-align: center;
   isolation: isolate;
@@ -1341,7 +1371,7 @@
 }
 
 .preferredReminder strong {
-  color: #f2c982;
+  color: #F5951C;
 }
 
 .handoffActions {
@@ -1365,8 +1395,8 @@
 }
 
 .primaryAction {
-  border: 1px solid #f2c982;
-  background: #f2c982;
+  border: 1px solid #F5951C;
+  background: #F5951C;
   color: var(--journey-ink);
 }
 
@@ -1377,9 +1407,9 @@
 }
 
 .secondaryAction[aria-pressed="true"] {
-  border-color: #f2c982;
+  border-color: #F5951C;
   background: rgb(242 201 130 / 14%);
-  color: #f2c982;
+  color: #F5951C;
 }
 
 .tertiaryAction {
@@ -1428,24 +1458,24 @@
 .summaryGrid { display: grid; grid-template-columns: 0.8fr 1.5fr; gap: 1rem; }
 .summaryGrid > div, .synopsis { padding: 1rem; border-radius: 0.8rem; background: rgb(0 0 0 / 14%); }
 .summaryGrid span, .summaryGrid small, .synopsisMeta { display: block; color: rgb(255 255 255 / 62%); font-size: 0.75rem; line-height: 1.5; }
-.summaryGrid strong { display: block; margin-top: 0.3rem; color: #f7d79b; font-size: 0.95rem; }
+.summaryGrid strong { display: block; margin-top: 0.3rem; color: #F5951C; font-size: 0.95rem; }
 .summaryGrid small { margin-top: 0.3rem; }
 .synopsis { margin-top: 1rem; border: 1px solid rgb(243 198 129 / 36%); background: linear-gradient(135deg, rgb(243 198 129 / 13%), rgb(0 0 0 / 20%)); box-shadow: inset 0 1px 0 rgb(255 255 255 / 8%); }
-.synopsisLead { color: #f7d79b; font-family: Georgia, "Times New Roman", serif; font-size: 1.05rem; font-style: italic; }
+.synopsisLead { color: #F5951C; font-family: Georgia, "Times New Roman", serif; font-size: 1.05rem; font-style: italic; }
 .synopsis > p:not(.eyebrowLight) { margin-top: 0.6rem; color: rgb(255 255 255 / 82%); line-height: 1.65; }
 .consent { display: flex; gap: 0.75rem; align-items: flex-start; margin-top: 1.4rem; color: rgb(255 255 255 / 83%); font-size: 0.84rem; line-height: 1.6; cursor: pointer; }
-.consent input { width: 1.15rem; height: 1.15rem; margin-top: 0.15rem; accent-color: #f2c982; }
+.consent input { width: 1.15rem; height: 1.15rem; margin-top: 0.15rem; accent-color: #F5951C; }
 .continuationActions { margin-top: 1.5rem; }
 .primaryAction:disabled { cursor: not-allowed; opacity: 0.5; transform: none; }
 .secondaryAction:disabled { cursor: not-allowed; opacity: 0.5; }
 .callbackPanel { margin-top: 1rem; padding: 1rem; border: 1px solid rgb(255 255 255 / 15%); border-radius: 0.8rem; }
-.callbackPanel > p:first-child { color: #f7d79b; font-weight: 700; }
+.callbackPanel > p:first-child { color: #F5951C; font-weight: 700; }
 .callbackFields { display: grid; grid-template-columns: 1fr 1.4fr; gap: 0.75rem; margin-top: 0.8rem; }
 .callbackFields label { display: grid; gap: 0.4rem; color: rgb(255 255 255 / 68%); font-size: 0.75rem; }
 .callbackError { color: #ffd0c8; line-height: 1.45; }
 .callbackFields input, .callbackFields select { min-height: 2.7rem; border: 1px solid rgb(255 255 255 / 26%); border-radius: 0.55rem; background: rgb(0 0 0 / 24%); color: white; padding: 0.55rem; font: inherit; }
-.callbackFields option { color: #25180f; }
-.callbackFields input:focus-visible, .callbackFields select:focus-visible, .consent input:focus-visible { outline: 2px solid #f2c982; outline-offset: 3px; }
+.callbackFields option { color: #2A211C; }
+.callbackFields input:focus-visible, .callbackFields select:focus-visible, .consent input:focus-visible { outline: 2px solid #F5951C; outline-offset: 3px; }
 
 @media (max-width: 620px) {
   .summaryGrid, .callbackFields { grid-template-columns: 1fr; }
@@ -1453,7 +1483,7 @@
 
 .page a:focus-visible,
 .page button:focus-visible {
-  outline: 2px solid #f2c982;
+  outline: 2px solid #F5951C;
   outline-offset: 4px;
 }
 

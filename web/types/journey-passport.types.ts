@@ -1,10 +1,28 @@
 export const JOURNEY_PASSPORT_SCHEMA_VERSION = 1 as const;
 export const JOURNEY_FEELINGS = ["relax", "explore", "celebrate", "romance", "escape"] as const;
+export const JOURNEY_ENTRY_EXPERIENCES = ["Memory Makers", "Celebration Moments", "Family Time", "Weekend Getaways", "Global Escapes", "Nature & Serenity"] as const;
+export const JOURNEY_ENTRY_INSPIRATIONS = ["Mountains", "Beaches", "Wildlife", "Romance", "Relaxation"] as const;
+export const JOURNEY_ENTRY_DESTINATION_THEMES = ["Tropical Escape", "Mountain Retreat", "City Discovery", "Wildlife Adventure"] as const;
 
 export type JourneyFeeling = (typeof JOURNEY_FEELINGS)[number];
+export type JourneyEntryExperience = (typeof JOURNEY_ENTRY_EXPERIENCES)[number];
+export type JourneyEntryInspiration = (typeof JOURNEY_ENTRY_INSPIRATIONS)[number];
+export type JourneyEntryDestinationTheme = (typeof JOURNEY_ENTRY_DESTINATION_THEMES)[number];
 
 export function isJourneyFeeling(value: unknown): value is JourneyFeeling {
   return typeof value === "string" && JOURNEY_FEELINGS.some((feeling) => feeling === value);
+}
+
+export function isJourneyEntryExperience(value: unknown): value is JourneyEntryExperience {
+  return typeof value === "string" && JOURNEY_ENTRY_EXPERIENCES.some((experience) => experience === value);
+}
+
+export function isJourneyEntryInspiration(value: unknown): value is JourneyEntryInspiration {
+  return typeof value === "string" && JOURNEY_ENTRY_INSPIRATIONS.some((inspiration) => inspiration === value);
+}
+
+export function isJourneyEntryDestinationTheme(value: unknown): value is JourneyEntryDestinationTheme {
+  return typeof value === "string" && JOURNEY_ENTRY_DESTINATION_THEMES.some((theme) => theme === value);
 }
 
 export type JourneyMomentId =
@@ -37,8 +55,11 @@ export type JourneyOption = {
 };
 export type JourneyPassportEntryContext = {
   feeling?: JourneyFeeling;
+  experience?: JourneyEntryExperience;
+  inspiration?: JourneyEntryInspiration;
   destination?: string;
-  source?: "homepage" | "direct";
+  destinationTheme?: JourneyEntryDestinationTheme;
+  source?: "homepage" | "direct" | "experience" | "mood" | "inspiration" | "destination";
 };
 
 export type JourneyPassportState = {

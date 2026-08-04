@@ -8,5 +8,5 @@ export const metadata = {
 };
 
 export default function JourneyPassportPage() {
-  return <Suspense fallback={<main className="min-h-screen bg-[#fbf7ef]" aria-label="Loading Journey Passport" />}><JourneyPassport /></Suspense>;
+  return <Suspense fallback={<main className="min-h-screen bg-[#FFFDFC]" aria-label="Loading Journey Passport" />}><JourneyPassport /></Suspense>;
 }

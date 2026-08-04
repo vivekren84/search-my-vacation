@@ -28,7 +28,7 @@ export default function Hero() {
       <div className="relative z-10 flex min-h-[calc(100svh+7.5rem)] items-center">
         <Container>
           <div className="max-w-2xl py-36 sm:py-40 lg:py-44 lg:pl-8 xl:pl-14">
-            <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#f3c681] sm:text-sm">
+            <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#F5951C] sm:text-sm">
               More Than a Trip. It’s an Experience.
             </p>
 
@@ -43,7 +43,7 @@ export default function Hero() {
 
             <Link
               href="/journey-passport"
-              className="mt-12 inline-flex min-h-16 items-center justify-center rounded-full bg-[#f3c681] px-9 text-base font-bold text-[#25180f] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-[#ffe1ab] hover:shadow-lg hover:shadow-black/20 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#f3c681] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+              className="mt-12 inline-flex min-h-16 items-center justify-center rounded-full bg-[#F5951C] px-9 text-base font-bold text-[#2A211C] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-[#F5951C] hover:shadow-lg hover:shadow-black/20 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F5951C] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
             >
               Plan My Experience <span aria-hidden="true" className="ml-2">→</span>
             </Link>

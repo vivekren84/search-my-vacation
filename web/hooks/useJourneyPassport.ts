@@ -5,15 +5,12 @@
 import { useEffect, useMemo, useReducer, useRef, useState } from "react";
 
 import { companionOptions, dreamJourneyOptions, journeyMomentIndex, journeyMoments, timingOptions, travelStyleOptions } from "@/config/journey-passport.config";
-import { isJourneyFeeling, JOURNEY_PASSPORT_SCHEMA_VERSION, type DestinationMode, type JourneyMomentId, type JourneyPassportDraft, type JourneyPassportEntryContext, type JourneyPassportState } from "@/types/journey-passport.types";
+import { createInitialJourneyPassportState } from "@/lib/journey-passport/entry-context";
+import { isJourneyEntryDestinationTheme, isJourneyEntryExperience, isJourneyEntryInspiration, isJourneyFeeling, JOURNEY_PASSPORT_SCHEMA_VERSION, type DestinationMode, type JourneyMomentId, type JourneyPassportDraft, type JourneyPassportEntryContext, type JourneyPassportState } from "@/types/journey-passport.types";
 
 export const JOURNEY_PASSPORT_SESSION_KEY = "smv:journey-passport:v1";
 export const JOURNEY_PASSPORT_ENTRY_KEY = "smv:journey-passport:entry:v1";
 const MAX_DRAFT_AGE = 24 * 60 * 60 * 1000;
-
-export const createInitialJourneyPassportState = (entryContext: JourneyPassportEntryContext = {}): JourneyPassportState => ({
-  schemaVersion: JOURNEY_PASSPORT_SCHEMA_VERSION, currentMoment: "welcome", name: "", companion: "", dreamJourney: "", travelStyles: [], timing: "", startDate: "", endDate: "", destinationMode: entryContext.destination ? "known" : "", destination: entryContext.destination ?? "", mobile: "", journeyReference: "", entryContext, visitedMoments: ["welcome"], completion: "idle", navigationDirection: "none", updatedAt: Date.now(),
-});
 
 type UpdateValue = Partial<Pick<JourneyPassportState, "name" | "companion" | "dreamJourney" | "timing" | "startDate" | "endDate" | "destination" | "mobile" | "journeyReference">>;
 type Action =
@@ -54,8 +51,11 @@ function sanitiseEntryContext(value: unknown): JourneyPassportEntryContext {
 
   return {
     ...(isJourneyFeeling(value.feeling) ? { feeling: value.feeling } : {}),
+    ...(isJourneyEntryExperience(value.experience) ? { experience: value.experience } : {}),
+    ...(isJourneyEntryInspiration(value.inspiration) ? { inspiration: value.inspiration } : {}),
     ...(typeof value.destination === "string" ? { destination: value.destination.slice(0, 100) } : {}),
-    ...(value.source === "homepage" || value.source === "direct" ? { source: value.source } : {}),
+    ...(isJourneyEntryDestinationTheme(value.destinationTheme) ? { destinationTheme: value.destinationTheme } : {}),
+    ...(value.source === "homepage" || value.source === "direct" || value.source === "experience" || value.source === "mood" || value.source === "inspiration" || value.source === "destination" ? { source: value.source } : {}),
   };
 }
 

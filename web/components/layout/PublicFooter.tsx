@@ -15,26 +15,26 @@ const links = [
 
 export default function PublicFooter() {
   return (
-    <footer className="bg-[#20150f] text-white">
+    <footer className="bg-[#2A211C] text-white">
       <Container className="grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.5fr_repeat(3,1fr)]">
         <div>
-          <SiteBrand variant="footer" surface="dark" className="max-w-[21rem] text-[#f3c681]" />
+          <SiteBrand variant="footer" surface="dark" className="max-w-[21rem] text-[#F5951C]" />
           <p className="mt-5 max-w-sm text-sm leading-6 text-white/70">Thoughtful travel planning begins with understanding the person taking the journey.</p>
         </div>
         {links.map((group) => (
           <div key={group.title}>
-            <h2 className="text-sm font-bold uppercase tracking-[0.12em] text-[#f3c681]">{group.title}</h2>
+            <h2 className="text-sm font-bold uppercase tracking-[0.12em] text-[#F5951C]">{group.title}</h2>
             <ul className="mt-4 space-y-3">
-              {group.items.map(([label, href]) => <li key={href}><Link href={href} className="text-sm text-white/75 transition hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#f3c681]">{label}</Link></li>)}
+              {group.items.map(([label, href]) => <li key={href}><Link href={href} className="text-sm text-white/75 transition hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F5951C]">{label}</Link></li>)}
             </ul>
           </div>
         ))}
         <div className="sm:col-span-2 lg:col-span-1">
-          <h2 className="text-sm font-bold uppercase tracking-[0.12em] text-[#f3c681]">Connect</h2>
+          <h2 className="text-sm font-bold uppercase tracking-[0.12em] text-[#F5951C]">Connect</h2>
           <div className="mt-4 space-y-4 text-sm text-white/75">
             <WhatsAppLink compact/>
-            <a href={siteContact.primaryPhoneHref} className="flex min-h-11 items-center leading-6 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#f3c681]">Phone: {siteContact.phoneDisplay}</a>
-            <a href={siteContact.emailHref} className="flex min-h-11 items-center hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#f3c681]">{siteContact.email}</a>
+            <a href={siteContact.primaryPhoneHref} className="flex min-h-11 items-center leading-6 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F5951C]">Phone: {siteContact.phoneDisplay}</a>
+            <a href={siteContact.emailHref} className="flex min-h-11 items-center hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F5951C]">{siteContact.email}</a>
             <p>{siteContact.officeHours}</p>
           </div>
         </div>

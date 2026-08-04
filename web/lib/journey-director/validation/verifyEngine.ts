@@ -2,11 +2,19 @@ import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
 import {
+  journeyThemeForDestinationCategory,
+  publicDestinationGroups,
+  resolvePublicDestinationPassportContext,
+} from "../../../config/public-destinations.config";
+import {
+  JOURNEY_ENTRY_EXPERIENCES,
+  JOURNEY_ENTRY_INSPIRATIONS,
   JOURNEY_FEELINGS,
   JOURNEY_PASSPORT_SCHEMA_VERSION,
   type JourneyFeeling,
   type JourneyPassportState,
 } from "../../../types/journey-passport.types";
+import { createInitialJourneyPassportState, JOURNEY_ENTRY_ADVISORY, resolveJourneyEntryPreselection } from "../../journey-passport/entry-context";
 import {
   createJourneyPassportSnapshot,
   isJourneyPassportSnapshot,
@@ -118,6 +126,66 @@ function verifyPureEngineBoundary() {
         assert(!pattern.test(source), `${name} contains no ${label}`);
       });
     });
+}
+
+function verifyJourneyEntryContext() {
+  const experienceValues = ["Photography", "Celebrations", "Family", "Within the Next Month", "City Discovery", "Nature"];
+  JOURNEY_ENTRY_EXPERIENCES.forEach((experience, index) => {
+    const context = { experience, source: "experience" } as const;
+    const preselection = resolveJourneyEntryPreselection(context);
+    assert(preselection?.value === experienceValues[index], `${experience} resolves to its governed Passport preselection`);
+    const state = createInitialJourneyPassportState(context);
+    assert(state.currentMoment === "welcome" && state.visitedMoments.join("|") === "welcome", `${experience} starts at Welcome without skipping a Passport page`);
+  });
+
+  const moodValues = ["Relaxation", "Adventure", "Celebrations", "Couple", "Tropical Escape"];
+  JOURNEY_FEELINGS.forEach((feeling, index) => {
+    const context = { feeling, source: "mood" } as const;
+    const preselection = resolveJourneyEntryPreselection(context);
+    assert(preselection?.value === moodValues[index], `${feeling} resolves to its editable mood preselection`);
+    const state = createInitialJourneyPassportState(context);
+    assert(state.currentMoment === "welcome" && state.visitedMoments.join("|") === "welcome", `${feeling} starts at Welcome without skipping a Passport page`);
+  });
+
+  const inspirationValues = ["Mountain Retreat", "Beaches & Islands", "Wildlife Adventure", "Couple", "Relaxation"];
+  JOURNEY_ENTRY_INSPIRATIONS.forEach((inspiration, index) => {
+    const preselection = resolveJourneyEntryPreselection({ inspiration, source: "inspiration" });
+    assert(preselection?.value === inspirationValues[index], `${inspiration} resolves to its governed inspiration preselection`);
+  });
+
+  const categoryExamples = [
+    ["India · Beaches", "Tropical Escape"],
+    ["India · Wildlife", "Wildlife Adventure"],
+    ["India · Heritage", "City Discovery"],
+    ["India · Islands", "Tropical Escape"],
+    ["India · Hill Stations", "Mountain Retreat"],
+    ["India · Spiritual", "City Discovery"],
+    ["International · Cities", "City Discovery"],
+  ] as const;
+  categoryExamples.forEach(([label, expected]) => {
+    assert(journeyThemeForDestinationCategory(label) === expected, `${label} resolves to ${expected}`);
+  });
+
+  const destinationCards = publicDestinationGroups.flatMap((group) => group.cards);
+  destinationCards.forEach((card) => {
+    const context = resolvePublicDestinationPassportContext(card.destinationId);
+    assert(context?.destination === card.title, `${card.title} carries its verified destination name into the Passport`);
+    assert(context?.source === "destination", `${card.title} records destination entry provenance`);
+    assert(Boolean(context?.destinationTheme), `${card.title} resolves an editable Journey Theme`);
+    const state = createInitialJourneyPassportState(context);
+    assert(state.currentMoment === "welcome" && state.visitedMoments.join("|") === "welcome", `${card.title} starts at Welcome without skipping a Passport page`);
+    assert(state.destinationMode === "known" && state.destination === card.title, `${card.title} defaults to a known editable destination`);
+    assert(state.dreamJourney === context?.destinationTheme, `${card.title} pre-selects its governed Journey Theme`);
+  });
+
+  const kashmir = resolvePublicDestinationPassportContext("kashmir");
+  assert(kashmir?.destination === "Kashmir" && kashmir.destinationTheme === "Mountain Retreat", "Kashmir carries forward with Mountain Retreat");
+  assert(resolvePublicDestinationPassportContext("not-a-public-destination") === undefined, "unverified destination query context is ignored");
+
+  const directState = createInitialJourneyPassportState({ source: "direct" });
+  assert(resolveJourneyEntryPreselection({ source: "direct" }) === undefined, "standard Plan My Experience entry remains unselected");
+  assert(directState.currentMoment === "welcome" && directState.companion === "" && directState.dreamJourney === "" && directState.travelStyles.length === 0 && directState.destinationMode === "", "standard Passport starts at Welcome with no inferred answers");
+  assert(JOURNEY_ENTRY_ADVISORY === "We've pre-selected this based on how you started your journey. Feel free to change it anytime.", "entry advisory matches approved copy exactly");
 }
 
 function verifyProfile(name: string, profile: (typeof representativeProfiles)[keyof typeof representativeProfiles]) {
@@ -367,6 +435,7 @@ function runVerification() {
   );
 
   verifyPureEngineBoundary();
+  verifyJourneyEntryContext();
 
   console.log(`Journey Director engine verification passed (${checks} checks).`);
   console.log("Profiles: relaxed family, culture couple, active friends, unsupported destination, incomplete Passport, homepage intent.");

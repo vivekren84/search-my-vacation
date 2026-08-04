@@ -82,7 +82,7 @@ export default function JourneyExperienceV2({ isOpen, onClose, emotion }: Journe
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-end justify-center bg-[#2a1a10]/45 p-3 backdrop-blur-xl sm:items-center sm:p-6"
+      className="fixed inset-0 z-[100] flex items-end justify-center bg-[#2A211C]/45 p-3 backdrop-blur-xl sm:items-center sm:p-6"
       role="dialog"
       aria-modal="true"
       aria-labelledby="journey-experience-v2-heading"
@@ -90,17 +90,17 @@ export default function JourneyExperienceV2({ isOpen, onClose, emotion }: Journe
         if (event.target === event.currentTarget) resetAndClose();
       }}
     >
-      <div className="relative max-h-[94svh] w-full max-w-7xl overflow-y-auto rounded-[2rem] border border-white/60 bg-[#fffaf3]/95 shadow-[0_32px_120px_rgba(35,20,10,0.35)] backdrop-blur-2xl sm:rounded-[2.75rem]">
+      <div className="relative max-h-[94svh] w-full max-w-7xl overflow-y-auto rounded-[2rem] border border-white/60 bg-[#FFFDFC]/95 shadow-[0_32px_120px_rgba(35,20,10,0.35)] backdrop-blur-2xl sm:rounded-[2.75rem]">
         <div className="flex items-center justify-between px-6 py-6 sm:px-10 sm:py-8">
-          <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#9a642e]">A journey shaped around you{emotion ? ` · ${emotion}` : ""}</p>
-          <button type="button" onClick={resetAndClose} aria-label="Close journey experience" className="rounded-full p-2 text-[#725137] transition hover:bg-[#f4e3ce] hover:text-[#2b1c13] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9a642e]">
+          <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#B72027]">A journey shaped around you{emotion ? ` · ${emotion}` : ""}</p>
+          <button type="button" onClick={resetAndClose} aria-label="Close journey experience" className="rounded-full p-2 text-[#2A211C] transition hover:bg-[#FFFDFC] hover:text-[#2A211C] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B72027]">
             <span aria-hidden="true" className="text-2xl leading-none">×</span>
           </button>
         </div>
 
         <div className="px-6 pb-8 sm:px-10 sm:pb-10">
           <div className="flex gap-2" aria-label={`Scene ${scene} of 4`}>
-            {[1, 2, 3, 4].map((index) => <span key={index} className={`h-1 flex-1 rounded-full transition-colors duration-500 ${index <= scene ? "bg-[#c7843d]" : "bg-[#ead8c0]"}`} />)}
+            {[1, 2, 3, 4].map((index) => <span key={index} className={`h-1 flex-1 rounded-full transition-colors duration-500 ${index <= scene ? "bg-[#F36523]" : "bg-[#ead8c0]"}`} />)}
           </div>
 
           <div key={scene} className={`${styles.scene} pt-8 sm:pt-10`}>
@@ -111,11 +111,11 @@ export default function JourneyExperienceV2({ isOpen, onClose, emotion }: Journe
           </div>
 
           <div className="mt-8 flex items-center justify-between gap-5">
-            <button type="button" onClick={scene === 1 ? resetAndClose : previousScene} className="text-sm font-semibold text-[#725137] transition hover:text-[#2b1c13] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#9a642e]">
+            <button type="button" onClick={scene === 1 ? resetAndClose : previousScene} className="text-sm font-semibold text-[#2A211C] transition hover:text-[#2A211C] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B72027]">
               ← {scene === 1 ? "Back to journey" : "Back"}
             </button>
             {scene < 4 ? (
-              <button type="button" disabled={!selectedValue} onClick={nextScene} className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#9a642e] px-6 text-sm font-bold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#7d4f23] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#9a642e] disabled:cursor-not-allowed disabled:bg-[#cbb9a7] disabled:hover:translate-y-0 motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+              <button type="button" disabled={!selectedValue} onClick={nextScene} className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#B72027] px-6 text-sm font-bold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#4A2062] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B72027] disabled:cursor-not-allowed disabled:bg-[#cbb9a7] disabled:hover:translate-y-0 motion-reduce:transition-none motion-reduce:hover:translate-y-0">
                 Continue <span aria-hidden="true" className="ml-2">→</span>
               </button>
             ) : null}
@@ -129,14 +129,14 @@ export default function JourneyExperienceV2({ isOpen, onClose, emotion }: Journe
 function ChoiceScene({ title, options, selected, onSelect, compact = false }: { title: string; options: SceneOption[]; selected: string; onSelect: (value: string) => void; compact?: boolean }) {
   return (
     <section aria-labelledby="journey-experience-v2-heading">
-      <h2 id="journey-experience-v2-heading" className="mx-auto max-w-3xl text-center font-serif text-4xl font-normal tracking-[-0.04em] text-[#2b1c13] sm:text-5xl">{title}</h2>
+      <h2 id="journey-experience-v2-heading" className="mx-auto max-w-3xl text-center font-serif text-4xl font-normal tracking-[-0.04em] text-[#2A211C] sm:text-5xl">{title}</h2>
       <div className={`mt-8 grid gap-5 ${compact ? "lg:grid-cols-3" : "sm:grid-cols-2"}`}>
         {options.map((option) => {
           const isSelected = selected === option.title;
           const hasSelection = Boolean(selected);
 
           return (
-            <button key={option.title} type="button" aria-pressed={isSelected} onClick={() => onSelect(option.title)} className={`group relative min-h-64 overflow-hidden rounded-[1.75rem] border text-left shadow-[0_14px_40px_rgba(76,45,20,0.16)] transition-all duration-500 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#9a642e] sm:min-h-72 ${isSelected ? "-translate-y-1 border-[#f2c680] ring-4 ring-[#f2c680]/45" : "border-white/70"} ${hasSelection && !isSelected ? "opacity-55" : "opacity-100"}`}>
+            <button key={option.title} type="button" aria-pressed={isSelected} onClick={() => onSelect(option.title)} className={`group relative min-h-64 overflow-hidden rounded-[1.75rem] border text-left shadow-[0_14px_40px_rgba(76,45,20,0.16)] transition-all duration-500 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B72027] sm:min-h-72 ${isSelected ? "-translate-y-1 border-[#f2c680] ring-4 ring-[#f2c680]/45" : "border-white/70"} ${hasSelection && !isSelected ? "opacity-55" : "opacity-100"}`}>
               <Image src={option.imageSrc} alt="" fill sizes={compact ? "(max-width: 1024px) 100vw, 30vw" : "(max-width: 640px) 100vw, 46vw"} className="object-cover transition-transform duration-700 ease-out group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100" />
               <span className="absolute inset-0 bg-[linear-gradient(0deg,rgba(25,14,9,0.86)_0%,rgba(25,14,9,0.12)_78%)]" aria-hidden="true" />
               <span className="absolute inset-x-0 bottom-0 block p-6 sm:p-7">
@@ -154,19 +154,19 @@ function ChoiceScene({ title, options, selected, onSelect, compact = false }: { 
 function DestinationScene({ destination, index, onPrevious, onNext, onExplore }: { destination: SceneOption; index: number; onPrevious: () => void; onNext: () => void; onExplore: () => void }) {
   return (
     <section aria-labelledby="journey-experience-v2-heading">
-      <div className="relative min-h-[30rem] overflow-hidden rounded-[2rem] bg-[#2b1c13] shadow-[0_20px_55px_rgba(76,45,20,0.22)] sm:min-h-[34rem]">
+      <div className="relative min-h-[30rem] overflow-hidden rounded-[2rem] bg-[#2A211C] shadow-[0_20px_55px_rgba(76,45,20,0.22)] sm:min-h-[34rem]">
         <Image src={destination.imageSrc} alt={`Travel inspiration for ${destination.title}`} fill priority sizes="(max-width: 1280px) 100vw, 72rem" className="object-cover" />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(23,14,9,0.8)_0%,rgba(23,14,9,0.28)_55%,rgba(23,14,9,0.05)_100%),linear-gradient(0deg,rgba(23,14,9,0.72)_0%,transparent_55%)]" aria-hidden="true" />
         <div className="absolute inset-x-0 bottom-0 p-7 sm:p-12">
-          <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#f3c681]">Destination preview · {index + 1} of {destinations.length}</p>
+          <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#F5951C]">Destination preview · {index + 1} of {destinations.length}</p>
           <h2 id="journey-experience-v2-heading" className="mt-3 font-serif text-5xl font-normal tracking-[-0.045em] text-white sm:text-6xl">{destination.title}</h2>
           <p className="mt-3 text-lg text-white/90 sm:text-xl">{destination.caption}</p>
           <p className="mt-8 text-sm font-medium text-white/75">This is just the beginning…</p>
-          <button type="button" onClick={onExplore} className="mt-4 inline-flex min-h-14 items-center justify-center rounded-full bg-[#f3c681] px-8 text-base font-bold text-[#25180f] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#ffe1ab] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#f3c681] motion-reduce:transition-none motion-reduce:hover:translate-y-0">Explore Your Journey <span aria-hidden="true" className="ml-2">→</span></button>
+          <button type="button" onClick={onExplore} className="mt-4 inline-flex min-h-14 items-center justify-center rounded-full bg-[#F5951C] px-8 text-base font-bold text-[#2A211C] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#F5951C] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F5951C] motion-reduce:transition-none motion-reduce:hover:translate-y-0">Explore Your Journey <span aria-hidden="true" className="ml-2">→</span></button>
         </div>
         <div className="absolute right-5 top-5 flex gap-2 sm:right-7 sm:top-7">
-          <button type="button" onClick={onPrevious} aria-label="Show previous destination" className="flex h-11 w-11 items-center justify-center rounded-full border border-white/35 bg-[#2b1c13]/35 text-xl text-white backdrop-blur-md transition hover:bg-[#2b1c13]/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">←</button>
-          <button type="button" onClick={onNext} aria-label="Show next destination" className="flex h-11 w-11 items-center justify-center rounded-full border border-white/35 bg-[#2b1c13]/35 text-xl text-white backdrop-blur-md transition hover:bg-[#2b1c13]/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">→</button>
+          <button type="button" onClick={onPrevious} aria-label="Show previous destination" className="flex h-11 w-11 items-center justify-center rounded-full border border-white/35 bg-[#2A211C]/35 text-xl text-white backdrop-blur-md transition hover:bg-[#2A211C]/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">←</button>
+          <button type="button" onClick={onNext} aria-label="Show next destination" className="flex h-11 w-11 items-center justify-center rounded-full border border-white/35 bg-[#2A211C]/35 text-xl text-white backdrop-blur-md transition hover:bg-[#2A211C]/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">→</button>
         </div>
       </div>
     </section>

@@ -8,8 +8,8 @@ import { siteContact } from "@/config/contact.config";
 
 function LegalContact() {
   return (
-  <div className="mt-5 rounded-2xl border border-[#e1ceb0] bg-white p-6 text-[#705c47]">
-    <p className="font-semibold text-[#2d2117]">
+  <div className="mt-5 rounded-2xl border border-[#e1ceb0] bg-white p-6 text-[#2A211C]">
+    <p className="font-semibold text-[#2A211C]">
       {siteBrand.name}
     </p>
 
@@ -68,12 +68,12 @@ function renderBlock(block: string, index: number) {
         <table className="w-full table-fixed text-left text-sm">
           <tbody>
             {rows.map((row, rowIndex) => (
-              <tr key={rowIndex} className={rowIndex === 0 ? "bg-[#f6ead8] font-semibold" : "border-t border-[#eadfce]"}>
+              <tr key={rowIndex} className={rowIndex === 0 ? "bg-[#FFFDFC] font-semibold" : "border-t border-[#eadfce]"}>
                 {row.map((cell, cellIndex) =>
                   rowIndex === 0 ? (
                     <th key={cellIndex} className="break-words px-4 py-3">{cell}</th>
                   ) : (
-                    <td key={cellIndex} className="break-words px-4 py-3 text-[#705c47]">{cell}</td>
+                    <td key={cellIndex} className="break-words px-4 py-3 text-[#2A211C]">{cell}</td>
                   ),
                 )}
               </tr>
@@ -86,7 +86,7 @@ function renderBlock(block: string, index: number) {
 
   if (block.startsWith("- ")) {
     return (
-      <ul key={index} className="mt-5 list-disc space-y-2 pl-6 leading-7 text-[#705c47]">
+      <ul key={index} className="mt-5 list-disc space-y-2 pl-6 leading-7 text-[#2A211C]">
         {block.split("\n").map((line) => <li key={line}>{line.slice(2)}</li>)}
       </ul>
     );
@@ -99,7 +99,7 @@ if (emailRegex.test(block)) {
   const match = block.match(emailRegex)!;
 
   return (
-    <p key={index} className="mt-5 leading-8 text-[#705c47]">
+    <p key={index} className="mt-5 leading-8 text-[#2A211C]">
       {block.split(match[0])[0]}
       <a
         href={match[2]}
@@ -113,7 +113,7 @@ if (emailRegex.test(block)) {
   }
 
   return (
-    <p key={index} className="mt-5 leading-8 text-[#705c47]">
+    <p key={index} className="mt-5 leading-8 text-[#2A211C]">
       {block.replace(/\*\*/g, "")}
     </p>
   );

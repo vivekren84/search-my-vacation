@@ -134,6 +134,18 @@ async function verifyValidation() {
   assert(!parseJourneyLeadSubmission({ ...rawSubmission, passportReference: "anything" }).ok, "arbitrary Passport reference is rejected");
   assert(!parseJourneyLeadSubmission({ ...rawSubmission, unexpected: true }).ok, "unexpected request keys are rejected");
   assert(!parseJourneyLeadSubmission({ ...rawSubmission, passportSummary: { ...rawSubmission.passportSummary, travelStyles: "Nature" } }).ok, "malformed Passport summary is rejected");
+  const destinationEntry = parseJourneyLeadSubmission({
+    ...rawSubmission,
+    passportSummary: {
+      ...rawSubmission.passportSummary,
+      dreamJourney: "Mountain Retreat",
+      destinationMode: "known",
+      destination: "Kashmir",
+      entryContext: { destination: "Kashmir", destinationTheme: "Mountain Retreat", source: "destination" },
+    },
+  });
+  assert(destinationEntry.ok && destinationEntry.value.passportSummary.entryContext?.destinationTheme === "Mountain Retreat", "verified destination context survives lead validation");
+  assert(!parseJourneyLeadSubmission({ ...rawSubmission, passportSummary: { ...rawSubmission.passportSummary, entryContext: { destination: "Kashmir", destinationTheme: "Unverified", source: "destination" } } }).ok, "unverified destination theme is rejected");
   assert(parseNotificationRecipients("a@example.com, A@example.com, invalid, b@example.com").length === 2, "recipient values are validated and deduplicated");
   const callback = parseJourneyCallbackSubmission(rawCallback);
   assert(callback.ok && callback.value.mobileNormalized === "919000000000", "valid callback request is normalized");

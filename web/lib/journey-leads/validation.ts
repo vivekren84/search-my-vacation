@@ -11,8 +11,11 @@ const SUMMARY_KEYS = new Set([
   "name", "mobile", "journeyReference", "companion", "dreamJourney", "travelStyles", "timing",
   "startDate", "endDate", "destinationMode", "destination", "travelScope", "entryContext", "completedAt", "source",
 ]);
-const ENTRY_KEYS = new Set(["feeling", "destination", "source"]);
+const ENTRY_KEYS = new Set(["feeling", "experience", "inspiration", "destination", "destinationTheme", "source"]);
 const FEELINGS = new Set(["relax", "explore", "celebrate", "romance", "escape"]);
+const EXPERIENCES = new Set(["Memory Makers", "Celebration Moments", "Family Time", "Weekend Getaways", "Global Escapes", "Nature & Serenity"]);
+const INSPIRATIONS = new Set(["Mountains", "Beaches", "Wildlife", "Romance", "Relaxation"]);
+const DESTINATION_THEMES = new Set(["Tropical Escape", "Mountain Retreat", "City Discovery", "Wildlife Adventure"]);
 const CALLBACK_KEYS = new Set([
   "passportReference", "guestName", "mobileNumber", "preferredDate", "preferredTimeWindow", "additionalComments",
 ]);
@@ -64,12 +67,18 @@ function parseEntryContext(value: unknown): JourneyLeadPassportSummary["entryCon
   if (value === undefined) return {};
   if (!isRecord(value) || !hasOnlyKeys(value, ENTRY_KEYS)) return null;
   if (value.feeling !== undefined && (typeof value.feeling !== "string" || !FEELINGS.has(value.feeling))) return null;
+  if (value.experience !== undefined && (typeof value.experience !== "string" || !EXPERIENCES.has(value.experience))) return null;
+  if (value.inspiration !== undefined && (typeof value.inspiration !== "string" || !INSPIRATIONS.has(value.inspiration))) return null;
   if (value.destination !== undefined && !boundedString(value.destination, 0, 100)) return null;
-  if (value.source !== undefined && value.source !== "homepage" && value.source !== "direct") return null;
+  if (value.destinationTheme !== undefined && (typeof value.destinationTheme !== "string" || !DESTINATION_THEMES.has(value.destinationTheme))) return null;
+  if (value.source !== undefined && value.source !== "homepage" && value.source !== "direct" && value.source !== "experience" && value.source !== "mood" && value.source !== "inspiration" && value.source !== "destination") return null;
   return {
     ...(typeof value.feeling === "string" ? { feeling: value.feeling as NonNullable<JourneyLeadPassportSummary["entryContext"]>["feeling"] } : {}),
+    ...(typeof value.experience === "string" ? { experience: value.experience as NonNullable<JourneyLeadPassportSummary["entryContext"]>["experience"] } : {}),
+    ...(typeof value.inspiration === "string" ? { inspiration: value.inspiration as NonNullable<JourneyLeadPassportSummary["entryContext"]>["inspiration"] } : {}),
     ...(typeof value.destination === "string" ? { destination: cleanSingleLine(value.destination) } : {}),
-    ...(value.source === "homepage" || value.source === "direct" ? { source: value.source } : {}),
+    ...(typeof value.destinationTheme === "string" ? { destinationTheme: value.destinationTheme as NonNullable<JourneyLeadPassportSummary["entryContext"]>["destinationTheme"] } : {}),
+    ...(value.source === "homepage" || value.source === "direct" || value.source === "experience" || value.source === "mood" || value.source === "inspiration" || value.source === "destination" ? { source: value.source } : {}),
   };
 }
 

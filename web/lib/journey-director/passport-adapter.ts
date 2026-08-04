@@ -1,4 +1,7 @@
 import {
+  isJourneyEntryDestinationTheme,
+  isJourneyEntryExperience,
+  isJourneyEntryInspiration,
   isJourneyFeeling,
   type JourneyPassportEntryContext,
   type JourneyPassportState,
@@ -14,8 +17,11 @@ function isJourneyPassportEntryContext(value: unknown): value is JourneyPassport
 
   return (
     (value.feeling === undefined || isJourneyFeeling(value.feeling)) &&
+    (value.experience === undefined || isJourneyEntryExperience(value.experience)) &&
+    (value.inspiration === undefined || isJourneyEntryInspiration(value.inspiration)) &&
     (value.destination === undefined || typeof value.destination === "string") &&
-    (value.source === undefined || value.source === "homepage" || value.source === "direct")
+    (value.destinationTheme === undefined || isJourneyEntryDestinationTheme(value.destinationTheme)) &&
+    (value.source === undefined || value.source === "homepage" || value.source === "direct" || value.source === "experience" || value.source === "mood" || value.source === "inspiration" || value.source === "destination")
   );
 }
 
@@ -60,8 +66,17 @@ export function createJourneyPassportSnapshot(
       ...(isJourneyFeeling(state.entryContext.feeling)
         ? { feeling: state.entryContext.feeling }
         : {}),
+      ...(isJourneyEntryExperience(state.entryContext.experience)
+        ? { experience: state.entryContext.experience }
+        : {}),
+      ...(isJourneyEntryInspiration(state.entryContext.inspiration)
+        ? { inspiration: state.entryContext.inspiration }
+        : {}),
       ...(state.entryContext.destination
         ? { destination: state.entryContext.destination }
+        : {}),
+      ...(isJourneyEntryDestinationTheme(state.entryContext.destinationTheme)
+        ? { destinationTheme: state.entryContext.destinationTheme }
         : {}),
       ...(state.entryContext.source ? { source: state.entryContext.source } : {}),
     },

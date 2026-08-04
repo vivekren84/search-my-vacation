@@ -39,6 +39,8 @@ export async function POST(request: Request) {
       RESEND_API_KEY: process.env.RESEND_API_KEY,
       JOURNEY_LEAD_FROM_EMAIL: process.env.JOURNEY_LEAD_FROM_EMAIL,
       JOURNEY_LEAD_NOTIFICATION_EMAILS: process.env.JOURNEY_LEAD_NOTIFICATION_EMAILS,
+      VERCEL_PROJECT_PRODUCTION_URL: process.env.VERCEL_PROJECT_PRODUCTION_URL,
+      VERCEL_URL: process.env.VERCEL_URL,
     });
     const result = await processJourneyCallback(parsed.value, { repository, notifier });
     return json({ ok: true, passportReference: parsed.value.passportReference, notificationStatus: result.notificationStatus }, 200);
