@@ -28,10 +28,10 @@ function assert(condition: unknown, message: string): asserts condition {
 const rawSubmission: JourneyLeadSubmission = {
   passportReference: "SMV-ABCD2345",
   guestName: "Test Traveller",
-  mobileNumber: "+91 90000 00000",
+  mobileNumber: "9000000000",
   passportSummary: {
     name: "Test Traveller",
-    mobile: "+91 90000 00000",
+    mobile: "9000000000",
     journeyReference: "SMV-ABCD2345",
     companion: "My partner",
     dreamJourney: "A quiet escape",
@@ -121,15 +121,28 @@ class MemoryRepository implements JourneyPassportRepository {
   }
 }
 
+function withMobile(mobileNumber: string) {
+  return { ...rawSubmission, mobileNumber, passportSummary: { ...rawSubmission.passportSummary, mobile: mobileNumber } };
+}
+
 async function verifyValidation() {
   const valid = parseJourneyLeadSubmission(rawSubmission);
-  assert(valid.ok && valid.value.mobileNormalized === "919000000000", "valid lead is normalized to digits");
+  assert(valid.ok && valid.value.mobileNormalized === "9000000000", "valid lead is normalized to digits");
   assert(isJourneyPassportReference("SMV-ABCD2345"), "production Passport reference is accepted");
   assert(isJourneyPassportReference("JY-ABCD-2345"), "recoverable legacy Passport reference is accepted");
   assert(!isJourneyPassportReference("SMV-123"), "malformed Passport reference is rejected");
   assert(!parseJourneyLeadSubmission({ ...rawSubmission, guestName: " " }).ok, "blank name is rejected");
+  assert(!parseJourneyLeadSubmission({ ...rawSubmission, mobileNumber: "" }).ok, "blank mobile is rejected");
   assert(!parseJourneyLeadSubmission({ ...rawSubmission, mobileNumber: "9000abc000" }).ok, "alphabetic mobile is rejected");
-  assert(!parseJourneyLeadSubmission({ ...rawSubmission, mobileNumber: "12345" }).ok, "short mobile is rejected");
+  assert(!parseJourneyLeadSubmission({ ...rawSubmission, mobileNumber: "12345" }).ok, "short mobile (5 digits) is rejected");
+  assert(!parseJourneyLeadSubmission({ ...rawSubmission, mobileNumber: "123456789" }).ok, "short mobile (9 digits) is rejected");
+  assert(parseJourneyLeadSubmission(withMobile("1234567890")).ok, "10-digit mobile is accepted");
+  assert(!parseJourneyLeadSubmission({ ...rawSubmission, mobileNumber: "0000000000" }).ok, "all-zero mobile is rejected");
+  assert(parseJourneyLeadSubmission(withMobile("3456789012")).ok, "mobile starting with 3 is accepted");
+  assert(parseJourneyLeadSubmission(withMobile("9876543210")).ok, "mobile starting with 9 is accepted");
+  assert(!parseJourneyLeadSubmission({ ...rawSubmission, mobileNumber: "12345678901" }).ok, "11-digit mobile is rejected");
+  assert(!parseJourneyLeadSubmission({ ...rawSubmission, mobileNumber: "+91 9000000000" }).ok, "mobile with a country code prefix is rejected");
+  assert(!parseJourneyLeadSubmission({ ...rawSubmission, mobileNumber: "900-000-0000" }).ok, "mobile with special characters is rejected");
   assert(!parseJourneyLeadSubmission({ ...rawSubmission, passportReference: undefined }).ok, "missing Passport reference is rejected");
   assert(!parseJourneyLeadSubmission({ ...rawSubmission, passportReference: "anything" }).ok, "arbitrary Passport reference is rejected");
   assert(!parseJourneyLeadSubmission({ ...rawSubmission, unexpected: true }).ok, "unexpected request keys are rejected");
@@ -148,7 +161,7 @@ async function verifyValidation() {
   assert(!parseJourneyLeadSubmission({ ...rawSubmission, passportSummary: { ...rawSubmission.passportSummary, entryContext: { destination: "Kashmir", destinationTheme: "Unverified", source: "destination" } } }).ok, "unverified destination theme is rejected");
   assert(parseNotificationRecipients("a@example.com, A@example.com, invalid, b@example.com").length === 2, "recipient values are validated and deduplicated");
   const callback = parseJourneyCallbackSubmission(rawCallback);
-  assert(callback.ok && callback.value.mobileNormalized === "919000000000", "valid callback request is normalized");
+  assert(callback.ok && callback.value.mobileNormalized === "9000000000", "valid callback request is normalized");
   assert(!parseJourneyCallbackSubmission({ ...rawCallback, preferredDate: "2020-01-01" }).ok, "past callback dates are rejected");
   assert(!parseJourneyCallbackSubmission({ ...rawCallback, preferredTimeWindow: "Any time" }).ok, "unknown callback windows are rejected");
   assert(!parseJourneyCallbackSubmission({ ...rawCallback, additionalComments: "x".repeat(501) }).ok, "oversized callback comments are rejected");
@@ -275,7 +288,7 @@ async function verifyNotificationProvider() {
   });
   const email = createJourneyLeadEmail(lead);
   assert(email.html.includes("&lt;Test &amp; Traveller&gt;") && !email.html.includes("<Test & Traveller>"), "notification HTML escapes guest values");
-  assert(email.text.includes("Mobile: +91 90000 00000"), "plain-text notification includes the guest contact");
+  assert(email.text.includes("Mobile: 9000000000"), "plain-text notification includes the guest contact");
 
   const missing = createJourneyLeadNotifier({});
   assert((await missing.send(lead)).status === "not-configured", "missing provider credentials return not-configured");
@@ -301,7 +314,7 @@ async function verifyNotificationProvider() {
 
   const callbackLead: JourneyCallbackLead = {
     ...rawCallback,
-    mobileNormalized: "919000000000",
+    mobileNormalized: "9000000000",
     fingerprint: "a".repeat(64),
     initialProviderRequestId: "initial-provider-id",
     initialMessageId: "<initial-message@resend.test>",

@@ -76,7 +76,7 @@ function sanitiseDraft(value: unknown): JourneyPassportDraft | null {
     startDate: typeof raw.startDate === "string" ? raw.startDate : "", endDate: typeof raw.endDate === "string" ? raw.endDate : "",
     destinationMode: raw.destinationMode === "known" || raw.destinationMode === "discovery" ? raw.destinationMode : "",
     destination: typeof raw.destination === "string" ? raw.destination.slice(0, 100) : "",
-    mobile: typeof raw.mobile === "string" ? raw.mobile.slice(0, 24) : "",
+    mobile: typeof raw.mobile === "string" ? raw.mobile.replace(/\D/g, "").slice(0, 10) : "",
     journeyReference: typeof raw.journeyReference === "string" ? raw.journeyReference.slice(0, 12) : "",
     visitedMoments: Array.isArray(raw.visitedMoments) ? raw.visitedMoments.filter((id): id is JourneyMomentId => momentValues.has(id as JourneyMomentId)) : ["welcome"],
     completion: "idle", navigationDirection: "none", updatedAt: typeof raw.updatedAt === "number" ? raw.updatedAt : draft.savedAt,

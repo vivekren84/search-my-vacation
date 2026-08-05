@@ -3,7 +3,8 @@ import { isCallbackTimeWindow, isValidCallbackDate } from "../callback-preferenc
 import type { JourneyCallbackSubmission, JourneyLeadPassportSummary, JourneyLeadSubmission, ValidatedJourneyCallback, ValidatedJourneyLead } from "./types";
 
 const PASSPORT_REFERENCE_PATTERN = /^(?:SMV-[A-Z2-9]{8}|JY-[A-Z2-9]{4}-[A-Z2-9]{4})$/;
-const MOBILE_DISPLAY_PATTERN = /^[\d+().\-\s]+$/;
+const MOBILE_NUMBER_PATTERN = /^\d{10}$/;
+const MOBILE_REJECTED_NUMBERS = new Set(["0000000000"]);
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const TOP_LEVEL_KEYS = new Set(["passportReference", "guestName", "mobileNumber", "passportSummary"]);
@@ -122,7 +123,7 @@ export function parseJourneyLeadSubmission(value: unknown): JourneyLeadValidatio
 
   if (!isJourneyPassportReference(passportReference)) return { ok: false, code: "invalid_passport_reference" };
   if (guestName.length < 2 || guestName.length > 80 || !/\p{L}/u.test(guestName)) return { ok: false, code: "invalid_guest_name" };
-  if (!MOBILE_DISPLAY_PATTERN.test(mobileNumber) || mobileNormalized.length < 10 || mobileNormalized.length > 15) return { ok: false, code: "invalid_mobile_number" };
+  if (!MOBILE_NUMBER_PATTERN.test(mobileNumber) || MOBILE_REJECTED_NUMBERS.has(mobileNormalized)) return { ok: false, code: "invalid_mobile_number" };
   if (!passportSummary) return { ok: false, code: "invalid_passport_summary" };
   if (
     passportSummary.journeyReference !== passportReference || passportSummary.name !== guestName ||
@@ -154,7 +155,7 @@ export function parseJourneyCallbackSubmission(value: unknown): JourneyCallbackV
 
   if (!isJourneyPassportReference(passportReference)) return { ok: false, code: "invalid_passport_reference" };
   if (guestName.length < 2 || guestName.length > 80 || !/\p{L}/u.test(guestName)) return { ok: false, code: "invalid_guest_name" };
-  if (!MOBILE_DISPLAY_PATTERN.test(mobileNumber) || mobileNormalized.length < 10 || mobileNormalized.length > 15) return { ok: false, code: "invalid_mobile_number" };
+  if (!MOBILE_NUMBER_PATTERN.test(mobileNumber) || MOBILE_REJECTED_NUMBERS.has(mobileNormalized)) return { ok: false, code: "invalid_mobile_number" };
   if (!isValidCallbackDate(preferredDate)) return { ok: false, code: "invalid_callback_date" };
   if (!isCallbackTimeWindow(preferredTimeWindow)) return { ok: false, code: "invalid_callback_time" };
   if (additionalComments.length > 500) return { ok: false, code: "invalid_callback_comments" };
