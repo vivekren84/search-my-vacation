@@ -94,3 +94,29 @@ export function journeyCanonicalImage(candidateId: string): JourneyCanonicalImag
     fallbackReason: `No canonical destination image is configured for ${candidateId}.`,
   };
 }
+
+function slugifyRegionName(regionName: string): string {
+  return regionName
+    .trim()
+    .toLocaleLowerCase("en-US")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+/**
+ * Region-aware canonical image lookup for Journey Director recommendation
+ * cards. Journey Director's internal region ids (e.g. "india-karnataka-kabini")
+ * do not match the short slugs used as keys in journeyCanonicalImages, so the
+ * traveller-facing region name (e.g. "Kabini") is slugified and checked first.
+ * This ensures a card's hero image reflects the actually-selected region
+ * rather than only the broader candidate (state/country) image. Falls back to
+ * the candidate-level image, then the documented default, exactly as
+ * journeyCanonicalImage already does.
+ */
+export function journeyCanonicalImageForPossibility(
+  regionName: string,
+  candidateId: string,
+): JourneyCanonicalImage {
+  const regionKey = slugifyRegionName(regionName);
+  return journeyCanonicalImages[regionKey] ?? journeyCanonicalImage(candidateId);
+}

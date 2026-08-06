@@ -36,6 +36,7 @@ const LEGACY_CANDIDATE_IDS: Readonly<Record<string, string>> = {
 
 const CANDIDATE_NAMES: Readonly<Record<string, string>> = {
   "india-andhra-pradesh": "Vizag",
+  "india-tamilnadu": "Tamil Nadu",
   "india-telangana": "Hyderabad",
   "india-wildlife-tours": "Wildlife",
   "united-arab-emirates": "Dubai",

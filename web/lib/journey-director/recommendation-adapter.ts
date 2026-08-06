@@ -1,6 +1,6 @@
 import {
   DEFAULT_JOURNEY_PRESENTATION,
-  journeyCanonicalImage,
+  journeyCanonicalImageForPossibility,
   journeyPresentationCatalogue,
   journeyPresentationKey,
 } from "../../config/journey-director.config";
@@ -89,6 +89,26 @@ function travellerFriendlyCopy(value: string) {
     .replace(/\bthreshold\b/gi, "standard");
 }
 
+/**
+ * Evidence attached to a possibility comes from two sources: the
+ * actually-selected region (id-prefixed "<regionId>-...") and the broader
+ * candidate record (id-prefixed "<candidateId>-generated-..."), which for
+ * multi-region candidates (e.g. Karnataka, Tamil Nadu) is generated from an
+ * arbitrary region and can name a different place than the one the traveller
+ * is actually shown (DEF-01/DEF-02). Presentation must prefer the
+ * selected-region's own evidence so a card never narrates another
+ * destination. Falls back to the full mixed set only if the region's own
+ * evidence doesn't clear the same >=2 threshold used elsewhere for
+ * traveller-facing fit explanations, so this never produces fewer reasons
+ * than before.
+ */
+function regionScopedEvidence(possibility: EnginePossibility): readonly CandidateEvidence[] {
+  const ownRegionEvidence = possibility.fitEvidence.filter((evidence) =>
+    evidence.id.startsWith(`${possibility.regionId}-`),
+  );
+  return ownRegionEvidence.length >= 2 ? ownRegionEvidence : possibility.fitEvidence;
+}
+
 function reasonCategory(evidence: CandidateEvidence) {
   if (evidence.companions?.length) return "companion";
   if (evidence.memoryGoals?.length) return "memory";
@@ -127,7 +147,7 @@ function mapReasons(possibility: EnginePossibility): JourneyReason[] {
     fit: 0,
   };
   const usedTitles = new Set<string>();
-  const evidenceReasons = possibility.fitEvidence.slice(0, 4).map((evidence, index) => {
+  const evidenceReasons = regionScopedEvidence(possibility).slice(0, 4).map((evidence, index) => {
     const category = reasonCategory(evidence);
     const titles = reasonTitles[category];
     const categoryIndex = categoryCount[category]++;
@@ -176,7 +196,10 @@ function mapPossibility(
     presentation[journeyPresentationKey(possibility.candidateId, possibility.regionId)];
   const evidenceIds = new Set(possibility.fitEvidence.map((evidence) => evidence.id));
   const supportingEvidence = possibility.fitEvidence.map(evidenceReference);
-  const canonicalImage = journeyCanonicalImage(possibility.candidateId);
+  const canonicalImage = journeyCanonicalImageForPossibility(
+    possibility.regionName,
+    possibility.candidateId,
+  );
   const canUseMetadata =
     metadata &&
     metadata.candidateId === possibility.candidateId &&
@@ -184,7 +207,7 @@ function mapPossibility(
     metadataIsSupported(metadata.supportingEvidenceIds, evidenceIds);
   const summary = travellerFriendlyCopy(
     (canUseMetadata ? metadata.summary : undefined) ??
-    possibility.fitEvidence[0]?.explanation ??
+    regionScopedEvidence(possibility)[0]?.explanation ??
     `${possibility.destinationName} and ${possibility.regionName} bring together several qualities from your Journey Passport.`,
   );
   const moments = canUseMetadata

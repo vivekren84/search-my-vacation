@@ -7,6 +7,7 @@ import { journeyCanonicalImages } from "./destination-images.config";
 export {
   DEFAULT_JOURNEY_PRESENTATION,
   journeyCanonicalImage,
+  journeyCanonicalImageForPossibility,
   journeyCanonicalImages,
   retainedJourneyImageAlternatives,
 } from "./destination-images.config";
