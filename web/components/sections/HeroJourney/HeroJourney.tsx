@@ -9,30 +9,38 @@ const emotions = [
     title: "Relax",
     desc: "Slow down & unwind",
     emoji: "🌿",
+    // Visual-weight correction: this glyph renders with more internal
+    // whitespace than the others at the same font-size, so it needs a
+    // slight boost to read as the same visual size. Styling only.
+    visualScale: 1.15,
   },
   {
     key: "explore",
     title: "Explore",
     desc: "Discover & adventure",
     emoji: "🗺️",
+    visualScale: 0.85,
   },
   {
     key: "celebrate",
     title: "Celebrate",
     desc: "Make it unforgettable",
     emoji: "🎉",
+    visualScale: 0.9,
   },
   {
     key: "romance",
     title: "Romance",
     desc: "Moments that connect",
     emoji: "💑",
+    visualScale: 1,
   },
   {
     key: "escape",
     title: "Escape",
     desc: "Get away & recharge",
     emoji: "🧘",
+    visualScale: 1.15,
   },
 ];
 
@@ -57,7 +65,7 @@ export default function HeroJourney() {
       {/* Content */}
       <div className="relative z-10 flex max-w-5xl flex-col items-center gap-6 px-6 pt-20">
 
-        <p className="text-xs tracking-[0.3em] text-white/70 uppercase">
+        <p className="inline-flex items-center rounded-md border border-[#D7A84B]/45 bg-[#2F211B]/55 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.28em] text-[#FFF8E8] backdrop-blur-[3px] shadow-[0_2px_10px_rgba(0,0,0,0.22)]">
           Your Journey, Your Feeling
         </p>
 
@@ -88,8 +96,14 @@ export default function HeroJourney() {
                   }
                 `}
               >
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/30 backdrop-blur-md text-xl shrink-0">
-                  <span className="leading-none">{emotion.emoji}</span>
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/30 backdrop-blur-md">
+                  <span
+                    aria-hidden="true"
+                    className="block text-xl leading-none"
+                    style={{ transform: `scale(${emotion.visualScale})`, transformOrigin: "center" }}
+                  >
+                    {emotion.emoji}
+                  </span>
                 </div>
 
                 <div>
