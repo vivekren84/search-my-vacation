@@ -30,17 +30,17 @@ function metadata(
  * eligible, change its score, or alter engine recommendation order.
  */
 export const journeyPresentationCatalogue: JourneyPresentationCatalogue = {
-  "goa:goa-south": metadata({
-    candidateId: "goa", regionId: "goa-south",
+  "goa:india-goa-south-goa": metadata({
+    candidateId: "goa", regionId: "india-goa-south-goa",
     summary: "A calmer coastal expression of Goa, with room for slow mornings, local flavour, and time together.",
     heroImage: goaImage, heroImageAlt: "A warm coastal scene representing a quieter South Goa stay", heroImagePosition: "center",
-    supportingEvidenceIds: ["goa-identity", "goa-themes"],
+    supportingEvidenceIds: ["india-goa-south-goa-identity", "india-goa-south-goa-strengths"],
     moments: [
-      { id: "goa-morning", title: "Let the coast set the pace", description: "Begin with an unhurried morning close to the water.", image: goaImage, imageAlt: "A quiet golden-hour coastal moment in Goa", supportingEvidenceIds: ["goa-identity"] },
-      { id: "goa-table", title: "Stay for local flavour", description: "Make room for a long table and the stories that arrive with it.", image: goaImage, imageAlt: "A relaxed coastal dining moment in Goa", supportingEvidenceIds: ["goa-themes"] },
-      { id: "goa-evening", title: "Keep the evening simple", description: "A gentle end to the day, shaped around the people travelling with you.", image: goaImage, imageAlt: "A calm evening by the Goan coast", supportingEvidenceIds: ["goa-identity"] },
+      { id: "goa-morning", title: "Let the coast set the pace", description: "Begin with an unhurried morning close to the water.", image: goaImage, imageAlt: "A quiet golden-hour coastal moment in Goa", supportingEvidenceIds: ["india-goa-south-goa-identity"] },
+      { id: "goa-table", title: "Stay for local flavour", description: "Make room for a long table and the stories that arrive with it.", image: goaImage, imageAlt: "A relaxed coastal dining moment in Goa", supportingEvidenceIds: ["india-goa-south-goa-strengths"] },
+      { id: "goa-evening", title: "Keep the evening simple", description: "A gentle end to the day, shaped around the people travelling with you.", image: goaImage, imageAlt: "A calm evening by the Goan coast", supportingEvidenceIds: ["india-goa-south-goa-identity"] },
     ],
-    handoffHeadline: "Let’s shape a calmer Goa story together.", handoffMessage: "A Journey Director can help choose the coast and pace that best fit the journey you described.", ctaLabel: "Explore This Journey",
+    handoffHeadline: "Let’s shape a calmer Goa story together.", handoffMessage: "Leave room for evenings that aren’t planned.", ctaLabel: "Explore This Journey",
   }),
   "kerala:kerala-alappuzha": metadata({
     candidateId: "kerala",
@@ -86,15 +86,15 @@ export const journeyPresentationCatalogue: JourneyPresentationCatalogue = {
       "A Journey Director can refine this Alappuzha possibility around your pace, your people, and the moments you want to keep.",
     ctaLabel: "Explore This Journey",
   }),
-  "bali:bali-ubud": metadata({
+  "bali:indonesia-bali-ubud": metadata({
     candidateId: "bali",
-    regionId: "bali-ubud",
+    regionId: "indonesia-bali-ubud",
     summary:
       "Reconnection through culture, green landscapes, wellness, and days with space to breathe.",
     heroImage: baliImage,
     heroImageAlt: "A couple walking beside Ubud rice terraces in warm morning light",
     heroImagePosition: "center",
-    supportingEvidenceIds: ["bali-reconnection", "bali-variety"],
+    supportingEvidenceIds: ["indonesia-bali-ubud-identity", "indonesia-bali-ubud-strengths"],
     moments: [
       {
         id: "bali-terraces",
@@ -103,7 +103,7 @@ export const journeyPresentationCatalogue: JourneyPresentationCatalogue = {
         image: baliImage,
         imageAlt: "A couple walking beside layered green rice terraces in Ubud",
         imagePosition: "70% center",
-        supportingEvidenceIds: ["bali-variety"],
+        supportingEvidenceIds: ["indonesia-bali-ubud-strengths"],
       },
       {
         id: "bali-culture",
@@ -112,7 +112,7 @@ export const journeyPresentationCatalogue: JourneyPresentationCatalogue = {
         image: baliImage,
         imageAlt: "Balinese cultural details among tropical greenery in Ubud",
         imagePosition: "22% center",
-        supportingEvidenceIds: ["bali-variety"],
+        supportingEvidenceIds: ["indonesia-bali-ubud-strengths"],
       },
       {
         id: "bali-wellness",
@@ -121,12 +121,12 @@ export const journeyPresentationCatalogue: JourneyPresentationCatalogue = {
         image: baliImage,
         imageAlt: "Soft morning mist and tropical greenery surrounding Ubud",
         imagePosition: "85% center",
-        supportingEvidenceIds: ["bali-reconnection"],
+        supportingEvidenceIds: ["indonesia-bali-ubud-identity"],
       },
     ],
     handoffHeadline: "Let’s make this Bali possibility feel entirely yours.",
     handoffMessage:
-      "A Journey Director can balance Ubud’s culture, nature, and wellness around the kind of reconnection you described.",
+      "Some of the best memories happen between the landmarks.",
     ctaLabel: "Explore This Journey",
   }),
   "sri-lanka:sri-lanka-bentota-galle": metadata({

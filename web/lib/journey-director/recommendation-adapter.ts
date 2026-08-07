@@ -4,6 +4,14 @@ import {
   journeyPresentationCatalogue,
   journeyPresentationKey,
 } from "../../config/journey-director.config";
+import {
+  closingMessage,
+  experienceTags,
+  memoriesText,
+  regionScopedEvidence,
+  travelStyleLabel,
+  travellerLinkClause,
+} from "./card-copy";
 import type {
   JourneyEvidenceReference,
   JourneyPassportSnapshot,
@@ -89,26 +97,6 @@ function travellerFriendlyCopy(value: string) {
     .replace(/\bthreshold\b/gi, "standard");
 }
 
-/**
- * Evidence attached to a possibility comes from two sources: the
- * actually-selected region (id-prefixed "<regionId>-...") and the broader
- * candidate record (id-prefixed "<candidateId>-generated-..."), which for
- * multi-region candidates (e.g. Karnataka, Tamil Nadu) is generated from an
- * arbitrary region and can name a different place than the one the traveller
- * is actually shown (DEF-01/DEF-02). Presentation must prefer the
- * selected-region's own evidence so a card never narrates another
- * destination. Falls back to the full mixed set only if the region's own
- * evidence doesn't clear the same >=2 threshold used elsewhere for
- * traveller-facing fit explanations, so this never produces fewer reasons
- * than before.
- */
-function regionScopedEvidence(possibility: EnginePossibility): readonly CandidateEvidence[] {
-  const ownRegionEvidence = possibility.fitEvidence.filter((evidence) =>
-    evidence.id.startsWith(`${possibility.regionId}-`),
-  );
-  return ownRegionEvidence.length >= 2 ? ownRegionEvidence : possibility.fitEvidence;
-}
-
 function reasonCategory(evidence: CandidateEvidence) {
   if (evidence.companions?.length) return "companion";
   if (evidence.memoryGoals?.length) return "memory";
@@ -157,11 +145,21 @@ function mapReasons(possibility: EnginePossibility): JourneyReason[] {
       : preferredTitle;
     usedTitles.add(title);
 
+    // "The memories you want to make" previously echoed the raw generated
+    // evidence text verbatim — a formulaic "X, Y, Z; pace rhythm; region
+    // context." string repeated near-identically across many cards (EBC-017C
+    // Part B). Route that category through a natural-language generator
+    // built from the same underlying signals instead.
+    const description =
+      category === "memory"
+        ? memoriesText(evidence, possibility)
+        : travellerFriendlyCopy(evidence.explanation);
+
     return {
       id: evidence.id,
       cue: String(index + 1).padStart(2, "0"),
       title,
-      description: travellerFriendlyCopy(evidence.explanation),
+      description,
       evidence: [evidenceReference(evidence)],
     };
   });
@@ -191,6 +189,7 @@ function mapPossibility(
   possibility: EnginePossibility,
   order: number,
   presentation: JourneyPresentationCatalogue,
+  passport: JourneyPassportSnapshot,
 ): JourneyPossibility {
   const metadata =
     presentation[journeyPresentationKey(possibility.candidateId, possibility.regionId)];
@@ -205,10 +204,18 @@ function mapPossibility(
     metadata.candidateId === possibility.candidateId &&
     metadata.regionId === possibility.regionId &&
     metadataIsSupported(metadata.supportingEvidenceIds, evidenceIds);
+  // Curated summaries (Goa, Bali) already reflect the destination and its
+  // emotional tone; the traveller-link clause is only appended to the
+  // generated fallback summary, which otherwise names only the destination
+  // and its themes, never the traveller's own selections (EBC-017C Part B).
   const summary = travellerFriendlyCopy(
-    (canUseMetadata ? metadata.summary : undefined) ??
-    regionScopedEvidence(possibility)[0]?.explanation ??
-    `${possibility.destinationName} and ${possibility.regionName} bring together several qualities from your Journey Passport.`,
+    (canUseMetadata
+      ? metadata.summary
+      : undefined) ??
+    (regionScopedEvidence(possibility)[0]?.explanation
+      ? `${regionScopedEvidence(possibility)[0].explanation}${travellerLinkClause(passport)}`
+      : undefined) ??
+    `${possibility.destinationName} and ${possibility.regionName} bring together several qualities from your Journey Passport.${travellerLinkClause(passport)}`,
   );
   const moments = canUseMetadata
     ? metadata.moments
@@ -247,8 +254,8 @@ function mapPossibility(
     confidence: possibility.confidence,
     matchStrength: possibility.totalScore,
     cautions: [...possibility.cautions],
-    experiences: [...possibility.experienceHighlights],
-    recommendedTravelStyle: possibility.recommendedTravelStyle,
+    experiences: [...experienceTags(possibility)],
+    recommendedTravelStyle: travelStyleLabel(possibility),
     recommendedSeason: possibility.recommendedSeason,
     confidenceNote: confidenceNote(possibility.confidence),
     ctaLabel:
@@ -259,7 +266,7 @@ function mapPossibility(
       `Let’s shape your ${possibility.destinationName} story together.`,
     handoffMessage:
       (canUseMetadata ? metadata.handoffMessage : undefined) ??
-      `A Journey Director can refine ${possibility.regionName} around the priorities preserved in your Journey Passport.`,
+      closingMessage(possibility),
   };
 }
 
@@ -334,7 +341,7 @@ export function adaptJourneyRecommendations({
   const state = stateFor(engineResult);
   const reflectionModel = buildTravellerReflection(passport, engineResult);
   const possibilities = engineResult.possibilities.map((possibility, index) =>
-    mapPossibility(possibility, index + 1, presentation),
+    mapPossibility(possibility, index + 1, presentation, passport),
   );
 
   return {
