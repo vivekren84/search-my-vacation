@@ -14,7 +14,7 @@
 
 .selectorHeader h2 {
   margin-top: 0.75rem;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-editorial);
   font-size: clamp(2rem, 5vw, 3.5rem);
   font-weight: 400;
   letter-spacing: -0.05em;

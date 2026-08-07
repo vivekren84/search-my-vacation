@@ -60,7 +60,7 @@ export default function HeroJourney() {
       />
 
       {/* Overlay */}
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(20,13,8,.45),rgba(20,13,8,.22)_42%,rgba(20,13,8,.82))]" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(20,13,8,.45),rgba(20,13,8,.22)_42%,rgba(20,13,8,.40))]" />
 
       {/* Content */}
       <div className="relative z-10 flex max-w-5xl flex-col items-center gap-6 px-6 pt-20">
@@ -139,9 +139,6 @@ export default function HeroJourney() {
           </p>
         )}
       </div>
-
-      {/* Bottom Fade */}
-      <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-b from-transparent to-[#FFFDFC]" />
 
     </section>
   );
