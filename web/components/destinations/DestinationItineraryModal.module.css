@@ -40,7 +40,7 @@
 }
 
 .header p {
-  color: #B72027;
+  color: #2A211C;
   font-size: 0.63rem;
   font-weight: 800;
   letter-spacing: 0.18em;
@@ -79,7 +79,7 @@
 }
 
 .header button:focus-visible {
-  outline: 3px solid #B72027;
+  outline: 3px solid #2A211C;
   outline-offset: 3px;
 }
 
@@ -107,7 +107,7 @@
   width: 2.25rem;
   height: 2.25rem;
   border: 2px solid rgb(154 100 46 / 22%);
-  border-top-color: #B72027;
+  border-top-color: #F5951C;
   border-radius: 999px;
   animation: journey-loading 800ms linear infinite;
 }

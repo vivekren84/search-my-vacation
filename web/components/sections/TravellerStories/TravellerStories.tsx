@@ -79,7 +79,7 @@ export default function TravellerStories() {
     <section className="bg-[#FFFDFC] layout-section" aria-labelledby="traveller-stories-heading">
       <div className="layout-container">
         <div className="layout-section-heading">
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#B72027]">
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#2A211C]">
             Told by our travellers
           </p>
           <h2

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
+import localFont from "next/font/local";
 
 import { siteBrand } from "@/config/brand.config";
 import { siteContact } from "@/config/contact.config";
@@ -18,6 +19,24 @@ const poppins = Poppins({
   display: "swap",
   variable: "--font-utility",
   weight: ["500", "600", "700"],
+});
+
+// Self-hosted editorial family, per the Search My Vacation Brand Identity
+// Manual (Edition Two), Section 04. GFS Baskerville is regular-weight only —
+// TeX Gyre Pagella supplies true (non-synthetic) bold, italic, and bold-italic
+// cuts for the same "--font-editorial" application token, exactly as the
+// approved asset package's README-FONTS.txt specifies. No external runtime
+// font dependency; approved serif fallbacks apply if the local files fail.
+const editorial = localFont({
+  src: [
+    { path: "../public/fonts/editorial/GFSBaskerville.otf", weight: "400", style: "normal" },
+    { path: "../public/fonts/editorial/texgyrepagella-bold.otf", weight: "700", style: "normal" },
+    { path: "../public/fonts/editorial/texgyrepagella-italic.otf", weight: "400", style: "italic" },
+    { path: "../public/fonts/editorial/texgyrepagella-bolditalic.otf", weight: "700", style: "italic" },
+  ],
+  variable: "--font-editorial",
+  display: "swap",
+  fallback: ["Georgia", "Times New Roman", "serif"],
 });
 
 const deploymentHost = process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL ?? "localhost:3000";
@@ -74,7 +93,7 @@ const organizationSchema = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" data-scroll-behavior="smooth" className={`${inter.variable} ${poppins.variable} h-full antialiased`}>
+    <html lang="en" data-scroll-behavior="smooth" className={`${inter.variable} ${poppins.variable} ${editorial.variable} h-full antialiased`}>
       <body className="min-h-screen bg-background text-foreground">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
         <JourneySessionProvider>{children}</JourneySessionProvider>

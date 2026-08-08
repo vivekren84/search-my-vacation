@@ -78,7 +78,7 @@ export default function DestinationsExperience() {
             {destinationCategories.map((category) => {
               const isActive = activeGroupId === category.id;
               return (
-                <button key={category.id} type="button" aria-pressed={isActive} onClick={() => setActiveGroupId(category.id)} className={`rounded-full px-5 py-2.5 text-sm font-bold transition focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#280336] ${isActive ? "bg-[#280336] text-white shadow-[0_10px_22px_rgba(40,3,54,.18)]" : "text-[#4A2062] hover:bg-[#280336]/10"}`}>
+                <button key={category.id} type="button" aria-pressed={isActive} onClick={() => setActiveGroupId(category.id)} className={`rounded-full px-5 py-2.5 text-sm font-bold transition focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#2A211C] ${isActive ? "bg-[#F5951C] text-[#2A211C] shadow-[0_10px_22px_rgba(245,149,28,.28)]" : "text-[#2A211C] hover:bg-[#2A211C]/10"}`}>
                   {category.label}
                 </button>
               );
@@ -90,7 +90,7 @@ export default function DestinationsExperience() {
         <section key={group.id} aria-labelledby={`${group.id}-destinations-heading`} hidden={activeGroupId !== group.id} className={index === 0 ? "pb-24" : "pb-24 pt-8"}>
           <Container>
             <div className="layout-section-heading mb-12">
-              <p className="text-xs font-bold uppercase tracking-[.18em] text-[#B72027]">{group.eyebrow}</p>
+              <p className="text-xs font-bold uppercase tracking-[.18em] text-[#2A211C]">{group.eyebrow}</p>
               <h2 id={`${group.id}-destinations-heading`} className="mt-4 text-balance font-serif text-4xl leading-[1.08] tracking-[-.04em] sm:text-5xl">{group.title}</h2>
               <p className="mx-auto mt-5 max-w-2xl leading-8 text-[#2A211C]">{group.copy}</p>
             </div>

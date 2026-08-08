@@ -1,6 +1,8 @@
 # Search My Vacation Brand Identity System v1.0
 
-Status: Review candidate  
+> **OBSOLETE / DEPRECATED (EBC-022, Release 1).** This document describes an SVG vector-reconstruction of the logo (Poppins + Great Vibes wordmark, an 8-layer traceable arch palette) that was never taken to production and directly conflicts with the approved Search My Vacation Brand Identity Manual, Edition Two ("no element of the mark is ever redrawn, recoloured, vectorised, or reconstructed"). The Edition Two Brand Book and its supplied asset package are the current single source of truth for logo, colour, and typography. This file is retained for historical context only and must not be used to guide implementation.
+
+Status: Review candidate (superseded)  
 Asset root: `web/public/brand/`  
 Motto: **More Than a Trip. It’s an Experience.**
 

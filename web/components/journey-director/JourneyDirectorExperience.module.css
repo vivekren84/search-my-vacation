@@ -1,7 +1,7 @@
 .page {
   --journey-ink: #2A211C;
   --journey-brown: #2A211C;
-  --journey-copper: #B72027;
+  --journey-copper: #2A211C;
   --journey-gold: #F5951C;
   --journey-cream: #FFFDFC;
   --journey-sand: #fff7f0;
@@ -677,7 +677,7 @@
   position: absolute;
   top: 0.3rem;
   right: 0.4rem;
-  color: #F36523;
+  color: #F5951C;
   font-size: 0.48rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -793,7 +793,7 @@
 }
 
 .reasonGrid article > span {
-  color: var(--journey-copper);
+  color: #F5951C;
   font-family: var(--font-editorial);
   font-style: italic;
 }
@@ -1123,7 +1123,7 @@
   max-width: 64rem;
   margin-top: 2.5rem;
   padding: 1.25rem 1.4rem;
-  border-left: 3px solid var(--journey-copper);
+  border-left: 3px solid #F5951C;
   background: rgb(255 255 255 / 58%);
   color: var(--journey-brown);
   font-family: var(--font-editorial);
@@ -1174,7 +1174,7 @@
 .itineraryHighlights li::before {
   position: absolute;
   left: 0;
-  color: var(--journey-copper);
+  color: #F5951C;
   content: "✦";
 }
 
@@ -1475,7 +1475,7 @@
 .callbackError { color: #ffd0c8; line-height: 1.45; }
 .callbackFields input, .callbackFields select { min-height: 2.7rem; border: 1px solid rgb(255 255 255 / 26%); border-radius: 0.55rem; background: rgb(0 0 0 / 24%); color: white; padding: 0.55rem; font: inherit; }
 .callbackFields option { color: #2A211C; }
-.callbackFields input:focus-visible, .callbackFields select:focus-visible, .consent input:focus-visible { outline: 2px solid #F5951C; outline-offset: 3px; }
+.callbackFields input:focus-visible, .callbackFields select:focus-visible, .consent input:focus-visible { outline: 2px solid #F5951C; outline-offset: 3px; } /* dark .continuationPanel surface — Amber correct here */
 
 @media (max-width: 620px) {
   .summaryGrid, .callbackFields { grid-template-columns: 1fr; }
@@ -1483,6 +1483,17 @@
 
 .page a:focus-visible,
 .page button:focus-visible {
+  outline: 2px solid #2A211C;
+  outline-offset: 4px;
+}
+
+/* The completion/handoff states render on the dark Espresso surface, where
+   Espresso outlines would be invisible — Amber remains the correct,
+   sufficiently visible focus indicator there. */
+.completion a:focus-visible,
+.completion button:focus-visible,
+.handoff a:focus-visible,
+.handoff button:focus-visible {
   outline: 2px solid #F5951C;
   outline-offset: 4px;
 }

@@ -27,7 +27,7 @@ export default function ContactPage() {
             <div className="mt-10 space-y-8 text-[#2A211C]">
               <div>
                 <h2 className="font-semibold text-[#2A211C]">Phone</h2>
-                <a className="mt-2 inline-flex min-h-11 items-center font-semibold text-[#2A211C] underline decoration-[#F36523] underline-offset-4" href={siteContact.primaryPhoneHref}>{siteContact.phoneDisplay}</a>
+                <a className="mt-2 inline-flex min-h-11 items-center font-semibold text-[#2A211C] underline decoration-[#F5951C] underline-offset-4" href={siteContact.primaryPhoneHref}>{siteContact.phoneDisplay}</a>
               </div>
               <div>
                 <h2 className="font-semibold text-[#2A211C]">Email</h2>

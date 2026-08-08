@@ -1,9 +1,9 @@
 export const siteBrand = {
   name: "Search My Vacation",
   shortName: "SMV",
-  tagline: "More than a trip. It's an experience.",
+  tagline: "More than a trip, it's an Experience",
   accessibleLabel:
-    "Search My Vacation — More than a trip. It's an experience.",
+    "Search My Vacation — More than a trip, it's an Experience",
   colours: {
     fuchsia: "#B41D8E",
     crimson: "#B72027",
@@ -14,12 +14,12 @@ export const siteBrand = {
     cream: "#FFFDFC",
   },
   assets: {
-    headerLightSurface: "/brand/official/web/web-header-light-bg-transparent.png",
-    headerDarkSurface: "/brand/official/web/web-header-dark-bg-transparent.png",
-    fullLightSurface: "/brand/official/logo/horizon-wordmark-horizontal-dark-text-transparent.png",
-    fullDarkSurface: "/brand/official/logo/horizon-wordmark-horizontal-light-text-transparent.png",
-    compactLightSurface: "/brand/official/logo/horizon-wordmark-short-dark-text-transparent.png",
-    compactDarkSurface: "/brand/official/logo/horizon-wordmark-short-light-text-transparent.png",
+    headerLightSurface: "/brand/official/web/web-header-light-bg-transparent-rule-orange.png",
+    headerDarkSurface: "/brand/official/web/web-header-dark-bg-transparent-rule-orange.png",
+    fullLightSurface: "/brand/official/web/logo-horizontal-black-NO-tagline-transparent.png",
+    fullDarkSurface: "/brand/official/web/logo-horizontal-white-NO-tagline-transparent.png",
+    compactLightSurface: "/brand/official/web/logo-horizontal-black-NO-tagline-transparent.png",
+    compactDarkSurface: "/brand/official/web/logo-horizontal-white-NO-tagline-transparent.png",
     primaryLockup: "/brand/official/logo/original-supplied-lockup-espresso-bg.png",
     iconMark: "/brand/official/logo/icon-mark-transparent-2000px.png",
     favicon: "/brand/official/favicon/favicon.ico",
@@ -28,7 +28,7 @@ export const siteBrand = {
     appleTouchIcon: "/brand/official/favicon/apple-touch-icon-180.png",
     appIcon192: "/brand/official/favicon/favicon-192.png",
     appIcon512: "/brand/official/app/app-icon-rounded-512.png",
-    openGraphImage: "/brand/official/web/social-share-og-image-1200x630.png",
-    emailLogo: "/brand/official/email/email-signature-logo-transparent.png",
+    openGraphImage: "/brand/official/web/social-share-og-image-rule-orange.png",
+    emailLogo: "/brand/official/email/email-signature-ondark-rule-white.png",
   },
 } as const;

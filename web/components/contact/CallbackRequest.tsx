@@ -50,7 +50,7 @@ export default function CallbackRequest() {
       </div>
       <label className="mt-5 block text-sm font-semibold">Travel message <span className="font-normal text-[#2A211C]">(optional)</span><textarea value={form.message} onChange={(event) => update("message", event.target.value)} className="mt-2 min-h-28 min-w-0 w-full rounded-xl border border-[#d8c4a7] px-3 py-3 font-normal" /></label>
       <label className="mt-6 flex gap-3 text-sm leading-6 text-[#2A211C]"><input required type="checkbox" checked={form.consent} onChange={(event) => update("consent", event.target.checked)} className="mt-1 size-4" />I agree that Search My Vacation may use these details to respond to my request, as explained in the <a className="underline" href="/privacy-policy">Privacy Policy</a>.</label>
-      <button className="mt-7 rounded-full bg-[#280336] px-6 py-3 text-sm font-bold text-white disabled:bg-[#cdbca6]" disabled={!form.consent || Boolean(dateError)}>Continue on WhatsApp <span aria-hidden="true">→</span></button>
+      <button className="mt-7 rounded-full bg-[#F5951C] px-6 py-3 text-sm font-bold text-[#2A211C] disabled:bg-[#cdbca6]" disabled={!form.consent || Boolean(dateError)}>Continue on WhatsApp <span aria-hidden="true">→</span></button>
       <p className="mt-4 text-xs leading-5 text-[#2A211C]">This opens WhatsApp with your details prefilled. No callback request is sent until you choose to send that message.</p>
     </form>
   );

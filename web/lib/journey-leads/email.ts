@@ -27,7 +27,7 @@ function emailBrandHeader(logoUrl?: string) {
 function deploymentBrandLogoUrl(environment: NotificationEnvironment) {
   const host = environment.VERCEL_PROJECT_PRODUCTION_URL?.trim() || environment.VERCEL_URL?.trim();
   if (!host || host.length > 253 || !/^[a-z0-9.-]+$/i.test(host) || host.includes("..")) return undefined;
-  return `https://${host}/brand/official/email/email-signature-logo-transparent.png`;
+  return `https://${host}/brand/official/email/email-signature-ondark-rule-white.png`;
 }
 
 export function createJourneyLeadEmail(lead: ValidatedJourneyLead, brandLogoUrl?: string) {
@@ -52,7 +52,7 @@ export function createJourneyLeadEmail(lead: ValidatedJourneyLead, brandLogoUrl?
     "A guest has entered the Journey Director.", "",
     ...rows.map(([label, value]) => `${label}: ${value}`),
   ].join("\n");
-  const htmlRows = rows.map(([label, value]) => `<tr><th align="left" style="padding:8px 16px 8px 0;color:#B72027;font-weight:600;vertical-align:top">${escapeEmailHtml(label)}</th><td style="padding:8px 0;color:#2A211C">${escapeEmailHtml(value)}</td></tr>`).join("");
+  const htmlRows = rows.map(([label, value]) => `<tr><th align="left" style="padding:8px 16px 8px 0;color:#2A211C;font-weight:600;vertical-align:top">${escapeEmailHtml(label)}</th><td style="padding:8px 0;color:#2A211C">${escapeEmailHtml(value)}</td></tr>`).join("");
   const html = `<div style="font-family:Inter,Arial,sans-serif;max-width:680px;padding:28px;background:#FFFDFC;color:#2A211C">${emailBrandHeader(brandLogoUrl)}<p style="font-family:Baskerville,Georgia,serif;font-size:22px;line-height:1.5">A guest has entered the Journey Director.</p><table style="border-collapse:collapse;width:100%;font-size:15px;line-height:1.5">${htmlRows}</table></div>`;
   return { subject: `New Journey Passport Lead — ${lead.passportReference}`, text, html };
 }
@@ -71,7 +71,7 @@ export function createJourneyCallbackEmail(callback: JourneyCallbackLead, origin
     ...rows.flatMap(([label, value]) => [label, value, ""]),
     "This callback request has been added to the existing Journey Passport.",
   ].join("\n");
-  const htmlRows = rows.map(([label, value]) => `<tr><th align="left" style="padding:8px 16px 8px 0;color:#B72027;font-weight:600;vertical-align:top">${escapeEmailHtml(label)}</th><td style="padding:8px 0;color:#2A211C">${escapeEmailHtml(value)}</td></tr>`).join("");
+  const htmlRows = rows.map(([label, value]) => `<tr><th align="left" style="padding:8px 16px 8px 0;color:#2A211C;font-weight:600;vertical-align:top">${escapeEmailHtml(label)}</th><td style="padding:8px 0;color:#2A211C">${escapeEmailHtml(value)}</td></tr>`).join("");
   const html = `<div style="font-family:Inter,Arial,sans-serif;max-width:680px;padding:28px;background:#FFFDFC;color:#2A211C">${emailBrandHeader(brandLogoUrl)}<p style="font-family:Baskerville,Georgia,serif;font-size:22px;line-height:1.5">Callback Request Received</p><table style="border-collapse:collapse;width:100%;font-size:15px;line-height:1.5">${htmlRows}</table><p style="margin-top:24px;color:#2A211C;line-height:1.6;opacity:.72">This callback request has been added to the existing Journey Passport.</p></div>`;
   return {
     subject: `Re: New Journey Passport • ${callback.passportReference}`,
