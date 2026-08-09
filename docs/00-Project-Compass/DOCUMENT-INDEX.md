@@ -4,7 +4,7 @@
 
 **Owner:** Search My Vacation — Product & Experience
 
-**Last updated:** 22 July 2026
+**Last updated:** 9 August 2026
 
 This index identifies the canonical repository location for the specifications that govern the current Search My Vacation product and EBC delivery workflow. Files outside these paths are not authoritative unless a later approved decision explicitly replaces them.
 
@@ -16,6 +16,22 @@ This index identifies the canonical repository location for the specifications t
 | Decision Log | `docs/00-Project-Compass/DECISION-LOG.md` | Approved product, design and architecture decisions |
 | Glossary | `docs/00-Project-Compass/GLOSSARY.md` | Shared terminology |
 | Project Standards | `docs/00-Project-Compass/PROJECT-STANDARDS.md` | Repository and documentation standards |
+
+## AI Operating Model
+
+| Document | Canonical path | Purpose |
+| --- | --- | --- |
+| AIOM-001 — AI Operating Model Overview | `docs/15-AI-Operating-Model/README.md` | Entry point and navigation for the Team Satvi AI Operating Model |
+| AIOM-002 — SMV Engineering Handbook | `docs/15-AI-Operating-Model/CLAUDE.md` | Repository-wide engineering baseline, workflow, and technical conventions |
+| AIOM-003 — Team Satvi Operating Model | `docs/15-AI-Operating-Model/TEAM-SATVI.md` | Team structure, collaboration, governance, and decision model |
+| AIOM-010 — Tiger Persona Manual | `docs/15-AI-Operating-Model/personas/Tiger.md` | Programme and delivery leadership mandate and boundaries |
+| AIOM-011 — Arjun Persona Manual | `docs/15-AI-Operating-Model/personas/Arjun.md` | Product and business analysis mandate and boundaries |
+| AIOM-012 — Archie Persona Manual | `docs/15-AI-Operating-Model/personas/Archie.md` | Technical architecture mandate and boundaries |
+| AIOM-013 — Sophie Persona Manual | `docs/15-AI-Operating-Model/personas/Sophie.md` | UX, UI, accessibility, and frontend experience mandate and boundaries |
+| AIOM-014 — Rad Persona Manual | `docs/15-AI-Operating-Model/personas/Rad.md` | Engineering and implementation mandate and boundaries |
+| AIOM-015 — Keerthi Persona Manual | `docs/15-AI-Operating-Model/personas/Keerthi.md` | Independent functional validation mandate and boundaries |
+| AIOM-016 — Sri Persona Manual | `docs/15-AI-Operating-Model/personas/Sri.md` | Independent traveller-experience review mandate and boundaries |
+| AIOM-017 — Vivek Persona Manual | `docs/15-AI-Operating-Model/personas/Vivek-Business-Owner.md` | Product ownership, risk acceptance, and final release authority |
 
 ## Vision and Business
 
