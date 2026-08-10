@@ -1,0 +1,55 @@
+{
+  "travellerId": "TR-004",
+  "displayName": "Kannama Rubesh",
+  "fullName": "Kannama Rubesh",
+  "status": "approved",
+  "journeys": [
+    {
+      "journeyId": "JRN-004",
+      "title": "Finding confidence to finally experience Kabini",
+      "destination": "Kabini, Karnataka",
+      "travelMonth": "August",
+      "travelYear": 2023,
+      "duration": "To confirm",
+      "experienceType": "Weekend Getaway",
+      "travellerType": "Family / Group (to confirm)",
+      "featured": false
+    }
+  ],
+  "media": {
+    "travellerPhoto": {
+      "file": "traveller.jpg",
+      "available": false,
+      "approvedForWebsite": false
+    },
+    "destinationPhotos": [
+      {
+        "file": "destination-01.jpg",
+        "journeyId": "JRN-004",
+        "caption": "Kabini, Karnataka vacation"
+      }
+    ]
+  },
+  "permissions": {
+    "story": true,
+    "travellerPhoto": false,
+    "destinationPhotos": false
+  },
+  "source": {
+    "testimonialRepository": true,
+    "googleReview": false,
+    "websiteStory": true
+  },
+  "tags": [
+    "Domestic",
+    "Family",
+    "Weekend Getaway",
+    "Wildlife",
+    "Weekend",
+    "Stay Options",
+    "River",
+    "Long Weekend",
+    "Relaxation"
+  ],
+  "lastUpdated": "2026-08-10"
+}

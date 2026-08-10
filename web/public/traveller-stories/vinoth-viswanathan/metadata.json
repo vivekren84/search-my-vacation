@@ -1,0 +1,47 @@
+{
+  "travellerId": "TR-010",
+  "displayName": "Vinothkumar Vishwanathan",
+  "fullName": "Vinothkumar Vishwanathan",
+  "status": "approved",
+  "journeys": [
+    {
+      "journeyId": "JRN-010",
+      "title": "A quiet family escape in misty Munnar",
+      "destination": "Munnar, Kerala",
+      "travelMonth": "May",
+      "travelYear": 2024,
+      "duration": "3 Days",
+      "experienceType": "Family Vacation",
+      "travellerType": "Family",
+      "featured": true
+    }
+  ],
+  "media": {
+    "travellerPhoto": {
+      "file": "traveller.jpg",
+      "available": true,
+      "approvedForWebsite": false
+    },
+    "destinationPhotos": []
+  },
+  "permissions": {
+    "story": true,
+    "travellerPhoto": false,
+    "destinationPhotos": false
+  },
+  "source": {
+    "testimonialRepository": true,
+    "googleReview": false,
+    "websiteStory": true
+  },
+  "tags": [
+    "Domestic",
+    "Family",
+    "Family Vacation",
+    "Relaxed Pace",
+    "Driver Support",
+    "Scenic Stay",
+    "Thoughtful Planning"
+  ],
+  "lastUpdated": "2026-08-10"
+}

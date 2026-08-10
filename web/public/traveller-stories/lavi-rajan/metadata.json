@@ -1,0 +1,39 @@
+{
+  "travellerId": "TR-015",
+  "displayName": "Lavi Rajan",
+  "fullName": "Lavi Rajan",
+  "status": "approved",
+  "journeys": [
+    {
+      "journeyId": "JRN-015",
+      "title": "To confirm",
+      "destination": "Kuala Lumpur & Langkawi, Malaysia",
+      "travelMonth": "March",
+      "travelYear": 2026,
+      "duration": "6 Days / 5 Nights",
+      "experienceType": "Vacation",
+      "travellerType": "To confirm",
+      "featured": false
+    }
+  ],
+  "media": {
+    "travellerPhoto": {
+      "file": "traveller.jpg",
+      "available": false,
+      "approvedForWebsite": false
+    },
+    "destinationPhotos": []
+  },
+  "permissions": {
+    "story": true,
+    "travellerPhoto": false,
+    "destinationPhotos": false
+  },
+  "source": {
+    "testimonialRepository": false,
+    "googleReview": true,
+    "websiteStory": false
+  },
+  "tags": [],
+  "lastUpdated": "2026-08-10"
+}

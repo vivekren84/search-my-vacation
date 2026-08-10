@@ -1,0 +1,52 @@
+{
+  "travellerId": "TR-013",
+  "displayName": "Ishwarya Raja",
+  "fullName": "Ishwarya Raja",
+  "status": "approved",
+  "journeys": [
+    {
+      "journeyId": "JRN-013",
+      "title": "A first girls-only international adventure",
+      "destination": "Kuala Lumpur & Langkawi, Malaysia",
+      "travelMonth": "January",
+      "travelYear": 2026,
+      "duration": "6 Days / 5 Nights",
+      "experienceType": "Girls-only International Vacation",
+      "travellerType": "Friends",
+      "featured": true
+    }
+  ],
+  "media": {
+    "travellerPhoto": {
+      "file": "traveller.jpg",
+      "available": false,
+      "approvedForWebsite": false
+    },
+    "destinationPhotos": []
+  },
+  "permissions": {
+    "story": true,
+    "travellerPhoto": false,
+    "destinationPhotos": false
+  },
+  "source": {
+    "testimonialRepository": true,
+    "googleReview": false,
+    "websiteStory": true
+  },
+  "tags": [
+    "Hero Story",
+    "International",
+    "Friends",
+    "Girls-only International Vacation",
+    "Girls Trip",
+    "Safety",
+    "Destination Recommendation",
+    "Medical Support",
+    "4-star Hotels",
+    "Dedicated Vehicle",
+    "Flights",
+    "Human Accountability"
+  ],
+  "lastUpdated": "2026-08-10"
+}

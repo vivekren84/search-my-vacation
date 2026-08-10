@@ -1,0 +1,49 @@
+{
+  "travellerId": "TR-007",
+  "displayName": "Ramakrishnan Appadorai",
+  "fullName": "Ramakrishnan Appadorai",
+  "status": "approved",
+  "journeys": [
+    {
+      "journeyId": "JRN-007",
+      "title": "A hassle-free honeymoon through Shimla and Manali",
+      "destination": "Shimla–Manali, Himachal Pradesh",
+      "travelMonth": "April",
+      "travelYear": 2024,
+      "duration": "7 Days",
+      "experienceType": "Honeymoon",
+      "travellerType": "Couple",
+      "featured": true
+    }
+  ],
+  "media": {
+    "travellerPhoto": {
+      "file": "traveller.jpg",
+      "available": true,
+      "approvedForWebsite": false
+    },
+    "destinationPhotos": []
+  },
+  "permissions": {
+    "story": true,
+    "travellerPhoto": false,
+    "destinationPhotos": false
+  },
+  "source": {
+    "testimonialRepository": true,
+    "googleReview": false,
+    "websiteStory": true
+  },
+  "tags": [
+    "Domestic",
+    "Couple",
+    "Honeymoon",
+    "Logistics",
+    "Stays",
+    "Meals",
+    "Driver",
+    "Orchard Stay",
+    "Camp Stay"
+  ],
+  "lastUpdated": "2026-08-10"
+}

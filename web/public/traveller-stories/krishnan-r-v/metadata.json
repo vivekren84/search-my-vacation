@@ -1,0 +1,43 @@
+{
+  "travellerId": "TR-008",
+  "displayName": "Krishnan R V",
+  "fullName": "Krishnan R V",
+  "status": "pending",
+  "journeys": [
+    {
+      "journeyId": "JRN-008",
+      "title": "To confirm",
+      "destination": "Gujarat",
+      "travelMonth": "March",
+      "travelYear": 2024,
+      "duration": "To confirm",
+      "experienceType": "Family & Spiritual",
+      "travellerType": "Family",
+      "featured": false
+    }
+  ],
+  "media": {
+    "travellerPhoto": {
+      "file": "traveller.jpg",
+      "available": true,
+      "approvedForWebsite": false
+    },
+    "destinationPhotos": []
+  },
+  "permissions": {
+    "story": false,
+    "travellerPhoto": false,
+    "destinationPhotos": false
+  },
+  "source": {
+    "testimonialRepository": true,
+    "googleReview": false,
+    "websiteStory": false
+  },
+  "tags": [
+    "Domestic",
+    "Family",
+    "Family & Spiritual"
+  ],
+  "lastUpdated": "2026-08-10"
+}

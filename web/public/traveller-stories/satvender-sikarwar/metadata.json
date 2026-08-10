@@ -1,0 +1,43 @@
+{
+  "travellerId": "TR-001",
+  "displayName": "Satvender Sikarwar",
+  "fullName": "Satvender Sikarwar",
+  "status": "pending",
+  "journeys": [
+    {
+      "journeyId": "JRN-001",
+      "title": "To confirm",
+      "destination": "Manali, Himachal Pradesh",
+      "travelMonth": "December",
+      "travelYear": 2023,
+      "duration": "To confirm",
+      "experienceType": "Holiday / Family",
+      "travellerType": "Family",
+      "featured": false
+    }
+  ],
+  "media": {
+    "travellerPhoto": {
+      "file": "traveller.jpg",
+      "available": true,
+      "approvedForWebsite": false
+    },
+    "destinationPhotos": []
+  },
+  "permissions": {
+    "story": false,
+    "travellerPhoto": false,
+    "destinationPhotos": false
+  },
+  "source": {
+    "testimonialRepository": true,
+    "googleReview": false,
+    "websiteStory": false
+  },
+  "tags": [
+    "Domestic",
+    "Family",
+    "Holiday / Family"
+  ],
+  "lastUpdated": "2026-08-10"
+}

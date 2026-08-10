@@ -1,0 +1,43 @@
+{
+  "travellerId": "TR-017",
+  "displayName": "Karthik Ramanathan",
+  "fullName": "Karthik Ramanathan",
+  "status": "approved",
+  "journeys": [
+    {
+      "journeyId": "JRN-017",
+      "title": "To confirm",
+      "destination": "Sri Lanka",
+      "travelMonth": null,
+      "travelYear": null,
+      "duration": "9 Days / 8 Nights",
+      "experienceType": "International Family Vacation",
+      "travellerType": "Family",
+      "featured": false
+    }
+  ],
+  "media": {
+    "travellerPhoto": {
+      "file": "traveller.jpg",
+      "available": false,
+      "approvedForWebsite": false
+    },
+    "destinationPhotos": []
+  },
+  "permissions": {
+    "story": true,
+    "travellerPhoto": false,
+    "destinationPhotos": false
+  },
+  "source": {
+    "testimonialRepository": false,
+    "googleReview": true,
+    "websiteStory": false
+  },
+  "tags": [
+    "International",
+    "Family",
+    "International Family Vacation"
+  ],
+  "lastUpdated": "2026-08-10"
+}

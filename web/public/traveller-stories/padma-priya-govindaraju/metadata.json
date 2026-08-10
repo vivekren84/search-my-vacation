@@ -1,0 +1,43 @@
+{
+  "travellerId": "TR-022",
+  "displayName": "Padma Priya Govindaraju",
+  "fullName": "Padma Priya Govindaraju",
+  "status": "approved",
+  "journeys": [
+    {
+      "journeyId": "JRN-022",
+      "title": "To confirm",
+      "destination": "Andaman Islands",
+      "travelMonth": null,
+      "travelYear": null,
+      "duration": "4 Days",
+      "experienceType": "Senior-friendly Family Vacation",
+      "travellerType": "Senior Travellers",
+      "featured": false
+    }
+  ],
+  "media": {
+    "travellerPhoto": {
+      "file": "traveller.jpg",
+      "available": false,
+      "approvedForWebsite": false
+    },
+    "destinationPhotos": []
+  },
+  "permissions": {
+    "story": true,
+    "travellerPhoto": false,
+    "destinationPhotos": false
+  },
+  "source": {
+    "testimonialRepository": false,
+    "googleReview": true,
+    "websiteStory": false
+  },
+  "tags": [
+    "Domestic",
+    "Senior Travellers",
+    "Senior-friendly Family Vacation"
+  ],
+  "lastUpdated": "2026-08-10"
+}

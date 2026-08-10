@@ -1,0 +1,42 @@
+{
+  "travellerId": "TR-018",
+  "displayName": "Sonia Negi",
+  "fullName": "Sonia Negi",
+  "status": "approved",
+  "journeys": [
+    {
+      "journeyId": "JRN-018",
+      "title": "To confirm",
+      "destination": "Ranthambore, Rajasthan",
+      "travelMonth": null,
+      "travelYear": null,
+      "duration": "To confirm",
+      "experienceType": "Wildlife / Short-notice Trip",
+      "travellerType": "To confirm",
+      "featured": false
+    }
+  ],
+  "media": {
+    "travellerPhoto": {
+      "file": "traveller.jpg",
+      "available": false,
+      "approvedForWebsite": false
+    },
+    "destinationPhotos": []
+  },
+  "permissions": {
+    "story": true,
+    "travellerPhoto": false,
+    "destinationPhotos": false
+  },
+  "source": {
+    "testimonialRepository": false,
+    "googleReview": true,
+    "websiteStory": false
+  },
+  "tags": [
+    "Domestic",
+    "Wildlife / Short-notice Trip"
+  ],
+  "lastUpdated": "2026-08-10"
+}

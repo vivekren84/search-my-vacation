@@ -1,0 +1,43 @@
+{
+  "travellerId": "TR-019",
+  "displayName": "Balaji Hariharan",
+  "fullName": "Balaji Hariharan",
+  "status": "approved",
+  "journeys": [
+    {
+      "journeyId": "JRN-019",
+      "title": "To confirm",
+      "destination": "Andaman Islands",
+      "travelMonth": null,
+      "travelYear": null,
+      "duration": "5 Days / 4 Nights",
+      "experienceType": "Solo Vacation",
+      "travellerType": "Solo Traveller",
+      "featured": false
+    }
+  ],
+  "media": {
+    "travellerPhoto": {
+      "file": "traveller.jpg",
+      "available": false,
+      "approvedForWebsite": false
+    },
+    "destinationPhotos": []
+  },
+  "permissions": {
+    "story": true,
+    "travellerPhoto": false,
+    "destinationPhotos": false
+  },
+  "source": {
+    "testimonialRepository": false,
+    "googleReview": true,
+    "websiteStory": false
+  },
+  "tags": [
+    "Domestic",
+    "Solo Traveller",
+    "Solo Vacation"
+  ],
+  "lastUpdated": "2026-08-10"
+}

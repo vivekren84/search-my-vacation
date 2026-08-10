@@ -1,0 +1,41 @@
+{
+  "travellerId": "TR-016",
+  "displayName": "Anirudh S",
+  "fullName": "Anirudh S",
+  "status": "approved",
+  "journeys": [
+    {
+      "journeyId": "JRN-016",
+      "title": "Heaven on Earth",
+      "destination": "Kashmir",
+      "travelMonth": "February",
+      "travelYear": 2026,
+      "duration": "5 Days / 4 Nights",
+      "experienceType": "Vacation",
+      "travellerType": "Couple",
+      "featured": false
+    }
+  ],
+  "media": {
+    "travellerPhoto": {
+      "file": "traveller.jpg",
+      "available": false,
+      "approvedForWebsite": false
+    },
+    "destinationPhotos": []
+  },
+  "permissions": {
+    "story": true,
+    "travellerPhoto": false,
+    "destinationPhotos": false
+  },
+  "source": {
+    "testimonialRepository": false,
+    "googleReview": true,
+    "websiteStory": false
+  },
+  "tags": [
+    "Couple"
+  ],
+  "lastUpdated": "2026-08-10"
+}

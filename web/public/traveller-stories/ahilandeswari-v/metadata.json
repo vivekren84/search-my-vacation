@@ -1,0 +1,58 @@
+{
+  "travellerId": "TR-006",
+  "displayName": "Ahilandeshwari V",
+  "fullName": "Ahilandeshwari V",
+  "status": "approved",
+  "journeys": [
+    {
+      "journeyId": "JRN-006",
+      "title": "A meaningful spiritual journey to Guruvayur",
+      "destination": "Guruvayur, Kerala",
+      "travelMonth": "March",
+      "travelYear": 2024,
+      "duration": "4 Days / 3 Nights",
+      "experienceType": "Spiritual & Heritage",
+      "travellerType": "Family / Group (to confirm)",
+      "featured": false
+    }
+  ],
+  "media": {
+    "travellerPhoto": {
+      "file": "traveller.jpg",
+      "available": true,
+      "approvedForWebsite": false
+    },
+    "destinationPhotos": [
+      {
+        "file": "guruvayur-01.jpg",
+        "journeyId": "JRN-006",
+        "caption": "Guruvayur, Kerala vacation"
+      }
+    ]
+  },
+  "permissions": {
+    "story": true,
+    "travellerPhoto": false,
+    "destinationPhotos": false
+  },
+  "source": {
+    "testimonialRepository": true,
+    "googleReview": true,
+    "websiteStory": true
+  },
+  "tags": [
+    "Repeat Traveller",
+    "Domestic",
+    "Family",
+    "Spiritual & Heritage",
+    "Spiritual",
+    "Temple",
+    "Culture",
+    "Authentic Meals",
+    "Peaceful Pace",
+    "Elephants",
+    "International",
+    "International Vacation"
+  ],
+  "lastUpdated": "2026-08-10"
+}

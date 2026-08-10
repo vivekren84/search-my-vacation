@@ -1,0 +1,49 @@
+{
+  "travellerId": "TR-005",
+  "displayName": "Sathish",
+  "fullName": "Sathish",
+  "status": "pending",
+  "journeys": [
+    {
+      "journeyId": "JRN-005",
+      "title": "To confirm",
+      "destination": "Kullu–Manali, Himachal Pradesh",
+      "travelMonth": "September",
+      "travelYear": 2023,
+      "duration": "To confirm",
+      "experienceType": "Romantic / Family Getaway",
+      "travellerType": "Family",
+      "featured": false
+    }
+  ],
+  "media": {
+    "travellerPhoto": {
+      "file": "traveller.jpg",
+      "available": false,
+      "approvedForWebsite": false
+    },
+    "destinationPhotos": [
+      {
+        "file": "destination-01.jpg",
+        "journeyId": "JRN-005",
+        "caption": "Kullu–Manali, Himachal Pradesh vacation"
+      }
+    ]
+  },
+  "permissions": {
+    "story": false,
+    "travellerPhoto": false,
+    "destinationPhotos": false
+  },
+  "source": {
+    "testimonialRepository": true,
+    "googleReview": false,
+    "websiteStory": false
+  },
+  "tags": [
+    "Domestic",
+    "Family",
+    "Romantic / Family Getaway"
+  ],
+  "lastUpdated": "2026-08-10"
+}

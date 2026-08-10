@@ -1,0 +1,54 @@
+{
+  "travellerId": "TR-012",
+  "displayName": "Madhangi",
+  "fullName": "Madhangi",
+  "status": "approved",
+  "journeys": [
+    {
+      "journeyId": "JRN-012",
+      "title": "Three generations, one unforgettable Sri Lanka journey",
+      "destination": "Sri Lanka",
+      "travelMonth": "December",
+      "travelYear": 2025,
+      "duration": "5 Days / 4 Nights",
+      "experienceType": "International Family Vacation",
+      "travellerType": "Multi-generational Family",
+      "featured": true
+    }
+  ],
+  "media": {
+    "travellerPhoto": {
+      "file": "traveller.jpg",
+      "available": false,
+      "approvedForWebsite": false
+    },
+    "destinationPhotos": []
+  },
+  "permissions": {
+    "story": true,
+    "travellerPhoto": false,
+    "destinationPhotos": false
+  },
+  "source": {
+    "testimonialRepository": true,
+    "googleReview": false,
+    "websiteStory": true
+  },
+  "tags": [
+    "Hero Story",
+    "International",
+    "Multi-generational Family",
+    "Family",
+    "International Family Vacation",
+    "First International Trip",
+    "Senior Travellers",
+    "Teenager",
+    "Vegetarian",
+    "Temples",
+    "Comfortable Pace",
+    "Human Support",
+    "Thoughtful Planning",
+    "Spiritual"
+  ],
+  "lastUpdated": "2026-08-10"
+}

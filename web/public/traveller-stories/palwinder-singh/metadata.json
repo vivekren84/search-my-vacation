@@ -1,0 +1,42 @@
+{
+  "travellerId": "TR-020",
+  "displayName": "Palwinder Singh",
+  "fullName": "Palwinder Singh",
+  "status": "approved",
+  "journeys": [
+    {
+      "journeyId": "JRN-020",
+      "title": "To confirm",
+      "destination": "Goa",
+      "travelMonth": "November",
+      "travelYear": 2025,
+      "duration": "6 Days / 5 Nights",
+      "experienceType": "Honeymoon",
+      "travellerType": "Couple",
+      "featured": false
+    }
+  ],
+  "media": {
+    "travellerPhoto": {
+      "file": "traveller.jpg",
+      "available": false,
+      "approvedForWebsite": false
+    },
+    "destinationPhotos": []
+  },
+  "permissions": {
+    "story": true,
+    "travellerPhoto": false,
+    "destinationPhotos": false
+  },
+  "source": {
+    "testimonialRepository": false,
+    "googleReview": true,
+    "websiteStory": false
+  },
+  "tags": [
+    "Couple",
+    "Honeymoon"
+  ],
+  "lastUpdated": "2026-08-10"
+}

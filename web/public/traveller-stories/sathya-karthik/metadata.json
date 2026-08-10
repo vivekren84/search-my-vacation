@@ -1,0 +1,77 @@
+{
+  "travellerId": "TR-009",
+  "displayName": "Sathya Karthik",
+  "fullName": "Sathya Karthik",
+  "status": "approved",
+  "journeys": [
+    {
+      "journeyId": "JRN-009",
+      "title": "Five cities across Rajasthan",
+      "destination": "Rajasthan",
+      "travelMonth": "January",
+      "travelYear": 2024,
+      "duration": "To confirm",
+      "experienceType": "Heritage & Luxury",
+      "travellerType": "Family",
+      "featured": false
+    },
+    {
+      "journeyId": "JRN-025",
+      "title": "The Andaman break the family needed most",
+      "destination": "Andaman Islands",
+      "travelMonth": "December",
+      "travelYear": 2024,
+      "duration": "7 Days / 6 Nights",
+      "experienceType": "Last-minute Family Vacation",
+      "travellerType": "Family",
+      "featured": true
+    }
+  ],
+  "media": {
+    "travellerPhoto": {
+      "file": "traveller.jpg",
+      "available": true,
+      "approvedForWebsite": false
+    },
+    "destinationPhotos": [
+      {
+        "file": "rajasthan-01.jpg",
+        "journeyId": "JRN-009",
+        "caption": "Rajasthan vacation"
+      }
+    ]
+  },
+  "permissions": {
+    "story": true,
+    "travellerPhoto": false,
+    "destinationPhotos": false
+  },
+  "source": {
+    "testimonialRepository": true,
+    "googleReview": true,
+    "websiteStory": true
+  },
+  "tags": [
+    "Repeat Traveller",
+    "Domestic",
+    "Family",
+    "Heritage & Luxury",
+    "Heritage",
+    "Luxury",
+    "Multi-city",
+    "Desert",
+    "Culture",
+    "History",
+    "Hero Story",
+    "Last-minute Family Vacation",
+    "Last Minute",
+    "Peak Season",
+    "Children",
+    "Vegetarian",
+    "Flights",
+    "Ferries",
+    "Single Point of Contact",
+    "Budget"
+  ],
+  "lastUpdated": "2026-08-10"
+}

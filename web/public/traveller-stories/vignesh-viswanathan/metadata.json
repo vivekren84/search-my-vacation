@@ -1,0 +1,44 @@
+{
+  "travellerId": "TR-002",
+  "displayName": "Vignesh Vishwanathan",
+  "fullName": "Vignesh Vishwanathan",
+  "status": "pending",
+  "journeys": [
+    {
+      "journeyId": "JRN-002",
+      "title": "To confirm",
+      "destination": "Karnataka",
+      "travelMonth": "November",
+      "travelYear": 2023,
+      "duration": "6 Days",
+      "experienceType": "Multi-generational Family Trip",
+      "travellerType": "Multi-generational Family",
+      "featured": false
+    }
+  ],
+  "media": {
+    "travellerPhoto": {
+      "file": "traveller.jpg",
+      "available": true,
+      "approvedForWebsite": false
+    },
+    "destinationPhotos": []
+  },
+  "permissions": {
+    "story": false,
+    "travellerPhoto": false,
+    "destinationPhotos": false
+  },
+  "source": {
+    "testimonialRepository": true,
+    "googleReview": false,
+    "websiteStory": false
+  },
+  "tags": [
+    "Domestic",
+    "Multi-generational Family",
+    "Family",
+    "Multi-generational Family Trip"
+  ],
+  "lastUpdated": "2026-08-10"
+}

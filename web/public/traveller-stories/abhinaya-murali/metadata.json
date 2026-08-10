@@ -1,0 +1,42 @@
+{
+  "travellerId": "TR-036",
+  "displayName": "Abhinaya Murali",
+  "fullName": "Abhinaya Murali",
+  "status": "approved",
+  "journeys": [
+    {
+      "journeyId": "JRN-037",
+      "title": "To confirm",
+      "destination": "Sikkim",
+      "travelMonth": "April",
+      "travelYear": "2024",
+      "duration": "7 Days / 6 Nights",
+      "experienceType": "Adventure & Culture",
+      "travellerType": "To confirm",
+      "featured": false
+    }
+  ],
+  "media": {
+    "travellerPhoto": {
+      "file": "traveller.jpg",
+      "available": false,
+      "approvedForWebsite": false
+    },
+    "destinationPhotos": []
+  },
+  "permissions": {
+    "story": true,
+    "travellerPhoto": false,
+    "destinationPhotos": false
+  },
+  "source": {
+    "testimonialRepository": false,
+    "googleReview": true,
+    "websiteStory": false
+  },
+  "tags": [
+    "Domestic",
+    "Adventure & Culture"
+  ],
+  "lastUpdated": "2026-08-10"
+}

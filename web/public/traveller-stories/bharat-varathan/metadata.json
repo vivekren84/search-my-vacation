@@ -1,0 +1,43 @@
+{
+  "travellerId": "TR-011",
+  "displayName": "Bharat Varathan",
+  "fullName": "Bharat Varathan",
+  "status": "pending",
+  "journeys": [
+    {
+      "journeyId": "JRN-011",
+      "title": "To confirm",
+      "destination": "Shimla–Manali, Himachal Pradesh",
+      "travelMonth": "May",
+      "travelYear": 2024,
+      "duration": "To confirm",
+      "experienceType": "Family Vacation",
+      "travellerType": "Family",
+      "featured": false
+    }
+  ],
+  "media": {
+    "travellerPhoto": {
+      "file": "traveller.jpg",
+      "available": true,
+      "approvedForWebsite": false
+    },
+    "destinationPhotos": []
+  },
+  "permissions": {
+    "story": false,
+    "travellerPhoto": false,
+    "destinationPhotos": false
+  },
+  "source": {
+    "testimonialRepository": true,
+    "googleReview": false,
+    "websiteStory": false
+  },
+  "tags": [
+    "Domestic",
+    "Family",
+    "Family Vacation"
+  ],
+  "lastUpdated": "2026-08-10"
+}

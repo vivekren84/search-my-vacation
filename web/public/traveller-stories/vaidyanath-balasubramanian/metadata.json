@@ -1,0 +1,42 @@
+{
+  "travellerId": "TR-028",
+  "displayName": "Vaidyanath Balasubramanian",
+  "fullName": "Vaidyanath Balasubramanian",
+  "status": "approved",
+  "journeys": [
+    {
+      "journeyId": "JRN-029",
+      "title": "To confirm",
+      "destination": "Rajasthan",
+      "travelMonth": null,
+      "travelYear": null,
+      "duration": "To confirm",
+      "experienceType": "Heritage Vacation",
+      "travellerType": "To confirm",
+      "featured": false
+    }
+  ],
+  "media": {
+    "travellerPhoto": {
+      "file": "traveller.jpg",
+      "available": false,
+      "approvedForWebsite": false
+    },
+    "destinationPhotos": []
+  },
+  "permissions": {
+    "story": true,
+    "travellerPhoto": false,
+    "destinationPhotos": false
+  },
+  "source": {
+    "testimonialRepository": false,
+    "googleReview": true,
+    "websiteStory": false
+  },
+  "tags": [
+    "Domestic",
+    "Heritage Vacation"
+  ],
+  "lastUpdated": "2026-08-10"
+}

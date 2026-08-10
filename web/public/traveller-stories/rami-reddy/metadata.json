@@ -1,0 +1,41 @@
+{
+  "travellerId": "TR-021",
+  "displayName": "Rami Reddy",
+  "fullName": "Rami Reddy",
+  "status": "approved",
+  "journeys": [
+    {
+      "journeyId": "JRN-021",
+      "title": "To confirm",
+      "destination": "Dubai & Abu Dhabi, UAE",
+      "travelMonth": "September",
+      "travelYear": 2025,
+      "duration": "8 Days / 7 Nights",
+      "experienceType": "Vacation",
+      "travellerType": "Family",
+      "featured": false
+    }
+  ],
+  "media": {
+    "travellerPhoto": {
+      "file": "traveller.jpg",
+      "available": false,
+      "approvedForWebsite": false
+    },
+    "destinationPhotos": []
+  },
+  "permissions": {
+    "story": true,
+    "travellerPhoto": false,
+    "destinationPhotos": false
+  },
+  "source": {
+    "testimonialRepository": false,
+    "googleReview": true,
+    "websiteStory": false
+  },
+  "tags": [
+    "Family"
+  ],
+  "lastUpdated": "2026-08-10"
+}

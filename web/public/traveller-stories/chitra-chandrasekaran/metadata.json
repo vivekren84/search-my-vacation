@@ -1,0 +1,43 @@
+{
+  "travellerId": "TR-027",
+  "displayName": "chitra chandrasekaran",
+  "fullName": "chitra chandrasekaran",
+  "status": "approved",
+  "journeys": [
+    {
+      "journeyId": "JRN-028",
+      "title": "To confirm",
+      "destination": "Madurai, Tamil Nadu",
+      "travelMonth": null,
+      "travelYear": null,
+      "duration": "To confirm",
+      "experienceType": "Senior-friendly Spiritual Trip",
+      "travellerType": "Senior Travellers",
+      "featured": false
+    }
+  ],
+  "media": {
+    "travellerPhoto": {
+      "file": "traveller.jpg",
+      "available": false,
+      "approvedForWebsite": false
+    },
+    "destinationPhotos": []
+  },
+  "permissions": {
+    "story": true,
+    "travellerPhoto": false,
+    "destinationPhotos": false
+  },
+  "source": {
+    "testimonialRepository": false,
+    "googleReview": true,
+    "websiteStory": false
+  },
+  "tags": [
+    "Domestic",
+    "Senior Travellers",
+    "Senior-friendly Spiritual Trip"
+  ],
+  "lastUpdated": "2026-08-10"
+}

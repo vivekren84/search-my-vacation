@@ -1,0 +1,42 @@
+{
+  "travellerId": "TR-024",
+  "displayName": "Aru K",
+  "fullName": "Aru K",
+  "status": "approved",
+  "journeys": [
+    {
+      "journeyId": "JRN-024",
+      "title": "To confirm",
+      "destination": "Andaman Islands",
+      "travelMonth": null,
+      "travelYear": null,
+      "duration": "To confirm",
+      "experienceType": "Adventure Vacation",
+      "travellerType": "To confirm",
+      "featured": false
+    }
+  ],
+  "media": {
+    "travellerPhoto": {
+      "file": "traveller.jpg",
+      "available": false,
+      "approvedForWebsite": false
+    },
+    "destinationPhotos": []
+  },
+  "permissions": {
+    "story": true,
+    "travellerPhoto": false,
+    "destinationPhotos": false
+  },
+  "source": {
+    "testimonialRepository": false,
+    "googleReview": true,
+    "websiteStory": false
+  },
+  "tags": [
+    "Domestic",
+    "Adventure Vacation"
+  ],
+  "lastUpdated": "2026-08-10"
+}

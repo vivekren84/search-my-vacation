@@ -1,0 +1,41 @@
+{
+  "travellerId": "TR-030",
+  "displayName": "sukumar k",
+  "fullName": "sukumar k",
+  "status": "approved",
+  "journeys": [
+    {
+      "journeyId": "JRN-031",
+      "title": "To confirm",
+      "destination": "Kodaikanal, Tamil Nadu",
+      "travelMonth": "February",
+      "travelYear": 2025,
+      "duration": "3 Days / 2 Nights",
+      "experienceType": "Vacation",
+      "travellerType": "Family",
+      "featured": false
+    }
+  ],
+  "media": {
+    "travellerPhoto": {
+      "file": "traveller.jpg",
+      "available": false,
+      "approvedForWebsite": false
+    },
+    "destinationPhotos": []
+  },
+  "permissions": {
+    "story": true,
+    "travellerPhoto": false,
+    "destinationPhotos": false
+  },
+  "source": {
+    "testimonialRepository": false,
+    "googleReview": true,
+    "websiteStory": false
+  },
+  "tags": [
+    "Family"
+  ],
+  "lastUpdated": "2026-08-10"
+}
