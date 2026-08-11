@@ -10,7 +10,7 @@
       "destination": "Kodaikanal, Tamil Nadu",
       "travelMonth": "September",
       "travelYear": 2023,
-      "duration": "To confirm",
+      "duration": null,
       "experienceType": "Solo Adventure",
       "travellerType": "Solo Traveller",
       "featured": false
@@ -18,22 +18,22 @@
   ],
   "media": {
     "travellerPhoto": {
-      "file": "traveller.jpg",
+      "file": null,
       "available": false,
       "approvedForWebsite": false
     },
     "destinationPhotos": [
       {
-        "file": "destination-01.jpg",
+        "file": "kodaikanal-01.jpg",
         "journeyId": "JRN-003",
-        "caption": "Kodaikanal, Tamil Nadu vacation"
+        "caption": "Kodaikanal, Tamil Nadu travel photo"
       }
     ]
   },
   "permissions": {
     "story": true,
     "travellerPhoto": false,
-    "destinationPhotos": false
+    "destinationPhotos": true
   },
   "source": {
     "testimonialRepository": true,

@@ -6,11 +6,11 @@
   "journeys": [
     {
       "journeyId": "JRN-008",
-      "title": "To confirm",
+      "title": null,
       "destination": "Gujarat",
       "travelMonth": "March",
       "travelYear": 2024,
-      "duration": "To confirm",
+      "duration": null,
       "experienceType": "Family & Spiritual",
       "travellerType": "Family",
       "featured": false
@@ -18,16 +18,22 @@
   ],
   "media": {
     "travellerPhoto": {
-      "file": "traveller.jpg",
+      "file": "group.jpg",
       "available": true,
-      "approvedForWebsite": false
+      "approvedForWebsite": true
     },
-    "destinationPhotos": []
+    "destinationPhotos": [
+      {
+        "file": "gujarat-01.jpg",
+        "journeyId": "JRN-008",
+        "caption": "Gujarat travel photo"
+      }
+    ]
   },
   "permissions": {
     "story": false,
-    "travellerPhoto": false,
-    "destinationPhotos": false
+    "travellerPhoto": true,
+    "destinationPhotos": true
   },
   "source": {
     "testimonialRepository": true,

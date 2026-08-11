@@ -6,19 +6,19 @@
   "journeys": [
     {
       "journeyId": "JRN-023",
-      "title": "To confirm",
+      "title": null,
       "destination": "Malaysia & Singapore",
       "travelMonth": null,
       "travelYear": null,
-      "duration": "To confirm",
+      "duration": null,
       "experienceType": "International Private Tour",
-      "travellerType": "To confirm",
+      "travellerType": null,
       "featured": false
     }
   ],
   "media": {
     "travellerPhoto": {
-      "file": "traveller.jpg",
+      "file": null,
       "available": false,
       "approvedForWebsite": false
     },

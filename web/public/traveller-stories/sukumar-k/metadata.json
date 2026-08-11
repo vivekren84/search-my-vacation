@@ -1,12 +1,12 @@
 {
   "travellerId": "TR-030",
-  "displayName": "sukumar k",
-  "fullName": "sukumar k",
+  "displayName": "Sukumar K",
+  "fullName": "Sukumar K",
   "status": "approved",
   "journeys": [
     {
       "journeyId": "JRN-031",
-      "title": "To confirm",
+      "title": null,
       "destination": "Kodaikanal, Tamil Nadu",
       "travelMonth": "February",
       "travelYear": 2025,
@@ -18,7 +18,7 @@
   ],
   "media": {
     "travellerPhoto": {
-      "file": "traveller.jpg",
+      "file": null,
       "available": false,
       "approvedForWebsite": false
     },

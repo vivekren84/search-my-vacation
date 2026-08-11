@@ -6,11 +6,11 @@
   "journeys": [
     {
       "journeyId": "JRN-011",
-      "title": "To confirm",
+      "title": null,
       "destination": "Shimla–Manali, Himachal Pradesh",
       "travelMonth": "May",
       "travelYear": 2024,
-      "duration": "To confirm",
+      "duration": null,
       "experienceType": "Family Vacation",
       "travellerType": "Family",
       "featured": false
@@ -18,16 +18,22 @@
   ],
   "media": {
     "travellerPhoto": {
-      "file": "traveller.jpg",
+      "file": "family.jpg",
       "available": true,
-      "approvedForWebsite": false
+      "approvedForWebsite": true
     },
-    "destinationPhotos": []
+    "destinationPhotos": [
+      {
+        "file": "manali-01.jpg",
+        "journeyId": "JRN-011",
+        "caption": "Shimla–Manali, Himachal Pradesh travel photo"
+      }
+    ]
   },
   "permissions": {
     "story": false,
-    "travellerPhoto": false,
-    "destinationPhotos": false
+    "travellerPhoto": true,
+    "destinationPhotos": true
   },
   "source": {
     "testimonialRepository": true,

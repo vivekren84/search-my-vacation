@@ -6,19 +6,19 @@
   "journeys": [
     {
       "journeyId": "JRN-015",
-      "title": "To confirm",
+      "title": null,
       "destination": "Kuala Lumpur & Langkawi, Malaysia",
       "travelMonth": "March",
       "travelYear": 2026,
       "duration": "6 Days / 5 Nights",
       "experienceType": "Vacation",
-      "travellerType": "To confirm",
+      "travellerType": null,
       "featured": false
     }
   ],
   "media": {
     "travellerPhoto": {
-      "file": "traveller.jpg",
+      "file": null,
       "available": false,
       "approvedForWebsite": false
     },

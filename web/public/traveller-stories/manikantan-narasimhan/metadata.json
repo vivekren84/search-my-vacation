@@ -6,19 +6,19 @@
   "journeys": [
     {
       "journeyId": "JRN-039",
-      "title": "To confirm",
+      "title": null,
       "destination": "Manali, Himachal Pradesh",
       "travelMonth": null,
       "travelYear": null,
-      "duration": "To confirm",
+      "duration": null,
       "experienceType": "Vacation",
-      "travellerType": "To confirm",
+      "travellerType": null,
       "featured": false
     }
   ],
   "media": {
     "travellerPhoto": {
-      "file": "traveller.jpg",
+      "file": null,
       "available": false,
       "approvedForWebsite": false
     },

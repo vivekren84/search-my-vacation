@@ -1,17 +1,17 @@
 {
-  "travellerId": "TR-021",
-  "displayName": "Rami Reddy",
-  "fullName": "Rami Reddy",
-  "status": "approved",
+  "travellerId": "TR-048",
+  "displayName": "Vidhya",
+  "fullName": "Vidhya",
+  "status": "pending",
   "journeys": [
     {
-      "journeyId": "JRN-021",
+      "journeyId": "JRN-050",
       "title": null,
       "destination": "Dubai & Abu Dhabi, UAE",
-      "travelMonth": "September",
-      "travelYear": 2025,
-      "duration": "8 Days / 7 Nights",
-      "experienceType": "Vacation",
+      "travelMonth": null,
+      "travelYear": null,
+      "duration": null,
+      "experienceType": null,
       "travellerType": "Family",
       "featured": false
     }
@@ -25,42 +25,43 @@
     "destinationPhotos": [
       {
         "file": "abu-dhabi-01.jpg",
-        "journeyId": "JRN-021",
+        "journeyId": "JRN-050",
         "caption": "Dubai & Abu Dhabi, UAE travel photo"
       },
       {
         "file": "abu-dhabi-02.jpg",
-        "journeyId": "JRN-021",
+        "journeyId": "JRN-050",
         "caption": "Dubai & Abu Dhabi, UAE travel photo"
       },
       {
         "file": "abu-dhabi-03.jpg",
-        "journeyId": "JRN-021",
+        "journeyId": "JRN-050",
         "caption": "Dubai & Abu Dhabi, UAE travel photo"
       },
       {
         "file": "dubai-01.jpg",
-        "journeyId": "JRN-021",
+        "journeyId": "JRN-050",
         "caption": "Dubai & Abu Dhabi, UAE travel photo"
       },
       {
         "file": "dubai-02.jpg",
-        "journeyId": "JRN-021",
+        "journeyId": "JRN-050",
         "caption": "Dubai & Abu Dhabi, UAE travel photo"
       }
     ]
   },
   "permissions": {
-    "story": true,
+    "story": false,
     "travellerPhoto": true,
     "destinationPhotos": true
   },
   "source": {
     "testimonialRepository": false,
-    "googleReview": true,
+    "googleReview": false,
     "websiteStory": false
   },
   "tags": [
+    "International",
     "Family"
   ],
   "lastUpdated": "2026-08-10"

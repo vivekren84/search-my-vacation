@@ -18,16 +18,22 @@
   ],
   "media": {
     "travellerPhoto": {
-      "file": "traveller.jpg",
-      "available": true,
+      "file": null,
+      "available": false,
       "approvedForWebsite": false
     },
-    "destinationPhotos": []
+    "destinationPhotos": [
+      {
+        "file": "munnar-01.jpg",
+        "journeyId": "JRN-010",
+        "caption": "Munnar, Kerala travel photo"
+      }
+    ]
   },
   "permissions": {
     "story": true,
     "travellerPhoto": false,
-    "destinationPhotos": false
+    "destinationPhotos": true
   },
   "source": {
     "testimonialRepository": true,

@@ -12,28 +12,28 @@
       "travelYear": 2024,
       "duration": "4 Days / 3 Nights",
       "experienceType": "Spiritual & Heritage",
-      "travellerType": "Family / Group (to confirm)",
+      "travellerType": null,
       "featured": false
     }
   ],
   "media": {
     "travellerPhoto": {
-      "file": "traveller.jpg",
+      "file": "family.jpg",
       "available": true,
-      "approvedForWebsite": false
+      "approvedForWebsite": true
     },
     "destinationPhotos": [
       {
-        "file": "guruvayur-01.jpg",
+        "file": "guruvayoor-01.jpg",
         "journeyId": "JRN-006",
-        "caption": "Guruvayur, Kerala vacation"
+        "caption": "Guruvayur, Kerala travel photo"
       }
     ]
   },
   "permissions": {
     "story": true,
-    "travellerPhoto": false,
-    "destinationPhotos": false
+    "travellerPhoto": true,
+    "destinationPhotos": true
   },
   "source": {
     "testimonialRepository": true,

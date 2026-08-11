@@ -1,24 +1,24 @@
 {
   "travellerId": "TR-033",
-  "displayName": "rajkumar yadavalli",
-  "fullName": "rajkumar yadavalli",
+  "displayName": "Rajkumar Yadavalli",
+  "fullName": "Rajkumar Yadavalli",
   "status": "approved",
   "journeys": [
     {
       "journeyId": "JRN-034",
-      "title": "To confirm",
+      "title": null,
       "destination": "Araku Valley, Andhra Pradesh",
       "travelMonth": null,
       "travelYear": null,
-      "duration": "To confirm",
+      "duration": null,
       "experienceType": "Adventure & Nature",
-      "travellerType": "To confirm",
+      "travellerType": null,
       "featured": false
     }
   ],
   "media": {
     "travellerPhoto": {
-      "file": "traveller.jpg",
+      "file": null,
       "available": false,
       "approvedForWebsite": false
     },

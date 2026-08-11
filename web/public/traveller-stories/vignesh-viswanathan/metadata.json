@@ -6,7 +6,7 @@
   "journeys": [
     {
       "journeyId": "JRN-002",
-      "title": "To confirm",
+      "title": null,
       "destination": "Karnataka",
       "travelMonth": "November",
       "travelYear": 2023,
@@ -18,16 +18,32 @@
   ],
   "media": {
     "travellerPhoto": {
-      "file": "traveller.jpg",
+      "file": "family.jpg",
       "available": true,
-      "approvedForWebsite": false
+      "approvedForWebsite": true
     },
-    "destinationPhotos": []
+    "destinationPhotos": [
+      {
+        "file": "karnataka-01.jpg",
+        "journeyId": "JRN-002",
+        "caption": "Karnataka travel photo"
+      },
+      {
+        "file": "karnataka-02.jpg",
+        "journeyId": "JRN-002",
+        "caption": "Karnataka travel photo"
+      },
+      {
+        "file": "karnataka-03.jpg",
+        "journeyId": "JRN-002",
+        "caption": "Karnataka travel photo"
+      }
+    ]
   },
   "permissions": {
     "story": false,
-    "travellerPhoto": false,
-    "destinationPhotos": false
+    "travellerPhoto": true,
+    "destinationPhotos": true
   },
   "source": {
     "testimonialRepository": true,

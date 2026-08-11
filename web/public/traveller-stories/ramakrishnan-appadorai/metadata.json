@@ -18,16 +18,22 @@
   ],
   "media": {
     "travellerPhoto": {
-      "file": "traveller.jpg",
+      "file": "couple.jpg",
       "available": true,
-      "approvedForWebsite": false
+      "approvedForWebsite": true
     },
-    "destinationPhotos": []
+    "destinationPhotos": [
+      {
+        "file": "manali-01.jpg",
+        "journeyId": "JRN-007",
+        "caption": "Shimla–Manali, Himachal Pradesh travel photo"
+      }
+    ]
   },
   "permissions": {
     "story": true,
-    "travellerPhoto": false,
-    "destinationPhotos": false
+    "travellerPhoto": true,
+    "destinationPhotos": true
   },
   "source": {
     "testimonialRepository": true,

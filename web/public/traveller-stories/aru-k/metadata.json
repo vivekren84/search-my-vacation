@@ -6,19 +6,19 @@
   "journeys": [
     {
       "journeyId": "JRN-024",
-      "title": "To confirm",
+      "title": null,
       "destination": "Andaman Islands",
       "travelMonth": null,
       "travelYear": null,
-      "duration": "To confirm",
+      "duration": null,
       "experienceType": "Adventure Vacation",
-      "travellerType": "To confirm",
+      "travellerType": null,
       "featured": false
     }
   ],
   "media": {
     "travellerPhoto": {
-      "file": "traveller.jpg",
+      "file": null,
       "available": false,
       "approvedForWebsite": false
     },

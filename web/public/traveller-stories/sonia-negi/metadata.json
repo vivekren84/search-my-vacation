@@ -6,28 +6,39 @@
   "journeys": [
     {
       "journeyId": "JRN-018",
-      "title": "To confirm",
+      "title": null,
       "destination": "Ranthambore, Rajasthan",
       "travelMonth": null,
       "travelYear": null,
-      "duration": "To confirm",
+      "duration": null,
       "experienceType": "Wildlife / Short-notice Trip",
-      "travellerType": "To confirm",
+      "travellerType": null,
       "featured": false
     }
   ],
   "media": {
     "travellerPhoto": {
-      "file": "traveller.jpg",
+      "file": null,
       "available": false,
       "approvedForWebsite": false
     },
-    "destinationPhotos": []
+    "destinationPhotos": [
+      {
+        "file": "ranthambore-01.jpg",
+        "journeyId": "JRN-018",
+        "caption": "Ranthambore, Rajasthan travel photo"
+      },
+      {
+        "file": "ranthambore-02.jpg",
+        "journeyId": "JRN-018",
+        "caption": "Ranthambore, Rajasthan travel photo"
+      }
+    ]
   },
   "permissions": {
     "story": true,
     "travellerPhoto": false,
-    "destinationPhotos": false
+    "destinationPhotos": true
   },
   "source": {
     "testimonialRepository": false,

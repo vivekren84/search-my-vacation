@@ -19,15 +19,26 @@
   "media": {
     "travellerPhoto": {
       "file": "traveller.jpg",
-      "available": false,
-      "approvedForWebsite": false
+      "available": true,
+      "approvedForWebsite": true
     },
-    "destinationPhotos": []
+    "destinationPhotos": [
+      {
+        "file": "sri-lanka-01.jpg",
+        "journeyId": "JRN-012",
+        "caption": "Sri Lanka travel photo"
+      },
+      {
+        "file": "sri-lanka-02.jpg",
+        "journeyId": "JRN-012",
+        "caption": "Sri Lanka travel photo"
+      }
+    ]
   },
   "permissions": {
     "story": true,
-    "travellerPhoto": false,
-    "destinationPhotos": false
+    "travellerPhoto": true,
+    "destinationPhotos": true
   },
   "source": {
     "testimonialRepository": true,

@@ -6,11 +6,11 @@
   "journeys": [
     {
       "journeyId": "JRN-014",
-      "title": "To confirm",
+      "title": null,
       "destination": "Kodaikanal, Poombarai & Palani, Tamil Nadu",
       "travelMonth": null,
       "travelYear": null,
-      "duration": "To confirm",
+      "duration": null,
       "experienceType": "Family Vacation",
       "travellerType": "Family",
       "featured": false
@@ -18,7 +18,7 @@
   ],
   "media": {
     "travellerPhoto": {
-      "file": "traveller.jpg",
+      "file": null,
       "available": false,
       "approvedForWebsite": false
     },

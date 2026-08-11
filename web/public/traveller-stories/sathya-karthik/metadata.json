@@ -10,7 +10,7 @@
       "destination": "Rajasthan",
       "travelMonth": "January",
       "travelYear": 2024,
-      "duration": "To confirm",
+      "duration": null,
       "experienceType": "Heritage & Luxury",
       "travellerType": "Family",
       "featured": false
@@ -29,22 +29,22 @@
   ],
   "media": {
     "travellerPhoto": {
-      "file": "traveller.jpg",
+      "file": "family.jpg",
       "available": true,
-      "approvedForWebsite": false
+      "approvedForWebsite": true
     },
     "destinationPhotos": [
       {
-        "file": "rajasthan-01.jpg",
-        "journeyId": "JRN-009",
-        "caption": "Rajasthan vacation"
+        "file": "andaman-havelock.jpg",
+        "journeyId": "JRN-025",
+        "caption": "Andaman Islands travel photo"
       }
     ]
   },
   "permissions": {
     "story": true,
-    "travellerPhoto": false,
-    "destinationPhotos": false
+    "travellerPhoto": true,
+    "destinationPhotos": true
   },
   "source": {
     "testimonialRepository": true,

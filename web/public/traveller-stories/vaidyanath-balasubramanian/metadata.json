@@ -6,27 +6,27 @@
   "journeys": [
     {
       "journeyId": "JRN-029",
-      "title": "To confirm",
+      "title": null,
       "destination": "Rajasthan",
       "travelMonth": null,
       "travelYear": null,
-      "duration": "To confirm",
+      "duration": null,
       "experienceType": "Heritage Vacation",
-      "travellerType": "To confirm",
+      "travellerType": null,
       "featured": false
     }
   ],
   "media": {
     "travellerPhoto": {
       "file": "traveller.jpg",
-      "available": false,
-      "approvedForWebsite": false
+      "available": true,
+      "approvedForWebsite": true
     },
     "destinationPhotos": []
   },
   "permissions": {
     "story": true,
-    "travellerPhoto": false,
+    "travellerPhoto": true,
     "destinationPhotos": false
   },
   "source": {

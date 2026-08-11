@@ -1,0 +1,73 @@
+{
+  "travellerId": "TR-039",
+  "displayName": "Charuvasine",
+  "fullName": "Charuvasine",
+  "status": "pending",
+  "journeys": [
+    {
+      "journeyId": "JRN-041",
+      "title": null,
+      "destination": "Shimla, Manali, Kullu & Kasol, Himachal Pradesh",
+      "travelMonth": null,
+      "travelYear": null,
+      "duration": null,
+      "experienceType": null,
+      "travellerType": "Family",
+      "featured": false
+    }
+  ],
+  "media": {
+    "travellerPhoto": {
+      "file": "family.jpg",
+      "available": true,
+      "approvedForWebsite": true
+    },
+    "destinationPhotos": [
+      {
+        "file": "kasol-01.jpg",
+        "journeyId": "JRN-041",
+        "caption": "Shimla, Manali, Kullu & Kasol, Himachal Pradesh travel photo"
+      },
+      {
+        "file": "kullu-01.jpg",
+        "journeyId": "JRN-041",
+        "caption": "Shimla, Manali, Kullu & Kasol, Himachal Pradesh travel photo"
+      },
+      {
+        "file": "manali-01.jpg",
+        "journeyId": "JRN-041",
+        "caption": "Shimla, Manali, Kullu & Kasol, Himachal Pradesh travel photo"
+      },
+      {
+        "file": "manali-02.jpg",
+        "journeyId": "JRN-041",
+        "caption": "Shimla, Manali, Kullu & Kasol, Himachal Pradesh travel photo"
+      },
+      {
+        "file": "shimla-01.jpg",
+        "journeyId": "JRN-041",
+        "caption": "Shimla, Manali, Kullu & Kasol, Himachal Pradesh travel photo"
+      },
+      {
+        "file": "shimla-02.jpg",
+        "journeyId": "JRN-041",
+        "caption": "Shimla, Manali, Kullu & Kasol, Himachal Pradesh travel photo"
+      }
+    ]
+  },
+  "permissions": {
+    "story": false,
+    "travellerPhoto": true,
+    "destinationPhotos": true
+  },
+  "source": {
+    "testimonialRepository": false,
+    "googleReview": false,
+    "websiteStory": false
+  },
+  "tags": [
+    "Domestic",
+    "Family"
+  ],
+  "lastUpdated": "2026-08-10"
+}

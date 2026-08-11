@@ -1,24 +1,24 @@
 {
   "travellerId": "TR-031",
-  "displayName": "sridevi vadhirajan",
-  "fullName": "sridevi vadhirajan",
+  "displayName": "Sridevi Vadhirajan",
+  "fullName": "Sridevi Vadhirajan",
   "status": "approved",
   "journeys": [
     {
       "journeyId": "JRN-032",
-      "title": "To confirm",
+      "title": null,
       "destination": "Manali, Himachal Pradesh",
       "travelMonth": null,
       "travelYear": null,
-      "duration": "To confirm",
+      "duration": null,
       "experienceType": "Vacation",
-      "travellerType": "To confirm",
+      "travellerType": null,
       "featured": false
     }
   ],
   "media": {
     "travellerPhoto": {
-      "file": "traveller.jpg",
+      "file": null,
       "available": false,
       "approvedForWebsite": false
     },

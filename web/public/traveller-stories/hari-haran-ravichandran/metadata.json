@@ -1,0 +1,63 @@
+{
+  "travellerId": "TR-040",
+  "displayName": "Hari Haran Ravichandran",
+  "fullName": "Hari Haran Ravichandran",
+  "status": "pending",
+  "journeys": [
+    {
+      "journeyId": "JRN-042",
+      "title": null,
+      "destination": "Mangalore & Murudeshwar, Karnataka",
+      "travelMonth": null,
+      "travelYear": null,
+      "duration": null,
+      "experienceType": null,
+      "travellerType": "Family",
+      "featured": false
+    }
+  ],
+  "media": {
+    "travellerPhoto": {
+      "file": "family.jpg",
+      "available": true,
+      "approvedForWebsite": true
+    },
+    "destinationPhotos": [
+      {
+        "file": "mangalore-01.jpg",
+        "journeyId": "JRN-042",
+        "caption": "Mangalore & Murudeshwar, Karnataka travel photo"
+      },
+      {
+        "file": "mangalore-02.jpg",
+        "journeyId": "JRN-042",
+        "caption": "Mangalore & Murudeshwar, Karnataka travel photo"
+      },
+      {
+        "file": "mangalore-03.jpg",
+        "journeyId": "JRN-042",
+        "caption": "Mangalore & Murudeshwar, Karnataka travel photo"
+      },
+      {
+        "file": "murudeshwar-01.jpg",
+        "journeyId": "JRN-042",
+        "caption": "Mangalore & Murudeshwar, Karnataka travel photo"
+      }
+    ]
+  },
+  "permissions": {
+    "story": false,
+    "travellerPhoto": true,
+    "destinationPhotos": true
+  },
+  "source": {
+    "testimonialRepository": false,
+    "googleReview": false,
+    "websiteStory": false
+  },
+  "tags": [
+    "Domestic",
+    "Family"
+  ],
+  "lastUpdated": "2026-08-10"
+}

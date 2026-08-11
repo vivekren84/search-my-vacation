@@ -1,17 +1,17 @@
 {
-  "travellerId": "TR-025",
-  "displayName": "Srividhya Subramanian",
-  "fullName": "Srividhya Subramanian",
-  "status": "approved",
+  "travellerId": "TR-043",
+  "displayName": "Malleswari",
+  "fullName": "Malleswari",
+  "status": "pending",
   "journeys": [
     {
-      "journeyId": "JRN-026",
+      "journeyId": "JRN-045",
       "title": null,
-      "destination": "Bali, Indonesia",
+      "destination": null,
       "travelMonth": null,
       "travelYear": null,
-      "duration": "5 Days / 4 Nights",
-      "experienceType": "International Vacation",
+      "duration": null,
+      "experienceType": null,
       "travellerType": null,
       "featured": false
     }
@@ -25,18 +25,15 @@
     "destinationPhotos": []
   },
   "permissions": {
-    "story": true,
+    "story": false,
     "travellerPhoto": false,
     "destinationPhotos": false
   },
   "source": {
     "testimonialRepository": false,
-    "googleReview": true,
+    "googleReview": false,
     "websiteStory": false
   },
-  "tags": [
-    "International",
-    "International Vacation"
-  ],
+  "tags": [],
   "lastUpdated": "2026-08-10"
 }

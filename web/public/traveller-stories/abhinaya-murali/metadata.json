@@ -6,19 +6,19 @@
   "journeys": [
     {
       "journeyId": "JRN-037",
-      "title": "To confirm",
+      "title": null,
       "destination": "Sikkim",
       "travelMonth": "April",
       "travelYear": "2024",
       "duration": "7 Days / 6 Nights",
       "experienceType": "Adventure & Culture",
-      "travellerType": "To confirm",
+      "travellerType": null,
       "featured": false
     }
   ],
   "media": {
     "travellerPhoto": {
-      "file": "traveller.jpg",
+      "file": null,
       "available": false,
       "approvedForWebsite": false
     },

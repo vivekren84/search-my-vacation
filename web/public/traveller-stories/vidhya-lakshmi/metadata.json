@@ -1,0 +1,53 @@
+{
+  "travellerId": "TR-049",
+  "displayName": "Vidhya Lakshmi",
+  "fullName": "Vidhya Lakshmi",
+  "status": "pending",
+  "journeys": [
+    {
+      "journeyId": "JRN-051",
+      "title": null,
+      "destination": "Malaysia & Singapore",
+      "travelMonth": null,
+      "travelYear": null,
+      "duration": null,
+      "experienceType": null,
+      "travellerType": "Couple",
+      "featured": false
+    }
+  ],
+  "media": {
+    "travellerPhoto": {
+      "file": "couple.jpg",
+      "available": true,
+      "approvedForWebsite": true
+    },
+    "destinationPhotos": [
+      {
+        "file": "malaysia-01.jpg",
+        "journeyId": "JRN-051",
+        "caption": "Malaysia & Singapore travel photo"
+      },
+      {
+        "file": "singapore-01.jpg",
+        "journeyId": "JRN-051",
+        "caption": "Malaysia & Singapore travel photo"
+      }
+    ]
+  },
+  "permissions": {
+    "story": false,
+    "travellerPhoto": true,
+    "destinationPhotos": true
+  },
+  "source": {
+    "testimonialRepository": false,
+    "googleReview": false,
+    "websiteStory": false
+  },
+  "tags": [
+    "International",
+    "Couple"
+  ],
+  "lastUpdated": "2026-08-10"
+}

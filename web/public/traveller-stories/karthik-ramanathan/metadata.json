@@ -6,7 +6,7 @@
   "journeys": [
     {
       "journeyId": "JRN-017",
-      "title": "To confirm",
+      "title": null,
       "destination": "Sri Lanka",
       "travelMonth": null,
       "travelYear": null,
@@ -18,16 +18,22 @@
   ],
   "media": {
     "travellerPhoto": {
-      "file": "traveller.jpg",
-      "available": false,
-      "approvedForWebsite": false
+      "file": "family.jpg",
+      "available": true,
+      "approvedForWebsite": true
     },
-    "destinationPhotos": []
+    "destinationPhotos": [
+      {
+        "file": "rajasthan-01.jpg",
+        "journeyId": null,
+        "caption": "Rajasthan travel photo"
+      }
+    ]
   },
   "permissions": {
     "story": true,
-    "travellerPhoto": false,
-    "destinationPhotos": false
+    "travellerPhoto": true,
+    "destinationPhotos": true
   },
   "source": {
     "testimonialRepository": false,

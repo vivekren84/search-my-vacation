@@ -6,7 +6,7 @@
   "journeys": [
     {
       "journeyId": "JRN-019",
-      "title": "To confirm",
+      "title": null,
       "destination": "Andaman Islands",
       "travelMonth": null,
       "travelYear": null,
@@ -18,7 +18,7 @@
   ],
   "media": {
     "travellerPhoto": {
-      "file": "traveller.jpg",
+      "file": null,
       "available": false,
       "approvedForWebsite": false
     },

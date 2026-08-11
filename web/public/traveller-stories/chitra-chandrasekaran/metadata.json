@@ -6,11 +6,11 @@
   "journeys": [
     {
       "journeyId": "JRN-028",
-      "title": "To confirm",
+      "title": null,
       "destination": "Madurai, Tamil Nadu",
       "travelMonth": null,
       "travelYear": null,
-      "duration": "To confirm",
+      "duration": null,
       "experienceType": "Senior-friendly Spiritual Trip",
       "travellerType": "Senior Travellers",
       "featured": false
@@ -18,7 +18,7 @@
   ],
   "media": {
     "travellerPhoto": {
-      "file": "traveller.jpg",
+      "file": null,
       "available": false,
       "approvedForWebsite": false
     },

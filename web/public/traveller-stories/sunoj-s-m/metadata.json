@@ -6,28 +6,39 @@
   "journeys": [
     {
       "journeyId": "JRN-027",
-      "title": "To confirm",
+      "title": null,
       "destination": "Munroe Island & Varkala, Kerala",
       "travelMonth": null,
       "travelYear": null,
-      "duration": "To confirm",
+      "duration": null,
       "experienceType": "Kerala Getaway",
-      "travellerType": "To confirm",
+      "travellerType": null,
       "featured": false
     }
   ],
   "media": {
     "travellerPhoto": {
-      "file": "traveller.jpg",
-      "available": false,
-      "approvedForWebsite": false
+      "file": "family.jpg",
+      "available": true,
+      "approvedForWebsite": true
     },
-    "destinationPhotos": []
+    "destinationPhotos": [
+      {
+        "file": "munroe-island-01.jpg",
+        "journeyId": "JRN-027",
+        "caption": "Munroe Island & Varkala, Kerala travel photo"
+      },
+      {
+        "file": "varkala-01.jpg",
+        "journeyId": "JRN-027",
+        "caption": "Munroe Island & Varkala, Kerala travel photo"
+      }
+    ]
   },
   "permissions": {
     "story": true,
-    "travellerPhoto": false,
-    "destinationPhotos": false
+    "travellerPhoto": true,
+    "destinationPhotos": true
   },
   "source": {
     "testimonialRepository": false,
