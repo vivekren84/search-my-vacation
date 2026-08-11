@@ -6,11 +6,11 @@
   "journeys": [
     {
       "journeyId": "JRN-011",
-      "title": null,
+      "title": "A Mountain Holiday the Whole Family Loved",
       "destination": "Shimla–Manali, Himachal Pradesh",
       "travelMonth": "May",
       "travelYear": 2024,
-      "duration": null,
+      "duration": "7 Days / 6 Nights",
       "experienceType": "Family Vacation",
       "travellerType": "Family",
       "featured": false
@@ -45,5 +45,5 @@
     "Family",
     "Family Vacation"
   ],
-  "lastUpdated": "2026-08-10"
+  "lastUpdated": "2026-08-11"
 }

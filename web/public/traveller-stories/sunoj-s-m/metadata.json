@@ -6,13 +6,13 @@
   "journeys": [
     {
       "journeyId": "JRN-027",
-      "title": null,
+      "title": "Backwaters, Beaches and Beautiful Family Moments",
       "destination": "Munroe Island & Varkala, Kerala",
-      "travelMonth": null,
-      "travelYear": null,
-      "duration": null,
+      "travelMonth": "May",
+      "travelYear": 2025,
+      "duration": "3 Days / 2 Nights",
       "experienceType": "Kerala Getaway",
-      "travellerType": null,
+      "travellerType": "Family",
       "featured": false
     }
   ],
@@ -47,7 +47,8 @@
   },
   "tags": [
     "Domestic",
-    "Kerala Getaway"
+    "Kerala Getaway",
+    "Family"
   ],
-  "lastUpdated": "2026-08-10"
+  "lastUpdated": "2026-08-11"
 }

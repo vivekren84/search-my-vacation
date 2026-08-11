@@ -1,18 +1,18 @@
 {
   "travellerId": "TR-047",
-  "displayName": "Thiagarajan S",
-  "fullName": "Thiagarajan S",
+  "displayName": "Thiyagarajan Sambasivam",
+  "fullName": "Thiyagarajan Sambasivam",
   "status": "pending",
   "journeys": [
     {
       "journeyId": "JRN-049",
-      "title": null,
-      "destination": null,
-      "travelMonth": null,
-      "travelYear": null,
-      "duration": null,
-      "experienceType": null,
-      "travellerType": null,
+      "title": "A Journey Filled with Family Moments in Bhubaneswar",
+      "destination": "Bhubaneswar, Odisha",
+      "travelMonth": "November",
+      "travelYear": 2024,
+      "duration": "3 Days / 2 Nights",
+      "experienceType": "Memory Makers",
+      "travellerType": "Family",
       "featured": false
     }
   ],
@@ -34,6 +34,10 @@
     "googleReview": false,
     "websiteStory": false
   },
-  "tags": [],
-  "lastUpdated": "2026-08-10"
+  "tags": [
+    "Domestic",
+    "Memory Makers",
+    "Family"
+  ],
+  "lastUpdated": "2026-08-11"
 }

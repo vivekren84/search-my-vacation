@@ -6,13 +6,13 @@
   "journeys": [
     {
       "journeyId": "JRN-023",
-      "title": null,
+      "title": "Two Countries, Countless Beautiful Memories",
       "destination": "Malaysia & Singapore",
-      "travelMonth": null,
-      "travelYear": null,
-      "duration": null,
+      "travelMonth": "July",
+      "travelYear": 2025,
+      "duration": "7 Days / 6 Nights",
       "experienceType": "International Private Tour",
-      "travellerType": null,
+      "travellerType": "Couple",
       "featured": false
     }
   ],
@@ -36,7 +36,8 @@
   },
   "tags": [
     "International",
-    "International Private Tour"
+    "International Private Tour",
+    "Couple"
   ],
-  "lastUpdated": "2026-08-10"
+  "lastUpdated": "2026-08-11"
 }

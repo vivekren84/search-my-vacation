@@ -6,13 +6,13 @@
   "journeys": [
     {
       "journeyId": "JRN-048",
-      "title": null,
-      "destination": null,
-      "travelMonth": null,
-      "travelYear": null,
-      "duration": null,
-      "experienceType": null,
-      "travellerType": null,
+      "title": "Cherished Family Moments by Vizag's Coast",
+      "destination": "Visakhapatnam, Andhra Pradesh",
+      "travelMonth": "October",
+      "travelYear": 2023,
+      "duration": "3 Days / 2 Nights",
+      "experienceType": "Family Time",
+      "travellerType": "Family",
       "featured": false
     }
   ],
@@ -34,6 +34,10 @@
     "googleReview": false,
     "websiteStory": false
   },
-  "tags": [],
-  "lastUpdated": "2026-08-10"
+  "tags": [
+    "Domestic",
+    "Family Time",
+    "Family"
+  ],
+  "lastUpdated": "2026-08-11"
 }

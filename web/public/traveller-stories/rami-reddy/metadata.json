@@ -6,7 +6,7 @@
   "journeys": [
     {
       "journeyId": "JRN-021",
-      "title": null,
+      "title": "A Family Getaway Filled with Wonder in the UAE",
       "destination": "Dubai & Abu Dhabi, UAE",
       "travelMonth": "September",
       "travelYear": 2025,
@@ -63,5 +63,5 @@
   "tags": [
     "Family"
   ],
-  "lastUpdated": "2026-08-10"
+  "lastUpdated": "2026-08-11"
 }

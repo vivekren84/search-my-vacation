@@ -5,11 +5,22 @@
   "status": "approved",
   "journeys": [
     {
+      "journeyId": "JRN-009",
+      "title": "Five cities across Rajasthan",
+      "destination": "Rajasthan",
+      "travelMonth": "January",
+      "travelYear": 2024,
+      "duration": "7 Days / 6 Nights",
+      "experienceType": "Heritage & Luxury",
+      "travellerType": "Family",
+      "featured": false
+    },
+    {
       "journeyId": "JRN-017",
-      "title": null,
+      "title": "Exploring Sri Lanka Together, One Memory at a Time",
       "destination": "Sri Lanka",
-      "travelMonth": null,
-      "travelYear": null,
+      "travelMonth": "March",
+      "travelYear": 2025,
       "duration": "9 Days / 8 Nights",
       "experienceType": "International Family Vacation",
       "travellerType": "Family",
@@ -25,7 +36,7 @@
     "destinationPhotos": [
       {
         "file": "rajasthan-01.jpg",
-        "journeyId": null,
+        "journeyId": "JRN-009",
         "caption": "Rajasthan travel photo"
       }
     ]
@@ -36,14 +47,23 @@
     "destinationPhotos": true
   },
   "source": {
-    "testimonialRepository": false,
+    "testimonialRepository": true,
     "googleReview": true,
-    "websiteStory": false
+    "websiteStory": true
   },
   "tags": [
+    "Repeat Traveller",
+    "Domestic",
     "International",
     "Family",
+    "Heritage & Luxury",
+    "Heritage",
+    "Luxury",
+    "Multi-city",
+    "Desert",
+    "Culture",
+    "History",
     "International Family Vacation"
   ],
-  "lastUpdated": "2026-08-10"
+  "lastUpdated": "2026-08-11"
 }

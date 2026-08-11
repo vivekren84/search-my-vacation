@@ -6,13 +6,13 @@
   "journeys": [
     {
       "journeyId": "JRN-026",
-      "title": null,
+      "title": "Our Love Story Unfolded in Bali",
       "destination": "Bali, Indonesia",
-      "travelMonth": null,
-      "travelYear": null,
+      "travelMonth": "June",
+      "travelYear": 2025,
       "duration": "5 Days / 4 Nights",
       "experienceType": "International Vacation",
-      "travellerType": null,
+      "travellerType": "Couple",
       "featured": false
     }
   ],
@@ -36,7 +36,8 @@
   },
   "tags": [
     "International",
-    "International Vacation"
+    "International Vacation",
+    "Couple"
   ],
-  "lastUpdated": "2026-08-10"
+  "lastUpdated": "2026-08-11"
 }

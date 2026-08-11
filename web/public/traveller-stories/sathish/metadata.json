@@ -6,11 +6,11 @@
   "journeys": [
     {
       "journeyId": "JRN-005",
-      "title": null,
+      "title": "Making Mountain Memories in Kullu and Manali",
       "destination": "Kullu–Manali, Himachal Pradesh",
       "travelMonth": "September",
       "travelYear": 2023,
-      "duration": null,
+      "duration": "5 Days / 4 Nights",
       "experienceType": "Romantic / Family Getaway",
       "travellerType": "Family",
       "featured": false
@@ -45,5 +45,5 @@
     "Family",
     "Romantic / Family Getaway"
   ],
-  "lastUpdated": "2026-08-10"
+  "lastUpdated": "2026-08-11"
 }

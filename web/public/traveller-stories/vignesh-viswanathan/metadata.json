@@ -6,7 +6,7 @@
   "journeys": [
     {
       "journeyId": "JRN-002",
-      "title": null,
+      "title": "Three Generations, One Incredible Karnataka Journey",
       "destination": "Karnataka",
       "travelMonth": "November",
       "travelYear": 2023,
@@ -56,5 +56,5 @@
     "Family",
     "Multi-generational Family Trip"
   ],
-  "lastUpdated": "2026-08-10"
+  "lastUpdated": "2026-08-11"
 }

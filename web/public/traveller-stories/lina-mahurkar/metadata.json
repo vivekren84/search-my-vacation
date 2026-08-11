@@ -6,13 +6,13 @@
   "journeys": [
     {
       "journeyId": "JRN-030",
-      "title": null,
+      "title": "Snow, Smiles and Family Time in Manali",
       "destination": "Manali, Himachal Pradesh",
-      "travelMonth": null,
-      "travelYear": null,
-      "duration": null,
+      "travelMonth": "April",
+      "travelYear": 2025,
+      "duration": "3 Days / 2 Nights",
       "experienceType": "Adventure Getaway",
-      "travellerType": null,
+      "travellerType": "Family",
       "featured": false
     }
   ],
@@ -36,7 +36,8 @@
   },
   "tags": [
     "Domestic",
-    "Adventure Getaway"
+    "Adventure Getaway",
+    "Family"
   ],
-  "lastUpdated": "2026-08-10"
+  "lastUpdated": "2026-08-11"
 }

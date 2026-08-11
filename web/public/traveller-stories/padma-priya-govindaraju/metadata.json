@@ -6,10 +6,10 @@
   "journeys": [
     {
       "journeyId": "JRN-022",
-      "title": null,
+      "title": "An Andaman Holiday Everyone Enjoyed, Across Generations",
       "destination": "Andaman Islands",
-      "travelMonth": null,
-      "travelYear": null,
+      "travelMonth": "August",
+      "travelYear": 2025,
       "duration": "4 Days",
       "experienceType": "Senior-friendly Family Vacation",
       "travellerType": "Senior Travellers",
@@ -39,5 +39,5 @@
     "Senior Travellers",
     "Senior-friendly Family Vacation"
   ],
-  "lastUpdated": "2026-08-10"
+  "lastUpdated": "2026-08-11"
 }

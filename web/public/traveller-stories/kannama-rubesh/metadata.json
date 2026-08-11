@@ -10,9 +10,9 @@
       "destination": "Kabini, Karnataka",
       "travelMonth": "August",
       "travelYear": 2023,
-      "duration": null,
+      "duration": "3 Days / 2 Nights",
       "experienceType": "Weekend Getaway",
-      "travellerType": null,
+      "travellerType": "Family",
       "featured": false
     }
   ],
@@ -51,5 +51,5 @@
     "Long Weekend",
     "Relaxation"
   ],
-  "lastUpdated": "2026-08-10"
+  "lastUpdated": "2026-08-11"
 }

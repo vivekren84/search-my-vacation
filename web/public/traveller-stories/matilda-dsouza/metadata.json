@@ -6,13 +6,13 @@
   "journeys": [
     {
       "journeyId": "JRN-046",
-      "title": null,
-      "destination": null,
-      "travelMonth": null,
-      "travelYear": null,
-      "duration": null,
-      "experienceType": null,
-      "travellerType": null,
+      "title": "Celebrating Life Amid Ooty's Hills",
+      "destination": "Ooty, Tamil Nadu",
+      "travelMonth": "October",
+      "travelYear": 2023,
+      "duration": "3 Days / 2 Nights",
+      "experienceType": "Celebrations",
+      "travellerType": "Senior",
       "featured": false
     }
   ],
@@ -34,6 +34,10 @@
     "googleReview": false,
     "websiteStory": false
   },
-  "tags": [],
-  "lastUpdated": "2026-08-10"
+  "tags": [
+    "Domestic",
+    "Celebrations",
+    "Senior"
+  ],
+  "lastUpdated": "2026-08-11"
 }

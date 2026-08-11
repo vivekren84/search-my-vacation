@@ -6,7 +6,7 @@
   "journeys": [
     {
       "journeyId": "JRN-020",
-      "title": null,
+      "title": "Our First Getaway Together in Goa",
       "destination": "Goa",
       "travelMonth": "November",
       "travelYear": 2025,
@@ -38,5 +38,5 @@
     "Couple",
     "Honeymoon"
   ],
-  "lastUpdated": "2026-08-10"
+  "lastUpdated": "2026-08-11"
 }

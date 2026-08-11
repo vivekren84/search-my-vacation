@@ -6,11 +6,11 @@
   "journeys": [
     {
       "journeyId": "JRN-040",
-      "title": null,
+      "title": "Slow Days and Sweet Moments in Ooty",
       "destination": "Ooty, Tamil Nadu",
-      "travelMonth": null,
-      "travelYear": null,
-      "duration": null,
+      "travelMonth": "June",
+      "travelYear": 2024,
+      "duration": "5 Days / 4 Nights",
       "experienceType": "Family / Leisure Vacation",
       "travellerType": "Family",
       "featured": false
@@ -39,5 +39,5 @@
     "Family",
     "Family / Leisure Vacation"
   ],
-  "lastUpdated": "2026-08-10"
+  "lastUpdated": "2026-08-11"
 }

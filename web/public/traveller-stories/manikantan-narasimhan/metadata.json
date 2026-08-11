@@ -6,13 +6,13 @@
   "journeys": [
     {
       "journeyId": "JRN-039",
-      "title": null,
+      "title": "A Solo Break in the Mountains of Manali",
       "destination": "Manali, Himachal Pradesh",
-      "travelMonth": null,
-      "travelYear": null,
-      "duration": null,
+      "travelMonth": "July",
+      "travelYear": 2024,
+      "duration": "5 Days / 4 Nights",
       "experienceType": "Vacation",
-      "travellerType": null,
+      "travellerType": "Solo",
       "featured": false
     }
   ],
@@ -35,7 +35,8 @@
     "websiteStory": false
   },
   "tags": [
-    "Domestic"
+    "Domestic",
+    "Solo"
   ],
-  "lastUpdated": "2026-08-10"
+  "lastUpdated": "2026-08-11"
 }

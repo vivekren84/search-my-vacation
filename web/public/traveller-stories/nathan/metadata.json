@@ -10,7 +10,7 @@
       "destination": "Kodaikanal, Tamil Nadu",
       "travelMonth": "September",
       "travelYear": 2023,
-      "duration": null,
+      "duration": "3 Days / 2 Nights",
       "experienceType": "Solo Adventure",
       "travellerType": "Solo Traveller",
       "featured": false
@@ -51,5 +51,5 @@
     "Rest",
     "Local Exploration"
   ],
-  "lastUpdated": "2026-08-10"
+  "lastUpdated": "2026-08-11"
 }

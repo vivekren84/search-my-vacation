@@ -6,13 +6,13 @@
   "journeys": [
     {
       "journeyId": "JRN-024",
-      "title": null,
+      "title": "Island Memories Made Together in the Andamans",
       "destination": "Andaman Islands",
-      "travelMonth": null,
-      "travelYear": null,
-      "duration": null,
+      "travelMonth": "June",
+      "travelYear": 2025,
+      "duration": "7 Days / 6 Nights",
       "experienceType": "Adventure Vacation",
-      "travellerType": null,
+      "travellerType": "Family",
       "featured": false
     }
   ],
@@ -36,7 +36,8 @@
   },
   "tags": [
     "Domestic",
-    "Adventure Vacation"
+    "Adventure Vacation",
+    "Family"
   ],
-  "lastUpdated": "2026-08-10"
+  "lastUpdated": "2026-08-11"
 }

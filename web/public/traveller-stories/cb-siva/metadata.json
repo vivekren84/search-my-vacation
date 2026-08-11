@@ -6,11 +6,11 @@
   "journeys": [
     {
       "journeyId": "JRN-014",
-      "title": null,
+      "title": "A Family Journey Through Kodaikanal, Poombarai and Palani",
       "destination": "Kodaikanal, Poombarai & Palani, Tamil Nadu",
-      "travelMonth": null,
-      "travelYear": null,
-      "duration": null,
+      "travelMonth": "April",
+      "travelYear": 2026,
+      "duration": "3 Days / 2 Nights",
       "experienceType": "Family Vacation",
       "travellerType": "Family",
       "featured": false
@@ -39,5 +39,5 @@
     "Family",
     "Family Vacation"
   ],
-  "lastUpdated": "2026-08-10"
+  "lastUpdated": "2026-08-11"
 }

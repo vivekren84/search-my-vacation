@@ -6,13 +6,13 @@
   "journeys": [
     {
       "journeyId": "JRN-029",
-      "title": null,
+      "title": "Discovering Rajasthan's Royal Legacy Together",
       "destination": "Rajasthan",
-      "travelMonth": null,
-      "travelYear": null,
-      "duration": null,
+      "travelMonth": "January",
+      "travelYear": 2024,
+      "duration": "6 Days / 5 Nights",
       "experienceType": "Heritage Vacation",
-      "travellerType": null,
+      "travellerType": "Family",
       "featured": false
     }
   ],
@@ -36,7 +36,8 @@
   },
   "tags": [
     "Domestic",
-    "Heritage Vacation"
+    "Heritage Vacation",
+    "Family"
   ],
-  "lastUpdated": "2026-08-10"
+  "lastUpdated": "2026-08-11"
 }

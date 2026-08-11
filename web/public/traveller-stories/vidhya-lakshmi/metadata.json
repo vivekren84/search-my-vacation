@@ -1,17 +1,17 @@
 {
   "travellerId": "TR-049",
-  "displayName": "Vidhya Lakshmi",
+  "displayName": "VidhyaLakshmi",
   "fullName": "Vidhya Lakshmi",
   "status": "pending",
   "journeys": [
     {
       "journeyId": "JRN-051",
-      "title": null,
+      "title": "Celebrating Love Across Malaysia and Singapore",
       "destination": "Malaysia & Singapore",
-      "travelMonth": null,
-      "travelYear": null,
-      "duration": null,
-      "experienceType": null,
+      "travelMonth": "July",
+      "travelYear": 2025,
+      "duration": "7 Days / 6 Nights",
+      "experienceType": "Celebrations",
       "travellerType": "Couple",
       "featured": false
     }
@@ -47,7 +47,8 @@
   },
   "tags": [
     "International",
-    "Couple"
+    "Couple",
+    "Celebrations"
   ],
-  "lastUpdated": "2026-08-10"
+  "lastUpdated": "2026-08-11"
 }

@@ -6,7 +6,7 @@
   "journeys": [
     {
       "journeyId": "JRN-031",
-      "title": null,
+      "title": "A Refreshing Family Escape to Kodaikanal",
       "destination": "Kodaikanal, Tamil Nadu",
       "travelMonth": "February",
       "travelYear": 2025,
@@ -37,5 +37,5 @@
   "tags": [
     "Family"
   ],
-  "lastUpdated": "2026-08-10"
+  "lastUpdated": "2026-08-11"
 }
