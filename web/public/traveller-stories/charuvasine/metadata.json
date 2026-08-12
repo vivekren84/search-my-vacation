@@ -2,7 +2,7 @@
   "travellerId": "TR-039",
   "displayName": "Charuvasine",
   "fullName": "Charuvasine",
-  "status": "pending",
+  "status": "approved",
   "journeys": [
     {
       "journeyId": "JRN-041",
@@ -13,7 +13,8 @@
       "duration": "7 Days / 6 Nights",
       "experienceType": "Family Time",
       "travellerType": "Family",
-      "featured": false
+      "featured": false,
+      "heroImage": "family.jpg"
     }
   ],
   "media": {
@@ -56,7 +57,7 @@
     ]
   },
   "permissions": {
-    "story": false,
+    "story": true,
     "travellerPhoto": true,
     "destinationPhotos": true
   },

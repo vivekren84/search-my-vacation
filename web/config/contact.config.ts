@@ -5,6 +5,7 @@ export const siteContact = {
   email: "bookings@searchmyvacation.com",
   emailHref: "mailto:bookings@searchmyvacation.com",
   officeHours: "Monday–Saturday, 10:00 AM–7:00 PM IST",
+  googleReviewsUrl: "https://g.page/r/CeizepY2VZZ0EBM/review",
   address: {
     line1: "Plot No. 1, First Floor, No. 2",
     line2: "Ponniamman Koil Street",

@@ -2,7 +2,7 @@
   "travellerId": "TR-044",
   "displayName": "Matilda Dsouza",
   "fullName": "Matilda Dsouza",
-  "status": "pending",
+  "status": "approved",
   "journeys": [
     {
       "journeyId": "JRN-046",
@@ -25,7 +25,7 @@
     "destinationPhotos": []
   },
   "permissions": {
-    "story": false,
+    "story": true,
     "travellerPhoto": false,
     "destinationPhotos": false
   },

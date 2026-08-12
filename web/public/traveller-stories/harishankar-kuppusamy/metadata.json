@@ -2,7 +2,7 @@
   "travellerId": "TR-041",
   "displayName": "Harishankar",
   "fullName": "Harishankar Kuppusamy",
-  "status": "pending",
+  "status": "approved",
   "journeys": [
     {
       "journeyId": "JRN-043",
@@ -25,7 +25,7 @@
     "destinationPhotos": []
   },
   "permissions": {
-    "story": false,
+    "story": true,
     "travellerPhoto": false,
     "destinationPhotos": false
   },

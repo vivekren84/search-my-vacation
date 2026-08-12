@@ -13,13 +13,14 @@
       "duration": "7 Days / 6 Nights",
       "experienceType": "Heritage & Luxury",
       "travellerType": "Family",
-      "featured": false
+      "featured": false,
+      "heroImage": "family.jpg"
     },
     {
       "journeyId": "JRN-017",
       "title": "Exploring Sri Lanka Together, One Memory at a Time",
       "destination": "Sri Lanka",
-      "travelMonth": "March",
+      "travelMonth": "December",
       "travelYear": 2025,
       "duration": "9 Days / 8 Nights",
       "experienceType": "International Family Vacation",
@@ -31,7 +32,7 @@
     "travellerPhoto": {
       "file": "family.jpg",
       "available": true,
-      "approvedForWebsite": true
+      "approvedForWebsite": false
     },
     "destinationPhotos": [
       {

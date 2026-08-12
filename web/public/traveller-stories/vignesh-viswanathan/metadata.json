@@ -2,7 +2,7 @@
   "travellerId": "TR-002",
   "displayName": "Vignesh Vishwanathan",
   "fullName": "Vignesh Vishwanathan",
-  "status": "pending",
+  "status": "approved",
   "journeys": [
     {
       "journeyId": "JRN-002",
@@ -24,11 +24,6 @@
     },
     "destinationPhotos": [
       {
-        "file": "karnataka-01.jpg",
-        "journeyId": "JRN-002",
-        "caption": "Karnataka travel photo"
-      },
-      {
         "file": "karnataka-02.jpg",
         "journeyId": "JRN-002",
         "caption": "Karnataka travel photo"
@@ -37,11 +32,16 @@
         "file": "karnataka-03.jpg",
         "journeyId": "JRN-002",
         "caption": "Karnataka travel photo"
+      },
+      {
+        "file": "karnataka-01.jpg",
+        "journeyId": "JRN-002",
+        "caption": "Karnataka travel photo"
       }
     ]
   },
   "permissions": {
-    "story": false,
+    "story": true,
     "travellerPhoto": true,
     "destinationPhotos": true
   },

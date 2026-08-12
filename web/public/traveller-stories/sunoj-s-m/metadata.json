@@ -13,7 +13,8 @@
       "duration": "3 Days / 2 Nights",
       "experienceType": "Kerala Getaway",
       "travellerType": "Family",
-      "featured": false
+      "featured": false,
+      "heroImage": "family.jpg"
     }
   ],
   "media": {
@@ -24,12 +25,12 @@
     },
     "destinationPhotos": [
       {
-        "file": "munroe-island-01.jpg",
+        "file": "varkala-01.jpg",
         "journeyId": "JRN-027",
         "caption": "Munroe Island & Varkala, Kerala travel photo"
       },
       {
-        "file": "varkala-01.jpg",
+        "file": "munroe-island-01.jpg",
         "journeyId": "JRN-027",
         "caption": "Munroe Island & Varkala, Kerala travel photo"
       }

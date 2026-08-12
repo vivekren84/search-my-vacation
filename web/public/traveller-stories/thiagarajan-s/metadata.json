@@ -2,7 +2,7 @@
   "travellerId": "TR-047",
   "displayName": "Thiyagarajan Sambasivam",
   "fullName": "Thiyagarajan Sambasivam",
-  "status": "pending",
+  "status": "approved",
   "journeys": [
     {
       "journeyId": "JRN-049",
@@ -25,7 +25,7 @@
     "destinationPhotos": []
   },
   "permissions": {
-    "story": false,
+    "story": true,
     "travellerPhoto": false,
     "destinationPhotos": false
   },

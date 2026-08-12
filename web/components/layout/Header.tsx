@@ -16,22 +16,22 @@ export default function Header() {
     <header
       className="sticky inset-x-0 top-0 z-50 border-b border-white/15 bg-[#2A211C]/95 shadow-[0_4px_18px_rgba(32,21,15,.12)] backdrop-blur-md"
     >
-      <Container className="flex min-h-[5.5rem] items-center justify-between gap-4 py-3 xl:min-h-32 xl:py-2">
+      <Container variant="wide" className="flex min-h-[5.5rem] items-center justify-between gap-4 py-3 xl:min-h-32 xl:py-2">
         <SiteBrand
           variant="header"
           surface="dark"
           preload
-          className="w-[clamp(11rem,48vw,14rem)] shrink-0 text-white xl:w-[clamp(19rem,24vw,21rem)]"
+          className="w-[clamp(11rem,48vw,14rem)] shrink-0 text-white xl:w-[clamp(14rem,20vw,21rem)]"
         />
 
         <nav aria-label="Primary navigation" className="hidden flex-1 justify-center xl:flex">
-          <ul className="flex items-center gap-6 2xl:gap-8">
+          <ul className="flex items-center gap-5 2xl:gap-8">
             {siteConfig.navigation.map((item) => (
               <li key={`${item.label}-${item.href}`}>
                 <Link
                   href={item.href}
                   aria-current={pathname === item.href ? "page" : undefined}
-                  className="text-sm font-medium tracking-wide text-white transition-colors duration-300 hover:text-white/75"
+                  className="whitespace-nowrap text-sm font-medium tracking-wide text-white transition-colors duration-300 hover:text-white/75"
                 >
                   {item.label}
                 </Link>
@@ -40,7 +40,7 @@ export default function Header() {
           </ul>
         </nav>
 
-        <Link href="/journey-passport" className="hidden shrink-0 rounded-full bg-[#F5951C] px-4 py-2 text-xs font-bold uppercase tracking-[0.1em] text-[#2A211C] transition hover:bg-[#F5951C] xl:inline-flex">
+        <Link href="/journey-passport" className="hidden shrink-0 whitespace-nowrap rounded-full bg-[#F5951C] px-4 py-2 text-xs font-bold uppercase tracking-[0.1em] text-[#2A211C] transition hover:bg-[#F5951C] xl:inline-flex">
           Plan My Experience
         </Link>
 

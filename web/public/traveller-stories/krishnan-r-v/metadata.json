@@ -2,7 +2,7 @@
   "travellerId": "TR-008",
   "displayName": "Krishnan R V",
   "fullName": "Krishnan R V",
-  "status": "pending",
+  "status": "approved",
   "journeys": [
     {
       "journeyId": "JRN-008",
@@ -31,7 +31,7 @@
     ]
   },
   "permissions": {
-    "story": false,
+    "story": true,
     "travellerPhoto": true,
     "destinationPhotos": true
   },

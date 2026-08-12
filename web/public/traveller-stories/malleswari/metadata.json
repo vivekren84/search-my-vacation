@@ -2,7 +2,7 @@
   "travellerId": "TR-043",
   "displayName": "Malleswari Reddy",
   "fullName": "Malleswari Reddy",
-  "status": "pending",
+  "status": "approved",
   "journeys": [
     {
       "journeyId": "JRN-045",
@@ -25,7 +25,7 @@
     "destinationPhotos": []
   },
   "permissions": {
-    "story": false,
+    "story": true,
     "travellerPhoto": false,
     "destinationPhotos": false
   },

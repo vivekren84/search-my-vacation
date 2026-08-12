@@ -2,7 +2,7 @@
   "travellerId": "TR-048",
   "displayName": "Vidhya Karthi",
   "fullName": "Vidhya Karthi",
-  "status": "pending",
+  "status": "approved",
   "journeys": [
     {
       "journeyId": "JRN-050",
@@ -51,7 +51,7 @@
     ]
   },
   "permissions": {
-    "story": false,
+    "story": true,
     "travellerPhoto": true,
     "destinationPhotos": true
   },

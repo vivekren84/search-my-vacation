@@ -2,7 +2,7 @@
   "travellerId": "TR-049",
   "displayName": "VidhyaLakshmi",
   "fullName": "Vidhya Lakshmi",
-  "status": "pending",
+  "status": "approved",
   "journeys": [
     {
       "journeyId": "JRN-051",
@@ -13,7 +13,8 @@
       "duration": "7 Days / 6 Nights",
       "experienceType": "Celebrations",
       "travellerType": "Couple",
-      "featured": false
+      "heroImage": "couple.jpg",
+      "featured": true
     }
   ],
   "media": {
@@ -36,7 +37,7 @@
     ]
   },
   "permissions": {
-    "story": false,
+    "story": true,
     "travellerPhoto": true,
     "destinationPhotos": true
   },

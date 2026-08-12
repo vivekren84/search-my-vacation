@@ -2,7 +2,7 @@
   "travellerId": "TR-040",
   "displayName": "Hariharan R",
   "fullName": "Hari Haran Ravichandran",
-  "status": "pending",
+  "status": "approved",
   "journeys": [
     {
       "journeyId": "JRN-042",
@@ -13,7 +13,8 @@
       "duration": "6 Days / 5 Nights",
       "experienceType": "Memory Makers",
       "travellerType": "Family",
-      "featured": false
+      "featured": false,
+      "heroImage": "family-01.jpg"
     },
     {
       "journeyId": "JRN-052",
@@ -24,14 +25,15 @@
       "duration": "6 Days / 5 Nights",
       "experienceType": "Adventure Vacation",
       "travellerType": "Family",
-      "featured": false
+      "featured": false,
+      "heroImage": "family-02.jpg"
     }
   ],
   "media": {
     "travellerPhoto": {
-      "file": "family.jpg",
-      "available": true,
-      "approvedForWebsite": true
+      "file": null,
+      "available": false,
+      "approvedForWebsite": false
     },
     "destinationPhotos": [
       {
@@ -53,11 +55,36 @@
         "file": "murudeshwar-01.jpg",
         "journeyId": "JRN-042",
         "caption": "Mangalore & Murudeshwar, Karnataka travel photo"
+      },
+      {
+        "file": "amritsar-01.jpg",
+        "journeyId": "JRN-052",
+        "caption": "Amritsar, Dalhousie & Dharamshala travel photo"
+      },
+      {
+        "file": "dalhousie-01.jpg",
+        "journeyId": "JRN-052",
+        "caption": "Amritsar, Dalhousie & Dharamshala travel photo"
+      },
+      {
+        "file": "dalhousie-02.jpg",
+        "journeyId": "JRN-052",
+        "caption": "Amritsar, Dalhousie & Dharamshala travel photo"
+      },
+      {
+        "file": "dharamshala-01.jpg",
+        "journeyId": "JRN-052",
+        "caption": "Amritsar, Dalhousie & Dharamshala travel photo"
+      },
+      {
+        "file": "dharamshala-02.jpg",
+        "journeyId": "JRN-052",
+        "caption": "Amritsar, Dalhousie & Dharamshala travel photo"
       }
     ]
   },
   "permissions": {
-    "story": false,
+    "story": true,
     "travellerPhoto": true,
     "destinationPhotos": true
   },

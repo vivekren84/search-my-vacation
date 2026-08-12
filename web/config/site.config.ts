@@ -18,6 +18,7 @@ export const siteConfig = {
   navigation: [
     { label: "Destinations", href: "/destinations" },
     { label: "Experiences", href: "/experiences" },
+    { label: "Traveller Stories", href: "/traveller-stories" },
     { label: "Travel Inspiration", href: "/travel-inspiration" },
     { label: "About Us", href: "/about" },
     { label: "Contact", href: "/contact" },

@@ -2,7 +2,7 @@
   "travellerId": "TR-046",
   "displayName": "Shankar Subramanian",
   "fullName": "Shankar Subramanian",
-  "status": "pending",
+  "status": "approved",
   "journeys": [
     {
       "journeyId": "JRN-048",
@@ -25,7 +25,7 @@
     "destinationPhotos": []
   },
   "permissions": {
-    "story": false,
+    "story": true,
     "travellerPhoto": false,
     "destinationPhotos": false
   },

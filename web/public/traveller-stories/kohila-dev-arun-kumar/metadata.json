@@ -2,7 +2,7 @@
   "travellerId": "TR-042",
   "displayName": "KohilaDevi ArunKumar",
   "fullName": "Kohila Dev Arun Kumar",
-  "status": "pending",
+  "status": "approved",
   "journeys": [
     {
       "journeyId": "JRN-044",
@@ -36,7 +36,7 @@
     ]
   },
   "permissions": {
-    "story": false,
+    "story": true,
     "travellerPhoto": true,
     "destinationPhotos": true
   },

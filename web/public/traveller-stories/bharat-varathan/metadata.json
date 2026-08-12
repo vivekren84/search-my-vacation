@@ -2,7 +2,7 @@
   "travellerId": "TR-011",
   "displayName": "Bharat Varathan",
   "fullName": "Bharat Varathan",
-  "status": "pending",
+  "status": "approved",
   "journeys": [
     {
       "journeyId": "JRN-011",
@@ -31,7 +31,7 @@
     ]
   },
   "permissions": {
-    "story": false,
+    "story": true,
     "travellerPhoto": true,
     "destinationPhotos": true
   },

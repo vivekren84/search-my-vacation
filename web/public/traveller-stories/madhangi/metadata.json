@@ -13,7 +13,8 @@
       "duration": "5 Days / 4 Nights",
       "experienceType": "International Family Vacation",
       "travellerType": "Multi-generational Family",
-      "featured": true
+      "featured": true,
+      "heroImage": "traveller.jpg"
     }
   ],
   "media": {
