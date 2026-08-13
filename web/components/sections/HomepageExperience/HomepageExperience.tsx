@@ -7,6 +7,7 @@ import InspirationSurface from "@/components/discovery/InspirationSurface";
 import TravellerStories from "@/components/sections/TravellerStories";
 import { siteContact } from "@/config/contact.config";
 import { journeyCanonicalImage } from "@/config/destination-images.config";
+import type { HomepageTravellerStory } from "@/lib/traveller-stories/getHomepageTravellerStories";
 
 const invitations = [
   { title: "Memory Makers", copy: "For the moments you will revisit long after you return home.", image: "/images/journey-passport/travel-styles/photography.webp", alt: "Traveller capturing a meaningful travel memory" },
@@ -46,7 +47,11 @@ const inspiration = [
 
 const homepageInspiration = inspiration.slice(0, 3);
 
-export default function HomepageExperience() {
+type HomepageExperienceProps = {
+  travellerStories: HomepageTravellerStory[];
+};
+
+export default function HomepageExperience({ travellerStories }: HomepageExperienceProps) {
   return (
     <div className="bg-[#FFFDFC] text-[#2A211C]">
       <section className="layout-section" aria-labelledby="journey-invitations-heading">
@@ -63,7 +68,7 @@ export default function HomepageExperience() {
 
       <section className="layout-section" aria-labelledby="trust-heading"><div className="layout-container grid gap-12 lg:grid-cols-[.8fr_1.5fr]"><div><p className="text-xs font-bold uppercase tracking-[0.18em] text-[#2A211C]">Travel confidence</p><h2 id="trust-heading" className="mt-4 font-serif text-4xl leading-[1.03] tracking-[-0.045em] sm:text-5xl">A journey begins with being understood.</h2><p className="mt-6 leading-8 text-[#2A211C]">We do not begin with what is easiest to sell. We begin with the person taking the journey.</p></div><div className="grid gap-4 sm:grid-cols-2">{trustPoints.map((point)=><article key={point.title} className="rounded-[1.5rem] border border-[#e4d2b5] bg-white p-7 shadow-[0_10px_28px_rgba(91,55,18,.06)]"><span aria-hidden="true" className="grid size-11 place-items-center rounded-full bg-[#f5e4c5] text-xl text-[#986328]">{point.icon}</span><h3 className="mt-6 text-xl font-semibold tracking-[-.02em]">{point.title}</h3><p className="mt-3 text-sm leading-7 text-[#2A211C]">{point.copy}</p></article>)}</div></div></section>
 
-      <TravellerStories />
+      <TravellerStories stories={travellerStories} />
 
       <InspirationSurface className="layout-section" aria-labelledby="inspiration-heading"><div className="layout-container"><div className="layout-section-heading"><p className="text-xs font-bold uppercase tracking-[0.18em] text-[#2A211C]">Travel inspiration</p><h2 id="inspiration-heading" className="mt-4 font-serif text-4xl leading-[1.06] tracking-[-0.045em] sm:text-5xl">A few ideas to carry with you.</h2><p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-[#2A211C]">Inspiration is not an itinerary. It is a way to notice the kind of experience you may be ready for.</p></div><div className="mx-auto mt-12 grid max-w-[72rem] gap-5 md:grid-cols-2 lg:grid-cols-3">{homepageInspiration.map((item)=><Link key={item.title} href="/travel-inspiration" className="group relative block min-h-[27rem] overflow-hidden rounded-[2rem] bg-[#2A211C] shadow-[0_18px_45px_rgba(86,55,22,0.14)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F5951C]"><Image src={item.image} alt={`Travel inspiration: ${item.title}`} fill sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-cover transition duration-700 group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100"/><div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(28,17,9,.92),rgba(28,17,9,.12)_76%)]" aria-hidden="true"/><div className="absolute inset-x-0 bottom-0 px-8 pb-9 pt-16 text-white"><h3 className="font-serif text-2xl leading-[1.15]">{item.title}</h3><p className="mt-4 text-sm leading-7 text-white/85">{item.copy}</p><span className="mt-6 inline-flex text-sm font-bold text-[#F5951C]">Explore this idea <span aria-hidden="true" className="ml-2">→</span></span></div></Link>)}</div><div className="text-center"><Link href="/travel-inspiration" className="mt-10 inline-flex rounded-full border border-[#F5951C] bg-white/55 px-6 py-3 text-sm font-bold text-[#2A211C] transition hover:bg-[#F5951C] hover:text-[#2A211C] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#2A211C]">Explore All Inspiration <span aria-hidden="true" className="ml-2">→</span></Link></div></div></InspirationSurface>
 
