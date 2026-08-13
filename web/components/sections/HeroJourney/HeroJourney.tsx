@@ -100,11 +100,11 @@ export default function HeroJourney() {
                 type="button"
                 onClick={() => setSelected(emotion.key)}
                 aria-pressed={isActive}
-                className={`group grid min-h-36 w-full grid-cols-[9.5rem_1fr] items-center gap-3 rounded-2xl border px-3 py-3 text-left text-[#FFF8E8] backdrop-blur-sm backdrop-saturate-75 transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#FFD58A] motion-reduce:transition-none sm:min-h-40 sm:grid-cols-[11rem_1fr] sm:gap-4 sm:px-4 sm:py-4
+                className={`group grid min-h-36 w-full grid-cols-[9.5rem_1fr] items-center gap-3 rounded-2xl border px-3 py-3 text-left text-[#FFF8E8] backdrop-blur-[4px] backdrop-saturate-75 transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#FFD58A] motion-reduce:transition-none sm:min-h-40 sm:grid-cols-[11rem_1fr] sm:gap-4 sm:px-4 sm:py-4
                   ${
                     isActive
-                      ? "border-[#F2B84B]/74 bg-[linear-gradient(135deg,rgba(111,73,40,.22),rgba(39,29,24,.20))] shadow-[0_0_0_1px_rgba(255,219,150,.10),0_14px_30px_rgba(12,7,4,.20),0_0_20px_rgba(242,184,75,.14),inset_0_1px_0_rgba(255,248,232,.12)] motion-safe:-translate-y-0.5"
-                      : "border-[#F7E5C4]/27 bg-[linear-gradient(135deg,rgba(75,57,47,.18),rgba(31,25,22,.16))] shadow-[0_10px_24px_rgba(10,6,4,.15),inset_0_1px_0_rgba(255,248,232,.09)] hover:border-[#F0D09A]/44 hover:bg-[linear-gradient(135deg,rgba(91,65,50,.22),rgba(37,28,24,.19))] hover:shadow-[0_14px_30px_rgba(10,6,4,.18),0_0_16px_rgba(239,184,93,.07),inset_0_1px_0_rgba(255,248,232,.11)] motion-safe:hover:-translate-y-0.5"
+                      ? "border-[#F2B84B]/74 bg-[linear-gradient(135deg,rgba(111,73,40,.17),rgba(39,29,24,.16))] shadow-[0_0_0_1px_rgba(255,219,150,.10),0_14px_30px_rgba(12,7,4,.20),0_0_20px_rgba(242,184,75,.14),inset_0_1px_0_rgba(255,248,232,.12)] motion-safe:-translate-y-0.5"
+                      : "border-[#F7E5C4]/25 bg-[linear-gradient(135deg,rgba(75,57,47,.14),rgba(31,25,22,.13))] shadow-[0_10px_24px_rgba(10,6,4,.15),inset_0_1px_0_rgba(255,248,232,.09)] hover:border-[#F0D09A]/44 hover:bg-[linear-gradient(135deg,rgba(91,65,50,.17),rgba(37,28,24,.15))] hover:shadow-[0_14px_30px_rgba(10,6,4,.18),0_0_16px_rgba(239,184,93,.07),inset_0_1px_0_rgba(255,248,232,.11)] motion-safe:hover:-translate-y-0.5"
                   }
                 `}
               >
