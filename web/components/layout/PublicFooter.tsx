@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import SiteBrand from "@/components/brand/SiteBrand";
+import SocialLinks from "@/components/contact/SocialLinks";
 import WhatsAppLink from "@/components/contact/WhatsAppLink";
 import { siteBrand } from "@/config/brand.config";
 import { siteContact } from "@/config/contact.config";
@@ -36,6 +37,7 @@ export default function PublicFooter() {
             <a href={siteContact.primaryPhoneHref} className="flex min-h-11 items-center leading-6 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F5951C]">Phone: {siteContact.phoneDisplay}</a>
             <a href={siteContact.emailHref} className="flex min-h-11 items-center hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F5951C]">{siteContact.email}</a>
             <p>{siteContact.officeHours}</p>
+            <SocialLinks className="pt-1" />
           </div>
         </div>
       </Container>

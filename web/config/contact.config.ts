@@ -6,6 +6,16 @@ export const siteContact = {
   emailHref: "mailto:bookings@searchmyvacation.com",
   officeHours: "Monday–Saturday, 10:00 AM–7:00 PM IST",
   googleReviewsUrl: "https://g.page/r/CeizepY2VZZ0EBM/review",
+  /**
+   * Release 1.1 — Footer Social Icons Finalisation: single canonical source
+   * for SMV's official social profile URLs. Referenced only by
+   * `components/contact/SocialLinks.tsx` — never hardcode these elsewhere.
+   */
+  socialLinks: {
+    instagram: "https://www.instagram.com/searchmyvacation/",
+    facebook: "https://www.facebook.com/searchmyvacation",
+    youtube: "https://www.youtube.com/@SearchMyVacation",
+  },
   address: {
     line1: "Plot No. 1, First Floor, No. 2",
     line2: "Ponniamman Koil Street",

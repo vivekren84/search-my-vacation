@@ -40,7 +40,7 @@ export default function CallbackRequest() {
       className="rounded-[2rem] border border-[#e1ceb0] bg-white p-[clamp(2rem,5vw,3rem)] shadow-[0_14px_36px_rgba(91,55,18,.07)]"
       onSubmit={(event) => {
         event.preventDefault();
-        if (form.consent && !dateError && !phoneError) window.location.assign(href);
+        if (form.consent && !dateError && !phoneError) window.open(href, "_blank", "noopener,noreferrer");
       }}
     >
       <h2 className="font-serif text-3xl tracking-[-.035em]">Request a Callback</h2>
