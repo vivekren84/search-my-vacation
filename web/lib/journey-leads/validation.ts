@@ -13,7 +13,11 @@ const SUMMARY_KEYS = new Set([
   "startDate", "endDate", "destinationMode", "destination", "travelScope", "entryContext", "completedAt", "source",
 ]);
 const ENTRY_KEYS = new Set(["feeling", "experience", "inspiration", "destination", "destinationTheme", "source"]);
-const FEELINGS = new Set(["relax", "explore", "celebrate", "romance", "escape"]);
+// EBC-036 (D-08): Memory Maker now enters via `?mood=memory` (see
+// entry-context.ts moodPreselections), so "memory" is a legitimate feeling
+// value that must be accepted here — otherwise every Memory Maker lead
+// submission would be rejected as an invalid passport summary.
+const FEELINGS = new Set(["relax", "explore", "celebrate", "romance", "escape", "memory"]);
 const EXPERIENCES = new Set(["Memory Makers", "Celebration Moments", "Family Time", "Weekend Getaways", "Global Escapes", "Nature & Serenity"]);
 const INSPIRATIONS = new Set(["Mountains", "Beaches", "Wildlife", "Romance", "Relaxation"]);
 const DESTINATION_THEMES = new Set(["Tropical Escape", "Mountain Retreat", "City Discovery", "Wildlife Adventure"]);

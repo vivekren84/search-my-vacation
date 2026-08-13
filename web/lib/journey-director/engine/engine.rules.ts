@@ -104,6 +104,17 @@ export const HOMEPAGE_FEELING_MAP: Readonly<Record<JourneyFeeling, EmotionId>> =
   celebrate: "celebration",
   romance: "romance",
   escape: "escape",
+  // EBC-036 (D-08): Memory Maker now enters via the shared `?mood=` mechanism
+  // (see entry-context.ts moodPreselections), so it needs a supporting
+  // EmotionId here too, otherwise TypeScript's exhaustiveness check on this
+  // Record fails and the homepage-intent signal would be silently absent
+  // from scoring for Memory Maker journeys. "reconnection" is unused by the
+  // other five moods and is the closest existing EmotionId to "moments made
+  // together" — no EmotionId literally means "family" or "togetherness".
+  // Flagged for Archie/product confirmation: this is a new scoring-signal
+  // value, even though it only affects the low-strength homepage-intent
+  // signal, not any explicit Journey Passport answer.
+  memory: "reconnection",
 };
 
 type DerivedJourneyMapping = {

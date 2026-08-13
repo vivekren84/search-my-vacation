@@ -1,5 +1,5 @@
 export const JOURNEY_PASSPORT_SCHEMA_VERSION = 1 as const;
-export const JOURNEY_FEELINGS = ["relax", "explore", "celebrate", "romance", "escape"] as const;
+export const JOURNEY_FEELINGS = ["relax", "explore", "celebrate", "romance", "escape", "memory"] as const;
 export const JOURNEY_ENTRY_EXPERIENCES = ["Memory Makers", "Celebration Moments", "Family Time", "Weekend Getaways", "Global Escapes", "Nature & Serenity"] as const;
 export const JOURNEY_ENTRY_INSPIRATIONS = ["Mountains", "Beaches", "Wildlife", "Romance", "Relaxation"] as const;
 export const JOURNEY_ENTRY_DESTINATION_THEMES = ["Tropical Escape", "Mountain Retreat", "City Discovery", "Wildlife Adventure"] as const;

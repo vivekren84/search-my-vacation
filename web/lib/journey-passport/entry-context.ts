@@ -21,6 +21,19 @@ const moodPreselections = {
   celebrate: { moment: "pace-and-timing", field: "travelStyles", value: "Celebrations" },
   romance: { moment: "companions", field: "companion", value: "Couple" },
   escape: { moment: "dream-journey", field: "dreamJourney", value: "Tropical Escape" },
+  // EBC-036 (D-08): Memory Maker previously bypassed this shared mood
+  // mapping entirely — its homepage card linked to
+  // `?experience=Memory%20Makers`, which resolves through
+  // `experiencePreselections` instead (a mechanism built for the
+  // unrelated "Begin with what matters" homepage tiles, not for Journey
+  // Mood). That accidental reuse produced "Photography" as the Pace &
+  // Timing pre-selection, which has no thematic connection to Memory
+  // Maker. Memory Maker now uses `?mood=memory`, the same routing
+  // mechanism as the other five moods, and "Culture & Heritage" as a
+  // pre-selection that fits "moments made together" without duplicating
+  // another mood's exact value (Relax already owns Relaxation, Explore
+  // owns Adventure, Celebrate owns Celebrations).
+  memory: { moment: "pace-and-timing", field: "travelStyles", value: "Culture & Heritage" },
 } as const satisfies Record<NonNullable<JourneyPassportEntryContext["feeling"]>, JourneyEntryPreselection>;
 
 const inspirationPreselections = {
@@ -39,6 +52,40 @@ export function resolveJourneyEntryPreselection(entryContext: JourneyPassportEnt
   if (entryContext.inspiration) return inspirationPreselections[entryContext.inspiration];
   if (entryContext.feeling) return moodPreselections[entryContext.feeling];
   return undefined;
+}
+
+/**
+ * EBC-036 (D-06): the entry-advisory banner ("We've pre-selected this…")
+ * must only appear while the pre-selection it describes is still genuinely
+ * reflected in the traveller's current answer — not merely because they
+ * arrived at a moment that *has* a pre-selection defined for it.
+ *
+ * Previously, `showEntryAdvisory` was computed purely from
+ * `entryPreselection?.moment === currentMomentId`, with no check against the
+ * actual state value. On a fresh, untouched visit this happened to look
+ * correct (the pre-selected value and the current value are the same thing
+ * at that point), which is why it read as "working" on first load. But the
+ * banner never turned itself off once a traveller changed their answer — it
+ * kept claiming a pre-selection was active long after it no longer was,
+ * which is the "banner without a genuinely real selection" defect. This one
+ * helper is now the single source of truth for that check, reused
+ * identically across every moment that can carry a pre-selection (Companions,
+ * Dream Journey, Pace & Timing) and every mood that can produce one.
+ */
+export function isJourneyEntryPreselectionActive(
+  preselection: JourneyEntryPreselection | undefined,
+  momentId: JourneyMomentId,
+  state: JourneyPassportState,
+): boolean {
+  if (!preselection || preselection.moment !== momentId) return false;
+
+  switch (preselection.field) {
+    case "companion": return state.companion === preselection.value;
+    case "dreamJourney": return state.dreamJourney === preselection.value;
+    case "travelStyles": return state.travelStyles.includes(preselection.value);
+    case "timing": return state.timing === preselection.value;
+    default: return false;
+  }
 }
 
 export function createInitialJourneyPassportState(entryContext: JourneyPassportEntryContext = {}): JourneyPassportState {

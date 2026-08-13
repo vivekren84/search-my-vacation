@@ -25,7 +25,9 @@ export type JourneyLeadPassportSummary = {
   destination: string;
   travelScope?: "DOMESTIC" | "INTERNATIONAL" | "ANY";
   entryContext?: {
-    feeling?: "relax" | "explore" | "celebrate" | "romance" | "escape";
+    // EBC-036 (D-08): "memory" added alongside the other five moods now that
+    // Memory Maker routes through the shared `?mood=` mechanism.
+    feeling?: "relax" | "explore" | "celebrate" | "romance" | "escape" | "memory";
     experience?: "Memory Makers" | "Celebration Moments" | "Family Time" | "Weekend Getaways" | "Global Escapes" | "Nature & Serenity";
     inspiration?: "Mountains" | "Beaches" | "Wildlife" | "Romance" | "Relaxation";
     destination?: string;

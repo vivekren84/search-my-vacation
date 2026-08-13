@@ -45,7 +45,13 @@ const emotions = [
     title: "Memory Maker / Family",
     desc: "Make moments together",
     artwork: "memory",
-    href: "/journey-passport?experience=Memory%20Makers",
+    // EBC-036 (D-08): previously routed through `?experience=Memory%20Makers`,
+    // which resolves via `experiencePreselections` — a mapping built for the
+    // separate "Begin with what matters" homepage tiles, not Journey Mood.
+    // That accidental reuse produced "Photography" as the Pace & Timing
+    // pre-selection. Memory Maker now uses the same `?mood=` routing as every
+    // other mood card, resolving through `moodPreselections.memory` instead.
+    href: "/journey-passport?mood=memory",
   },
 ] as const satisfies ReadonlyArray<{
   key: string;
@@ -100,6 +106,7 @@ export default function HeroJourney() {
                 type="button"
                 onClick={() => setSelected(emotion.key)}
                 aria-pressed={isActive}
+                aria-label={emotion.title}
                 className={`group grid min-h-36 w-full grid-cols-[9.5rem_1fr] items-center gap-3 rounded-2xl border px-3 py-3 text-left text-[#FFF8E8] backdrop-blur-[4px] backdrop-saturate-75 transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#FFD58A] motion-reduce:transition-none sm:min-h-40 sm:grid-cols-[11rem_1fr] sm:gap-4 sm:px-4 sm:py-4
                   ${
                     isActive

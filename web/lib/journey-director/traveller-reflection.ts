@@ -9,6 +9,7 @@ import type {
   TravellerReflection,
   TravellerSummary,
 } from "../../types/journey-director";
+import type { JourneyFeeling } from "../../types/journey-passport.types";
 
 type ReflectionLanguage = {
   statement: string;
@@ -184,7 +185,12 @@ const homepageFeelingQuality = {
   celebrate: "A sense of occasion",
   romance: "Time to reconnect",
   escape: "A genuine change of scene",
-} as const;
+  // EBC-036 (D-08): Memory Maker now enters via `?mood=memory` alongside the
+  // other five moods, so it needs a matching Journey Director summary
+  // quality — without this entry the lookup below would silently push
+  // `undefined` into the traveller's "matching qualities" list.
+  memory: "Moments made together",
+} as const satisfies Record<JourneyFeeling, string>;
 
 const signalLabels: Readonly<Record<string, string>> = {
   "active-discovery": "active discovery",
