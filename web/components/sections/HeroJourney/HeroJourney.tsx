@@ -100,11 +100,11 @@ export default function HeroJourney() {
                 type="button"
                 onClick={() => setSelected(emotion.key)}
                 aria-pressed={isActive}
-                className={`group grid min-h-36 w-full grid-cols-[9.5rem_1fr] items-center gap-3 rounded-2xl border px-3 py-3 text-left text-[#280336] backdrop-blur-md transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white motion-reduce:transition-none sm:min-h-40 sm:grid-cols-[11rem_1fr] sm:gap-4 sm:px-4 sm:py-4
+                className={`group grid min-h-36 w-full grid-cols-[9.5rem_1fr] items-center gap-3 rounded-2xl border px-3 py-3 text-left text-[#FFF8E8] backdrop-blur-xl backdrop-saturate-75 transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#FFD58A] motion-reduce:transition-none sm:min-h-40 sm:grid-cols-[11rem_1fr] sm:gap-4 sm:px-4 sm:py-4
                   ${
                     isActive
-                      ? "border-[#F5951C]/80 bg-[#FFFDFC] shadow-[0_16px_34px_rgba(31,14,37,.22)] ring-1 ring-[#F5951C]/35 motion-safe:-translate-y-0.5"
-                      : "border-white/45 bg-[#FFFDFC]/90 shadow-[0_10px_28px_rgba(31,14,37,.15)] hover:border-[#F5951C]/60 hover:bg-[#FFFDFC] hover:shadow-[0_16px_34px_rgba(31,14,37,.22)] motion-safe:hover:-translate-y-0.5"
+                      ? "border-[#F2B84B]/85 bg-[linear-gradient(135deg,rgba(111,73,40,.68),rgba(39,29,24,.68))] shadow-[0_0_0_1px_rgba(255,219,150,.18),0_16px_34px_rgba(12,7,4,.34),0_0_22px_rgba(242,184,75,.16),inset_0_1px_0_rgba(255,248,232,.18)] motion-safe:-translate-y-0.5"
+                      : "border-[#F7E5C4]/35 bg-[linear-gradient(135deg,rgba(75,57,47,.58),rgba(31,25,22,.52))] shadow-[0_12px_28px_rgba(10,6,4,.25),inset_0_1px_0_rgba(255,248,232,.14)] hover:border-[#F0D09A]/60 hover:bg-[linear-gradient(135deg,rgba(91,65,50,.62),rgba(37,28,24,.58))] hover:shadow-[0_16px_34px_rgba(10,6,4,.32),0_0_18px_rgba(239,184,93,.10),inset_0_1px_0_rgba(255,248,232,.18)] motion-safe:hover:-translate-y-0.5"
                   }
                 `}
               >
@@ -113,8 +113,8 @@ export default function HeroJourney() {
                 </div>
 
                 <div className="min-w-0">
-                  <p className="font-serif text-lg font-bold leading-tight tracking-[-.02em]">{emotion.title}</p>
-                  <p className="mt-1 text-xs leading-5 text-[#2A211C]/72">
+                  <p className="font-serif text-lg font-bold leading-tight tracking-[-.02em] text-[#FFF9ED] drop-shadow-[0_1px_2px_rgba(12,7,4,.28)]">{emotion.title}</p>
+                  <p className="mt-1 text-xs leading-5 text-[#F5E7D0]/82">
                     {emotion.desc}
                   </p>
                 </div>

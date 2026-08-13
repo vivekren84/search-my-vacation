@@ -13,12 +13,12 @@ type JourneyMoodIllustrationProps = {
 };
 
 const artworkByMood: Record<JourneyMoodIllustrationName, string> = {
-  relax: "/images/journey-moods/relax.webp",
-  explore: "/images/journey-moods/explore.webp",
-  celebrate: "/images/journey-moods/celebrate.webp",
-  romance: "/images/journey-moods/romance.webp",
-  escape: "/images/journey-moods/escape.webp",
-  memory: "/images/journey-moods/memory-maker.webp",
+  relax: "/images/journey-moods/relax-luxury.webp",
+  explore: "/images/journey-moods/explore-luxury.webp",
+  celebrate: "/images/journey-moods/celebrate-luxury.webp",
+  romance: "/images/journey-moods/romance-luxury.webp",
+  escape: "/images/journey-moods/escape-luxury.webp",
+  memory: "/images/journey-moods/memory-maker-luxury.webp",
 };
 
 export default function JourneyMoodIllustration({ name }: JourneyMoodIllustrationProps) {
