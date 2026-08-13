@@ -19,7 +19,18 @@ const ENTRY_KEYS = new Set(["feeling", "experience", "inspiration", "destination
 // submission would be rejected as an invalid passport summary.
 const FEELINGS = new Set(["relax", "explore", "celebrate", "romance", "escape", "memory"]);
 const EXPERIENCES = new Set(["Memory Makers", "Celebration Moments", "Family Time", "Weekend Getaways", "Global Escapes", "Nature & Serenity"]);
-const INSPIRATIONS = new Set(["Mountains", "Beaches", "Wildlife", "Romance", "Relaxation"]);
+// EBC-030: governed Travel Inspiration stable IDs (replaces the previous
+// ad-hoc Mountains/Beaches/Wildlife/Romance/Relaxation set).
+const INSPIRATIONS = new Set([
+  "feeling-led",
+  "slow-unhurried",
+  "family-time",
+  "short-restorative-escape",
+  "food-culture-local",
+  "nature-led",
+  "travel-celebration",
+  "first-international",
+]);
 const DESTINATION_THEMES = new Set(["Tropical Escape", "Mountain Retreat", "City Discovery", "Wildlife Adventure"]);
 const CALLBACK_KEYS = new Set([
   "passportReference", "guestName", "mobileNumber", "preferredDate", "preferredTimeWindow", "additionalComments",

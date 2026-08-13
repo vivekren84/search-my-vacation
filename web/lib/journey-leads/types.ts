@@ -29,7 +29,17 @@ export type JourneyLeadPassportSummary = {
     // Memory Maker routes through the shared `?mood=` mechanism.
     feeling?: "relax" | "explore" | "celebrate" | "romance" | "escape" | "memory";
     experience?: "Memory Makers" | "Celebration Moments" | "Family Time" | "Weekend Getaways" | "Global Escapes" | "Nature & Serenity";
-    inspiration?: "Mountains" | "Beaches" | "Wildlife" | "Romance" | "Relaxation";
+    // EBC-030: governed Travel Inspiration stable IDs (replaces the previous
+    // ad-hoc Mountains/Beaches/Wildlife/Romance/Relaxation set).
+    inspiration?:
+      | "feeling-led"
+      | "slow-unhurried"
+      | "family-time"
+      | "short-restorative-escape"
+      | "food-culture-local"
+      | "nature-led"
+      | "travel-celebration"
+      | "first-international";
     destination?: string;
     destinationTheme?: "Tropical Escape" | "Mountain Retreat" | "City Discovery" | "Wildlife Adventure";
     source?: "homepage" | "direct" | "experience" | "mood" | "inspiration" | "destination";

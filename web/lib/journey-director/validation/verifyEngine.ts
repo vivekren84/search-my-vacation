@@ -14,7 +14,7 @@ import {
   type JourneyFeeling,
   type JourneyPassportState,
 } from "../../../types/journey-passport.types";
-import { createInitialJourneyPassportState, JOURNEY_ENTRY_ADVISORY, resolveJourneyEntryPreselection } from "../../journey-passport/entry-context";
+import { createInitialJourneyPassportState, isJourneyEntryPreselectionActive, JOURNEY_ENTRY_ADVISORY, resolveJourneyEntryPreselection } from "../../journey-passport/entry-context";
 import {
   createJourneyPassportSnapshot,
   isJourneyPassportSnapshot,
@@ -128,30 +128,88 @@ function verifyPureEngineBoundary() {
     });
 }
 
+// EBC-030: `JourneyEntryPreselection` is now a discriminated union — a
+// `travelStyles` preselection carries `values: string[]` (0–3 governed
+// defaults) while every other field still carries a single `value`. This
+// helper flattens either shape to an array purely for verification-script
+// comparisons; it is not part of the app's runtime code.
+function resolvedPreselectionValues(preselection: ReturnType<typeof resolveJourneyEntryPreselection>): string[] {
+  if (!preselection) return [];
+  return preselection.field === "travelStyles" ? preselection.values : [preselection.value];
+}
+
 function verifyJourneyEntryContext() {
-  const experienceValues = ["Photography", "Celebrations", "Family", "Within the Next Month", "City Discovery", "Nature"];
+  const experienceValues = [["Photography"], ["Celebrations"], ["Family"], ["Within the Next Month"], ["City Discovery"], ["Nature"]];
   JOURNEY_ENTRY_EXPERIENCES.forEach((experience, index) => {
     const context = { experience, source: "experience" } as const;
     const preselection = resolveJourneyEntryPreselection(context);
-    assert(preselection?.value === experienceValues[index], `${experience} resolves to its governed Passport preselection`);
+    assert(resolvedPreselectionValues(preselection).join("|") === experienceValues[index].join("|"), `${experience} resolves to its governed Passport preselection`);
     const state = createInitialJourneyPassportState(context);
     assert(state.currentMoment === "welcome" && state.visitedMoments.join("|") === "welcome", `${experience} starts at Welcome without skipping a Passport page`);
   });
 
-  const moodValues = ["Relaxation", "Adventure", "Celebrations", "Couple", "Tropical Escape"];
+  // "memory" (added by EBC-036/D-08) was previously missing from this fixture
+  // — moodValues had only 5 entries for 6 JOURNEY_FEELINGS, so this
+  // verification script has been failing on `main` independent of EBC-030.
+  // Fixed here while generalising the same assertions for the new
+  // discriminated-union shape.
+  const moodValues = [["Relaxation"], ["Adventure"], ["Celebrations"], ["Couple"], ["Tropical Escape"], ["Culture & Heritage"]];
   JOURNEY_FEELINGS.forEach((feeling, index) => {
     const context = { feeling, source: "mood" } as const;
     const preselection = resolveJourneyEntryPreselection(context);
-    assert(preselection?.value === moodValues[index], `${feeling} resolves to its editable mood preselection`);
+    assert(resolvedPreselectionValues(preselection).join("|") === moodValues[index].join("|"), `${feeling} resolves to its editable mood preselection`);
     const state = createInitialJourneyPassportState(context);
     assert(state.currentMoment === "welcome" && state.visitedMoments.join("|") === "welcome", `${feeling} starts at Welcome without skipping a Passport page`);
   });
 
-  const inspirationValues = ["Mountain Retreat", "Beaches & Islands", "Wildlife Adventure", "Couple", "Relaxation"];
-  JOURNEY_ENTRY_INSPIRATIONS.forEach((inspiration, index) => {
-    const preselection = resolveJourneyEntryPreselection({ inspiration, source: "inspiration" });
-    assert(preselection?.value === inspirationValues[index], `${inspiration} resolves to its governed inspiration preselection`);
+  // EBC-030 — governed Inspiration Mapping Catalogue. Expected resolved
+  // Travel Style/Companion default(s) for each of the eight approved stable
+  // IDs, in the exact approved order; an empty array means "no defaults"
+  // (feeling-led, first-international).
+  const inspirationExpectations: Record<(typeof JOURNEY_ENTRY_INSPIRATIONS)[number], string[]> = {
+    "feeling-led": [],
+    "slow-unhurried": ["Relaxation"],
+    "family-time": ["Family"],
+    "short-restorative-escape": ["Relaxation"],
+    "food-culture-local": ["Food & Dining", "Culture & Heritage"],
+    "nature-led": ["Nature"],
+    "travel-celebration": ["Celebrations"],
+    "first-international": [],
+  };
+  JOURNEY_ENTRY_INSPIRATIONS.forEach((inspiration) => {
+    const context = { inspiration, source: "inspiration" } as const;
+    const preselection = resolveJourneyEntryPreselection(context);
+    assert(
+      resolvedPreselectionValues(preselection).join("|") === inspirationExpectations[inspiration].join("|"),
+      `${inspiration} resolves to its governed inspiration preselection`,
+    );
+    // Explicit Product Decision: only "family-time" may pre-select
+    // Companion; every other inspiration entry must never touch it, and
+    // none may pre-select Dream Journey, Timing, Destination, Budget or
+    // Dates (those fields don't even exist on JourneyEntryPreselection, so
+    // this also structurally proves they can't be set).
+    assert(
+      preselection === undefined || preselection.field === "travelStyles" || (inspiration === "family-time" && preselection.field === "companion"),
+      `${inspiration} only pre-selects Companion (family-time only) or Travel Styles — never Dream Journey, Timing, Destination, Budget or Dates`,
+    );
+    const state = createInitialJourneyPassportState(context);
+    assert(state.currentMoment === "welcome" && state.visitedMoments.join("|") === "welcome", `${inspiration} starts at Welcome without skipping a Passport page`);
   });
+  assert(!(JOURNEY_ENTRY_INSPIRATIONS as readonly string[]).includes("Wildlife"), "the removed Wildlife inspiration mapping does not exist in the governed catalogue");
+
+  // Multi-default Travel Styles: food-culture-local must behave exactly as
+  // though the traveller selected both Food & Dining and Culture &
+  // Heritage — in order, independently editable, and the entry advisory
+  // only disappears once *both* have been removed.
+  const foodCulturePreselection = resolveJourneyEntryPreselection({ inspiration: "food-culture-local", source: "inspiration" });
+  const foodCultureState = createInitialJourneyPassportState({ inspiration: "food-culture-local", source: "inspiration" });
+  assert(foodCultureState.travelStyles.join("|") === "Food & Dining|Culture & Heritage", "food-culture-local Passport state carries both governed travel styles, in order");
+  assert(isJourneyEntryPreselectionActive(foodCulturePreselection, "pace-and-timing", foodCultureState), "food-culture-local advisory is active while both governed defaults remain");
+  const afterRemovingFood = { ...foodCultureState, travelStyles: foodCultureState.travelStyles.filter((style) => style !== "Food & Dining") };
+  assert(afterRemovingFood.travelStyles.join("|") === "Culture & Heritage", "Food & Dining is independently removable, leaving Culture & Heritage selected");
+  assert(isJourneyEntryPreselectionActive(foodCulturePreselection, "pace-and-timing", afterRemovingFood), "food-culture-local advisory remains active while at least one governed default is still selected");
+  const afterRemovingBoth = { ...foodCultureState, travelStyles: [] };
+  assert(!isJourneyEntryPreselectionActive(foodCulturePreselection, "pace-and-timing", afterRemovingBoth), "food-culture-local advisory disappears once every governed default has been removed");
 
   const categoryExamples = [
     ["India · Beaches", "Tropical Escape"],
