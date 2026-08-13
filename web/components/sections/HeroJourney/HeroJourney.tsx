@@ -81,7 +81,22 @@ export default function HeroJourney() {
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(20,13,8,.45),rgba(20,13,8,.22)_42%,rgba(20,13,8,.40))]" />
 
       {/* Content */}
-      <div className="relative z-10 flex w-full max-w-5xl flex-col items-center gap-6 px-6 pt-20">
+      {/* EBC — R1.1 Hero CTA Vertical Alignment Polish: this wrapper previously
+          had top padding (pt-20) only, with nothing balancing the bottom. The
+          section centres this whole block vertically, so that asymmetry read
+          as the CTA (the block's last child) sitting flush against the Hero's
+          bottom edge — "resting on the section boundary" rather than reading
+          as part of the composition, on any viewport tall enough for the
+          content to actually be centred within the Hero's min-height. Adding
+          responsive bottom padding gives the CTA real breathing room before
+          the section ends and, via that same centring, nudges the whole
+          composition (and so the CTA) upward — without touching Hero height,
+          typography, card sizing, button styling, or section order. Kept
+          modest at the smallest breakpoint specifically so mobile — already
+          the tallest variant of this section (cards stack to one column) —
+          doesn't pick up excess scroll length; sized up at sm/md/lg where
+          Desktop and iPad actually showed the issue. */}
+      <div className="relative z-10 flex w-full max-w-5xl flex-col items-center gap-6 px-6 pt-20 pb-8 sm:pb-10 md:pb-14 lg:pb-16">
 
         <p className="inline-flex items-center rounded-md border border-[#D7A84B]/45 bg-[#2F211B]/55 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.28em] text-[#FFF8E8] backdrop-blur-[3px] shadow-[0_2px_10px_rgba(0,0,0,0.22)]">
           Your Journey, Your Feeling
