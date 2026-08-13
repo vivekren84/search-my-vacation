@@ -2,51 +2,63 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import JourneyMoodIllustration, { type JourneyMoodIllustrationName } from "./JourneyMoodIllustration";
 
 const emotions = [
   {
     key: "relax",
     title: "Relax",
     desc: "Slow down & unwind",
-    emoji: "🌿",
-    // Visual-weight correction: this glyph renders with more internal
-    // whitespace than the others at the same font-size, so it needs a
-    // slight boost to read as the same visual size. Styling only.
-    visualScale: 1.15,
+    artwork: "relax",
+    href: "/journey-passport?mood=relax",
   },
   {
     key: "explore",
     title: "Explore",
     desc: "Discover & adventure",
-    emoji: "🗺️",
-    visualScale: 0.85,
+    artwork: "explore",
+    href: "/journey-passport?mood=explore",
   },
   {
     key: "celebrate",
     title: "Celebrate",
     desc: "Make it unforgettable",
-    emoji: "🎉",
-    visualScale: 0.9,
+    artwork: "celebrate",
+    href: "/journey-passport?mood=celebrate",
   },
   {
     key: "romance",
     title: "Romance",
     desc: "Moments that connect",
-    emoji: "💑",
-    visualScale: 1,
+    artwork: "romance",
+    href: "/journey-passport?mood=romance",
   },
   {
     key: "escape",
     title: "Escape",
     desc: "Get away & recharge",
-    emoji: "🧘",
-    visualScale: 1.15,
+    artwork: "escape",
+    href: "/journey-passport?mood=escape",
   },
-];
+  {
+    key: "memory",
+    title: "Memory Maker / Family",
+    desc: "Make moments together",
+    artwork: "memory",
+    href: "/journey-passport?experience=Memory%20Makers",
+  },
+] as const satisfies ReadonlyArray<{
+  key: string;
+  title: string;
+  desc: string;
+  artwork: JourneyMoodIllustrationName;
+  href: string;
+}>;
 
 export default function HeroJourney() {
   const [selected, setSelected] = useState<string | null>(null);
   const router = useRouter();
+  const selectedEmotion = emotions.find((emotion) => emotion.key === selected);
 
   return (
     <section className="relative flex min-h-[44rem] w-full items-center justify-center overflow-hidden text-center md:min-h-[48rem]">
@@ -63,7 +75,7 @@ export default function HeroJourney() {
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(20,13,8,.45),rgba(20,13,8,.22)_42%,rgba(20,13,8,.40))]" />
 
       {/* Content */}
-      <div className="relative z-10 flex max-w-5xl flex-col items-center gap-6 px-6 pt-20">
+      <div className="relative z-10 flex w-full max-w-5xl flex-col items-center gap-6 px-6 pt-20">
 
         <p className="inline-flex items-center rounded-md border border-[#D7A84B]/45 bg-[#2F211B]/55 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.28em] text-[#FFF8E8] backdrop-blur-[3px] shadow-[0_2px_10px_rgba(0,0,0,0.22)]">
           Your Journey, Your Feeling
@@ -78,7 +90,7 @@ export default function HeroJourney() {
         </p>
 
         {/* Emotion Cards */}
-        <div className="flex flex-wrap justify-center gap-5 mt-8">
+        <div className="mt-8 grid w-full max-w-[68rem] grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {emotions.map((emotion) => {
             const isActive = selected === emotion.key;
 
@@ -88,27 +100,21 @@ export default function HeroJourney() {
                 type="button"
                 onClick={() => setSelected(emotion.key)}
                 aria-pressed={isActive}
-                className={`flex min-w-[220px] items-center gap-4 rounded-2xl border px-6 py-5 text-left backdrop-blur-md transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white
+                className={`group grid min-h-36 w-full grid-cols-[9.5rem_1fr] items-center gap-3 rounded-2xl border px-3 py-3 text-left text-[#FFF8E8] backdrop-blur-[4px] backdrop-saturate-75 transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#FFD58A] motion-reduce:transition-none sm:min-h-40 sm:grid-cols-[11rem_1fr] sm:gap-4 sm:px-4 sm:py-4
                   ${
                     isActive
-                      ? "bg-white text-black border-white scale-105 shadow-2xl"
-                      : "bg-white/10 text-white border-white/20 hover:bg-white/20 hover:scale-105 hover:shadow-lg"
+                      ? "border-[#F2B84B]/74 bg-[linear-gradient(135deg,rgba(111,73,40,.17),rgba(39,29,24,.16))] shadow-[0_0_0_1px_rgba(255,219,150,.10),0_14px_30px_rgba(12,7,4,.20),0_0_20px_rgba(242,184,75,.14),inset_0_1px_0_rgba(255,248,232,.12)] motion-safe:-translate-y-0.5"
+                      : "border-[#F7E5C4]/25 bg-[linear-gradient(135deg,rgba(75,57,47,.14),rgba(31,25,22,.13))] shadow-[0_10px_24px_rgba(10,6,4,.15),inset_0_1px_0_rgba(255,248,232,.09)] hover:border-[#F0D09A]/44 hover:bg-[linear-gradient(135deg,rgba(91,65,50,.17),rgba(37,28,24,.15))] hover:shadow-[0_14px_30px_rgba(10,6,4,.18),0_0_16px_rgba(239,184,93,.07),inset_0_1px_0_rgba(255,248,232,.11)] motion-safe:hover:-translate-y-0.5"
                   }
                 `}
               >
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/30 backdrop-blur-md">
-                  <span
-                    aria-hidden="true"
-                    className="block text-xl leading-none"
-                    style={{ transform: `scale(${emotion.visualScale})`, transformOrigin: "center" }}
-                  >
-                    {emotion.emoji}
-                  </span>
+                <div className="flex h-[7.125rem] w-[9.5rem] items-center justify-center transition-transform duration-300 group-hover:scale-[1.015] group-focus-visible:scale-[1.015] motion-reduce:transform-none motion-reduce:transition-none sm:h-[7.5rem] sm:w-44">
+                  <JourneyMoodIllustration name={emotion.artwork} />
                 </div>
 
-                <div>
-                  <p className="font-semibold text-base">{emotion.title}</p>
-                  <p className="text-sm opacity-70 mt-0.5">
+                <div className="min-w-0">
+                  <p className="font-serif text-lg font-bold leading-tight tracking-[-.02em] text-[#FFF9ED] drop-shadow-[0_1px_2px_rgba(12,7,4,.28)]">{emotion.title}</p>
+                  <p className="mt-1 text-xs leading-5 text-[#F5E7D0]/82">
                     {emotion.desc}
                   </p>
                 </div>
@@ -120,8 +126,8 @@ export default function HeroJourney() {
         {/* CTA */}
         <button
           type="button"
-          onClick={() => selected && router.push(`/journey-passport?mood=${encodeURIComponent(selected)}`)}
-          disabled={!selected}
+          onClick={() => selectedEmotion && router.push(selectedEmotion.href)}
+          disabled={!selectedEmotion}
           className={`mt-10 rounded-full px-12 py-4 text-base font-semibold transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white disabled:cursor-not-allowed
             ${
               selected
@@ -130,10 +136,10 @@ export default function HeroJourney() {
             }
           `}
         >
-          {selected ? "Start My Journey →" : "Select your mood to begin"}
+          {selectedEmotion ? "Start My Journey →" : "Select your mood to begin"}
         </button>
 
-        {selected && (
+        {selectedEmotion && (
           <p className="text-xs text-white/60 mt-2">
             Takes less than a minute
           </p>
