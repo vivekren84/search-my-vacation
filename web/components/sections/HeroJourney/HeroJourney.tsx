@@ -75,7 +75,7 @@ export default function HeroJourney() {
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(20,13,8,.45),rgba(20,13,8,.22)_42%,rgba(20,13,8,.40))]" />
 
       {/* Content */}
-      <div className="relative z-10 flex max-w-5xl flex-col items-center gap-6 px-6 pt-20">
+      <div className="relative z-10 flex w-full max-w-5xl flex-col items-center gap-6 px-6 pt-20">
 
         <p className="inline-flex items-center rounded-md border border-[#D7A84B]/45 bg-[#2F211B]/55 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.28em] text-[#FFF8E8] backdrop-blur-[3px] shadow-[0_2px_10px_rgba(0,0,0,0.22)]">
           Your Journey, Your Feeling
@@ -100,7 +100,7 @@ export default function HeroJourney() {
                 type="button"
                 onClick={() => setSelected(emotion.key)}
                 aria-pressed={isActive}
-                className={`group grid min-h-32 w-full grid-cols-[10rem_1fr] items-center gap-4 rounded-2xl border px-4 py-4 text-left text-[#280336] backdrop-blur-md transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white motion-reduce:transition-none
+                className={`group grid min-h-36 w-full grid-cols-[9.5rem_1fr] items-center gap-3 rounded-2xl border px-3 py-3 text-left text-[#280336] backdrop-blur-md transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white motion-reduce:transition-none sm:min-h-40 sm:grid-cols-[11rem_1fr] sm:gap-4 sm:px-4 sm:py-4
                   ${
                     isActive
                       ? "border-[#F5951C]/80 bg-[#FFFDFC] shadow-[0_16px_34px_rgba(31,14,37,.22)] ring-1 ring-[#F5951C]/35 motion-safe:-translate-y-0.5"
@@ -108,7 +108,7 @@ export default function HeroJourney() {
                   }
                 `}
               >
-                <div className="flex h-24 w-40 items-center justify-center transition-transform duration-300 group-hover:scale-[1.015] group-focus-visible:scale-[1.015] motion-reduce:transform-none motion-reduce:transition-none">
+                <div className="flex h-[7.125rem] w-[9.5rem] items-center justify-center transition-transform duration-300 group-hover:scale-[1.015] group-focus-visible:scale-[1.015] motion-reduce:transform-none motion-reduce:transition-none sm:h-[7.5rem] sm:w-44">
                   <JourneyMoodIllustration name={emotion.artwork} />
                 </div>
 
