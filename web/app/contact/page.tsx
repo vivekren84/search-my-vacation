@@ -32,6 +32,7 @@ export default function ContactPage() {
               <div>
                 <h2 className="font-semibold text-[#2A211C]">Email</h2>
                 <a className="mt-2 inline-flex min-h-11 items-center underline" href={siteContact.emailHref}>{siteContact.email}</a>
+                <p className="mt-3 leading-7">We usually respond within four business hours.</p>
               </div>
               <div>
                 <h2 className="font-semibold text-[#2A211C]">Visit us</h2>
@@ -39,8 +40,7 @@ export default function ContactPage() {
               </div>
               <div>
                 <h2 className="font-semibold text-[#2A211C]">Office visits</h2>
-                <p className="mt-2 leading-7">By prior appointment only<br/>Monday–Saturday • 10:00 AM–7:00 PM IST</p>
-                <p className="mt-3 leading-7">We usually respond within four business hours.</p>
+                <p className="mt-2 leading-7">Available by prior appointment only<br/>Monday–Saturday • 10:00 AM–7:00 PM IST</p>
               </div>
             </div>
           </section>
