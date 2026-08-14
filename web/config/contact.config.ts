@@ -4,7 +4,7 @@ export const siteContact = {
   whatsappHref: "https://wa.me/918925838541",
   email: "bookings@searchmyvacation.com",
   emailHref: "mailto:bookings@searchmyvacation.com",
-  officeHours: "Monday–Saturday, 10:00 AM–7:00 PM IST",
+  officeHours: "By prior appointment only. Monday–Saturday, 10:00 AM–7:00 PM IST.",
   googleReviewsUrl: "https://g.page/r/CeizepY2VZZ0EBM/review",
   /**
    * Release 1.1 — Footer Social Icons Finalisation: single canonical source
