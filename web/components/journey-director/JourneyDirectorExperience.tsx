@@ -822,7 +822,7 @@ function JourneyDirectorHandoff({
       "Please help me continue the conversation with my Journey Designer.",
     ].join("\n");
     void recordJourneyPassportEvent(journeyReference, "whatsapp_handoff_opened");
-    window.location.assign(`${siteContact.whatsappHref}?text=${encodeURIComponent(message)}`);
+    window.open(`${siteContact.whatsappHref}?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
   }
 
   return (
