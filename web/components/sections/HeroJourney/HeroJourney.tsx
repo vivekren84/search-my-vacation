@@ -33,24 +33,23 @@ const emotions = [
     artwork: "romance",
     href: "/journey-passport?mood=romance",
   },
-  {
-    key: "escape",
-    title: "Escape",
-    desc: "Get away & recharge",
-    artwork: "escape",
-    href: "/journey-passport?mood=escape",
-  },
+  // DEC-R1.2-007: the Escape mood card is retired from the Homepage Mood
+  // Card set — no strong Journey Passport mapping ever existed for it (its
+  // Dream Journey "Tropical Escape" mapping had no thematic link to
+  // "escape" as a feeling). Tropical Escape itself is untouched and remains
+  // independently selectable inside Journey Passport; see the retirement
+  // note on `moodPreselections.escape` in `lib/journey-passport/entry-context.ts`.
   {
     key: "memory",
-    title: "Memory Maker / Family",
+    title: "Memory Makers",
     desc: "Make moments together",
     artwork: "memory",
-    // EBC-036 (D-08): previously routed through `?experience=Memory%20Makers`,
-    // which resolves via `experiencePreselections` — a mapping built for the
-    // separate "Begin with what matters" homepage tiles, not Journey Mood.
-    // That accidental reuse produced "Photography" as the Pace & Timing
-    // pre-selection. Memory Maker now uses the same `?mood=` routing as every
-    // other mood card, resolving through `moodPreselections.memory` instead.
+    // DEC-R1.2-008: "Memory Maker / Family" renamed to "Memory Makers" — now
+    // consistent with the separate "Memory Makers" Experience tile on the
+    // homepage and /experiences. Routing stays `?mood=memory`, resolving
+    // through `moodPreselections.memory` (see entry-context.ts), which
+    // pre-selects "Photography" instead of "Culture & Heritage" — see that
+    // file for the full rationale.
     href: "/journey-passport?mood=memory",
   },
 ] as const satisfies ReadonlyArray<{
@@ -111,7 +110,13 @@ export default function HeroJourney() {
         </p>
 
         {/* Emotion Cards */}
-        <div className="mt-8 grid w-full max-w-[68rem] grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {/* HL-1 (Homepage Layout Rebalance): flex-wrap layout with per-card
+            basis widths rather than a 3-column CSS grid. With Escape removed
+            there are 5 cards, not a multiple of 3 — a grid would leave the
+            final row's 2 cards flush left with an empty gap at the right.
+            flex-wrap + justify-center centres that shorter final row
+            instead, so the layout reads as intentional at every breakpoint. */}
+        <div className="mt-8 flex w-full max-w-[68rem] flex-wrap justify-center gap-4">
           {emotions.map((emotion) => {
             const isActive = selected === emotion.key;
 
@@ -122,11 +127,19 @@ export default function HeroJourney() {
                 onClick={() => setSelected(emotion.key)}
                 aria-pressed={isActive}
                 aria-label={emotion.title}
-                className={`group grid min-h-36 w-full grid-cols-[9.5rem_1fr] items-center gap-3 rounded-2xl border px-3 py-3 text-left text-[#FFF8E8] backdrop-blur-[4px] backdrop-saturate-75 transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#FFD58A] motion-reduce:transition-none sm:min-h-40 sm:grid-cols-[11rem_1fr] sm:gap-4 sm:px-4 sm:py-4
+                // Mood card glass treatment: a neutral, low-saturation frosted
+                // panel with a champagne border accent. Transparency, blur
+                // and neutral tint are tuned together for legibility against
+                // the Golden Hour hero's brightest area (the sun/water
+                // reflection behind the Explore card) — keep them as a set;
+                // changing one without the others risks losing that
+                // legibility. Full design rationale and rejected
+                // alternatives: docs/09-Development/EBCR1.2-004-SOPHIE-VISUAL-TREATMENT-ADDENDUM.md
+                className={`group grid min-h-36 w-full basis-full grid-cols-[9.5rem_1fr] items-center gap-3 rounded-2xl border px-3 py-3 text-left text-[#FFF8E8] backdrop-blur-xl backdrop-saturate-50 transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#FFD58A] motion-reduce:transition-none sm:min-h-40 sm:basis-[calc(50%-0.5rem)] sm:grid-cols-[11rem_1fr] sm:gap-4 sm:px-4 sm:py-4 lg:basis-[calc(33.333%-0.667rem)]
                   ${
                     isActive
-                      ? "border-[#F2B84B]/74 bg-[linear-gradient(135deg,rgba(111,73,40,.17),rgba(39,29,24,.16))] shadow-[0_0_0_1px_rgba(255,219,150,.10),0_14px_30px_rgba(12,7,4,.20),0_0_20px_rgba(242,184,75,.14),inset_0_1px_0_rgba(255,248,232,.12)] motion-safe:-translate-y-0.5"
-                      : "border-[#F7E5C4]/25 bg-[linear-gradient(135deg,rgba(75,57,47,.14),rgba(31,25,22,.13))] shadow-[0_10px_24px_rgba(10,6,4,.15),inset_0_1px_0_rgba(255,248,232,.09)] hover:border-[#F0D09A]/44 hover:bg-[linear-gradient(135deg,rgba(91,65,50,.17),rgba(37,28,24,.15))] hover:shadow-[0_14px_30px_rgba(10,6,4,.18),0_0_16px_rgba(239,184,93,.07),inset_0_1px_0_rgba(255,248,232,.11)] motion-safe:hover:-translate-y-0.5"
+                      ? "border-[#E3C48C]/75 bg-[linear-gradient(135deg,rgba(24,23,21,.32),rgba(16,15,14,.25))] shadow-[0_0_0_1px_rgba(227,196,140,.24),0_14px_26px_rgba(0,0,0,.26),0_0_16px_rgba(227,196,140,.16),inset_0_1px_0_rgba(255,255,255,.08)] motion-safe:-translate-y-0.5"
+                      : "border-[#E3C48C]/24 bg-[linear-gradient(135deg,rgba(20,20,22,.24),rgba(13,13,15,.17))] shadow-[0_10px_22px_rgba(0,0,0,.20),inset_0_1px_0_rgba(255,255,255,.05)] hover:border-[#E3C48C]/40 hover:bg-[linear-gradient(135deg,rgba(24,24,26,.28),rgba(16,16,18,.20))] hover:shadow-[0_14px_26px_rgba(0,0,0,.24),inset_0_1px_0_rgba(255,255,255,.07)] motion-safe:hover:-translate-y-0.5"
                   }
                 `}
               >
@@ -135,8 +148,8 @@ export default function HeroJourney() {
                 </div>
 
                 <div className="min-w-0">
-                  <p className="font-serif text-lg font-bold leading-tight tracking-[-.02em] text-[#FFF9ED] drop-shadow-[0_1px_2px_rgba(12,7,4,.28)]">{emotion.title}</p>
-                  <p className="mt-1 text-xs leading-5 text-[#F5E7D0]/82">
+                  <p className="font-serif text-lg font-bold leading-tight tracking-[-.02em] text-[#FFF9ED] drop-shadow-[0_1px_2px_rgba(12,7,4,.30)]">{emotion.title}</p>
+                  <p className="mt-1 text-xs leading-5 text-[#F5E7D0]/85">
                     {emotion.desc}
                   </p>
                 </div>

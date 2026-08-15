@@ -51,21 +51,34 @@ const moodPreselections = {
   explore: travelStyleDefaults("pace-and-timing", ["Adventure"]),
   celebrate: travelStyleDefaults("pace-and-timing", ["Celebrations"]),
   romance: { moment: "companions", field: "companion", value: "Couple" },
-  escape: { moment: "dream-journey", field: "dreamJourney", value: "Tropical Escape" },
-  // EBC-036 (D-08): Memory Maker previously bypassed this shared mood
-  // mapping entirely — its homepage card linked to
-  // `?experience=Memory%20Makers`, which resolves through
-  // `experiencePreselections` instead (a mechanism built for the
-  // unrelated "Begin with what matters" homepage tiles, not for Journey
-  // Mood). That accidental reuse produced "Photography" as the Pace &
-  // Timing pre-selection, which has no thematic connection to Memory
-  // Maker. Memory Maker now uses `?mood=memory`, the same routing
-  // mechanism as the other five moods, and "Culture & Heritage" as a
-  // pre-selection that fits "moments made together" without duplicating
-  // another mood's exact value (Relax already owns Relaxation, Explore
-  // owns Adventure, Celebrate owns Celebrations).
-  memory: travelStyleDefaults("pace-and-timing", ["Culture & Heritage"]),
-} as const satisfies Record<NonNullable<JourneyPassportEntryContext["feeling"]>, JourneyEntryPreselection>;
+  // EBCR1.2-004 (DEC-R1.2-007): the Escape mood card has been removed from
+  // the Homepage/Journey Mood Card set — Product's stated rationale is that
+  // no strong Journey Passport mapping ever existed for it; the previous
+  // mapping simply pointed to the Dream Journey "Tropical Escape" archetype,
+  // which has no thematic link to "escape" as a feeling. Retired to
+  // `undefined` (the same pattern already used below for `feeling-led` /
+  // `first-international`) rather than removed from this Record outright,
+  // so a stale `?mood=escape` link — from a bookmark, cached page, or old
+  // marketing asset — still resolves cleanly to "no pre-selection" instead
+  // of a type error or a misleading default. Tropical Escape itself is
+  // untouched: it remains a fully independent, traveller-selectable Dream
+  // Journey option inside Journey Passport (see
+  // `JOURNEY_ENTRY_DESTINATION_THEMES` in `types/journey-passport.types.ts`)
+  // and Journey Director's scoring for it (see `DREAM_JOURNEY_MAP` in
+  // `lib/journey-director/engine/engine.rules.ts`) — neither is affected by
+  // this retirement.
+  escape: undefined,
+  // EBCR1.2-004 (DEC-R1.2-008): the "Memory Maker / Family" homepage card is
+  // renamed "Memory Makers" and its Journey Passport mapping is updated to
+  // "Photography" — Product's stated rationale is that Photography best
+  // represents the emotional intent of preserving memories across all
+  // traveller types. This supersedes the "Culture & Heritage" mapping set
+  // under EBC-036 (D-08). Photography is also the exact default already
+  // used by the separate "Memory Makers" Experience tile
+  // (`experiencePreselections["Memory Makers"]` above), so both "Memory
+  // Makers" entry points on the site now resolve to the same pre-selection.
+  memory: travelStyleDefaults("pace-and-timing", ["Photography"]),
+} as const satisfies Record<NonNullable<JourneyPassportEntryContext["feeling"]>, JourneyEntryPreselection | undefined>;
 
 /**
  * EBC-030 — governed Inspiration Mapping Catalogue.

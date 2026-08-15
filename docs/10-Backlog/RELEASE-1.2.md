@@ -686,7 +686,115 @@ This is a release-readiness checklist for R1.2 at the master-tracker level. A de
 
 ---
 
-# 13. Status Definitions
+# 13. Post-Implementation Observations
+
+## Purpose
+
+This section records observations identified during implementation, Functional QA, Traveller Experience Review, and Business Acceptance that were consciously accepted without reopening the completed workstream.
+
+These observations are **not defects**, **not release blockers**, and **not pending tasks**. They are retained to preserve product knowledge and may inform future design refreshes or roadmap discussions.
+
+---
+
+## Workstream 1 – Homepage Mood Experience
+
+**Status:** Accepted
+
+### OBS-R1.2-001
+**Title:** Memory Makers visual identity
+
+**Source:** Sri – Traveller Experience Review
+
+**Observation:**
+
+The Memory Makers card is slightly weaker than the other four mood cards. The two-line title and illustration require marginally more effort to recognise compared to Relax, Explore, Celebrate and Romance.
+
+**Decision:**
+
+Accepted.
+
+No further design changes will be made as part of Release 1.2 Workstream 1.
+
+This may be revisited during a future homepage design refresh.
+
+---
+
+### OBS-R1.2-002
+**Title:** Desktop hover affordance
+
+**Source:** Sri – Traveller Experience Review
+
+**Observation:**
+
+Hover feedback on desktop is intentionally subtle and premium, but could be made marginally more pronounced for discoverability.
+
+**Decision:**
+
+Accepted.
+
+Current interaction behaviour remains aligned with the approved premium design direction.
+
+Future refinement may be considered during a broader UX review.
+
+---
+
+### OBS-R1.2-003
+**Title:** Mobile first-fold visibility
+
+**Source:** Sri – Traveller Experience Review
+
+**Observation:**
+
+Depending on device height, not all Mood Cards are visible within the initial viewport before scrolling.
+
+**Decision:**
+
+Accepted.
+
+This is consistent with the approved homepage hierarchy and does not negatively affect usability.
+
+No layout changes are planned for Release 1.2.
+
+---
+
+### OBS-R1.2-004
+**Title:** Responsive automation limitation
+
+**Source:** Keerthi – Functional QA
+
+**Observation:**
+
+Automated responsive validation within the cloud testing environment could not fully simulate tablet and mobile viewport behaviour.
+
+Manual validation was completed successfully on Android using the local development environment.
+
+**Decision:**
+
+Accepted.
+
+This is an environmental limitation of the validation tooling and does not represent a product defect.
+
+---
+
+## Summary
+
+The Homepage Mood Experience (Workstream 1) successfully completed:
+
+- Engineering Implementation
+- Engineering Cleanup
+- Functional QA
+- Traveller Experience Review
+- Business Acceptance
+
+All observations recorded above were reviewed by the Product Owner and consciously accepted.
+
+No Critical, High, or Medium severity defects remain open for this workstream.
+
+Workstream 1 is therefore considered **Complete**.
+
+---
+
+# 14. Status Definitions
 
 ## Lifecycle statuses (used for tasks, decisions and workstreams)
 
