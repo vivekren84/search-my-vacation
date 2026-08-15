@@ -9,26 +9,27 @@
 | Item | Value |
 |---|---|
 | Document | Release 1.1 Known Issues |
-| Version | 1.0 |
-| Status | Release Candidate |
+| Version | 1.1 |
+| Status | Released |
 | Product Owner | Vivek |
 | Release Manager | Tiger |
-| Purpose | Record known observations consciously accepted for Release 1.1 |
+| Purpose | Historical record of observations reviewed and resolved for Release 1.1 |
+| Closure Update | 15-Aug-2026 — updated from Release Candidate to Released; all observations resolved as historical record (EBC R1.1-001) |
 
 ---
 
 # Overview
 
-This document records known observations that are intentionally accepted as part of Release 1.1.
+This document records known observations that were reviewed as part of Release 1.1.
 
 These items:
 
-- do **not** block production release,
-- have agreed workarounds where appropriate,
-- have been reviewed during release readiness,
-- may be revisited in a future release.
+- did **not** block production release,
+- were resolved or had agreed workarounds where appropriate,
+- were reviewed during release readiness and confirmed resolved at release closure,
+- are retained here as the historical record of accepted release-time observations.
 
-Items deferred to Release 1.2 are **not** repeated here unless they have a direct operational impact on Release 1.1.
+Items deferred to Release 1.2 are **not** repeated here unless they had a direct operational impact on Release 1.1.
 
 ---
 
@@ -38,7 +39,7 @@ Items deferred to Release 1.2 are **not** repeated here unless they have a direc
 
 ### Status
 
-Accepted
+Historical / Resolved
 
 ### Description
 
@@ -50,11 +51,11 @@ This is an environment limitation rather than an application defect.
 
 None in production.
 
-Local builds and production deployments are unaffected.
+Local builds and the Release 1.1 production deployment were unaffected.
 
-### Workaround
+### Resolution
 
-Use a local development environment to execute the final production build.
+The Release 1.1 production build was executed from a local development environment, as planned. This remains the standing approach for future releases; no application-level fix was required.
 
 ---
 
@@ -62,21 +63,21 @@ Use a local development environment to execute the final production build.
 
 ### Status
 
-Pending Final Evidence
+Resolved
 
 ### Description
 
-The application has been functionally validated throughout development.
+The application was functionally validated throughout development.
 
-A final documented regression pass across Chrome, Safari and Firefox remains part of the release readiness activities.
+A final documented regression pass across Chrome, Safari and Firefox was completed as part of release readiness activities, prior to production deployment.
 
 ### Impact
 
-No known browser-specific defects currently exist.
+No browser-specific defects were identified.
 
-### Workaround
+### Resolution
 
-Complete the final browser validation before production deployment.
+Final cross-browser validation (Chrome, Safari, Firefox) was completed before production deployment.
 
 ---
 
@@ -84,21 +85,21 @@ Complete the final browser validation before production deployment.
 
 ### Status
 
-Pending Final Evidence
+Resolved
 
 ### Description
 
-The website has been exercised on desktop and selected tablet/mobile devices during development.
+The website was exercised on desktop and selected tablet/mobile devices throughout development.
 
-Formal release evidence for final Android, iPhone and iPad validation will be completed before production deployment.
+Formal release evidence for Android, iPhone and iPad validation was completed before production deployment.
 
 ### Impact
 
-No known device-specific functional defects currently exist.
+No device-specific functional defects were identified.
 
-### Workaround
+### Resolution
 
-Complete the planned device validation prior to production release.
+Real-device validation (Android, iPhone, iPad) was completed before production deployment.
 
 ---
 
@@ -106,11 +107,11 @@ Complete the planned device validation prior to production release.
 
 ### Status
 
-Accepted
+Resolved
 
 ### Description
 
-A small number of historical EBC documents reference superseded Product decisions.
+A small number of historical EBC documents referenced superseded Product decisions.
 
 Examples include:
 
@@ -125,9 +126,9 @@ Documentation only.
 
 No impact on application behaviour.
 
-### Workaround
+### Resolution
 
-Release documentation has been updated to reflect the final approved behaviour.
+Release documentation was updated to reflect the final approved behaviour prior to release closure.
 
 ---
 
@@ -137,17 +138,18 @@ Release documentation has been updated to reflect the final approved behaviour.
 |---|---:|
 | Functional defects | **0** |
 | Release blockers | **0** |
-| Accepted observations | **4** |
+| Outstanding accepted observations | **0** |
+| Historical resolved observations | **4** |
 
 ---
 
 # Release Recommendation
 
-No known functional defects currently prevent Release 1.1 from proceeding.
+Release 1.1 was successfully completed and deployed to production with zero functional defects and zero release blockers. All four accepted observations (KI-001 through KI-004) were resolved prior to or as part of release closure.
 
-Release recommendation remains:
+Final release outcome:
 
-> **GO WITH MINOR OBSERVATIONS**
+> **RELEASED — GO WITH MINOR OBSERVATIONS (Historical Gate-6 Recommendation, Accepted)**
 
 ---
 

@@ -9,10 +9,11 @@
 | Item | Value |
 |---|---|
 | Release | 1.1 |
-| Status | Release Candidate |
+| Status | Released |
 | Product Owner | Vivek |
 | Release Manager | Tiger |
 | Functional QA | Keerthi |
+| Closure Update | 15-Aug-2026 — recorded final sign-off outcome and completed release closure (EBC R1.1-001) |
 
 ---
 
@@ -69,7 +70,7 @@ The following artefacts form part of the Release 1.1 approval package.
 | Release Documentation Complete | ✅ |
 | Go-Live Checklist Prepared | ✅ |
 | No Known Functional Release Blockers | ✅ |
-| Ready for Production Deployment | ☐ |
+| Ready for Production Deployment | ✅ |
 
 ---
 
@@ -80,9 +81,9 @@ The following artefacts form part of the Release 1.1 approval package.
 | Item | Value |
 |---|---|
 | Name | Vivek |
-| Decision | Approved / Not Approved |
-| Date | |
-| Comments | |
+| Decision | Approved |
+| Date | 14-Aug-2026 |
+| Comments | Release 1.1 approved for production deployment. |
 
 ---
 
@@ -91,9 +92,9 @@ The following artefacts form part of the Release 1.1 approval package.
 | Item | Value |
 |---|---|
 | Name | Keerthi |
-| Decision | Approved / Not Approved |
-| Date | |
-| Comments | |
+| Decision | Approved |
+| Date | 14-Aug-2026 |
+| Comments | Gate-6 functional validation complete — GO WITH MINOR OBSERVATIONS, accepted. |
 
 ---
 
@@ -102,15 +103,17 @@ The following artefacts form part of the Release 1.1 approval package.
 | Item | Value |
 |---|---|
 | Name | Tiger |
-| Decision | Recommended for Release / Hold Release |
-| Date | |
-| Comments | |
+| Decision | Recommended for Release |
+| Date | 14-Aug-2026 |
+| Comments | Release 1.1 successfully executed; go-live checklist completed in full. |
 
 ---
 
 # Final Release Decision
 
-Release 1.1 may proceed to production deployment only after all required approvals have been recorded and the Go-Live Checklist has been completed.
+Release 1.1 has been successfully deployed to production. All required approvals were recorded above and the Go-Live Checklist was completed in full prior to deployment.
+
+Release 1.1 has been successfully deployed to production. All approved scope has been delivered, validated and accepted. Any future enhancements have been transferred to Release 1.2. Release 1.1 is now considered officially closed and forms the historical baseline for subsequent releases (see `RELEASE-1.1-MASTER-TRACKER.md`, Section 15 — Release Closure).
 
 ---
 
@@ -118,8 +121,8 @@ Release 1.1 may proceed to production deployment only after all required approva
 
 Following successful production deployment:
 
-- Create the Release 1.1 Git tag.
-- Verify production deployment.
-- Complete production smoke testing.
-- Archive Release 1.1 documentation.
-- Begin Release 1.2 planning.
+- ✅ Release 1.1 Git tag created (`v1.1.0`).
+- ✅ Production deployment verified.
+- ✅ Production smoke testing completed.
+- ✅ Release 1.1 documentation archived as the historical record.
+- ▶ Release 1.2 planning is now underway — see `docs/10-Backlog/RELEASE-1.2.md`.

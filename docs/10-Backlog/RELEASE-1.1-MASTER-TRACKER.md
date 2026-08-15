@@ -7,15 +7,16 @@
 | Item | Value |
 |---|---|
 | Document | Release 1.1 Master Tracker |
-| Version | 1.0 |
-| Status | Release Candidate — GO WITH MINOR OBSERVATIONS |
+| Version | 1.1 |
+| Status | Released — Release Closed (GO WITH MINOR OBSERVATIONS at Gate-6) |
 | Product Owner | Vivek |
 | Release Manager | Tiger |
 | Functional QA | Keerthi |
 | Project | Search My Vacation Website |
 | Baseline | Release 1.0 — `v1.0.0` |
-| Purpose | Authoritative Release 1.1 status, remaining release work, deferrals and release decisions |
+| Purpose | Authoritative Release 1.1 historical record — final status, completed release work, deferrals and release decisions |
 | Previous Version | `RELEASE-1.1-MASTER-TRACKER-v0.1-ARCHIVE.md` |
+| Closure Update | 15-Aug-2026 — updated from Release Candidate to Released as the permanent historical record (EBC R1.1-001) |
 
 ---
 
@@ -36,9 +37,9 @@ The release focuses on:
 - Functional validation and release readiness
 - Post-R1.0 business feedback
 
-Release 1.1 is now in **stabilisation and release preparation**.
+Release 1.1 was successfully deployed to production on **14 August 2026** (`v1.1.0`) and is now **closed**. This document is retained as the permanent historical record of Release 1.1, distinguishing what was planned during release preparation from what actually occurred at release.
 
-No new feature scope should be introduced unless required to resolve a genuine release-blocking defect.
+No new feature scope was introduced beyond release-blocking defect resolution prior to closure. All further enhancements have been transferred to Release 1.2 (see `docs/10-Backlog/RELEASE-1.2.md`).
 
 ---
 
@@ -69,11 +70,13 @@ No new feature scope should be introduced unless required to resolve a genuine r
 | Traveller Stories | ✅ Release-ready |
 | Trust & Credibility | ✅ Release-ready |
 | Contact / Footer | ✅ Release-ready |
-| Cross-device / Cross-browser | 🟡 Final validation remaining |
-| Production Build | 🟡 Final local confirmation remaining |
-| Pre-production / Vercel Verification | 🟡 Remaining |
-| Release Documentation | 🟡 In progress |
-| Overall Release State | **Release Candidate** |
+| Cross-device / Cross-browser | ✅ Complete |
+| Production Build | ✅ Complete |
+| Pre-production / Vercel Verification | ✅ Complete |
+| Release Documentation | ✅ Complete |
+| Production Deployment | ✅ Complete — 14 August 2026 |
+| Release Tag | `v1.1.0` |
+| Overall Release State | **Released** |
 
 ---
 
@@ -346,39 +349,39 @@ The 10-point deduction represents unclosed validation evidence and housekeeping,
 
 ---
 
-# 6. Remaining R1.1 Release Work
+# 6. Remaining R1.1 Release Work (Historical)
 
-The following are the items still open before final Release 1.1 closure.
+**This section is retained as historical execution evidence.** At the time these items were opened, they represented the work remaining before Release 1.1 could close. All items below were completed and Release 1.1 has since been deployed to production and closed — see Section 15 (Release Closure) for the formal closure statement.
 
-## 6.1 Must Complete Before Production Release
+## 6.1 Must Complete Before Production Release — Completion Record
 
 | ID | Item | Priority | Status | Owner / Action |
 |---|---|---|:---:|---|
-| RC-01 | Successful production build outside sandbox | Critical | 🟡 | Run `npm run build` locally |
-| RC-02 | Chrome final regression | High | 🟡 | Keerthi / Vivek |
-| RC-03 | Safari final regression | High | 🟡 | Keerthi / Vivek |
-| RC-04 | Firefox final regression | High | 🟡 | Keerthi / Vivek |
-| RC-05 | iPhone sanity | High | 🟡 | Real-device check |
-| RC-06 | Android sanity | High | 🟡 | Real-device check |
-| RC-07 | iPad / tablet sanity | Medium | 🟡 | Partially verified; final formal pass |
-| RC-08 | Release Candidate Vercel deployment | Critical | 🟡 | Deploy consolidated R1.1 line |
-| RC-09 | Pre-production production-like sanity | Critical | 🟡 | Homepage / Passport / Director / Stories / Contact |
-| RC-10 | Product Owner final walkthrough | Critical | 🟡 | Vivek |
-| RC-11 | Production go-live checklist | Critical | 🟡 | Tiger + Vivek |
-| RC-12 | Final release documentation | High | 🟡 | Tracker / notes / decisions / known issues |
-| RC-13 | Release branch consolidation / merge | Critical | 🟡 | Merge accepted R1.1 commits into release line / main |
-| RC-14 | Release tag and deployment record | High | 🟡 | After production approval |
+| RC-01 | Successful production build outside sandbox | Critical | ✅ | Completed — `npm run build` run locally |
+| RC-02 | Chrome final regression | High | ✅ | Completed — Keerthi / Vivek |
+| RC-03 | Safari final regression | High | ✅ | Completed — Keerthi / Vivek |
+| RC-04 | Firefox final regression | High | ✅ | Completed — Keerthi / Vivek |
+| RC-05 | iPhone sanity | High | ✅ | Completed — real-device check |
+| RC-06 | Android sanity | High | ✅ | Completed — real-device check |
+| RC-07 | iPad / tablet sanity | Medium | ✅ | Completed — final formal pass |
+| RC-08 | Release Candidate Vercel deployment | Critical | ✅ | Completed — consolidated R1.1 line deployed |
+| RC-09 | Pre-production production-like sanity | Critical | ✅ | Completed — Homepage / Passport / Director / Stories / Contact |
+| RC-10 | Product Owner final walkthrough | Critical | ✅ | Completed — Vivek |
+| RC-11 | Production go-live checklist | Critical | ✅ | Completed — Tiger + Vivek (see `RELEASE-1.1-GO-LIVE-CHECKLIST.md`) |
+| RC-12 | Final release documentation | High | ✅ | Completed — Tracker / notes / decisions / known issues |
+| RC-13 | Release branch consolidation / merge | Critical | ✅ | Completed — accepted R1.1 commits merged into release line / main |
+| RC-14 | Release tag and deployment record | High | ✅ | Completed — `v1.1.0` tagged after production approval |
 
 ---
 
-## 6.2 Recommended Final Sanity Checks
+## 6.2 Recommended Final Sanity Checks — Completion Record
 
-These are small release assurances rather than feature work.
+These were small release assurances rather than feature work. All were confirmed complete as part of release closure.
 
 | Item | Status |
 |---|:---:|
-| Broken-link sanity | ✅ Gate-6 found none; quick production recheck recommended |
-| Browser console | ✅ Clean in QA; production recheck recommended |
+| Broken-link sanity | ✅ Confirmed clean in production |
+| Browser console | ✅ Confirmed clean in production |
 | Google Reviews external link | ✅ |
 | Social URLs | ✅ |
 | WhatsApp | ✅ |
@@ -467,32 +470,34 @@ The following are useful improvements but **must not delay Release 1.1**.
 
 ---
 
-# 9. Known Release Observations
+# 9. Known Release Observations (Historical)
 
-The following are **not release blockers**:
+The following were **not release blockers** and are retained as historical context:
 
-1. Sandbox production builds cannot fetch Google Fonts because of outbound-network restrictions. A local production build is required for final evidence.
-2. Full real-device and cross-browser evidence is still being closed.
-3. Some historical EBC wording conflicts with later Product decisions; documentation should reflect the shipped Product decision.
-4. Temporary / working project artefacts should be cleaned or archived before final release documentation commit.
+1. Sandbox production builds cannot fetch Google Fonts because of outbound-network restrictions — a permanent environment limitation, not a release-time defect. The Release 1.1 production build was executed from a local development environment, as planned.
+2. Real-device and cross-browser evidence was completed prior to production deployment — see `RELEASE-1.1-KNOWN-ISSUES.md` (KI-002, KI-003), both Resolved.
+3. Some historical EBC wording conflicted with later Product decisions; release documentation reflects the shipped Product decision — see `RELEASE-1.1-KNOWN-ISSUES.md` (KI-004), Resolved.
+4. Temporary/working project artefacts were reviewed as part of release documentation closure (this EBC, R1.1-001).
 
-No known functional blocker is currently open.
+No known functional blocker was open at release, and none remain open now.
 
 ---
 
 # 10. Repository / Documentation Housekeeping
 
-Before final Release 1.1 merge:
+This section tracks repository housekeeping as a distinct concern from the documentation content updated by this EBC. Items confirmed as of this documentation pass are marked complete below; items that could not be independently verified from the repository at the time of this update remain open rather than being marked complete on assumption.
 
-- [ ] Preserve official QA evidence under `docs/09-Development/`
-- [ ] Preserve Master Tracker under `docs/10-Backlog/`
-- [ ] Preserve social brand covers under `docs/16-Brand-Assets/social-covers/`
-- [ ] Decide archive location for `SMV-Traveller-Stories-Missing-Data.xlsx`
-- [ ] Remove stale temporary files and lock artefacts
-- [ ] Confirm no approved release code depends on Codex/Cowork temporary worktrees
-- [ ] Confirm accepted R1.1 code runs entirely from the primary repository checkout
-- [ ] Make a dedicated documentation commit
-- [ ] Confirm Git working tree is clean before release consolidation
+- [x] Preserve official QA evidence under `docs/09-Development/`
+- [x] Preserve Master Tracker under `docs/10-Backlog/`
+- [x] Preserve social brand covers under `docs/16-Brand-Assets/social-covers/`
+- [ ] Decide archive location for `SMV-Traveller-Stories-Missing-Data.xlsx` — not yet confirmed
+- [ ] Remove stale temporary files and lock artefacts — not yet confirmed
+- [ ] Confirm no approved release code depends on Codex/Cowork temporary worktrees — not yet confirmed
+- [ ] Confirm accepted R1.1 code runs entirely from the primary repository checkout — not yet confirmed
+- [ ] Make a dedicated documentation commit — this documentation update has not yet been committed; pending explicit authorisation to commit
+- [ ] Confirm Git working tree is clean before release consolidation — **not currently true**: the working tree holds this update plus other pending documentation changes not yet committed
+
+These remaining items do not affect the release outcome itself (Release 1.1 is already live in production) — they are repository hygiene tasks that should be closed out when the documentation changes in this and related EBCs are committed.
 
 ---
 
@@ -521,9 +526,9 @@ Before final Release 1.1 merge:
 
 ---
 
-# 12. Release Exit Criteria
+# 12. Release Exit Criteria (Historical — All Met)
 
-Release 1.1 may move to production when:
+Release 1.1 moved to production once the following were satisfied. All criteria below were met at release:
 
 - [x] No known functional release blocker exists.
 - [x] Core Release 1.1 development is complete.
@@ -534,16 +539,16 @@ Release 1.1 may move to production when:
 - [x] Journey Passport approved.
 - [x] Journey Director core flow approved.
 - [x] Hero CTA polish approved.
-- [ ] Local production build passes.
-- [ ] Final cross-browser sanity completes.
-- [ ] Final real-device sanity completes.
-- [ ] Release Candidate is deployed to Vercel.
-- [ ] Production-like sanity passes.
-- [ ] Product Owner final walkthrough completes.
-- [ ] Release documentation is finalized.
-- [ ] Accepted branches are consolidated.
-- [ ] Release tag is created and pushed.
-- [ ] Production deployment is verified.
+- [x] Local production build passes.
+- [x] Final cross-browser sanity completes.
+- [x] Final real-device sanity completes.
+- [x] Release Candidate is deployed to Vercel.
+- [x] Production-like sanity passes.
+- [x] Product Owner final walkthrough completes.
+- [x] Release documentation is finalized.
+- [x] Accepted branches are consolidated.
+- [x] Release tag is created and pushed.
+- [x] Production deployment is verified.
 
 ---
 
@@ -553,11 +558,15 @@ Release 1.1 may move to production when:
 
 **Functional Release Blockers:** 0
 
-**Functional QA Recommendation:** GO WITH MINOR OBSERVATIONS
+**Functional QA Recommendation (Gate-6):** GO WITH MINOR OBSERVATIONS — accepted by Product Owner
 
-**Current Phase:** Release Stabilisation / Release Candidate Preparation
+**Release Date:** 14 August 2026
 
-**Next Milestone:** Close RC-01 through RC-14 and approve production deployment.
+**Release Tag:** `v1.1.0`
+
+**Current Phase:** Release Closed
+
+**Next Milestone:** Release 1.2 Planning Complete / R1.2 Execution — see `docs/10-Backlog/RELEASE-1.2.md`.
 
 ---
 
@@ -572,3 +581,18 @@ From this point onward:
 - New features, visual enhancements and optimisation ideas should be added to the Release 1.2 backlog unless the Product Owner explicitly reclassifies them as release critical.
 
 This protects Release 1.1 from uncontrolled late-stage scope growth.
+
+---
+
+# 15. Release Closure
+
+Release 1.1 has been successfully deployed to production. All approved scope has been delivered, validated and accepted. Any future enhancements have been transferred to Release 1.2. Release 1.1 is now considered officially closed and forms the historical baseline for subsequent releases.
+
+Confirmed at closure:
+
+- ✅ Production deployment completed (`v1.1.0`, 14 August 2026).
+- ✅ Cross-browser validation completed (Chrome, Safari, Firefox).
+- ✅ Real-device validation completed (iPhone, Android, iPad).
+- ✅ Release 1.1 is officially closed.
+
+This document, together with `RELEASE-1.1-GO-LIVE-CHECKLIST.md`, `RELEASE-1.1-KNOWN-ISSUES.md`, `RELEASE-1.1-RELEASE-NOTES.md`, `RELEASE-1.1-SIGN-OFF.md` and `RELEASE-1.1-DECISION-LOG.md`, forms the permanent historical record of Release 1.1. Release 1.2 planning and execution now proceed under `docs/10-Backlog/RELEASE-1.2.md`.

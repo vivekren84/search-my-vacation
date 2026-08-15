@@ -9,11 +9,12 @@
 | Item | Value |
 |---|---|
 | Release | 1.1 |
-| Status | Release Candidate |
+| Status | Released |
 | Baseline | Release 1.0 (`v1.0.0`) |
 | Product Owner | Vivek |
 | Release Manager | Tiger |
 | Functional QA | Keerthi |
+| Closure Update | 15-Aug-2026 — reviewed for factual consistency at release closure; "Known Observations" updated to reflect completed validation (EBC R1.1-001) |
 
 ---
 
@@ -234,13 +235,13 @@ No functional release blockers were identified.
 
 # Known Observations
 
-At the time of preparing these Release Notes:
+At release:
 
-- Final production build confirmation will be performed locally.
-- Final cross-browser validation remains part of release readiness.
-- Final real-device validation remains part of release readiness.
+- Production build confirmation was performed locally.
+- Final cross-browser validation was completed.
+- Final real-device validation was completed.
 
-No known functional release blockers exist.
+No known functional release blockers were identified. See `RELEASE-1.1-KNOWN-ISSUES.md` for the resolved historical record of these observations.
 
 ---
 

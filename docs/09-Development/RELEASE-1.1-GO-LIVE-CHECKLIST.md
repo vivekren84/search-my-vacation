@@ -9,19 +9,22 @@
 | Item | Value |
 |---|---|
 | Document | Release 1.1 Go-Live Checklist |
-| Version | 1.0 |
-| Status | Release Candidate |
+| Version | 1.1 |
+| Status | Released — Execution Complete (Historical Record) |
 | Product Owner | Vivek |
 | Release Manager | Tiger |
-| Purpose | Operational checklist for deploying Release 1.1 safely to production |
+| Purpose | Historical execution record of the Release 1.1 production deployment |
+| Closure Update | 15-Aug-2026 — converted from a pre-deployment checklist into a completed execution record (EBC R1.1-001) |
 
 ---
 
 # Overview
 
-This checklist is intended to be followed on the day of the Release 1.1 deployment.
+This checklist was followed on the day of the Release 1.1 deployment, **14 August 2026**.
 
-Every item should be explicitly verified before marking the release complete.
+Every item below was explicitly verified before the release was marked complete. This document is retained as the historical execution record of that deployment — it is no longer a pending checklist.
+
+**Execution note:** Production deployment completed successfully, and post-deployment smoke testing (Phase 10) was completed with no customer-impacting issues reported.
 
 ---
 
@@ -29,17 +32,17 @@ Every item should be explicitly verified before marking the release complete.
 
 ## Product
 
-- [ ] Product Owner approval received
-- [ ] Functional QA approval received
-- [ ] Release Manager approval received
+- [x] Product Owner approval received
+- [x] Functional QA approval received
+- [x] Release Manager approval received
 
 ## Documentation
 
-- [ ] Master Tracker finalized
-- [ ] Release Notes finalized
-- [ ] Known Issues finalized
-- [ ] Decision Log finalized
-- [ ] Release 1.2 Roadmap finalized
+- [x] Master Tracker finalized
+- [x] Release Notes finalized
+- [x] Known Issues finalized
+- [x] Decision Log finalized
+- [x] Release 1.2 Roadmap finalized
 
 ---
 
@@ -47,20 +50,20 @@ Every item should be explicitly verified before marking the release complete.
 
 ## Git
 
-- [ ] Working tree clean
-- [ ] No Git lock files present
-- [ ] All approved R1.1 branches merged
-- [ ] Release branch verified
-- [ ] Main branch updated
-- [ ] Remote synchronized
+- [x] Working tree clean
+- [x] No Git lock files present
+- [x] All approved R1.1 branches merged
+- [x] Release branch verified
+- [x] Main branch updated
+- [x] Remote synchronized
 
 ## Build
 
-- [ ] npm install completed successfully
-- [ ] npm run lint passed
-- [ ] npm run typecheck passed
-- [ ] npm run build passed
-- [ ] No unexpected warnings
+- [x] npm install completed successfully
+- [x] npm run lint passed
+- [x] npm run typecheck passed
+- [x] npm run build passed
+- [x] No unexpected warnings
 
 ---
 
@@ -68,18 +71,18 @@ Every item should be explicitly verified before marking the release complete.
 
 ## Environment
 
-- [ ] Production environment variables verified
-- [ ] Supabase configuration verified
-- [ ] Resend configuration verified
-- [ ] Google Reviews URL verified
-- [ ] Social links verified
+- [x] Production environment variables verified
+- [x] Supabase configuration verified
+- [x] Resend configuration verified
+- [x] Google Reviews URL verified
+- [x] Social links verified
 
 ## Hosting
 
-- [ ] Vercel deployment completed
-- [ ] Deployment successful
-- [ ] SSL active
-- [ ] Production URL accessible
+- [x] Vercel deployment completed
+- [x] Deployment successful
+- [x] SSL active
+- [x] Production URL accessible
 
 ---
 
@@ -87,14 +90,14 @@ Every item should be explicitly verified before marking the release complete.
 
 ## Homepage
 
-- [ ] Hero renders correctly
-- [ ] Journey Invitations functional
-- [ ] Featured Destinations functional
-- [ ] Traveller Stories (3 cards)
-- [ ] Trust Strip visible
-- [ ] Premium medallions visible
-- [ ] Travel Inspiration visible
-- [ ] Footer verified
+- [x] Hero renders correctly
+- [x] Journey Invitations functional
+- [x] Featured Destinations functional
+- [x] Traveller Stories (3 cards)
+- [x] Trust Strip visible
+- [x] Premium medallions visible
+- [x] Travel Inspiration visible
+- [x] Footer verified
 
 ---
 
@@ -102,45 +105,45 @@ Every item should be explicitly verified before marking the release complete.
 
 Verify all entry paths:
 
-- [ ] Direct
-- [ ] Destination
-- [ ] Experience
-- [ ] Journey Invitation
-- [ ] Travel Inspiration
-- [ ] Mood (Journey Invitation) pre-population verified
+- [x] Direct
+- [x] Destination
+- [x] Experience
+- [x] Journey Invitation
+- [x] Travel Inspiration
+- [x] Mood (Journey Invitation) pre-population verified
 
 Verify:
 
-- [ ] Review page
-- [ ] Mobile validation
-- [ ] Submission
+- [x] Review page
+- [x] Mobile validation
+- [x] Submission
 
 ---
 
 ## Journey Director
 
-- [ ] Recommendations generated
-- [ ] Compatibility reasoning visible
-- [ ] No unsupported destinations
+- [x] Recommendations generated
+- [x] Compatibility reasoning visible
+- [x] No unsupported destinations
 
 ---
 
 ## Traveller Stories
 
-- [ ] Listing page
-- [ ] Detail pages
-- [ ] Multiple journeys
-- [ ] Images
-- [ ] Google Reviews CTA
+- [x] Listing page
+- [x] Detail pages
+- [x] Multiple journeys
+- [x] Images
+- [x] Google Reviews CTA
 
 ---
 
 ## Contact
 
-- [ ] Callback Request
-- [ ] Contact details
-- [ ] WhatsApp
-- [ ] Footer social links
+- [x] Callback Request
+- [x] Contact details
+- [x] WhatsApp
+- [x] Footer social links
 
 ---
 
@@ -148,40 +151,40 @@ Verify:
 
 Desktop
 
-- [ ] Chrome
-- [ ] Safari
-- [ ] Firefox
+- [x] Chrome
+- [x] Safari
+- [x] Firefox
 
 Tablet
 
-- [ ] iPad
+- [x] iPad
 
 Mobile
 
-- [ ] Android
-- [ ] iPhone
+- [x] Android
+- [x] iPhone
 
 ---
 
 # Phase 6 – SEO & Metadata
 
-- [ ] Homepage metadata
-- [ ] Traveller Stories metadata
-- [ ] Canonical URLs
-- [ ] Open Graph tags
-- [ ] Favicon
-- [ ] robots.txt
-- [ ] sitemap.xml
+- [x] Homepage metadata
+- [x] Traveller Stories metadata
+- [x] Canonical URLs
+- [x] Open Graph tags
+- [x] Favicon
+- [x] robots.txt
+- [x] sitemap.xml
 
 ---
 
 # Phase 7 – Performance
 
-- [ ] Homepage load
-- [ ] Images optimized
-- [ ] Browser console clean
-- [ ] No broken links
-- [ ] No layout regressions
+- [x] Homepage load
+- [x] Images optimized
+- [x] Browser console clean
+- [x] No broken links
+- [x] No layout regressions
 
 ---
 
@@ -189,22 +192,22 @@ Mobile
 
 Confirm:
 
-- [ ] Branding
-- [ ] Copy
-- [ ] Metrics
-- [ ] Trust Strip
-- [ ] Google Reviews opens correctly in a new tab
-- [ ] Traveller Stories
-- [ ] Homepage
+- [x] Branding
+- [x] Copy
+- [x] Metrics
+- [x] Trust Strip
+- [x] Google Reviews opens correctly in a new tab
+- [x] Traveller Stories
+- [x] Homepage
 
 ---
 
 # Phase 9 – Release
 
-- [ ] Production deployment approved
-- [ ] Release tag created
-- [ ] Release pushed
-- [ ] Deployment verified
+- [x] Production deployment approved
+- [x] Release tag created
+- [x] Release pushed
+- [x] Deployment verified
 
 ---
 
@@ -212,12 +215,12 @@ Confirm:
 
 Within the first hour after deployment:
 
-- [ ] Homepage accessible
-- [ ] Journey Passport working
-- [ ] Journey Director working
-- [ ] Traveller Stories working
-- [ ] Contact working
-- [ ] No customer issues reported
+- [x] Homepage accessible
+- [x] Journey Passport working
+- [x] Journey Director working
+- [x] Traveller Stories working
+- [x] Contact working
+- [x] No customer issues reported
 
 ---
 
@@ -239,15 +242,15 @@ Rollback should be initiated if:
 
 | Item | Status |
 |---|---|
-| Product Approval | |
-| QA Approval | |
-| Release Approval | |
-| Deployment | |
-| Smoke Test | |
-| Final Outcome | |
+| Product Approval | ✅ Approved |
+| QA Approval | ✅ Approved |
+| Release Approval | ✅ Approved |
+| Deployment | ✅ Successful |
+| Smoke Test | ✅ Passed |
+| Final Outcome | ✅ Released |
 
 ---
 
 # Final Decision
 
-Release 1.1 is approved for production only after every mandatory checklist item has been successfully completed or explicitly accepted by the Product Owner.
+Release 1.1 was approved for production after every mandatory checklist item was successfully completed and accepted by the Product Owner. Release 1.1 was deployed to production on 14 August 2026 (`v1.1.0`) and this checklist now stands as the historical execution record of that deployment.
