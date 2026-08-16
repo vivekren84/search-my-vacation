@@ -9,17 +9,17 @@
 | Item | Value |
 |---|---|
 | Document | Release 1.2 Master Planning & Tracking Document |
-| Version | 1.3 |
-| Status | Draft — Active Planning |
+| Version | 1.6 |
+| Status | Draft — Active Implementation |
 | Origin EBC | R1.2-001 (see Document Change History below for every EBC that has updated this document) |
 | Product Owner | Vivek |
 | Release Manager | Tiger |
 | Purpose | Single source of truth for Release 1.2 planning, execution, QA, decision tracking and release readiness |
 | Baseline | Release 1.1 — `v1.1.0` |
 | Related | `docs/10-Backlog/RELEASE-1.2-BACKLOG.md` (source roadmap ideas), `docs/09-Development/PROJECT-HISTORY.md`, `docs/10-Backlog/RELEASE-1.1-MASTER-TRACKER.md` (R1.1 precedent) |
-| Last Updated | 15 August 2026 |
+| Last Updated | 16 August 2026 |
 
-**EBC Numbering Convention:** Release 1.2 EBCs use a release-based numbering sequence rather than the legacy `EBC-0xx` numbering used through Release 1.1. **R1.2-001** created this document; **R1.2-002** (Journey Passport OTP Verification planning) is the second card in the sequence; **R1.2-003** (Homepage Simplification & Destination Intelligence Enhancements planning) is the third. Future Release 1.2 implementation cards continue sequentially — `R1.2-004`, `R1.2-005`, and so on. This convention applies to all future Release 1.2 EBC references; it does not renumber or otherwise affect existing `EBC-0xx` cards from Release 1.0/1.1.
+**EBC Numbering Convention:** Release 1.2 EBCs use a release-based numbering sequence rather than the legacy `EBC-0xx` numbering used through Release 1.1. **R1.2-001** created this document; **R1.2-002** added Journey Passport OTP Verification planning; **R1.2-003** added Homepage Simplification and Destination Intelligence Enhancements planning; **R1.2-004** implemented the Homepage Mood Experience refinement; **R1.2-005** completed the Mood Card Luxury Balance Pass; **R1.2-006** completed the Sri Traveller Experience Review; **R1.2-007** completed Workstream 2 Product Analysis; **R1.2-008** consolidated the tracker as Version 1.5; **R1.2-009** completed Workstream 2 UX Implementation; **R1.2-010** completed Workstream 2 Engineering Completion; **R1.2-011** completed Workstream 2 Functional QA; **R1.2-012** completed Workstream 2 Traveller Experience Validation; and **R1.2-013** closed Workstream 2 and consolidated the tracker as Version 1.6. Future Release 1.2 cards continue sequentially from `R1.2-014`. This convention does not renumber or otherwise affect existing `EBC-0xx` cards from Release 1.0/1.1.
 
 ---
 
@@ -31,7 +31,16 @@
 | 1.1 | 15-Aug-2026 | Rad | R1.2-001 | Adopted the release-based EBC numbering convention (R1.2-001 onward); moved the Change Log here as Document Change History, immediately after Document Information; added a new Release Milestones section (Section 4), renumbering all subsequent sections; added task R1.2-05.17 (phone number normalization to E.164); added tasks R1.2-06.12 and R1.2-06.13 (remove an individual selected destination; preserve selection order); added decision DEC-R1.2-005 (multi-destination selection) and open decision OPEN-R1.2-005 (geographic dataset maintenance strategy); total tracked task count updated from 84 to 87. |
 | 1.2 | 15-Aug-2026 | Rad | R1.2-002 | Added the Journey Passport OTP Verification scope to Workstream 5 (renamed to International Phone Number & OTP Verification), including updated Goal, Business Value and Acceptance Criteria; appended 18 new tasks R1.2-05.18–R1.2-05.35; added decision DEC-R1.2-006 (Journey Passport-only OTP policy), open decision OPEN-R1.2-006 (future OTP expansion), risk RISK-R1.2-010 (OTP delivery/outage risk) and a Future Release Candidates entry (OTP for additional lead-capture forms); added a WS5→WS4 dependency note; total tracked task count updated from 87 to 105. Documentation only — no application code, architecture or configuration changed. |
 | 1.3 | 15-Aug-2026 | Rad | R1.2-003 | Added homepage simplification decisions (DEC-R1.2-007 remove Escape mood card, DEC-R1.2-008 rename Memory Maker/Family to Memory Makers and remap it to Photography, DEC-R1.2-009 retire Experiences from the homepage and primary navigation without deleting the page or its URL) and destination intelligence decisions (DEC-R1.2-010 weighted Primary/Secondary/Tertiary Journey and Memory destination preference model as the preferred Journey Director recommendation model; DEC-R1.2-011 Journey Passport traveller name field to prevent numeric characters); renamed Workstream 3 to Destination Intelligence and added 19 new tasks across Workstreams 1–4 (R1.2-01.12–01.15, R1.2-02.10–02.13, R1.2-03.07–03.15 including 3 Wildlife destination tasks, R1.2-04.10–04.11); updated Goal/Business Value/Acceptance Criteria for Workstreams 1–4; resolved and retired OPEN-R1.2-001 and OPEN-R1.2-002 (superseded by DEC-R1.2-009) and closed RISK-R1.2-002; added RISK-R1.2-011 (weighted destination preference model's impact on Journey Director recommendation output) and a Future Release Candidates entry (Destination Intelligence expansion metadata); total tracked task count updated from 105 to 124. Documentation only — no application code, architecture, configuration or Journey Director logic changed. |
-| 1.4 | 16-Aug-2026 | Tiger | R1.2-003 / R1.2-004 | Updated Workstream 1 to reflect completed Homepage Premium Visual Refinement implementation, including Trust Strip premium redesign, Mood Card refinement, implementation status, validation results and revised release progress. |
+| 1.4 | 16-Aug-2026 | Rad | R1.2-004 | Implemented the Workstream 1 Homepage Mood Experience refinement: completed the Trust Strip premium redesign and initial Mood Card treatment, removed Escape, renamed and remapped Memory Makers, and rebalanced the five-card homepage layout. Workstream 1 implementation moved through engineering cleanup and functional validation. |
+| 1.4 | 16-Aug-2026 | Rad | R1.2-005 | Completed the Homepage Mood Cards Luxury Balance Pass, adopting the approved champagne-glass treatment to retain premium warmth while protecting readability against the Golden Hour Hero. Affected Workstream 1 only; no release scope change. |
+| 1.4 | 16-Aug-2026 | Sri | R1.2-006 | Completed the independent Traveller Experience Review for Workstream 1. Accepted observations were recorded for Memory Makers recognition, desktop hover affordance and mobile first-fold visibility; no release-blocking defect was identified. |
+| 1.4 | 16-Aug-2026 | Arjun | R1.2-007 | Completed Workstream 2 Product Analysis covering Experiences/Journey Mood overlap, taxonomy, navigation, SEO, redirects, Journey Passport and homepage implications. Analysis tasks were closed, implementation requirements were made ready, and the Product Owner approved the resulting temporary public-retirement decision recorded as DEC-R1.2-012 without changing release scope. |
+| 1.5 | 16-Aug-2026 | Rad | R1.2-008 | Consolidated all approved Release 1.2 information through R1.2-007; reconciled dashboard, milestone, workstream, task, decision, dependency, checklist and observation status; added DEC-R1.2-012; and completed numbering and cross-reference QA. Affected Workstreams 1, 2 and 7. Documentation only. |
+| 1.5 | 16-Aug-2026 | Sophie | R1.2-009 | Implemented the approved Workstream 2 UX changes: removed the "Journey Invitations" section from the Homepage and the Experiences entry from Header and Footer navigation, extracting the removed section verbatim into a new, unimported `JourneyInvitations.tsx` component to preserve it for future reuse. No page or route deletion. Handed off to Rad for the guest-facing redirect. |
+| 1.5 | 16-Aug-2026 | Rad | R1.2-010 | Completed Workstream 2 engineering: added a temporary (307, non-permanent) guest redirect from `/experiences` to the Homepage via `next.config.ts`; confirmed by repository-wide search that no intentional internal link to Experiences remains anywhere in the live app; confirmed `JourneyInvitations.tsx` is preserved and unimported. ESLint, TypeScript and production build all passed. No page, route or implementation was deleted. |
+| 1.5 | 16-Aug-2026 | Keerthi | R1.2-011 | Completed Workstream 2 Functional QA. 24 of 25 checks passed with 0 defects found; 1 check (a dedicated tablet-width responsive pass) was blocked by test-tooling limitations rather than a product issue, with partial incidental evidence showing no breakage. Confirmed no normal guest interaction reaches the retired Experiences feature. Recommendation: PASS. |
+| 1.5 | 16-Aug-2026 | Sri | R1.2-012 | Completed Workstream 2 independent Traveller Experience Validation. Found the retirement makes the homepage read as simpler and more complete, with a seamless Hero-to-Destinations transition and no sense that anything is missing. No material improvements identified. Recommendation: Approve for Workstream 2 Closure. |
+| 1.6 | 16-Aug-2026 | Rad | R1.2-013 | Closed Workstream 2 following completed Product Analysis (R1.2-007), UX Implementation (R1.2-009), Engineering Completion (R1.2-010), Functional QA (R1.2-011) and Traveller Experience Validation (R1.2-012). Reconciled dashboard, milestone, workstream, task, dependency, checklist and programme-metric status; verified the decision log and all numbering/cross-references remain consistent. Workstream 3 (Destination Intelligence) is now the next active implementation stream. Documentation only — no application code, routing or Product Decisions were changed. |
 
 ---
 
@@ -73,7 +82,7 @@ Release 1.2 deepens the traveller experience established in Release 1.1 through 
 
 ## Current Status
 
-**Implementation in Progress.** Release 1.2 planning is complete. Workstream 1 has completed its initial implementation, with the Homepage Premium Visual Refinement (including the Trust Strip redesign) finished and validated. Remaining workstreams continue according to the Release 1.2 roadmap.
+**Implementation in Progress.** Workstream 1 is ✅ Complete, including the Trust Strip redesign, Mood Card refinement, Luxury Balance Pass, functional QA, Traveller Experience Review and Business Acceptance. Workstream 2 is now also ✅ Complete: Product Analysis (R1.2-007), UX Implementation (R1.2-009), Engineering Completion (R1.2-010), Functional QA (R1.2-011) and Traveller Experience Validation (R1.2-012) have all closed with no open defects, and the Product Owner has approved Workstream 2 for closure. Workstream 3 (Destination Intelligence) is now the next active implementation stream. Remaining workstreams continue according to the Release 1.2 roadmap.
 
 ## Planned Release Sequence
 
@@ -93,7 +102,7 @@ Release
 Retrospective
 ```
 
-Each workstream and task in this document moves through this sequence independently — see Section 13 for status definitions, and Section 4 for the release-level milestone checkpoints that track overall progress through this sequence.
+Each workstream and task in this document moves through this sequence independently — see Section 14 for status definitions, and Section 4 for the release-level milestone checkpoints that track overall progress through this sequence.
 
 ## Release Owner
 
@@ -103,11 +112,11 @@ Tiger (Programme & Delivery Lead) — owns this document and consolidates delive
 
 ## Last Updated
 
-15 August 2026
+16 August 2026
 
 ## Document Version
 
-1.3
+1.6
 
 ---
 
@@ -132,12 +141,15 @@ These principles apply to every product, UX, architecture, engineering, content 
 
 | Metric | Current Value | Notes |
 |---|---|---|
-| Overall Progress | Implementation in Progress | We have begun implementation. I would avoid percentage estimates for now. |
-| Number of Workstreams | 8 | All approved; see Section 5 |
+| Overall Progress | Implementation in Progress | 2 of 8 workstreams are ✅ Complete (Workstream 1, Workstream 2); Workstream 3 (Destination Intelligence) is now the next active implementation stream. |
+| Number of Workstreams | 8 | All are approved release scope; individual lifecycle statuses are recorded in Section 5. |
+| Number of Completed Workstreams | 2 | Workstream 1 and Workstream 2 are both Complete. |
 | Number of Open Decisions | 4 | See Section 8 (2 further decisions — OPEN-R1.2-001, OPEN-R1.2-002 — retired/resolved; see Section 8's Retired sub-list) |
-| Number of Approved Decisions | 11 | See Section 7 |
-| Number of EBCs | 3 | R1.2-001 (created this document), R1.2-002 (added Journey Passport OTP Verification scope), R1.2-003 (added homepage simplification and destination intelligence enhancements). Future Release 1.2 EBCs continue the sequence R1.2-004, R1.2-005, ... |
-| Number of Completed Items | 3 (Workstream 1 Trust Strip tasks) | R1.2-01.16, 01.17 and 01.18 are marked Complete. |
+| Number of Approved Decisions | 12 | DEC-R1.2-001 through DEC-R1.2-012; see Section 7. No new decisions were introduced by Workstream 2 closure. |
+| Number of EBCs | 13 | R1.2-001 through R1.2-013; see Document Change History. |
+| Number of Completed EBCs | 13 | R1.2-001 through R1.2-013 are complete as of this consolidation. |
+| Number of Completed Tasks | 33 of 128 | All 19 Workstream 1 tasks, all 13 Workstream 2 tasks (R1.2-02.01–02.13, analysis and implementation) and R1.2-07.05 are Complete. |
+| Task Status Breakdown | 33 Complete · 0 Approved · 95 Proposed (of 128) | Reconciled against Section 6 task tables; the 4 tasks that moved from Approved to Complete this update are R1.2-02.10–02.13. |
 | Number of Deferred Items | See Section 9 | Future Release Candidates carried from `RELEASE-1.2-BACKLOG.md` and R1.1 deferrals |
 | Overall Release State | **Implementation** | The release has moved beyond planning. |
 
@@ -147,15 +159,15 @@ These principles apply to every product, UX, architecture, engineering, content 
 
 # 4. Release Milestones
 
-This section tracks Release 1.2 against its top-level lifecycle checkpoints, independent of the task-level detail in Section 6. See Section 12 for the detailed release-readiness checklist and Section 13 for status meanings.
+This section tracks Release 1.2 against its top-level lifecycle checkpoints, independent of the task-level detail in Section 6. See Section 12 for the detailed release-readiness checklist and Section 14 for status meanings.
 
 | Milestone | Target Date | Status | Owner | Exit Criteria |
 |---|---|---|---|---|
 | Planning Complete | TBD | In Progress | Tiger | All 8 workstreams reach Approved status; Section 8 open decisions are resolved or explicitly carried forward as accepted risk |
 | Architecture Review | TBD | Not Started | Archie | Archie's assessment complete for Workstream 5 (phone storage format and OTP verification architecture) and Workstream 6 (dataset/validation architecture) per Project Instructions Section 5 |
-| Implementation Complete | TBD | Not Started | Rad | All Workstream 1–6 tasks reach Complete or Ready for QA |
-| Functional QA | TBD | Not Started | Keerthi | Workstream 8 functional and regression validation complete |
-| Traveller Experience QA | TBD | Not Started | Sri | Independent traveller-experience validation complete |
+| Implementation Complete | TBD | In Progress | Rad | All Workstream 1–6 tasks reach Complete or Ready for QA (Workstream 1 and Workstream 2 are now Complete; Workstreams 3–6 remain Proposed) |
+| Functional QA | TBD | In Progress | Keerthi | Workstream 8 functional and regression validation complete; workstream-level Functional QA is complete for Workstream 1 and Workstream 2 (R1.2-011), recorded in Section 13 |
+| Traveller Experience QA | TBD | In Progress | Sri | Independent release-wide traveller-experience validation complete; the completed Workstream 1 and Workstream 2 (R1.2-012) reviews are recorded in Section 13 |
 | Release Candidate | TBD | Not Started | Tiger | Release Checklist (Section 12) Delivery and Quality items satisfied |
 | Production Release | TBD | Not Started | Vivek | Business Owner approval received; production deployment verified |
 | Retrospective Complete | TBD | Not Started | Tiger | Workstream 7 retrospective and Lessons Learned captured; `PROJECT-HISTORY.md` updated |
@@ -184,7 +196,7 @@ Retrospective Complete
 
 # 5. Master Workstream Tracker
 
-Status values used below follow Section 13 (Status Definitions). All workstreams currently start at **Proposed** unless noted.
+Status values used below follow Section 14 (Status Definitions). Each workstream's current lifecycle status is recorded below.
 
 ## Workstream 1 — Homepage Premium Visual Refinement
 
@@ -193,13 +205,13 @@ Status values used below follow Section 13 (Status Definitions). All workstreams
 | Goal | Refine the Journey Mood cards' visual treatment for a more premium, hierarchical presentation while preserving the approved illustration style; simplify the mood card set by removing the Escape card and clarify the Memory Maker card's emotional intent. Refine the homepage's premium visual presentation through improved Journey Mood cards and a redesigned Trust Strip while preserving the approved Search My Vacation visual identity and homepage hierarchy. |
 | Business Value | Stronger first impression on the homepage; improved perceived quality without changing product structure; simplified homepage; reduced cognitive load; better emotional mapping between mood cards and Journey Passport intent; strengthen traveller trust; improve first impressions; increase perceived premium quality; improve homepage credibility |
 | Priority | P1 |
-| Status | In Progress |
-| Dependencies | None blocking; loosely coordinates with Workstream 2 if taxonomy changes affect card labelling; R1.2-01.15's homepage layout review should be coordinated with Workstream 2's R1.2-02.13 (both touch the same homepage layout following the Escape and Experiences removals) |
+| Status | Complete |
+| Dependencies | Complete; the former Workstream 2 taxonomy dependency was resolved by DEC-R1.2-009 and refined by DEC-R1.2-012. Workstream 2 is now also Complete; its homepage review (R1.2-02.13) preserved the accepted Workstream 1 visual baseline with no regression, confirmed by Rad's engineering validation (R1.2-010) and Sri's traveller experience validation (R1.2-012). |
 | Owner | Sophie (design direction), Rad (implementation) |
-| Risks | Palette/saturation changes could drift from approved brand system if not validated against `BRAND-AUDIT.md`; illustration rework could be mistaken for a full redesign |
-| Acceptance Criteria | Illustration style preserved; ivory/champagne palette applied; gold saturation reduced; visual hierarchy improved; Hero remains the dominant homepage element; hover and selected states validated; desktop/mobile reviewed; accessibility reviewed; Sri traveller validation complete; Escape mood card removed (DEC-R1.2-007); "Memory Maker / Family" renamed to "Memory Makers" and its Journey Passport mapping updated from Culture & Heritage to Photography (DEC-R1.2-008); homepage layout reviewed for premium spacing and visual balance after the Escape card's removal; rust Strip redesigned using premium travel imagery; Existing layout and typography preserved; Homepage visual consistency maintained across Hero, Mood Cards and Trust Strip; Prototype imagery approved and production-safe assets identified before release. |
+| Risks | No open Workstream 1 defect. Accepted post-implementation observations are retained in Section 13 and do not constitute release debt or a blocker. Future visual changes must preserve the approved champagne-glass baseline and `BRAND-AUDIT.md` guardrails. |
+| Acceptance Criteria | Complete: illustration style preserved; champagne-glass palette and reduced gold saturation applied; visual hierarchy improved; Hero remains dominant; hover, selected, desktop/mobile, accessibility and responsive behaviour validated; Sri Traveller Experience Review complete; Escape removed (DEC-R1.2-007); "Memory Maker / Family" renamed to "Memory Makers" and remapped from Culture & Heritage to Photography (DEC-R1.2-008); five-card homepage layout rebalanced; Trust Strip redesigned using approved premium travel imagery; existing layout and typography preserved; homepage consistency maintained across Hero, Mood Cards and Trust Strip; Business Acceptance received. |
 
-Tasks: R1.2-01.01 through R1.2-01.15 (Section 6.1).
+Tasks: R1.2-01.01 through R1.2-01.19 (Section 6.1).
 
 ---
 
@@ -207,16 +219,16 @@ Tasks: R1.2-01.01 through R1.2-01.15 (Section 6.1).
 
 | Field | Value |
 |---|---|
-| Goal | Resolve conceptual overlap between "Experiences" and "Journey Moods" so travellers are not presented with two similar, competing entry points; retire Experiences as a distinct homepage/navigation concept per the Product Owner's approved decision |
+| Goal | Establish Journey Mood Cards and Journey Passport as the single traveller discovery model, eliminating competing public entry points while preserving the Experiences implementation, assets and code for future redesign and reuse (DEC-R1.2-012). |
 | Business Value | Reduced traveller confusion; cleaner information architecture; stronger homepage narrative; simplified homepage; reduced cognitive load |
 | Priority | P1 |
-| Status | Proposed |
-| Dependencies | Findings may affect Workstream 1 (card labelling), Workstream 3 (which concept Featured Destinations link into), and homepage layout; R1.2-02.13's homepage layout review should be coordinated with Workstream 1's R1.2-01.15 |
-| Owner | Arjun (taxonomy/requirements analysis), Sophie (navigation/homepage UX implications), Archie (SEO/redirect technical impact), Rad (implementation) |
-| Risks | The taxonomy question itself is resolved (DEC-R1.2-009 — see Section 7); residual risk is limited to correctly preserving the Experiences page/route for future reuse while removing discoverability, and to homepage layout regressions after removal |
-| Acceptance Criteria | Overlap and duplicate concepts identified and documented; taxonomy review complete; navigation, SEO, redirect, Passport and homepage implications documented; all resulting open product decisions explicitly logged in Section 8; Experiences section removed from the homepage and from primary navigation; Experiences page implementation and routing retained (no page or URL deletion) with discoverability removed, preserving it for future redesign/reuse; homepage visual hierarchy reviewed after removal |
+| Status | Complete |
+| Dependencies | Complete; no longer blocks downstream work. R1.2-02.13's homepage-hierarchy review preserved the completed Workstream 1 visual baseline (confirmed by R1.2-010 and R1.2-012). Workstream 3 (Destination Intelligence) is now unblocked and is the next active implementation stream, proceeding on Journey Mood Cards and Journey Passport as the approved discovery model. |
+| Owner | Arjun (taxonomy/requirements analysis), Sophie (navigation/homepage UX implementation), Rad (engineering implementation and validation), Keerthi (functional QA), Sri (traveller experience validation) |
+| Risks | No open Workstream 2 defect. Keerthi's Functional QA (R1.2-011) found 0 defects across 25 checks (24 Passed, 1 Blocked by a test-tooling limitation rather than a product issue — see OBS-R1.2-006 in Section 13). Sri's Traveller Experience Validation (R1.2-012) found no traveller-facing regression and recommended approval for closure. Future re-introduction of Experiences (should a redesign occur) must continue to preserve the Journey Mood Cards / Journey Passport discovery model and the `BRAND-AUDIT.md` guardrails. |
+| Acceptance Criteria | Complete: overlap, duplicate concepts, taxonomy, navigation, SEO, redirect, Journey Passport and homepage implications documented (R1.2-007); Homepage entry and Experiences section removed (R1.2-02.10); Header and Footer navigation entries removed (R1.2-02.11); Experiences page/route retained with discoverability removed via a temporary, non-permanent guest redirect to the Homepage (R1.2-02.12); homepage hierarchy reviewed after removal with no regression (R1.2-02.13); Experiences implementation, assets, code and future reusability preserved (`JourneyInvitations.tsx`, `app/experiences/page.tsx`); Journey Mood Cards and Journey Passport confirmed as the single public traveller discovery model; independent Functional QA passed (R1.2-011); independent Traveller Experience Validation passed (R1.2-012); Product Owner approved Workstream 2 for closure. |
 
-Tasks: R1.2-02.01 through R1.2-02.13 (Section 6.2).
+Tasks: R1.2-02.01 through R1.2-02.13 (Section 6.2) — all Complete.
 
 ---
 
@@ -305,7 +317,7 @@ Tasks: R1.2-06.01 through R1.2-06.13 (Section 6.6).
 | Goal | Keep release governance documentation current throughout R1.2 and complete it before release close |
 | Business Value | Preserves institutional memory; enables a clean, evidence-based release decision |
 | Priority | P1 |
-| Status | Proposed |
+| Status | In Progress |
 | Dependencies | Depends on all other workstreams reaching a stable state before final versions (retrospective, release notes) can be written; can begin in parallel as a living draft |
 | Owner | Tiger |
 | Risks | Documentation debt tends to accumulate if deferred to the end of the release, as noted in the R1.0 and R1.1 Lessons Learned |
@@ -338,49 +350,49 @@ Each task carries a unique ID in the form `R1.2-<workstream>.<task>`. Tables are
 
 Workstream-level Acceptance Criteria are captured once in Section 5 rather than repeated per row; the **Notes** column below flags any task-specific acceptance detail that isn't obvious from the task name.
 
-Status values: Proposed / Under Discussion / Approved / In Progress / Ready for QA / Complete / Deferred / Cancelled (Section 13).
+Status values: Proposed / Under Discussion / Approved / In Progress / Ready for QA / Complete / Deferred / Cancelled (Section 14).
 
 ## 6.1 Workstream 1 — Premium Mood Card Visual Refinement
 
 | ID | Task | Priority | Status | Owner | Dependencies | Notes |
 |---|---|---|---|---|---|---|
-| R1.2-01.01 | Preserve existing illustration style — audit current mood card illustrations against approved style guide | P1 | Proposed | Sophie | — | Baseline check before any change |
-| R1.2-01.02 | Apply ivory/champagne palette to mood card backgrounds | P1 | Proposed | Sophie / Rad | 01.01 | Must stay within `BRAND-AUDIT.md` guardrails |
-| R1.2-01.03 | Reduce gold saturation across mood card treatment | P1 | Proposed | Sophie / Rad | 01.02 | |
-| R1.2-01.04 | Improve visual hierarchy within mood cards | P1 | Proposed | Sophie / Rad | 01.02, 01.03 | |
-| R1.2-01.05 | Confirm Hero remains the dominant visual element after refinement | P1 | Proposed | Sophie | 01.04 | Non-negotiable brand guardrail |
-| R1.2-01.06 | Illustration QA against brand and quality standards | P1 | Proposed | Keerthi | 01.01–01.05 | |
-| R1.2-01.07 | Hover-state review across mood cards | P2 | Proposed | Keerthi | 01.06 | |
-| R1.2-01.08 | Selected-state review across mood cards | P2 | Proposed | Keerthi | 01.06 | |
-| R1.2-01.09 | Desktop/mobile visual review of refined mood cards | P1 | Proposed | Keerthi | 01.06 | |
-| R1.2-01.10 | Accessibility review (contrast, reduced motion, focus states) | P1 | Proposed | Keerthi | 01.06 | |
-| R1.2-01.11 | Traveller validation of refined mood card experience | P1 | Proposed | Sri | 01.07–01.10 | Independent of Keerthi's functional QA |
-| R1.2-01.12 | Remove the Escape mood card | P1 | Proposed | Sophie / Rad | 01.01–01.05 | Per DEC-R1.2-007 — no strong Journey Passport mapping exists; current Tropical Escape mapping is misleading |
-| R1.2-01.13 | Rename "Memory Maker / Family" mood card to "Memory Makers" | P1 | Proposed | Sophie | 01.12 | Per DEC-R1.2-008 |
-| R1.2-01.14 | Update Journey Passport mapping for Memory Makers from Culture & Heritage to Photography | P1 | Proposed | Arjun / Rad | 01.13 | Per DEC-R1.2-008 |
-| R1.2-01.15 | Review homepage layout after removing the Escape card | P1 | Proposed | Sophie | 01.12 | Maintain premium spacing and visual balance; coordinate with R1.2-02.13 |
-| R1.2-01.16 | Redesign Trust Strip visual treatment using premium travel imagery | P1 | Complete | Sophie |
-| R1.2-01.17 | Replace medallion icons with premium photographic assets while preserving layout | P1 | Complete | Sophie | 
-| R1.2-01.18 | Validate responsive behaviour, build performance and visual consistency | P1 | Complete | Sophie | 
-| R1.2-01.19 | Replace prototype imagery with production-approved/licensed assets before release | P1 | Proposed | Sophie | 
+| R1.2-01.01 | Preserve existing illustration style — audit current mood card illustrations against approved style guide | P1 | Complete | Sophie | — | Baseline check before any change |
+| R1.2-01.02 | Apply ivory/champagne palette to mood card backgrounds | P1 | Complete | Sophie / Rad | 01.01 | Must stay within `BRAND-AUDIT.md` guardrails |
+| R1.2-01.03 | Reduce gold saturation across mood card treatment | P1 | Complete | Sophie / Rad | 01.02 | |
+| R1.2-01.04 | Improve visual hierarchy within mood cards | P1 | Complete | Sophie / Rad | 01.02, 01.03 | |
+| R1.2-01.05 | Confirm Hero remains the dominant visual element after refinement | P1 | Complete | Sophie | 01.04 | Non-negotiable brand guardrail |
+| R1.2-01.06 | Illustration QA against brand and quality standards | P1 | Complete | Keerthi | 01.01–01.05 | |
+| R1.2-01.07 | Hover-state review across mood cards | P2 | Complete | Keerthi | 01.06 | |
+| R1.2-01.08 | Selected-state review across mood cards | P2 | Complete | Keerthi | 01.06 | |
+| R1.2-01.09 | Desktop/mobile visual review of refined mood cards | P1 | Complete | Keerthi | 01.06 | |
+| R1.2-01.10 | Accessibility review (contrast, reduced motion, focus states) | P1 | Complete | Keerthi | 01.06 | |
+| R1.2-01.11 | Traveller validation of refined mood card experience | P1 | Complete | Sri | 01.07–01.10 | Independent of Keerthi's functional QA |
+| R1.2-01.12 | Remove the Escape mood card | P1 | Complete | Sophie / Rad | 01.01–01.05 | Per DEC-R1.2-007 — no strong Journey Passport mapping exists; current Tropical Escape mapping is misleading |
+| R1.2-01.13 | Rename "Memory Maker / Family" mood card to "Memory Makers" | P1 | Complete | Sophie | 01.12 | Per DEC-R1.2-008 |
+| R1.2-01.14 | Update Journey Passport mapping for Memory Makers from Culture & Heritage to Photography | P1 | Complete | Arjun / Rad | 01.13 | Per DEC-R1.2-008 |
+| R1.2-01.15 | Review homepage layout after removing the Escape card | P1 | Complete | Sophie | 01.12 | Maintain premium spacing and visual balance; coordinate with R1.2-02.13 |
+| R1.2-01.16 | Redesign Trust Strip visual treatment using premium travel imagery | P1 | Complete | Sophie | — | |
+| R1.2-01.17 | Replace medallion icons with premium photographic assets while preserving layout | P1 | Complete | Sophie | 01.16 | |
+| R1.2-01.18 | Validate responsive behaviour, build performance and visual consistency | P1 | Complete | Sophie | 01.16, 01.17 | |
+| R1.2-01.19 | Replace prototype imagery with production-approved/licensed assets before release | P1 | Complete | Sophie | 01.16, 01.17 | |
 
 ## 6.2 Workstream 2 — Experiences vs Journey Mood Rationalisation
 
 | ID | Task | Priority | Status | Owner | Dependencies | Notes |
 |---|---|---|---|---|---|---|
-| R1.2-02.01 | Overlap review between Experiences and Journey Moods | P1 | Proposed | Arjun | — | |
-| R1.2-02.02 | Taxonomy review of both concepts | P1 | Proposed | Arjun | 02.01 | |
-| R1.2-02.03 | Navigation implications assessment | P1 | Proposed | Sophie | 02.02 | |
-| R1.2-02.04 | Identify duplicate concepts | P1 | Proposed | Arjun | 02.01 | |
-| R1.2-02.05 | SEO considerations assessment | P2 | Proposed | Archie | 02.02 | Only material if routes/taxonomy change |
-| R1.2-02.06 | Redirect considerations assessment | P2 | Proposed | Archie | 02.05 | |
-| R1.2-02.07 | Journey Passport implications assessment | P1 | Proposed | Arjun | 02.02 | |
-| R1.2-02.08 | Homepage implications assessment | P1 | Proposed | Sophie | 02.02, 02.03 | |
-| R1.2-02.09 | Document and route open product decisions to Product Owner | P1 | Proposed | Tiger | 02.01–02.08 | Feeds Section 8 |
-| R1.2-02.10 | Remove Experiences section from the homepage | P1 | Proposed | Sophie / Rad | — | Per DEC-R1.2-009 |
-| R1.2-02.11 | Remove Experiences from primary navigation | P1 | Proposed | Sophie / Rad | — | Per DEC-R1.2-009 |
-| R1.2-02.12 | Retire the Experiences page — keep implementation and routing, remove discoverability, preserve for future reuse | P1 | Proposed | Archie / Rad | 02.10, 02.11 | No page or URL deletion; per DEC-R1.2-009 |
-| R1.2-02.13 | Review homepage visual hierarchy after removing the Experiences section | P1 | Proposed | Sophie | 02.10 | Coordinate with R1.2-01.15 |
+| R1.2-02.01 | Overlap review between Experiences and Journey Moods | P1 | Complete | Arjun | — | |
+| R1.2-02.02 | Taxonomy review of both concepts | P1 | Complete | Arjun | 02.01 | |
+| R1.2-02.03 | Navigation implications assessment | P1 | Complete | Sophie | 02.02 | |
+| R1.2-02.04 | Identify duplicate concepts | P1 | Complete | Arjun | 02.01 | |
+| R1.2-02.05 | SEO considerations assessment | P2 | Complete | Archie | 02.02 | Only material if routes/taxonomy change |
+| R1.2-02.06 | Redirect considerations assessment | P2 | Complete | Archie | 02.05 | |
+| R1.2-02.07 | Journey Passport implications assessment | P1 | Complete | Arjun | 02.02 | |
+| R1.2-02.08 | Homepage implications assessment | P1 | Complete | Sophie | 02.02, 02.03 | |
+| R1.2-02.09 | Document and route open product decisions to Product Owner | P1 | Complete | Tiger | 02.01–02.08 | Feeds Section 8 |
+| R1.2-02.10 | Remove Experiences section from the homepage | P1 | Complete | Sophie / Rad | 02.09 | Per DEC-R1.2-009; implemented under R1.2-009 |
+| R1.2-02.11 | Remove Experiences from primary navigation | P1 | Complete | Sophie / Rad | 02.09 | Per DEC-R1.2-009; implemented under R1.2-009 (Header and Footer) |
+| R1.2-02.12 | Retire the Experiences page — keep implementation and routing, remove discoverability, preserve for future reuse | P1 | Complete | Archie / Rad | 02.10, 02.11 | No page or URL deletion; per DEC-R1.2-009; guest redirect implemented under R1.2-010 |
+| R1.2-02.13 | Review homepage visual hierarchy after removing the Experiences section | P1 | Complete | Sophie | 01.15, 02.10 | Coordinated with R1.2-01.15; no regression found (R1.2-010, R1.2-012) |
 
 ## 6.3 Workstream 3 — Destination Intelligence
 
@@ -484,7 +496,7 @@ Status values: Proposed / Under Discussion / Approved / In Progress / Ready for 
 | R1.2-07.02 | Prepare Release 1.2 retrospective | P1 | Proposed | Tiger | Near release close | |
 | R1.2-07.03 | Capture Lessons Learned | P1 | Proposed | Tiger | 07.02 | |
 | R1.2-07.04 | Reconcile `RELEASE-1.2-BACKLOG.md` against delivered scope | P2 | Proposed | Tiger | Near release close | |
-| R1.2-07.05 | Consolidate EBC references for Release 1.2 | P2 | Proposed | Tiger | Ongoing | |
+| R1.2-07.05 | Consolidate EBC references for Release 1.2 | P2 | Complete | Rad | Ongoing | |
 | R1.2-07.06 | Prepare Release 1.2 release notes | P1 | Proposed | Tiger | Near release close | |
 
 ## 6.8 Workstream 8 — Release-wide QA & Regression
@@ -527,6 +539,7 @@ Only decisions that materially influence product behaviour, architecture, UX or 
 | DEC-R1.2-009 | 15-Aug-2026 | Retire the Experiences section from the homepage and remove it from primary website navigation; the page shall remain available internally for future redesign and reuse — no page deletion, no URL deletion | Resolves the Experiences vs Journey Mood overlap identified in Workstream 2 | Workstream 2 scoped accordingly; OPEN-R1.2-001 and OPEN-R1.2-002 resolved (see Section 8) | Approved |
 | DEC-R1.2-010 | 15-Aug-2026 | Introduce weighted destination preference ordering using Primary/Secondary/Tertiary Journey and Memory mappings; this becomes the preferred Journey Director recommendation model. The implementation may choose numerical weighting internally, but this tracker deliberately avoids prescribing fixed scores | Strengthens destination intelligence and improves recommendation accuracy while keeping the business specification stable and independent of the underlying implementation | Workstream 3 (renamed Destination Intelligence) scoped accordingly; requires Archie's architecture review before implementation; does not change the served-destination guardrail (DEC-R1.2-004 / R1.1 DEC-010) | Approved |
 | DEC-R1.2-011 | 15-Aug-2026 | Journey Passport traveller name field shall prevent numeric characters from being entered | Improves Journey Passport data quality | Workstream 4 scoped to add name-field validation | Approved |
+| DEC-R1.2-012 | 16-Aug-2026 | **Temporary Retirement of Experiences from the Public Website.** Release 1.2 establishes Journey Mood Cards and Journey Passport as the single traveller discovery model. The Experiences feature remains preserved in the repository for future redesign but will no longer be publicly accessible. Implementation must remove the Homepage entry, Header navigation, Footer navigation and all intentional internal links; redirect guest requests to `/experiences`; and preserve the implementation, assets, code and future reusability. | Avoid competing traveller journeys while preserving future investment. | Workstream 2 analysis is complete and implementation is approved and ready. DEC-R1.2-009 remains the original retirement decision; this decision adds the approved public-access, Footer, internal-link, redirect and preservation requirements. | Approved |
 
 ---
 
@@ -547,8 +560,8 @@ Retained here (never deleted) for historical traceability, per the project's Dec
 
 | ID | Open Discussion | Raised In | Resolution | Status |
 |---|---|---|---|---|
-| OPEN-R1.2-001 | Future of Experiences navigation — should "Experiences" remain a distinct top-level concept, be merged into Journey Moods, or be repositioned? | Workstream 2 | Resolved by DEC-R1.2-009 (15-Aug-2026) — Experiences retired from the homepage and primary navigation; page/route retained internally for future reuse | Resolved |
-| OPEN-R1.2-002 | Final Experience taxonomy — the definitive naming/grouping of Experience vs Journey Mood concepts | Workstream 2 | Resolved by DEC-R1.2-009 (15-Aug-2026) — see above; no further taxonomy work required for R1.2 | Resolved |
+| OPEN-R1.2-001 | Future of Experiences navigation — should "Experiences" remain a distinct top-level concept, be merged into Journey Moods, or be repositioned? | Workstream 2 | Resolved by DEC-R1.2-009 (15-Aug-2026) and refined by DEC-R1.2-012 (16-Aug-2026) — Experiences is temporarily retired from the public website while its implementation, assets and code remain preserved for future reuse | Resolved |
+| OPEN-R1.2-002 | Final Experience taxonomy — the definitive naming/grouping of Experience vs Journey Mood concepts | Workstream 2 | Resolved by DEC-R1.2-009 and DEC-R1.2-012 — Journey Mood Cards and Journey Passport are the single public traveller discovery model for Release 1.2 | Resolved |
 
 ---
 
@@ -568,7 +581,7 @@ Ideas intentionally excluded from Release 1.2 scope. Carried forward from `RELEA
 | Traveller submissions / video stories | Larger content-operations undertaking | Future | P3 |
 | Lightweight content management interface | Deferred pending R1.2 data-quality work (autocomplete, phone) landing first | Future | P2 |
 | Suggested itineraries / interactive maps on destination pages | Not selected for R1.2 | Future | P3 |
-| Experience collections / dynamic experience recommendations | Taxonomy resolved (DEC-R1.2-009 retires Experiences from homepage/nav); the retained internal page/route could be reused for a future collections concept | R1.3+ | P2 |
+| Experience collections / dynamic experience recommendations | Taxonomy resolved (DEC-R1.2-009; refined by DEC-R1.2-012); preserved Experiences implementation, assets and code may be reused in a future redesign | R1.3+ | P2 |
 | Destination Intelligence expansion — additional destination metadata: seasonal suitability, budget suitability, couple score, family score, senior traveller score, child-friendly score, festival suitability, luxury suitability, wellness suitability | Planning only — not Release 1.2 scope | R1.3+ / Future | P2 |
 | Awards / recognitions / press mentions / trust dashboard | Not selected for R1.2 | Future | P3 |
 | Bundle optimisation / infrastructure modernisation | Engineering housekeeping, not release-critical | Future | P2 |
@@ -585,8 +598,8 @@ Ideas intentionally excluded from Release 1.2 scope. Carried forward from `RELEA
 
 | ID | Description | Impact | Likelihood | Mitigation | Owner | Status |
 |---|---|---|---|---|---|---|
-| RISK-R1.2-001 | Mood card palette/saturation changes drift from the approved brand system | Medium — could require rework | Low | Validate against `BRAND-AUDIT.md` at each step; Sophie sign-off before Rad implements | Sophie | Open |
-| RISK-R1.2-002 | Workstream 2's open taxonomy decisions (OPEN-R1.2-001/002) remain unresolved and stall Workstream 1 labelling or Workstream 3 mapping | Medium — schedule slip | Medium | Resolved — DEC-R1.2-009 (15-Aug-2026) retired Experiences from the homepage/navigation, closing the underlying taxonomy question | Tiger | Closed |
+| RISK-R1.2-001 | Mood card palette/saturation changes drift from the approved brand system | Medium — could require rework | Low | Completed: validated against the approved brand direction through the Luxury Balance Pass, functional QA, Traveller Experience Review and Business Acceptance | Sophie | Closed |
+| RISK-R1.2-002 | Workstream 2's open taxonomy decisions (OPEN-R1.2-001/002) remain unresolved and stall Workstream 1 labelling or Workstream 3 mapping | Medium — schedule slip | Medium | Resolved — DEC-R1.2-009 closed the taxonomy question and DEC-R1.2-012 confirmed Journey Mood Cards and Journey Passport as the single public traveller discovery model | Tiger | Closed |
 | RISK-R1.2-003 | Featured Destination deep-link mapping goes stale as destinations are added/removed | Low-Medium — broken/irrelevant links over time | Medium | Defined fallback behaviour (R1.2-03.04); document mapping maintenance responsibility | Archie | Open |
 | RISK-R1.2-004 | Changing phone storage format breaks compatibility with existing Release 1.0/1.1 lead records | High — data integrity / reporting impact | Medium | Archie's architecture assessment required before implementation (per Project Instructions Section 5); consider migration or dual-read approach | Archie | Open |
 | RISK-R1.2-005 | Free geographic datasets (GeoNames/OSM) have incomplete or inconsistent coverage of Indian place-name aliases | Medium — validation gaps or false rejections | Medium | Explicit edge-case test list (R1.2-06.09); accept known gaps as documented limitations rather than blocking release | Archie / Keerthi | Open |
@@ -604,11 +617,17 @@ Ideas intentionally excluded from Release 1.2 scope. Carried forward from `RELEA
 High-level workstream dependencies:
 
 ```
-Workstream 2 (Experience/Mood Rationalisation)
+Workstream 1 (Mood Card Visual Refinement) — Complete
         ↓
-Workstream 1 (Mood Card Visual Refinement) — labelling/taxonomy sensitive
+Workstream 8 (Release-wide QA & Regression)
         ↓
-Workstream 3 (Destination Intelligence) — targets the rationalised concept
+Release
+```
+
+```
+Workstream 2 (Experience/Mood Rationalisation) — Complete
+        ↓
+Workstream 3 (Destination Intelligence) — now the active implementation stream, targets the rationalised concept
         ↓
 Workstream 8 (Release-wide QA & Regression)
         ↓
@@ -645,9 +664,9 @@ Release
 
 | Dependency | Type | Notes |
 |---|---|---|
-| WS2 → WS1 | Soft | Card labelling may need to reflect the final taxonomy decision |
-| WS1 ↔ WS2 | Soft | Homepage layout review tasks (R1.2-01.15, R1.2-02.13) should be coordinated — both are triggered by homepage changes (Escape card removal, Experiences section removal) landing in the same layout |
-| WS2 → WS3 | Soft | Deep-link target concept depends on taxonomy outcome |
+| WS2 → WS1 | Satisfied | Workstream 2 analysis and DEC-R1.2-012 confirmed the discovery model; Workstream 1 is Complete and requires no further taxonomy change. |
+| WS1 → WS2 | Satisfied | R1.2-02.13 preserved the accepted Workstream 1 homepage hierarchy when the Experiences entry was removed; confirmed with no regression by Rad's engineering validation (R1.2-010) and Sri's traveller experience validation (R1.2-012). |
+| WS2 → WS3 | Satisfied | Workstream 2 is Complete (analysis, UX implementation, engineering, Functional QA and Traveller Experience Validation all closed). Journey Mood Cards and Journey Passport are confirmed as the approved discovery model. Workstream 3 (Destination Intelligence) is no longer blocked and is now the next active implementation stream. |
 | WS6 → WS4 | Shared surface | Both touch the Journey Passport; coordinate regression |
 | WS5 → WS4 | Shared surface | OTP verification gates Journey Passport final submission; entry-context fixes govern earlier steps in the same flow — coordinate regression |
 | WS6 → WS3 | Soft | Destination mapping may reference autocomplete-validated names |
@@ -664,15 +683,15 @@ This is a release-readiness checklist for R1.2 at the master-tracker level. A de
 ## Delivery
 
 - [ ] All 8 workstreams are Complete or explicitly Deferred with Product Owner acceptance
-- [ ] All EBCs raised under Release 1.2 are completed or explicitly deferred
+- [x] All EBCs raised under Release 1.2 through R1.2-013 are completed
 - [ ] No known functional release blocker remains open
 
 ## Documentation
 
-- [ ] This document (`RELEASE-1.2.md`) is current
+- [x] This document (`RELEASE-1.2.md`) is current at Version 1.5
 - [ ] `PROJECT-HISTORY.md` updated with the Release 1.2 entry
 - [ ] Release notes prepared
-- [ ] Decision log (Section 7) reflects all material decisions
+- [x] Decision log (Section 7) reflects all approved material decisions through DEC-R1.2-012
 - [ ] Open decisions (Section 8) are resolved or explicitly carried to a future release
 
 ## Quality
@@ -750,15 +769,17 @@ Future refinement may be considered during a broader UX review.
 
 **Observation:**
 
-Depending on device height, not all Mood Cards are visible within the initial viewport before scrolling.
+Depending on the device height and viewport size, not all five Journey Mood cards are visible within the initial mobile viewport before scrolling. A small amount of scrolling is required before the complete Journey Mood experience is visible.
 
 **Decision:**
 
 Accepted.
 
-This is consistent with the approved homepage hierarchy and does not negatively affect usability.
+This behaviour is consistent with the approved homepage hierarchy and does not negatively impact the traveller experience.
 
-No layout changes are planned for Release 1.2.
+No layout changes are planned as part of Release 1.2.
+
+This observation may be revisited during a future homepage redesign if the Hero composition or above-the-fold content changes.
 
 ---
 
@@ -781,6 +802,25 @@ This is an environmental limitation of the validation tooling and does not repre
 
 ---
 
+### OBS-R1.2-005
+**Title:** Luxury warmth versus readability balance
+
+**Source:** Business Review / Traveller Experience Review
+
+**Observation:**
+
+Multiple visual iterations were evaluated during Workstream 1 to balance premium warmth with homepage readability. The original gold-dominant treatment created stronger visual richness but reduced text readability where the Hero's golden-hour sunlight was brightest. The final champagne-glass treatment restored warmth while preserving clear visual separation from the Hero.
+
+**Decision:**
+
+Accepted.
+
+The final Luxury Balance Pass represents the approved visual direction for Release 1.2.
+
+Future homepage redesigns should treat this implementation as the visual baseline rather than revisiting the original gold treatment.
+
+---
+
 ## Summary
 
 The Homepage Mood Experience (Workstream 1) successfully completed:
@@ -796,6 +836,49 @@ All observations recorded above were reviewed by the Product Owner and conscious
 No Critical, High, or Medium severity defects remain open for this workstream.
 
 Workstream 1 is therefore considered **Complete**.
+
+The observations recorded above intentionally preserve implementation and design knowledge for future releases. They do not represent release debt, outstanding defects, or pending work, and therefore do not prevent Release 1.2 from progressing to subsequent workstreams.
+
+---
+
+## Workstream 2 – Experiences Retirement
+
+**Status:** Accepted
+
+### OBS-R1.2-006
+**Title:** Tablet-width responsive validation blocked by test tooling
+
+**Source:** Keerthi – Functional QA (R1.2-011)
+
+**Observation:**
+
+A dedicated controlled pass at tablet width (approximately 768–1024px) could not be completed — the browser-resize tool used in the validation session changed the viewport once and then stopped responding to further resize calls within the same tab, the same test-tooling limitation recorded against Workstream 1 (OBS-R1.2-004). As partial mitigating evidence, a separate browser tab that happened to open at approximately 1170px (tablet range) displayed a clean layout with no visible breakage.
+
+**Decision:**
+
+Accepted.
+
+This is an environmental limitation of the validation tooling, not a product defect — consistent with OBS-R1.2-004's treatment of the same limitation under Workstream 1. No Critical, High or Medium severity defect is open for Workstream 2.
+
+Recommend Tiger schedule a short follow-up tablet-width check (real device, DevTools device toolbar, or a deployed preview) ahead of final release sign-off; this does not block Workstream 2 closure or Workstream 3 from proceeding.
+
+---
+
+## Summary
+
+Workstream 2 (Experiences vs Journey Mood Rationalisation) successfully completed:
+
+- Product Analysis (R1.2-007)
+- UX Implementation (R1.2-009)
+- Engineering Completion (R1.2-010)
+- Functional QA (R1.2-011)
+- Traveller Experience Validation (R1.2-012)
+
+The observation recorded above was reviewed and consciously accepted; it does not represent release debt, an outstanding defect, or pending work.
+
+No Critical, High, or Medium severity defects remain open for this workstream.
+
+Workstream 2 is therefore considered **✅ Complete**, and Workstream 3 (Destination Intelligence) is now the next active implementation stream.
 
 ---
 
