@@ -10,17 +10,6 @@ import { siteContact } from "@/config/contact.config";
 import { journeyCanonicalImage } from "@/config/destination-images.config";
 import type { HomepageTravellerStory } from "@/lib/traveller-stories/getHomepageTravellerStories";
 
-const invitations = [
-  { title: "Memory Makers", copy: "For the moments you will revisit long after you return home.", image: "/images/journey-passport/travel-styles/photography.webp", alt: "Traveller capturing a meaningful travel memory" },
-  { title: "Celebration Moments", copy: "For milestones that deserve more than an ordinary backdrop.", image: "/images/journey-passport/travel-styles/celebrations.webp", alt: "Travellers sharing a celebration" },
-  { title: "Family Time", copy: "For making room for the people who matter most.", image: "/images/journey-passport/companions/family.webp", alt: "Family spending time together while travelling" },
-  { title: "Global Escapes", copy: "For the joy of stepping into a world that feels wonderfully new.", image: "/images/journey-passport/dream-journeys/city-discovery.webp", alt: "Traveller discovering a new city" },
-  { title: "Nature & Serenity", copy: "For slower mornings, open views and a little room to breathe.", image: "/images/journey-passport/travel-styles/nature.webp", alt: "Quiet natural landscape for a slower journey" },
-  { title: "Weekend Getaways", copy: "For a thoughtful pause when a few days can change your rhythm.", image: "/images/journey-passport/timing/within-next-month.webp", alt: "Traveller preparing for a short escape" },
-] as const;
-
-const homepageInvitations = invitations.slice(0, 3);
-
 const destinations = [
   { name: "Kashmir", slug: "kashmir", region: "India · Mountains & valleys", copy: "For cool air, wide landscapes and a complete change of pace.", image: journeyCanonicalImage("kashmir").heroImage },
   { name: "Kerala", slug: "kerala", region: "India · Backwaters & hills", copy: "For unhurried days shaped by water, green space and gentle comfort.", image: journeyCanonicalImage("kerala").heroImage },
@@ -55,15 +44,21 @@ type HomepageExperienceProps = {
 export default function HomepageExperience({ travellerStories }: HomepageExperienceProps) {
   return (
     <div className="bg-[#FFFDFC] text-[#2A211C]">
-      <section className="layout-section" aria-labelledby="journey-invitations-heading">
-        <div className="layout-container">
-          <div className="layout-section-heading"><p className="text-xs font-bold uppercase tracking-[0.18em] text-[#2A211C]">Begin with what matters</p><h2 id="journey-invitations-heading" className="mt-4 text-balance font-serif text-4xl leading-[1.06] tracking-[-0.045em] sm:text-5xl">What kind of time are you hoping to make?</h2><p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-[#2A211C]">You do not need every detail yet. Begin with the feeling, the people or the moment that is calling you.</p></div>
-          <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {homepageInvitations.map((invitation, index) => <article key={invitation.title} className={`group relative min-h-[27rem] overflow-hidden rounded-[2rem] bg-[#2A211C] shadow-[0_18px_45px_rgba(86,55,22,0.14)] ${index === 0 ? "md:col-span-2 lg:col-span-1" : ""}`}><Image src={invitation.image} alt={invitation.alt} fill sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-cover transition duration-700 group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100"/><div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(28,17,9,.92),rgba(28,17,9,.12)_76%)]" aria-hidden="true"/><div className="absolute inset-x-0 bottom-0 px-8 pb-9 pt-16 text-white"><p className="text-xs font-bold uppercase tracking-[0.15em] text-[#F5951C]">A journey invitation</p><h3 className="mt-4 font-serif text-3xl leading-[1.1] tracking-[-0.04em]">{invitation.title}</h3><p className="mt-4 max-w-sm text-sm leading-7 text-white/85">{invitation.copy}</p><Link href={`/journey-passport?experience=${encodeURIComponent(invitation.title)}`} className="mt-6 inline-flex text-sm font-bold text-[#F5951C] transition hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F5951C]">Explore this experience <span aria-hidden="true">→</span></Link></div></article>)}
-          </div>
-          <div className="mt-10 text-center"><Link href="/experiences" className="inline-flex rounded-full border border-[#F5951C] bg-white/55 px-6 py-3 text-sm font-bold text-[#2A211C] transition hover:bg-[#F5951C] hover:text-[#2A211C] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#2A211C]">Explore All Experiences <span aria-hidden="true" className="ml-2">→</span></Link></div>
-        </div>
-      </section>
+      {/* R1.2-009 (Workstream 2 — Experiences vs Journey Mood Rationalisation):
+          the "Journey Invitations" section ("Begin with what matters") that
+          previously rendered here has been removed per DEC-R1.2-009 /
+          DEC-R1.2-012 — it duplicated the Journey Mood Cards as a second,
+          competing homepage entry point (see Arjun's R1.2-007 analysis).
+          The implementation is preserved, not deleted — see
+          `./JourneyInvitations.tsx` in this same directory — and can be
+          reintroduced by importing and rendering `<JourneyInvitations />`
+          here again if a future release calls for it. Destinations
+          ("Places with possibility", directly below) is now the first
+          section a visitor reaches after the Hero; `.layout-section`
+          applies uniform padding-block regardless of position, so no
+          spacing/rhythm adjustment was needed after the removal — see
+          docs/09-Development/EBCR1.2-009-EXPERIENCES-RETIREMENT-IMPLEMENTATION.md
+          for the full before/after review. */}
 
       <section className="bg-[#FFFDFC] layout-section" aria-labelledby="destinations-heading"><div className="layout-container"><div className="layout-section-heading"><p className="text-xs font-bold uppercase tracking-[0.18em] text-[#2A211C]">Places with possibility</p><h2 id="destinations-heading" className="mt-4 text-balance font-serif text-4xl leading-[1.06] tracking-[-0.045em] sm:text-5xl">Some places are worth beginning with.</h2><p className="mx-auto mt-5 max-w-2xl leading-8 text-[#2A211C]">These are not packages or promises. They are thoughtful starting points for a conversation about what could fit.</p></div><div className="mx-auto mt-12 grid max-w-[72rem] gap-6 sm:grid-cols-2 lg:grid-cols-4">{destinations.map((destination)=><article key={destination.name} className="group flex flex-col overflow-hidden rounded-[1.75rem] bg-[#2A211C] shadow-[0_14px_35px_rgba(84,52,17,.14)]"><div className="relative aspect-[4/3] overflow-hidden"><Image src={destination.image} alt={`Travel inspiration for ${destination.name}`} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" className="object-cover transition duration-700 group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100"/></div><div className="flex flex-1 flex-col px-7 pb-8 pt-7 text-white"><p className="text-[0.68rem] font-bold uppercase leading-5 tracking-[.14em] text-[#F5951C]">{destination.region}</p><h3 className="mt-3 font-serif text-3xl leading-[1.1]">{destination.name}</h3><p className="mt-4 text-sm leading-7 text-white/82">{destination.copy}</p><Link href={`/destinations#${destination.slug}`} className="mt-auto inline-flex pt-6 text-sm font-bold text-[#F5951C] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#F5951C]">Discover destination <span aria-hidden="true" className="ml-2">→</span></Link></div></article>)}</div><div className="mt-10 text-center"><Link href="/destinations" className="inline-flex rounded-full border border-[#F5951C] bg-white/55 px-6 py-3 text-sm font-bold text-[#2A211C] transition hover:bg-[#F5951C] hover:text-[#2A211C] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#2A211C]">Explore All Destinations <span aria-hidden="true" className="ml-2">→</span></Link></div></div></section>
 

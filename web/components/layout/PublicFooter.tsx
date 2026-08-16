@@ -8,8 +8,15 @@ import { siteContact } from "@/config/contact.config";
 
 import Container from "./Container";
 
+// R1.2-009 (Workstream 2 — Experiences vs Journey Mood Rationalisation): the
+// "Experiences" entry is removed from the "Discover" group per DEC-R1.2-009 /
+// DEC-R1.2-012 — Experiences is retired from every intentional site-wide
+// discovery path (Header, Homepage, Footer), not only the Homepage and
+// Header. The /experiences route and its page implementation are untouched
+// and preserved for future reuse; only this footer link is removed. See
+// docs/09-Development/EBCR1.2-009-EXPERIENCES-RETIREMENT-IMPLEMENTATION.md.
 const links = [
-  { title: "Discover", items: [["Destinations", "/destinations"], ["Experiences", "/experiences"], ["Travel Inspiration", "/travel-inspiration"], ["Plan My Experience", "/journey-passport"]] },
+  { title: "Discover", items: [["Destinations", "/destinations"], ["Travel Inspiration", "/travel-inspiration"], ["Plan My Experience", "/journey-passport"]] },
   { title: "About", items: [["About Us", "/about"], ["Our Promise", "/about#our-promise"], ["Contact Us", "/contact"]] },
   { title: "Support", items: [["Privacy Policy", "/privacy-policy"], ["Terms and Conditions", "/terms-and-conditions"]] },
 ] as const;
