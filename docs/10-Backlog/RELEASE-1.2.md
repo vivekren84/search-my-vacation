@@ -31,6 +31,7 @@
 | 1.1 | 15-Aug-2026 | Rad | R1.2-001 | Adopted the release-based EBC numbering convention (R1.2-001 onward); moved the Change Log here as Document Change History, immediately after Document Information; added a new Release Milestones section (Section 4), renumbering all subsequent sections; added task R1.2-05.17 (phone number normalization to E.164); added tasks R1.2-06.12 and R1.2-06.13 (remove an individual selected destination; preserve selection order); added decision DEC-R1.2-005 (multi-destination selection) and open decision OPEN-R1.2-005 (geographic dataset maintenance strategy); total tracked task count updated from 84 to 87. |
 | 1.2 | 15-Aug-2026 | Rad | R1.2-002 | Added the Journey Passport OTP Verification scope to Workstream 5 (renamed to International Phone Number & OTP Verification), including updated Goal, Business Value and Acceptance Criteria; appended 18 new tasks R1.2-05.18–R1.2-05.35; added decision DEC-R1.2-006 (Journey Passport-only OTP policy), open decision OPEN-R1.2-006 (future OTP expansion), risk RISK-R1.2-010 (OTP delivery/outage risk) and a Future Release Candidates entry (OTP for additional lead-capture forms); added a WS5→WS4 dependency note; total tracked task count updated from 87 to 105. Documentation only — no application code, architecture or configuration changed. |
 | 1.3 | 15-Aug-2026 | Rad | R1.2-003 | Added homepage simplification decisions (DEC-R1.2-007 remove Escape mood card, DEC-R1.2-008 rename Memory Maker/Family to Memory Makers and remap it to Photography, DEC-R1.2-009 retire Experiences from the homepage and primary navigation without deleting the page or its URL) and destination intelligence decisions (DEC-R1.2-010 weighted Primary/Secondary/Tertiary Journey and Memory destination preference model as the preferred Journey Director recommendation model; DEC-R1.2-011 Journey Passport traveller name field to prevent numeric characters); renamed Workstream 3 to Destination Intelligence and added 19 new tasks across Workstreams 1–4 (R1.2-01.12–01.15, R1.2-02.10–02.13, R1.2-03.07–03.15 including 3 Wildlife destination tasks, R1.2-04.10–04.11); updated Goal/Business Value/Acceptance Criteria for Workstreams 1–4; resolved and retired OPEN-R1.2-001 and OPEN-R1.2-002 (superseded by DEC-R1.2-009) and closed RISK-R1.2-002; added RISK-R1.2-011 (weighted destination preference model's impact on Journey Director recommendation output) and a Future Release Candidates entry (Destination Intelligence expansion metadata); total tracked task count updated from 105 to 124. Documentation only — no application code, architecture, configuration or Journey Director logic changed. |
+| 1.4 | 16-Aug-2026 | Tiger | R1.2-003 / R1.2-004 | Updated Workstream 1 to reflect completed Homepage Premium Visual Refinement implementation, including Trust Strip premium redesign, Mood Card refinement, implementation status, validation results and revised release progress. |
 
 ---
 
@@ -72,7 +73,7 @@ Release 1.2 deepens the traveller experience established in Release 1.1 through 
 
 ## Current Status
 
-**Planning.** This document has just been created (R1.2-001) and workstreams have not yet begun implementation. No R1.2 code has shipped.
+**Implementation in Progress.** Release 1.2 planning is complete. Workstream 1 has completed its initial implementation, with the Homepage Premium Visual Refinement (including the Trust Strip redesign) finished and validated. Remaining workstreams continue according to the Release 1.2 roadmap.
 
 ## Planned Release Sequence
 
@@ -131,14 +132,14 @@ These principles apply to every product, UX, architecture, engineering, content 
 
 | Metric | Current Value | Notes |
 |---|---|---|
-| Overall Progress | 0% — Planning | No workstream has entered Implementation |
+| Overall Progress | Implementation in Progress | We have begun implementation. I would avoid percentage estimates for now. |
 | Number of Workstreams | 8 | All approved; see Section 5 |
 | Number of Open Decisions | 4 | See Section 8 (2 further decisions — OPEN-R1.2-001, OPEN-R1.2-002 — retired/resolved; see Section 8's Retired sub-list) |
 | Number of Approved Decisions | 11 | See Section 7 |
 | Number of EBCs | 3 | R1.2-001 (created this document), R1.2-002 (added Journey Passport OTP Verification scope), R1.2-003 (added homepage simplification and destination intelligence enhancements). Future Release 1.2 EBCs continue the sequence R1.2-004, R1.2-005, ... |
-| Number of Completed Items | 0 | Of 124 tracked tasks (Section 6) |
+| Number of Completed Items | 3 (Workstream 1 Trust Strip tasks) | R1.2-01.16, 01.17 and 01.18 are marked Complete. |
 | Number of Deferred Items | See Section 9 | Future Release Candidates carried from `RELEASE-1.2-BACKLOG.md` and R1.1 deferrals |
-| Overall Release State | **Planning** | Not yet a Release Candidate |
+| Overall Release State | **Implementation** | The release has moved beyond planning. |
 
 **Maintenance note:** Update the count fields above manually whenever a task or decision changes status. This table is intentionally small so it stays cheap to keep current — do not expand it into a full audit; Section 6 is the source of truth for task-level counts.
 
@@ -185,18 +186,18 @@ Retrospective Complete
 
 Status values used below follow Section 13 (Status Definitions). All workstreams currently start at **Proposed** unless noted.
 
-## Workstream 1 — Premium Mood Card Visual Refinement
+## Workstream 1 — Homepage Premium Visual Refinement
 
 | Field | Value |
 |---|---|
-| Goal | Refine the Journey Mood cards' visual treatment for a more premium, hierarchical presentation while preserving the approved illustration style; simplify the mood card set by removing the Escape card and clarify the Memory Maker card's emotional intent |
-| Business Value | Stronger first impression on the homepage; improved perceived quality without changing product structure; simplified homepage; reduced cognitive load; better emotional mapping between mood cards and Journey Passport intent |
+| Goal | Refine the Journey Mood cards' visual treatment for a more premium, hierarchical presentation while preserving the approved illustration style; simplify the mood card set by removing the Escape card and clarify the Memory Maker card's emotional intent. Refine the homepage's premium visual presentation through improved Journey Mood cards and a redesigned Trust Strip while preserving the approved Search My Vacation visual identity and homepage hierarchy. |
+| Business Value | Stronger first impression on the homepage; improved perceived quality without changing product structure; simplified homepage; reduced cognitive load; better emotional mapping between mood cards and Journey Passport intent; strengthen traveller trust; improve first impressions; increase perceived premium quality; improve homepage credibility |
 | Priority | P1 |
-| Status | Proposed |
+| Status | In Progress |
 | Dependencies | None blocking; loosely coordinates with Workstream 2 if taxonomy changes affect card labelling; R1.2-01.15's homepage layout review should be coordinated with Workstream 2's R1.2-02.13 (both touch the same homepage layout following the Escape and Experiences removals) |
 | Owner | Sophie (design direction), Rad (implementation) |
 | Risks | Palette/saturation changes could drift from approved brand system if not validated against `BRAND-AUDIT.md`; illustration rework could be mistaken for a full redesign |
-| Acceptance Criteria | Illustration style preserved; ivory/champagne palette applied; gold saturation reduced; visual hierarchy improved; Hero remains the dominant homepage element; hover and selected states validated; desktop/mobile reviewed; accessibility reviewed; Sri traveller validation complete; Escape mood card removed (DEC-R1.2-007); "Memory Maker / Family" renamed to "Memory Makers" and its Journey Passport mapping updated from Culture & Heritage to Photography (DEC-R1.2-008); homepage layout reviewed for premium spacing and visual balance after the Escape card's removal |
+| Acceptance Criteria | Illustration style preserved; ivory/champagne palette applied; gold saturation reduced; visual hierarchy improved; Hero remains the dominant homepage element; hover and selected states validated; desktop/mobile reviewed; accessibility reviewed; Sri traveller validation complete; Escape mood card removed (DEC-R1.2-007); "Memory Maker / Family" renamed to "Memory Makers" and its Journey Passport mapping updated from Culture & Heritage to Photography (DEC-R1.2-008); homepage layout reviewed for premium spacing and visual balance after the Escape card's removal; rust Strip redesigned using premium travel imagery; Existing layout and typography preserved; Homepage visual consistency maintained across Hero, Mood Cards and Trust Strip; Prototype imagery approved and production-safe assets identified before release. |
 
 Tasks: R1.2-01.01 through R1.2-01.15 (Section 6.1).
 
@@ -358,6 +359,10 @@ Status values: Proposed / Under Discussion / Approved / In Progress / Ready for 
 | R1.2-01.13 | Rename "Memory Maker / Family" mood card to "Memory Makers" | P1 | Proposed | Sophie | 01.12 | Per DEC-R1.2-008 |
 | R1.2-01.14 | Update Journey Passport mapping for Memory Makers from Culture & Heritage to Photography | P1 | Proposed | Arjun / Rad | 01.13 | Per DEC-R1.2-008 |
 | R1.2-01.15 | Review homepage layout after removing the Escape card | P1 | Proposed | Sophie | 01.12 | Maintain premium spacing and visual balance; coordinate with R1.2-02.13 |
+| R1.2-01.16 | Redesign Trust Strip visual treatment using premium travel imagery | P1 | Complete | Sophie |
+| R1.2-01.17 | Replace medallion icons with premium photographic assets while preserving layout | P1 | Complete | Sophie | 
+| R1.2-01.18 | Validate responsive behaviour, build performance and visual consistency | P1 | Complete | Sophie | 
+| R1.2-01.19 | Replace prototype imagery with production-approved/licensed assets before release | P1 | Proposed | Sophie | 
 
 ## 6.2 Workstream 2 — Experiences vs Journey Mood Rationalisation
 
