@@ -127,19 +127,29 @@ export default function HeroJourney() {
                 onClick={() => setSelected(emotion.key)}
                 aria-pressed={isActive}
                 aria-label={emotion.title}
-                // Mood card glass treatment: a neutral, low-saturation frosted
-                // panel with a champagne border accent. Transparency, blur
-                // and neutral tint are tuned together for legibility against
-                // the Golden Hour hero's brightest area (the sun/water
-                // reflection behind the Explore card) — keep them as a set;
-                // changing one without the others risks losing that
-                // legibility. Full design rationale and rejected
-                // alternatives: docs/09-Development/EBCR1.2-004-SOPHIE-VISUAL-TREATMENT-ADDENDUM.md
-                className={`group grid min-h-36 w-full basis-full grid-cols-[9.5rem_1fr] items-center gap-3 rounded-2xl border px-3 py-3 text-left text-[#FFF8E8] backdrop-blur-xl backdrop-saturate-50 transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#FFD58A] motion-reduce:transition-none sm:min-h-40 sm:basis-[calc(50%-0.5rem)] sm:grid-cols-[11rem_1fr] sm:gap-4 sm:px-4 sm:py-4 lg:basis-[calc(33.333%-0.667rem)]
+                // Mood card glass treatment (R1.2-004, colour-graded under
+                // R1.2-005 — Luxury Balance Pass): a warm, low-saturation
+                // frosted panel with a champagne border accent. Transparency,
+                // blur and warm tint are tuned together for legibility
+                // against the Golden Hour hero's brightest area (the
+                // sun/water reflection behind the Explore card) — keep them
+                // as a set; changing one without the others risks losing
+                // that legibility. R1.2-005 shifts the glass tint's hue from
+                // a neutral charcoal (equal-ish R/G, B slightly dominant —
+                // read as faintly cool) to a warm dark champagne/bronze cast
+                // (R > G > B) at the same alpha values as before, and layers
+                // a very low-opacity warm-ivory radial highlight near the
+                // top-left corner to suggest light catching frosted glass —
+                // it does not lighten or brighten the panel overall, so the
+                // Explore-card legibility fix from R1.2-004 is preserved.
+                // Full design rationale for both passes:
+                // docs/09-Development/EBCR1.2-004-SOPHIE-VISUAL-TREATMENT-ADDENDUM.md
+                // docs/09-Development/EBCR1.2-005-MOOD-CARD-LUXURY-BALANCE-PASS.md
+                className={`group grid min-h-36 w-full basis-full grid-cols-[9.5rem_1fr] items-center gap-3 rounded-2xl border px-3 py-3 text-left text-[#FFF8E8] backdrop-blur-2xl backdrop-saturate-[.7] transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#FFD58A] motion-reduce:transition-none sm:min-h-40 sm:basis-[calc(50%-0.5rem)] sm:grid-cols-[11rem_1fr] sm:gap-4 sm:px-4 sm:py-4 lg:basis-[calc(33.333%-0.667rem)]
                   ${
                     isActive
-                      ? "border-[#E3C48C]/75 bg-[linear-gradient(135deg,rgba(24,23,21,.32),rgba(16,15,14,.25))] shadow-[0_0_0_1px_rgba(227,196,140,.24),0_14px_26px_rgba(0,0,0,.26),0_0_16px_rgba(227,196,140,.16),inset_0_1px_0_rgba(255,255,255,.08)] motion-safe:-translate-y-0.5"
-                      : "border-[#E3C48C]/24 bg-[linear-gradient(135deg,rgba(20,20,22,.24),rgba(13,13,15,.17))] shadow-[0_10px_22px_rgba(0,0,0,.20),inset_0_1px_0_rgba(255,255,255,.05)] hover:border-[#E3C48C]/40 hover:bg-[linear-gradient(135deg,rgba(24,24,26,.28),rgba(16,16,18,.20))] hover:shadow-[0_14px_26px_rgba(0,0,0,.24),inset_0_1px_0_rgba(255,255,255,.07)] motion-safe:hover:-translate-y-0.5"
+                      ? "border-[#E3C48C]/75 bg-[radial-gradient(135%_100%_at_18%_0%,rgba(255,248,232,.13),transparent_55%),linear-gradient(135deg,rgba(42,33,20,.35),rgba(24,18,11,.27))] shadow-[0_0_0_1px_rgba(227,196,140,.26),0_14px_26px_rgba(0,0,0,.26),0_0_18px_rgba(227,196,140,.20),inset_0_1px_0_rgba(255,248,232,.12)] motion-safe:-translate-y-0.5"
+                      : "border-[#E3C48C]/24 bg-[radial-gradient(135%_100%_at_18%_0%,rgba(255,248,232,.09),transparent_55%),linear-gradient(135deg,rgba(34,27,17,.27),rgba(20,15,9,.19))] shadow-[0_10px_22px_rgba(0,0,0,.20),inset_0_1px_0_rgba(255,248,232,.07)] hover:border-[#E3C48C]/40 hover:bg-[radial-gradient(135%_100%_at_18%_0%,rgba(255,248,232,.12),transparent_55%),linear-gradient(135deg,rgba(38,30,19,.31),rgba(23,17,10,.22))] hover:shadow-[0_14px_26px_rgba(0,0,0,.24),inset_0_1px_0_rgba(255,248,232,.10)] motion-safe:hover:-translate-y-0.5"
                   }
                 `}
               >
@@ -148,7 +158,7 @@ export default function HeroJourney() {
                 </div>
 
                 <div className="min-w-0">
-                  <p className="font-serif text-lg font-bold leading-tight tracking-[-.02em] text-[#FFF9ED] drop-shadow-[0_1px_2px_rgba(12,7,4,.30)]">{emotion.title}</p>
+                  <p className="font-serif text-lg font-bold leading-tight tracking-[-.02em] text-[#FFF9ED] drop-shadow-[0_1px_2px_rgba(12,7,4,.34)]">{emotion.title}</p>
                   <p className="mt-1 text-xs leading-5 text-[#F5E7D0]/85">
                     {emotion.desc}
                   </p>
