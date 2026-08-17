@@ -1,23 +1,39 @@
 # ADR-R1.2-WS3-001 — Destination Knowledge Governance
 
+```text
+Document Type : Architecture Decision Record
+Decision ID   : ADR-R1.2-WS3-001
+Title         : Destination Knowledge Governance
+Status        : Accepted
+Release       : Release 1.2
+Workstream    : WS3 – Destination Intelligence
+Owner         : Archie
+Reviewer      : Tiger
+Business Owner: Vivek
+Effective Date: 17-Aug-2026
+Supersedes    : None
+Superseded By : —
+```
+
 ## Document Information
 
 | Field | Value |
 | --- | --- |
 | ADR ID | ADR-R1.2-WS3-001 |
 | Title | Destination Knowledge Governance |
-| Status | **Proposed — ready for Product Owner ratification** (see Decision History) |
+| Status | **Accepted** (ratified 17 August 2026 — see Decision History) |
 | Type | Architecture Decision Record (permanent, repository-level) |
 | Owner | Archie — Technical Architect |
 | Reviewer | Tiger — Programme and Delivery Lead |
 | Business Approver | Vivek — Product Owner |
-| Originating EBC | `ADR-R1.2-WS3-EBC-ARCHIE-001` (this document's authoring EBC); architecture itself originates from `R1.2-03.04-EBC-ARCHIE` |
+| Originating EBC | `ADR-R1.2-WS3-EBC-ARCHIE-001` (this document's authoring EBC); architecture itself originates from `R1.2-03.04-EBC-ARCHIE`; finalised to Accepted status under `ADR-R1.2-WS3-EBC-ARCHIE-002` |
 | Applies to | Destination Intelligence: the Destination Knowledge Base, the Journey Intelligence generation pipeline, the Journey Director runtime catalogue, and all public/presentation surfaces that reference destination data |
 | Supersedes | None — first ADR for this domain |
 | Superseded by | None |
 | Location | `docs/20-Architecture/ADR-R1.2-WS3-001-Destination-Knowledge-Governance.md` |
+| Effective date | 17 August 2026 |
 | Date created | 17 August 2026 |
-| Last updated | 17 August 2026 |
+| Last updated | 17 August 2026 (status finalised to Accepted, `ADR-R1.2-WS3-EBC-ARCHIE-002`) |
 
 ---
 
@@ -283,9 +299,9 @@ These require Tiger/Vivek decision and are not resolved by this ADR:
 | 17 Aug 2026 | `R1.2-03.03` — Source comparison and runtime trace locates the exact root-cause mechanisms and quantifies the vocabulary reachability gap | Rad |
 | 17 Aug 2026 | `R1.2-03.04-EBC-ARCHIE` — Target-state governance architecture drafted | Archie |
 | 17 Aug 2026 | This ADR created, formalising the above as a permanent governance document | Archie |
-| *Pending* | Formal ratification | Vivek |
+| 17 Aug 2026 | Workstream 3 Architecture & Product Review completed; this ADR formally approved by the Business Owner and the Architecture Reviewer. Status changed from **Proposed — ready for Product Owner ratification** to **Accepted**. No architectural principle, governance decision, or investigation finding was modified as part of this approval or its documentation finalisation (`ADR-R1.2-WS3-EBC-ARCHIE-002`) | Vivek (Business Owner, ratification), Tiger (Architecture Reviewer), Archie (documentation finalisation) |
 
-This ADR's status will move from **Proposed** to **Accepted** on the Product Owner's explicit ratification, recorded here and cross-referenced from `RELEASE-1.2.md`'s Decision Log at that time. Future material changes to this architecture must be recorded as new rows in this table, not as silent edits to the sections above.
+This ADR is now **Accepted**, per the ratification recorded above. Future material changes to this architecture must be recorded as new rows in this table, not as silent edits to the sections above, and must be made through a new or explicitly superseding ADR rather than an edit to this one (Tiger's note, `ADR-R1.2-WS3-EBC-ARCHIE-002`) — this ADR should require no further edits unless superseded.
 
 ---
 
