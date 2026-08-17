@@ -9,7 +9,7 @@
 | Item | Value |
 |---|---|
 | Document | Release 1.2 Master Planning & Tracking Document |
-| Version | 1.6 |
+| Version | 1.7 |
 | Status | Draft — Active Implementation |
 | Origin EBC | R1.2-001 (see Document Change History below for every EBC that has updated this document) |
 | Product Owner | Vivek |
@@ -17,9 +17,9 @@
 | Purpose | Single source of truth for Release 1.2 planning, execution, QA, decision tracking and release readiness |
 | Baseline | Release 1.1 — `v1.1.0` |
 | Related | `docs/10-Backlog/RELEASE-1.2-BACKLOG.md` (source roadmap ideas), `docs/09-Development/PROJECT-HISTORY.md`, `docs/10-Backlog/RELEASE-1.1-MASTER-TRACKER.md` (R1.1 precedent) |
-| Last Updated | 16 August 2026 |
+| Last Updated | 17 August 2026 |
 
-**EBC Numbering Convention:** Release 1.2 EBCs use a release-based numbering sequence rather than the legacy `EBC-0xx` numbering used through Release 1.1. **R1.2-001** created this document; **R1.2-002** added Journey Passport OTP Verification planning; **R1.2-003** added Homepage Simplification and Destination Intelligence Enhancements planning; **R1.2-004** implemented the Homepage Mood Experience refinement; **R1.2-005** completed the Mood Card Luxury Balance Pass; **R1.2-006** completed the Sri Traveller Experience Review; **R1.2-007** completed Workstream 2 Product Analysis; **R1.2-008** consolidated the tracker as Version 1.5; **R1.2-009** completed Workstream 2 UX Implementation; **R1.2-010** completed Workstream 2 Engineering Completion; **R1.2-011** completed Workstream 2 Functional QA; **R1.2-012** completed Workstream 2 Traveller Experience Validation; and **R1.2-013** closed Workstream 2 and consolidated the tracker as Version 1.6. Future Release 1.2 cards continue sequentially from `R1.2-014`. This convention does not renumber or otherwise affect existing `EBC-0xx` cards from Release 1.0/1.1.
+**EBC Numbering Convention:** Release 1.2 EBCs use a release-based numbering sequence rather than the legacy `EBC-0xx` numbering used through Release 1.1. **R1.2-001** created this document; **R1.2-002** added Journey Passport OTP Verification planning; **R1.2-003** added Homepage Simplification and Destination Intelligence Enhancements planning; **R1.2-004** implemented the Homepage Mood Experience refinement; **R1.2-005** completed the Mood Card Luxury Balance Pass; **R1.2-006** completed the Sri Traveller Experience Review; **R1.2-007** completed Workstream 2 Product Analysis; **R1.2-008** consolidated the tracker as Version 1.5; **R1.2-009** completed Workstream 2 UX Implementation; **R1.2-010** completed Workstream 2 Engineering Completion; **R1.2-011** completed Workstream 2 Functional QA; **R1.2-012** completed Workstream 2 Traveller Experience Validation; **R1.2-013** closed Workstream 2 and consolidated the tracker as Version 1.6; **R1.2-014** completed an independent Homepage Architecture Validation Review (Arjun — Product/IA; Sophie — UX/Visual Hierarchy) re-confirming Workstream 1 and 2 outcomes against the live implementation — **this EBC is explicitly NOT the tracker's Workstream 3** (Destination Intelligence remains Workstream 3's approved scope; see both reviewers' own Section 0.1 scope notes) and is numbered sequentially here specifically to avoid that confusion; and **R1.2-015** performed this documentation-alignment pass, filed R1.2-014's findings into their proper sections below, and confirmed Workstream 3 required no change. Future Release 1.2 cards continue sequentially from `R1.2-016`. This convention does not renumber or otherwise affect existing `EBC-0xx` cards from Release 1.0/1.1.
 
 ---
 
@@ -41,6 +41,8 @@
 | 1.5 | 16-Aug-2026 | Keerthi | R1.2-011 | Completed Workstream 2 Functional QA. 24 of 25 checks passed with 0 defects found; 1 check (a dedicated tablet-width responsive pass) was blocked by test-tooling limitations rather than a product issue, with partial incidental evidence showing no breakage. Confirmed no normal guest interaction reaches the retired Experiences feature. Recommendation: PASS. |
 | 1.5 | 16-Aug-2026 | Sri | R1.2-012 | Completed Workstream 2 independent Traveller Experience Validation. Found the retirement makes the homepage read as simpler and more complete, with a seamless Hero-to-Destinations transition and no sense that anything is missing. No material improvements identified. Recommendation: Approve for Workstream 2 Closure. |
 | 1.6 | 16-Aug-2026 | Rad | R1.2-013 | Closed Workstream 2 following completed Product Analysis (R1.2-007), UX Implementation (R1.2-009), Engineering Completion (R1.2-010), Functional QA (R1.2-011) and Traveller Experience Validation (R1.2-012). Reconciled dashboard, milestone, workstream, task, dependency, checklist and programme-metric status; verified the decision log and all numbering/cross-references remain consistent. Workstream 3 (Destination Intelligence) is now the next active implementation stream. Documentation only — no application code, routing or Product Decisions were changed. |
+| 1.7 | 16-Aug-2026 | Arjun / Sophie | R1.2-014 | Completed an independent Homepage Architecture Validation Review of the live, implemented homepage — Arjun (Product/Business/IA) and Sophie (UX/Visual Hierarchy) each re-derived findings directly from the current repository rather than citing the WS1/WS2 chain alone. Both independently found no new evidence to reopen DEC-R1.2-009/012 (Experiences retirement) and confirmed the ten-section homepage narrative is coherent and release-ready. Both also independently flagged, in their own Section 0.1, that this review's informal "WS3" card title conflicts with the tracker's real Workstream 3 (Destination Intelligence) and recommended it be filed under its own sequential EBC number instead — adopted here as R1.2-014. New findings (Trust Points icon treatment and imagery, Header tablet-range CTA breakpoint, Contact Preview CTA routing, an unused colour-token system, an orphaned off-brand Experiences component) are recorded as new Open Product Decisions (Section 8), a new Decision Log entry (DEC-R1.2-013) and a new Technical Debt Register (Section 13). No code, design or configuration was changed; Workstream 3's own scope was left untouched. |
+| 1.7 | 17-Aug-2026 | Rad | R1.2-015 | Documentation alignment pass (EBC `R1.2-WS3-EBC-RAD-001`). Confirmed this tracker already reflected the implemented homepage as of v1.6 (R1.2-013) — Workstream 1 and Workstream 2 fully documented and Complete. Identified that this EBC's own Task 1/2/6 instructions (rename Workstream 3 to "Homepage Architecture Optimisation"; rewrite R1.2-03.01–03.04) would have misapplied R1.2-014's homepage findings onto the tracker's unrelated, still-Proposed Destination Intelligence workstream; escalated to the Product Owner per Project Instructions Section 35 rather than silently resolving the conflict. Per the Product Owner's direction: Workstream 3 and its tasks (R1.2-03.01–03.15) were left entirely unchanged; R1.2-014's findings were instead filed under their own EBC number into the Decision Log (DEC-R1.2-013), Open Product Decisions (OPEN-R1.2-007–009) and a new Technical Debt Register (Section 13); a stale "Version 1.5" reference and a stale decision-log-through-DEC-012 reference in the Release Checklist (Section 12) were corrected to match the current version. Documentation only — no application code, architecture, Workstream 3 scope or Product Decisions were changed. |
 
 ---
 
@@ -82,7 +84,7 @@ Release 1.2 deepens the traveller experience established in Release 1.1 through 
 
 ## Current Status
 
-**Implementation in Progress.** Workstream 1 is ✅ Complete, including the Trust Strip redesign, Mood Card refinement, Luxury Balance Pass, functional QA, Traveller Experience Review and Business Acceptance. Workstream 2 is now also ✅ Complete: Product Analysis (R1.2-007), UX Implementation (R1.2-009), Engineering Completion (R1.2-010), Functional QA (R1.2-011) and Traveller Experience Validation (R1.2-012) have all closed with no open defects, and the Product Owner has approved Workstream 2 for closure. Workstream 3 (Destination Intelligence) is now the next active implementation stream. Remaining workstreams continue according to the Release 1.2 roadmap.
+**Implementation in Progress.** Workstream 1 is ✅ Complete, including the Trust Strip redesign, Mood Card refinement, Luxury Balance Pass, functional QA, Traveller Experience Review and Business Acceptance. Workstream 2 is now also ✅ Complete: Product Analysis (R1.2-007), UX Implementation (R1.2-009), Engineering Completion (R1.2-010), Functional QA (R1.2-011) and Traveller Experience Validation (R1.2-012) have all closed with no open defects, and the Product Owner has approved Workstream 2 for closure. An independent Homepage Architecture Validation Review (R1.2-014, Arjun and Sophie) has since re-confirmed both workstreams' outcomes against the live homepage, with no recommendation to reopen either — see Section 13. Workstream 3 (Destination Intelligence) remains unaffected by that review and is now the next active implementation stream. Remaining workstreams continue according to the Release 1.2 roadmap.
 
 ## Planned Release Sequence
 
@@ -112,11 +114,11 @@ Tiger (Programme & Delivery Lead) — owns this document and consolidates delive
 
 ## Last Updated
 
-16 August 2026
+17 August 2026
 
 ## Document Version
 
-1.6
+1.7
 
 ---
 
@@ -141,13 +143,13 @@ These principles apply to every product, UX, architecture, engineering, content 
 
 | Metric | Current Value | Notes |
 |---|---|---|
-| Overall Progress | Implementation in Progress | 2 of 8 workstreams are ✅ Complete (Workstream 1, Workstream 2); Workstream 3 (Destination Intelligence) is now the next active implementation stream. |
+| Overall Progress | Implementation in Progress | 2 of 8 workstreams are ✅ Complete (Workstream 1, Workstream 2); Workstream 3 (Destination Intelligence) is now the next active implementation stream. An independent Homepage Architecture Validation Review (R1.2-014) has re-confirmed Workstreams 1 and 2 with no recommendation to reopen either; it does not change this count. |
 | Number of Workstreams | 8 | All are approved release scope; individual lifecycle statuses are recorded in Section 5. |
 | Number of Completed Workstreams | 2 | Workstream 1 and Workstream 2 are both Complete. |
-| Number of Open Decisions | 4 | See Section 8 (2 further decisions — OPEN-R1.2-001, OPEN-R1.2-002 — retired/resolved; see Section 8's Retired sub-list) |
-| Number of Approved Decisions | 12 | DEC-R1.2-001 through DEC-R1.2-012; see Section 7. No new decisions were introduced by Workstream 2 closure. |
-| Number of EBCs | 13 | R1.2-001 through R1.2-013; see Document Change History. |
-| Number of Completed EBCs | 13 | R1.2-001 through R1.2-013 are complete as of this consolidation. |
+| Number of Open Decisions | 7 | See Section 8 (2 further decisions — OPEN-R1.2-001, OPEN-R1.2-002 — retired/resolved; see Section 8's Retired sub-list). Includes 3 new decisions (OPEN-R1.2-007–009) raised by the R1.2-014 Homepage Architecture Validation Review. |
+| Number of Approved Decisions | 13 | DEC-R1.2-001 through DEC-R1.2-013; see Section 7. DEC-R1.2-013 records the R1.2-014 validation review's confirmed outcome. |
+| Number of EBCs | 15 | R1.2-001 through R1.2-015; see Document Change History. |
+| Number of Completed EBCs | 15 | R1.2-001 through R1.2-015 are complete as of this consolidation. |
 | Number of Completed Tasks | 33 of 128 | All 19 Workstream 1 tasks, all 13 Workstream 2 tasks (R1.2-02.01–02.13, analysis and implementation) and R1.2-07.05 are Complete. |
 | Task Status Breakdown | 33 Complete · 0 Approved · 95 Proposed (of 128) | Reconciled against Section 6 task tables; the 4 tasks that moved from Approved to Complete this update are R1.2-02.10–02.13. |
 | Number of Deferred Items | See Section 9 | Future Release Candidates carried from `RELEASE-1.2-BACKLOG.md` and R1.1 deferrals |
@@ -540,6 +542,7 @@ Only decisions that materially influence product behaviour, architecture, UX or 
 | DEC-R1.2-010 | 15-Aug-2026 | Introduce weighted destination preference ordering using Primary/Secondary/Tertiary Journey and Memory mappings; this becomes the preferred Journey Director recommendation model. The implementation may choose numerical weighting internally, but this tracker deliberately avoids prescribing fixed scores | Strengthens destination intelligence and improves recommendation accuracy while keeping the business specification stable and independent of the underlying implementation | Workstream 3 (renamed Destination Intelligence) scoped accordingly; requires Archie's architecture review before implementation; does not change the served-destination guardrail (DEC-R1.2-004 / R1.1 DEC-010) | Approved |
 | DEC-R1.2-011 | 15-Aug-2026 | Journey Passport traveller name field shall prevent numeric characters from being entered | Improves Journey Passport data quality | Workstream 4 scoped to add name-field validation | Approved |
 | DEC-R1.2-012 | 16-Aug-2026 | **Temporary Retirement of Experiences from the Public Website.** Release 1.2 establishes Journey Mood Cards and Journey Passport as the single traveller discovery model. The Experiences feature remains preserved in the repository for future redesign but will no longer be publicly accessible. Implementation must remove the Homepage entry, Header navigation, Footer navigation and all intentional internal links; redirect guest requests to `/experiences`; and preserve the implementation, assets, code and future reusability. | Avoid competing traveller journeys while preserving future investment. | Workstream 2 analysis is complete and implementation is approved and ready. DEC-R1.2-009 remains the original retirement decision; this decision adds the approved public-access, Footer, internal-link, redirect and preservation requirements. | Approved |
+| DEC-R1.2-013 | 17-Aug-2026 | **Homepage Architecture Validation confirmed; Experiences retirement remains valid.** Following the independent R1.2-014 Homepage Architecture Validation Review (Arjun — Product/IA; Sophie — UX/Visual Hierarchy), the Product Owner confirms: (1) the Experiences retirement (DEC-R1.2-009/012) remains valid, with no new evidence found to reopen it; (2) the Experiences implementation, assets and code remain intentionally retained as a reusable technical asset for possible future redesign, not as unresolved debt; (3) the current ten-section homepage architecture (Header → Hero/Mood Cards → Destinations → Trust Points → Traveller Stories → Trust Strip → Travel Inspiration → About/Promise Preview → Contact Preview → Footer) is validated as coherent and release-ready; (4) there is no recommendation to restore Experiences to the public homepage, navigation or footer. | Independent Product and UX re-confirmation of Workstream 1/2 outcomes, requested to validate the tracker before Workstream 3 proceeds. | Workstreams 1 and 2 remain Complete and unchanged. Future homepage optimisation should prioritise the Trust Points section (imagery/iconography — OPEN-R1.2-009) and the Header's tablet-range CTA breakpoint (OPEN-R1.2-007) ahead of any other homepage polish. Workstream 3 (Destination Intelligence) scope is unaffected. | Approved |
 
 ---
 
@@ -553,6 +556,9 @@ These remain unresolved and must stay visible until the Product Owner formally r
 | OPEN-R1.2-004 | Future destination intelligence enhancements beyond R1.2 (e.g. deeper Journey Director scoring, additional compatibility tuning, beyond the R1.2-scoped Workstream 3 weighted preference model) | Workstream 3 / general roadmap | Scope boundary for what belongs in R1.2 vs a future release; prevents Workstream 3 from silently expanding beyond the approved weighted Primary/Secondary/Tertiary model | Under Discussion |
 | OPEN-R1.2-005 | Long-term strategy for refreshing and maintaining the geographic dataset used for destination autocomplete | Workstream 6 | The free datasets selected in R1.2-06.02 will need a maintenance cadence (refresh frequency, source-of-truth ownership, handling new/renamed places) that is beyond a one-time investigation | Under Discussion |
 | OPEN-R1.2-006 | Future expansion of OTP verification — should OTP eventually be introduced for Plan My Experience, Contact Us and Callback Request? | Workstream 5 | Determines whether OTP scope grows beyond Journey Passport in a future release; current decision (DEC-R1.2-006) limits OTP to Journey Passport only | Deferred |
+| OPEN-R1.2-007 | Should the Header's persistent nav and CTA move from the `xl` (1280px) breakpoint to `lg` (1024px), so the entire tablet range (including landscape iPad) regains one-tap access to "Plan My Experience" instead of only reaching it via the hamburger menu? | R1.2-014 (Sophie) | Currently every tablet viewport loses the persistent CTA that Design Principle 05 and prior reviews describe as available "at every scroll depth" — in practice that guarantee only holds from 1280px up. Low-Medium severity, non-blocking, but named by Sophie as one of two findings worth a specific Tiger/Vivek decision. | Under Discussion |
+| OPEN-R1.2-008 | Trust Points is the homepage's only section with neither photography nor a proper icon set (its four "icons" are raw Unicode glyphs, off-system per `ICONOGRAPHY.md`) — should it gain a proper icon set and/or a photographic element, or is "text only" a deliberate choice worth preserving for this specific section? | R1.2-014 (Sophie / Arjun) | It is the homepage's most trust-critical section (the company's own stated differentiators) and, per Sophie's review, currently also its visually plainest. The icon-set fix is a small, contained P2 improvement; the photography question needs Arjun/Vivek input before any change. | Under Discussion |
+| OPEN-R1.2-009 | Should the Contact Preview section's CTA link to `/contact` (in addition to, or instead of, `/journey-passport`-only), given its heading ("When you are ready, we are here") and contact-channel column both read as "talk to someone" while the button alone routes to the self-serve Journey Passport flow? | R1.2-014 (Arjun) | Low-impact — the section already offers WhatsApp/Phone/Email directly — but Arjun named this the single P1 item worth a specific Product decision from this review. | Under Discussion |
 
 ### Retired / Resolved Open Decisions
 
@@ -683,16 +689,16 @@ This is a release-readiness checklist for R1.2 at the master-tracker level. A de
 ## Delivery
 
 - [ ] All 8 workstreams are Complete or explicitly Deferred with Product Owner acceptance
-- [x] All EBCs raised under Release 1.2 through R1.2-013 are completed
+- [x] All EBCs raised under Release 1.2 through R1.2-015 are completed
 - [ ] No known functional release blocker remains open
 
 ## Documentation
 
-- [x] This document (`RELEASE-1.2.md`) is current at Version 1.5
+- [x] This document (`RELEASE-1.2.md`) is current at Version 1.7
 - [ ] `PROJECT-HISTORY.md` updated with the Release 1.2 entry
 - [ ] Release notes prepared
-- [x] Decision log (Section 7) reflects all approved material decisions through DEC-R1.2-012
-- [ ] Open decisions (Section 8) are resolved or explicitly carried to a future release
+- [x] Decision log (Section 7) reflects all approved material decisions through DEC-R1.2-013
+- [ ] Open decisions (Section 8) are resolved or explicitly carried to a future release (now includes OPEN-R1.2-007–009 from R1.2-014)
 
 ## Quality
 
@@ -879,6 +885,28 @@ The observation recorded above was reviewed and consciously accepted; it does no
 No Critical, High, or Medium severity defects remain open for this workstream.
 
 Workstream 2 is therefore considered **✅ Complete**, and Workstream 3 (Destination Intelligence) is now the next active implementation stream.
+
+---
+
+## Homepage Architecture Validation Review (R1.2-014)
+
+**Status:** Accepted — re-confirms Workstream 1 and Workstream 2; does not reopen either.
+
+**Source:** Arjun (Product/Business/IA) and Sophie (UX/Visual Hierarchy), each reviewing the live, implemented homepage independently, dated 16-Aug-2026. Filed under EBC number R1.2-014 rather than a "Workstream 3" label — both reviewers independently flagged in their own reviews that a "WS3" label would conflict with the tracker's actual Workstream 3 (Destination Intelligence) and recommended sequential EBC numbering instead; Tiger/Rad adopted that recommendation when filing this review (see R1.2-015 in the Document Change History).
+
+**Outcome:** Both reviewers independently re-derived their findings directly from the current repository (not by citing the WS1/WS2 chain alone) and found no new evidence to justify reopening DEC-R1.2-009 or DEC-R1.2-012. The live ten-section homepage — Header, Hero + Journey Mood Cards, Featured Destinations, Trust Points, Traveller Stories, Trust Strip, Travel Inspiration, About/Promise Preview, Contact Preview, Footer — was assessed as coherent, low-cognitive-load and release-ready. See DEC-R1.2-013 for the recorded decision.
+
+**New findings raised as Open Product Decisions (Section 8):** the Header's tablet-range CTA breakpoint (OPEN-R1.2-007), Trust Points' icon treatment and imagery (OPEN-R1.2-008), and the Contact Preview CTA's routing (OPEN-R1.2-009). None are release-blocking.
+
+### Technical Debt Register
+
+Carried forward as intentional technical debt — not defects, not pending tasks, not release blockers:
+
+| Item | Description | Disposition |
+|---|---|---|
+| Preserved Experiences implementation | `JourneyInvitations.tsx` (the on-brand, previously-live "Journey Invitations" block) remains in the repository, unimported, per DEC-R1.2-009/012 and reaffirmed by DEC-R1.2-013. | Intentional — retained for possible future reuse. Not a defect. |
+| Orphaned off-brand `Experiences.tsx` / `ExperienceCard.tsx` | A second, separate "Experiences" component (`web/components/sections/Experiences/`) not imported anywhere in the codebase (the live `/experiences` route uses `EditorialCardGrid`/`EditorialCardItem` instead). Styled with generic grey Tailwind defaults and raw emoji/text icons — inconsistent with the site's espresso/cream/amber brand system. First identified by Sophie's R1.2-014 review. | Unused legacy component — confirmed. Recommend Rad schedule a future cleanup/removal task; carries a small risk that a future contributor mistakes it for the on-brand `JourneyInvitations.tsx`. Not actioned under this documentation-only EBC. |
+| Unused colour-token system | `web/app/globals.css` defines nine named "Brand Colors" custom properties, but no component references them as Tailwind theme-colour utilities — every component hardcodes literal hex values instead (~193 distinct hex occurrences found across `components/` and `app/`; only espresso, amber and cream are actually in active use). First identified by Sophie's R1.2-014 review. | Subject to future engineering validation — a future design-token consolidation pass (Archie/Rad) should either wire components to the existing tokens or remove the unused ones. Not a current defect; visual consistency today is maintained by developer discipline across the hardcoded values. |
 
 ---
 
