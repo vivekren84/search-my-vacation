@@ -1,3 +1,21 @@
+/**
+ * GOVERNANCE BOUNDARY — Runtime Layer: candidate pool construction.
+ *
+ * This module builds the typed candidate pool consumed by the deterministic
+ * Journey Director engine, exclusively from generated Generation Layer output
+ * (`journey-dna.json` etc.) — never from the workbook or Knowledge Base
+ * directly. Ownership: Engineering, with Operations approval required for the
+ * `CONFIDENT` vs `SUPPORTED` confidence tier. See
+ * `docs/20-Architecture/ADR-R1.2-WS3-001-Destination-Knowledge-Governance.md`
+ * Section 8 (Artefact Ownership Matrix) and
+ * `docs/09-Development/JOURNEY-DIRECTOR-RUNTIME-CATALOGUE.md`.
+ *
+ * Documentation-only addition (EBC R1.2-03.07) — candidate-building logic
+ * unchanged, including the label-mapping tables below (`EMOTION_BY_LABEL`,
+ * `THEMES_BY_LABEL`, `TRAVELLER_BY_LABEL`), which are in scope for a later
+ * Controlled Vocabulary Governance phase per ADR Section 11, not this one.
+ */
+
 import { runtimeJourneyIntelligence } from "../intelligence";
 import type {
   CandidateCapabilities,

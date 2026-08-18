@@ -1,3 +1,21 @@
+/**
+ * GOVERNANCE BOUNDARY — Generation Layer entry point.
+ *
+ * This module is the sole entry point for the Journey Intelligence Generator.
+ * It reads the Operational Layer (the enriched workbook), validates it, and
+ * deterministically writes the Generation Layer's output — `web/generated/*.json`
+ * — via `writeArtifacts.ts`. It must not make business inclusion decisions of
+ * its own; those live upstream, in the Knowledge Base (Business Layer) and the
+ * workbook (Operational Layer).
+ *
+ * Ownership: Engineering (Rad). Governed by
+ * `docs/20-Architecture/ADR-R1.2-WS3-001-Destination-Knowledge-Governance.md`,
+ * Section 6 (Layered Architecture) and Section 8 (Artefact Ownership Matrix).
+ * See also `docs/09-Development/JOURNEY-DIRECTOR-RUNTIME-CATALOGUE.md`.
+ *
+ * Documentation-only addition (EBC R1.2-03.07) — no generator behaviour changed.
+ */
+
 import { resolve } from "node:path";
 
 import { generateArtifactObjects } from "./generateArtifacts.js";

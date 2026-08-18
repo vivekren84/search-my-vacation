@@ -1,3 +1,16 @@
+/**
+ * GOVERNANCE BOUNDARY — Generation Layer → Runtime Layer.
+ *
+ * This module is the fail-closed integrity boundary between the Generation
+ * Layer's output (`web/generated/*.json`) and the Runtime Layer. It performs
+ * build-time static imports and checksum/version verification only; it must
+ * not re-derive or override any Generation Layer decision. See
+ * `docs/20-Architecture/ADR-R1.2-WS3-001-Destination-Knowledge-Governance.md`
+ * Section 6 (Layered Architecture) and Section 10 (Synchronisation Principles).
+ *
+ * Documentation-only addition (EBC R1.2-03.07) — verification logic unchanged.
+ */
+
 import compatibilityMatrixJson from "../../../generated/compatibility-matrix.json";
 import constraintLibraryJson from "../../../generated/constraint-library.json";
 import manifestJson from "../../../generated/intelligence-manifest.json";
