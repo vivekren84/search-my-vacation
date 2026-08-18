@@ -9,7 +9,7 @@
 | Item | Value |
 |---|---|
 | Document | Release 1.2 Master Planning & Tracking Document |
-| Version | 1.9 |
+| Version | 1.10 |
 | Status | Draft — Active Implementation |
 | Origin EBC | R1.2-001 (see Document Change History below for every EBC that has updated this document) |
 | Product Owner | Vivek |
@@ -17,9 +17,9 @@
 | Purpose | Single source of truth for Release 1.2 planning, execution, QA, decision tracking and release readiness |
 | Baseline | Release 1.1 — `v1.1.0` |
 | Related | `docs/10-Backlog/RELEASE-1.2-BACKLOG.md` (source roadmap ideas), `docs/09-Development/PROJECT-HISTORY.md`, `docs/10-Backlog/RELEASE-1.1-MASTER-TRACKER.md` (R1.1 precedent), `docs/20-Architecture/ADR-R1.2-WS3-001-Destination-Knowledge-Governance.md` (governing architecture for Destination Intelligence — Status: Accepted) |
-| Last Updated | 17 August 2026 |
+| Last Updated | 18 August 2026 |
 
-**EBC Numbering Convention:** Release 1.2 EBCs use a release-based numbering sequence rather than the legacy `EBC-0xx` numbering used through Release 1.1. **R1.2-001** created this document; **R1.2-002** added Journey Passport OTP Verification planning; **R1.2-003** added Homepage Simplification and Destination Intelligence Enhancements planning; **R1.2-004** implemented the Homepage Mood Experience refinement; **R1.2-005** completed the Mood Card Luxury Balance Pass; **R1.2-006** completed the Sri Traveller Experience Review; **R1.2-007** completed Workstream 2 Product Analysis; **R1.2-008** consolidated the tracker as Version 1.5; **R1.2-009** completed Workstream 2 UX Implementation; **R1.2-010** completed Workstream 2 Engineering Completion; **R1.2-011** completed Workstream 2 Functional QA; **R1.2-012** completed Workstream 2 Traveller Experience Validation; **R1.2-013** closed Workstream 2 and consolidated the tracker as Version 1.6; **R1.2-014** completed an independent Homepage Architecture Validation Review (Arjun — Product/IA; Sophie — UX/Visual Hierarchy) re-confirming Workstream 1 and 2 outcomes against the live implementation — **this EBC is explicitly NOT the tracker's Workstream 3** (Destination Intelligence remains Workstream 3's approved scope; see both reviewers' own Section 0.1 scope notes) and is numbered sequentially here specifically to avoid that confusion; **R1.2-015** performed this documentation-alignment pass, filed R1.2-014's findings into their proper sections below, and confirmed Workstream 3 required no change; **R1.2-016** added a reference to the newly-created `ADR-R1.2-WS3-001-Destination-Knowledge-Governance.md` (authored under `ADR-R1.2-WS3-EBC-ARCHIE-001`) as the governing architecture document for Destination Intelligence — see Section 6.3; and **R1.2-017** finalised that ADR's status from Proposed to Accepted following its formal ratification by the Business Owner and Architecture Reviewer (authored under `ADR-R1.2-WS3-EBC-ARCHIE-002`), and updated this tracker's reference to it accordingly. Future Release 1.2 cards continue sequentially from `R1.2-018`. This convention does not renumber or otherwise affect existing `EBC-0xx` cards from Release 1.0/1.1.
+**EBC Numbering Convention:** Release 1.2 EBCs use a release-based numbering sequence rather than the legacy `EBC-0xx` numbering used through Release 1.1. **R1.2-001** created this document; **R1.2-002** added Journey Passport OTP Verification planning; **R1.2-003** added Homepage Simplification and Destination Intelligence Enhancements planning; **R1.2-004** implemented the Homepage Mood Experience refinement; **R1.2-005** completed the Mood Card Luxury Balance Pass; **R1.2-006** completed the Sri Traveller Experience Review; **R1.2-007** completed Workstream 2 Product Analysis; **R1.2-008** consolidated the tracker as Version 1.5; **R1.2-009** completed Workstream 2 UX Implementation; **R1.2-010** completed Workstream 2 Engineering Completion; **R1.2-011** completed Workstream 2 Functional QA; **R1.2-012** completed Workstream 2 Traveller Experience Validation; **R1.2-013** closed Workstream 2 and consolidated the tracker as Version 1.6; **R1.2-014** completed an independent Homepage Architecture Validation Review (Arjun — Product/IA; Sophie — UX/Visual Hierarchy) re-confirming Workstream 1 and 2 outcomes against the live implementation — **this EBC is explicitly NOT the tracker's Workstream 3** (Destination Intelligence remains Workstream 3's approved scope; see both reviewers' own Section 0.1 scope notes) and is numbered sequentially here specifically to avoid that confusion; **R1.2-015** performed this documentation-alignment pass, filed R1.2-014's findings into their proper sections below, and confirmed Workstream 3 required no change; **R1.2-016** added a reference to the newly-created `ADR-R1.2-WS3-001-Destination-Knowledge-Governance.md` (authored under `ADR-R1.2-WS3-EBC-ARCHIE-001`) as the governing architecture document for Destination Intelligence — see Section 6.3; **R1.2-017** finalised that ADR's status from Proposed to Accepted following its formal ratification by the Business Owner and Architecture Reviewer (authored under `ADR-R1.2-WS3-EBC-ARCHIE-002`), and updated this tracker's reference to it accordingly; and **R1.2-018** closed the Workstream 3 planning chapter (authored under native EBC ID `R1.2-03.06-EBC-RAD`), recording completion of the WS3 governance/planning chain and readiness to begin implementation — see Section 5's Workstream 3 entry for the ID-collision note explaining why this update is recorded here rather than against the Section 6.3 task table's own, unrelated `R1.2-03.05`/`R1.2-03.06` rows. Future Release 1.2 cards continue sequentially from `R1.2-019`. This convention does not renumber or otherwise affect existing `EBC-0xx` cards from Release 1.0/1.1.
 
 ---
 
@@ -45,6 +45,7 @@
 | 1.7 | 17-Aug-2026 | Rad | R1.2-015 | Documentation alignment pass (EBC `R1.2-WS3-EBC-RAD-001`). Confirmed this tracker already reflected the implemented homepage as of v1.6 (R1.2-013) — Workstream 1 and Workstream 2 fully documented and Complete. Identified that this EBC's own Task 1/2/6 instructions (rename Workstream 3 to "Homepage Architecture Optimisation"; rewrite R1.2-03.01–03.04) would have misapplied R1.2-014's homepage findings onto the tracker's unrelated, still-Proposed Destination Intelligence workstream; escalated to the Product Owner per Project Instructions Section 35 rather than silently resolving the conflict. Per the Product Owner's direction: Workstream 3 and its tasks (R1.2-03.01–03.15) were left entirely unchanged; R1.2-014's findings were instead filed under their own EBC number into the Decision Log (DEC-R1.2-013), Open Product Decisions (OPEN-R1.2-007–009) and a new Technical Debt Register (Section 13); a stale "Version 1.5" reference and a stale decision-log-through-DEC-012 reference in the Release Checklist (Section 12) were corrected to match the current version. Documentation only — no application code, architecture, Workstream 3 scope or Product Decisions were changed. |
 | 1.8 | 17-Aug-2026 | Archie | R1.2-016 | Created `docs/20-Architecture/ADR-R1.2-WS3-001-Destination-Knowledge-Governance.md` (authored under EBC `ADR-R1.2-WS3-EBC-ARCHIE-001`), the permanent Architecture Decision Record formalising the Destination Knowledge Governance architecture reviewed across Workstream 3 (`R1.2-03.01`–`03.04`). The ADR is a faithful, non-reinterpreting restatement of the already-agreed architecture — no architectural decision, principle, or investigation finding was changed. ADR status recorded as Proposed, pending Vivek's formal ratification (see the ADR's own Decision History). This tracker's Document Information "Related" field and Workstream 3 section (6.3) now reference the ADR as the governing architecture document for Destination Intelligence; future Workstream 3 implementation EBCs (`R1.2-03.07` onward) should treat it as their primary architectural prerequisite. As with `R1.2-03.02`–`03.04` before it, this EBC's own native ID (`ADR-R1.2-WS3-EBC-ARCHIE-001`) does not follow the sequential `R1.2-0XX` convention; it is recorded here as `R1.2-016` per that convention's own stated purpose (tracking every EBC that updates this document), consistent with how `R1.2-015` recorded `R1.2-WS3-EBC-RAD-001`. Documentation only — no application code, runtime configuration, generator, workbook, or recommendation logic was changed. |
 | 1.9 | 17-Aug-2026 | Archie | R1.2-017 | Documentation finalisation pass (EBC `ADR-R1.2-WS3-EBC-ARCHIE-002`). Following completion of the Workstream 3 Architecture & Product Review and formal approval by the Business Owner (Vivek) and Architecture Reviewer (Tiger), updated `ADR-R1.2-WS3-001-Destination-Knowledge-Governance.md`'s status from "Proposed — ready for Product Owner ratification" to "Accepted"; added a standard ADR metadata block and an Effective Date field; recorded the ratification as a new Decision History entry within the ADR itself. Corrected this tracker's Workstream 3 "Governing architecture" reference (Section 6.3) and the Document Information "Related" field, both of which previously described the ADR as pending ratification, to reflect its Accepted status. No architectural principle, governance decision, or investigation finding was changed — housekeeping only, consistent with this EBC's explicit constraints. |
+| 1.10 | 18-Aug-2026 | Rad | R1.2-018 | Documentation alignment pass (native EBC ID `R1.2-03.06-EBC-RAD`) closing the Workstream 3 planning chapter. Recorded completion of the full WS3 governance/planning chain — Product Analysis (Arjun), Traveller Experience/UX Validation (Sophie), Knowledge Base Synchronisation Audit (Rad), Source Comparison & Runtime Trace Analysis (Rad), Governance Architecture (Archie), `ADR-R1.2-WS3-001-Destination-Knowledge-Governance.md` (Accepted), and Implementation Planning (Rad, `docs/09-Development/EBC-R1.2-03.05-RAD-Destination-Intelligence-Implementation-Planning.md`) — via a new "Workstream 3 Planning Dashboard" and "WS3 Implementation Readiness" subsection under Section 5, updated the Workstream 3 narrative and Status field (Proposed → Approved — Planning Complete, Implementation Ready to Begin), and reconciled the Section 3 dashboard EBC counts and Section 12 checklist's stale EBC/version cross-references. **Flagging a literal ID collision per Project Instructions Section 35, consistent with the same category of mismatch already named in R1.2-015/016/017:** this EBC's own native ID (`R1.2-03.06-EBC-RAD`) and its instruction to mark "R1.2-03.05" Complete both collide with pre-existing, unrelated Section 6.3 task-table rows — `R1.2-03.05` ("Define analytics considerations," Owner Archie, Proposed) and `R1.2-03.06` ("Regression testing," Owner Keerthi, Proposed) — which remain part of the original, not-yet-started Destination Mapping/Deep-Linking/Weighted-Model implementation scope defined under EBC R1.2-003. Consistent with the Product Owner's prior direction on this exact pattern (R1.2-015), those task-table rows and every task status under `R1.2-03.01`–`03.15` were left entirely unchanged; this update is recorded under the tracker's own sequential EBC-numbering convention (`R1.2-018`) instead, and the completed WS3 governance/planning chain is referenced by its own document paths rather than by conflating it with the Section 6.3 task IDs. Documentation only — no application code, generators, runtime assets, datasets, workbooks, architecture documents, or implementation task status was changed. |
 
 ---
 
@@ -86,7 +87,7 @@ Release 1.2 deepens the traveller experience established in Release 1.1 through 
 
 ## Current Status
 
-**Implementation in Progress.** Workstream 1 is ✅ Complete, including the Trust Strip redesign, Mood Card refinement, Luxury Balance Pass, functional QA, Traveller Experience Review and Business Acceptance. Workstream 2 is now also ✅ Complete: Product Analysis (R1.2-007), UX Implementation (R1.2-009), Engineering Completion (R1.2-010), Functional QA (R1.2-011) and Traveller Experience Validation (R1.2-012) have all closed with no open defects, and the Product Owner has approved Workstream 2 for closure. An independent Homepage Architecture Validation Review (R1.2-014, Arjun and Sophie) has since re-confirmed both workstreams' outcomes against the live homepage, with no recommendation to reopen either — see Section 13. Workstream 3 (Destination Intelligence) remains unaffected by that review and is now the next active implementation stream. Remaining workstreams continue according to the Release 1.2 roadmap.
+**Implementation in Progress.** Workstream 1 is ✅ Complete, including the Trust Strip redesign, Mood Card refinement, Luxury Balance Pass, functional QA, Traveller Experience Review and Business Acceptance. Workstream 2 is now also ✅ Complete: Product Analysis (R1.2-007), UX Implementation (R1.2-009), Engineering Completion (R1.2-010), Functional QA (R1.2-011) and Traveller Experience Validation (R1.2-012) have all closed with no open defects, and the Product Owner has approved Workstream 2 for closure. An independent Homepage Architecture Validation Review (R1.2-014, Arjun and Sophie) has since re-confirmed both workstreams' outcomes against the live homepage, with no recommendation to reopen either — see Section 13. Workstream 3 (Destination Intelligence) remains unaffected by that review; its governance/planning chain — Product Analysis, UX/Traveller Experience Validation, Knowledge Base Synchronisation Audit, Source Comparison & Runtime Trace Analysis, Governance Architecture, `ADR-R1.2-WS3-001` (Accepted) and Implementation Planning — is now ✅ Complete (R1.2-018), and Workstream 3 is Approved and ready to begin implementation against its Section 6.3 task table; see Section 5 for the WS3 Implementation Readiness checklist. Remaining workstreams continue according to the Release 1.2 roadmap.
 
 ## Planned Release Sequence
 
@@ -116,11 +117,11 @@ Tiger (Programme & Delivery Lead) — owns this document and consolidates delive
 
 ## Last Updated
 
-17 August 2026
+18 August 2026
 
 ## Document Version
 
-1.7
+1.10
 
 ---
 
@@ -145,13 +146,13 @@ These principles apply to every product, UX, architecture, engineering, content 
 
 | Metric | Current Value | Notes |
 |---|---|---|
-| Overall Progress | Implementation in Progress | 2 of 8 workstreams are ✅ Complete (Workstream 1, Workstream 2); Workstream 3 (Destination Intelligence) is now the next active implementation stream. An independent Homepage Architecture Validation Review (R1.2-014) has re-confirmed Workstreams 1 and 2 with no recommendation to reopen either; it does not change this count. |
+| Overall Progress | Implementation in Progress | 2 of 8 workstreams are ✅ Complete (Workstream 1, Workstream 2); Workstream 3 (Destination Intelligence) is now the next active implementation stream. An independent Homepage Architecture Validation Review (R1.2-014) has re-confirmed Workstreams 1 and 2 with no recommendation to reopen either; it does not change this count. Workstream 3's planning/governance chain is now ✅ Complete (R1.2-018) and its Status has moved from Proposed to Approved — Planning Complete, Implementation Ready to Begin; this does not change the completed-workstream count, since none of its Section 6.3 implementation tasks have started. |
 | Number of Workstreams | 8 | All are approved release scope; individual lifecycle statuses are recorded in Section 5. |
 | Number of Completed Workstreams | 2 | Workstream 1 and Workstream 2 are both Complete. |
 | Number of Open Decisions | 7 | See Section 8 (2 further decisions — OPEN-R1.2-001, OPEN-R1.2-002 — retired/resolved; see Section 8's Retired sub-list). Includes 3 new decisions (OPEN-R1.2-007–009) raised by the R1.2-014 Homepage Architecture Validation Review. |
 | Number of Approved Decisions | 13 | DEC-R1.2-001 through DEC-R1.2-013; see Section 7. DEC-R1.2-013 records the R1.2-014 validation review's confirmed outcome. |
-| Number of EBCs | 17 | R1.2-001 through R1.2-017; see Document Change History. |
-| Number of Completed EBCs | 17 | R1.2-001 through R1.2-017 are complete as of this consolidation. |
+| Number of EBCs | 18 | R1.2-001 through R1.2-018; see Document Change History. |
+| Number of Completed EBCs | 18 | R1.2-001 through R1.2-018 are complete as of this consolidation. |
 | Number of Completed Tasks | 33 of 128 | All 19 Workstream 1 tasks, all 13 Workstream 2 tasks (R1.2-02.01–02.13, analysis and implementation) and R1.2-07.05 are Complete. |
 | Task Status Breakdown | 33 Complete · 0 Approved · 95 Proposed (of 128) | Reconciled against Section 6 task tables; the 4 tasks that moved from Approved to Complete this update are R1.2-02.10–02.13. |
 | Number of Deferred Items | See Section 9 | Future Release Candidates carried from `RELEASE-1.2-BACKLOG.md` and R1.1 deferrals |
@@ -245,7 +246,7 @@ Tasks: R1.2-02.01 through R1.2-02.13 (Section 6.2) — all Complete.
 | Goal | Make Featured Destination cards deep-link directly into a relevant, pre-mapped Journey Passport flow instead of a generic entry; establish a weighted Primary/Secondary/Tertiary destination preference model (Journey and Memory) that becomes the preferred Journey Director recommendation model — the foundation of a broader Destination Intelligence Model, documented as business concepts rather than fixed numerical scores. The weighting model shall influence recommendation ranking only and shall not override Journey Director's existing destination eligibility and business guardrails. |
 | Business Value | Shorter path from inspiration to a personalised recommendation; improved conversion from the homepage; improved recommendation accuracy and better destination ranking through weighted preference intelligence |
 | Priority | P1 |
-| Status | Proposed |
+| Status | Approved — Planning Complete, Implementation Ready to Begin |
 | Dependencies | Benefits from Workstream 2's taxonomy outcome (which concept the deep link should target); depends on Workstream 6 for destination-level data quality if mapping references autocomplete-validated place names; R1.2-03.11 (Journey Director recommendation-ordering review) requires Archie's architecture review before implementation |
 | Owner | Arjun (destination/journey mapping), Rad (implementation), Archie (fallback/analytics architecture, weighted-model architecture review) |
 | Risks | Mapping table can become stale as destinations are added/removed; fallback behaviour must be robust or broken links will damage trust; the weighted preference model changing Journey Director's recommendation output without adequate review — see RISK-R1.2-011 |
@@ -258,6 +259,32 @@ Tasks: R1.2-03.01 through R1.2-03.15 (Section 6.3).
 **Governing architecture:** `docs/20-Architecture/ADR-R1.2-WS3-001-Destination-Knowledge-Governance.md` (Status: **Accepted**, ratified 17 August 2026) is the governing architecture document for Destination Intelligence source-of-truth, synchronisation, controlled-vocabulary and lifecycle governance, formalising the findings of `R1.2-03.01`–`03.04`. Implementation tasks in this workstream (`R1.2-03.07` onward) should treat it as their primary architectural prerequisite alongside the Architecture note above.
 
 **Destination Intelligence Model (Tiger's guidance):** the destination mapping spreadsheet is the starting point of a broader Destination Intelligence Model, not merely a configuration table. `Journey 1/2/3` and `Memory 1/2/3` represent Primary/Secondary/Tertiary Journey and Memory preferences respectively — business concepts that guide Journey Director recommendations. This tracker deliberately avoids prescribing fixed numerical weights; the relative priority (Primary/Secondary/Tertiary) is the documented product specification, and the underlying implementation/weighting approach may evolve across future releases without requiring a change to this specification.
+
+### Workstream 3 Planning Dashboard
+
+| Phase | Status |
+|---|---|
+| Discovery | ✅ Complete |
+| Validation | ✅ Complete |
+| Architecture | ✅ Complete |
+| Governance | ✅ Complete |
+| Implementation Planning | ✅ Complete |
+| Implementation | ▶ Ready to Begin |
+
+This dashboard tracks the WS3 governance/planning chain (Arjun's Product Analysis; Sophie's UX/Traveller Experience Validation; Rad's Knowledge Base Synchronisation Audit and Source Comparison & Runtime Trace Analysis; Archie's Governance Architecture and `ADR-R1.2-WS3-001`; and Rad's Implementation Planning, `docs/09-Development/EBC-R1.2-03.05-RAD-Destination-Intelligence-Implementation-Planning.md`). It is distinct from the Section 6.3 task table below, whose `R1.2-03.01`–`03.15` statuses remain Proposed — none of that implementation work has started as of this update.
+
+### WS3 Implementation Readiness
+
+- [x] ADR Accepted
+- [x] Governance Complete
+- [x] Implementation Plan Approved
+- [x] Technical Investigation Complete
+- [x] Architecture Complete
+- [x] Ready to commence implementation
+
+This is a status checklist reflecting the completed governance/planning chain above, not an implementation checklist — it does not itself track or imply progress on any Section 6.3 task.
+
+**Workstream 3 narrative:** governance activities for Destination Intelligence have concluded, the implementation plan (`R1.2-03.05`/Rad) has been approved, and the workstream is now entering the execution phase. Implementation will proceed in accordance with `ADR-R1.2-WS3-001-Destination-Knowledge-Governance.md` as the governing architectural document, sequenced per the approved implementation plan's phasing (Phase 0 Governance Foundations through Phase 5 Validation/QA/Release).
 
 ---
 
@@ -693,12 +720,12 @@ This is a release-readiness checklist for R1.2 at the master-tracker level. A de
 ## Delivery
 
 - [ ] All 8 workstreams are Complete or explicitly Deferred with Product Owner acceptance
-- [x] All EBCs raised under Release 1.2 through R1.2-015 are completed
+- [x] All EBCs raised under Release 1.2 through R1.2-018 are completed
 - [ ] No known functional release blocker remains open
 
 ## Documentation
 
-- [x] This document (`RELEASE-1.2.md`) is current at Version 1.7
+- [x] This document (`RELEASE-1.2.md`) is current at Version 1.10
 - [ ] `PROJECT-HISTORY.md` updated with the Release 1.2 entry
 - [ ] Release notes prepared
 - [x] Decision log (Section 7) reflects all approved material decisions through DEC-R1.2-013
