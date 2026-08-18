@@ -26,14 +26,14 @@ Superseded By : —
 | Owner | Archie — Technical Architect |
 | Reviewer | Tiger — Programme and Delivery Lead |
 | Business Approver | Vivek — Product Owner |
-| Originating EBC | `ADR-R1.2-WS3-EBC-ARCHIE-001` (this document's authoring EBC); architecture itself originates from `R1.2-03.04-EBC-ARCHIE`; finalised to Accepted status under `ADR-R1.2-WS3-EBC-ARCHIE-002` |
+| Originating EBC | `ADR-R1.2-WS3-EBC-ARCHIE-001` (this document's authoring EBC); architecture itself originates from `R1.2-03.04-EBC-ARCHIE`; finalised to Accepted status under `ADR-R1.2-WS3-EBC-ARCHIE-002`; Outstanding Decision 1 closed and Governance Roles section (8.1) added under `R1.2-03.08A-EBC-ARCHIE` |
 | Applies to | Destination Intelligence: the Destination Knowledge Base, the Journey Intelligence generation pipeline, the Journey Director runtime catalogue, and all public/presentation surfaces that reference destination data |
 | Supersedes | None — first ADR for this domain |
 | Superseded by | None |
 | Location | `docs/20-Architecture/ADR-R1.2-WS3-001-Destination-Knowledge-Governance.md` |
 | Effective date | 17 August 2026 |
 | Date created | 17 August 2026 |
-| Last updated | 17 August 2026 (status finalised to Accepted, `ADR-R1.2-WS3-EBC-ARCHIE-002`) |
+| Last updated | 18 August 2026 (Outstanding Decision 1 closed — Destination Operational Steward assigned to Rad; Governance Roles section added, `R1.2-03.08A-EBC-ARCHIE`) |
 
 ---
 
@@ -166,13 +166,26 @@ Consolidates ownership already defined in `DESTINATION-KNOWLEDGE-BASE.md` §15.1
 | Artefact | Owner | Purpose | Consumers |
 | --- | --- | --- | --- |
 | `DESTINATION-KNOWLEDGE-BASE.md` | Product & Experience, with Operations approval (KB §15.1) | Business source of truth | Everything downstream, in principle |
-| Seed/operational workbook | **Destination Operational Steward** — role not currently assigned to any Team Satvi persona (Section 15, Outstanding Decision 1) | Generation-ready authoring surface, KB-derived | Generation Layer only |
+| Seed/operational workbook | **Destination Operational Steward** — Rad (assigned 18 August 2026; Outstanding Decision 1 closed — Section 15) | Generation-ready authoring surface, KB-derived | Generation Layer only |
 | Generator (`web/scripts/journey-intelligence/*`) | Engineering (Rad) | Deterministic transformation to runtime JSON | `web/generated/*.json` |
 | `web/generated/*.json` | Engineering (generated artefact, never hand-edited) | Runtime matching facts | `loadRuntimeIntelligence.ts` |
 | Runtime catalogue (`release1Candidates.ts`, `catalogue.mappings.ts`) | Engineering, with Operations approval for confidence tier (Runtime Catalogue §13) | Typed candidate pool | Deterministic engine |
 | Deterministic engine, Recommendation Adapter | Engineering (Architecture Checkpoint, EBC-003C) | Eligibility, scoring, ranking, presentation translation | Journey Director UI |
 | `public-destinations.config.ts`, `destination-images.config.ts` | Content & Experience | Public browse content | `/destinations` page only |
 | `journey-director.config.ts` presentation catalogue | Content & Experience (copy) / Engineering (contract) | Presentation-only "moments", CTA | Recommendation Adapter, presentation only |
+
+### 8.1 Governance Roles
+
+Consolidates, for quick reference, the primary responsibility of each governance role named across this ADR. All are existing Team Satvi personas (Project Instructions Sections 3–10) except the Destination Operational Steward, which this ADR introduces and Section 15 Decision 1 assigns. This section names responsibility, not change authority — see Section 9 for who must approve a specific type of change.
+
+| Governance Role | Primary Responsibility (within Destination Intelligence governance) |
+| --- | --- |
+| Business Owner (Vivek) | Final approval and release authority; ratifies this ADR and any future material change to it (Section 9); approves destination/region status changes and controlled-vocabulary additions alongside Product & Experience |
+| Destination Operational Steward (Rad) | Owns and maintains the Operational Layer (seed/operational workbook); authors KB-derived, generation-ready operational records; approves operational-layer row-set changes, subordinate to an existing KB-approved status (Sections 8, 9, 12) |
+| Architecture Owner (Archie) | Owns this ADR and the target-state Destination Intelligence architecture; reviews and approves engine, adapter, or scoring-logic changes (Section 9) |
+| Product Owner / Product & Experience (Arjun) | Owns Business Layer content — destination/region existence and status, controlled vocabulary, recommendation rules, narrative standards (Sections 7, 11); advances destinations through the Proposed and Approved (KB Active) lifecycle stages (Section 12) |
+| UX Owner (Sophie) | Owns presentation-layer traveller experience for destination content — public browse content and imagery treatment; validates the Presentation Ready lifecycle stage (Section 12) |
+| QA Owner (Keerthi) | Validates, as part of the Release Governance Workflow, that a KB-approved destination is actually recommendable end-to-end — not only that KB documentation is internally consistent (Section 13) |
 
 ---
 
@@ -265,7 +278,7 @@ What R1.3 needs as an explicit go-forward decision, not an architecture blocker:
 
 These require Tiger/Vivek decision and are not resolved by this ADR:
 
-1. **Destination Operational Steward** — no current Team Satvi persona owns this role today; it is the single most consequential ownership gap this architecture identifies.
+1. **Destination Operational Steward** — **Status: Closed – Approved, 18 August 2026.** Rad is appointed Destination Operational Steward for Release 1.2, approved by Vivek (Business Owner) and Tiger (Architecture Reviewer) following escalation during `R1.2-03.08` Phase 1 implementation; see Decision History and Section 8 (Artefact Ownership Matrix) / Section 8.1 (Governance Roles). This was the single most consequential ownership gap this architecture identified; it is now resolved.
 2. **Warn-mode vs. block-mode** for the KB-to-Operational Reconciliation Check at launch — this ADR recommends warn-mode first, escalating to block-on-*new*-gaps once the existing four-destination register is resolved or explicitly deferred.
 3. **Resolution of Amritsar, Assam, Corbett, and Darjeeling** specifically — mechanism is a product/operational decision; this ADR requires only that the resolution be visible, dated, and owned (via the lifecycle model, Section 12).
 4. **Traveller Type vocabulary scope** — formalise at 5 (current runtime state) or extend toward the KB's approved 9.
@@ -300,8 +313,9 @@ These require Tiger/Vivek decision and are not resolved by this ADR:
 | 17 Aug 2026 | `R1.2-03.04-EBC-ARCHIE` — Target-state governance architecture drafted | Archie |
 | 17 Aug 2026 | This ADR created, formalising the above as a permanent governance document | Archie |
 | 17 Aug 2026 | Workstream 3 Architecture & Product Review completed; this ADR formally approved by the Business Owner and the Architecture Reviewer. Status changed from **Proposed — ready for Product Owner ratification** to **Accepted**. No architectural principle, governance decision, or investigation finding was modified as part of this approval or its documentation finalisation (`ADR-R1.2-WS3-EBC-ARCHIE-002`) | Vivek (Business Owner, ratification), Tiger (Architecture Reviewer), Archie (documentation finalisation) |
+| 18 Aug 2026 | Outstanding Decision 1 (Destination Operational Steward) closed following escalation during `R1.2-03.08` Phase 1 implementation (`EBC-R1.2-03.08-RAD-Phase-1-Business-Operational-Alignment-Implementation.md`, Section 2/8/10). Rad appointed Destination Operational Steward for Release 1.2. Artefact Ownership Matrix (Section 8) and Outstanding Product Decisions (Section 15, Decision 1) updated to record the appointment; a new Governance Roles subsection (8.1) added consolidating existing role responsibilities. No architectural principle, layer boundary, source-of-truth assignment, or other governance decision was changed (`R1.2-03.08A-EBC-ARCHIE`) | Vivek (Business Owner, approval), Tiger (Architecture Reviewer, approval), Archie (documentation) |
 
-This ADR is now **Accepted**, per the ratification recorded above. Future material changes to this architecture must be recorded as new rows in this table, not as silent edits to the sections above, and must be made through a new or explicitly superseding ADR rather than an edit to this one (Tiger's note, `ADR-R1.2-WS3-EBC-ARCHIE-002`) — this ADR should require no further edits unless superseded.
+This ADR is now **Accepted**, per the ratification recorded above. Future material changes to this architecture must be recorded as new rows in this table, not as silent edits to the sections above, and must be made through a new or explicitly superseding ADR rather than an edit to this one (Tiger's note, `ADR-R1.2-WS3-EBC-ARCHIE-002`) — this ADR should require no further edits unless superseded. Closing an already-identified Outstanding Product Decision (Section 15) — as recorded above for Decision 1 — is not a material change to the architecture itself and does not require a superseding ADR; Section 15's remaining open items will be closed the same way, as new Decision History rows, as Tiger/Vivek resolve each.
 
 ---
 
