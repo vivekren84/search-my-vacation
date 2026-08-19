@@ -7,6 +7,7 @@ import type { ArtifactVerificationReport } from "./verifyArtifacts.js";
 import type { DeterminismReport } from "./verifyDeterminism.js";
 import type {
   GenerationResult,
+  LabelMappingReport,
   ValidationReport,
   WorkbookModel,
 } from "./types.js";
@@ -25,6 +26,7 @@ export async function writeGenerationReport(input: {
   model: WorkbookModel;
   validation: ValidationReport;
   kbReconciliation: KbReconciliationReport;
+  labelMappings: LabelMappingReport;
   result: GenerationResult;
   verification: ArtifactVerificationReport;
   determinism: DeterminismReport;
@@ -65,6 +67,28 @@ export async function writeGenerationReport(input: {
           .map((finding) => `- \`${finding.code}\` (KB §${finding.kbSection}): ${finding.message}`)
           .join("\n");
   const kbFindingsOpen = input.kbReconciliation.findings.length > 0;
+
+  const labelComparison =
+    input.labelMappings.comparison.length === 0
+      ? "- None. Every operational-layer Traveller Type/Emotional Goal/Desired Experience label has a governed runtime-ID mapping, and every governed mapping entry has a matching operational-layer label."
+      : input.labelMappings.comparison
+          .map((finding) => `- \`${finding.code}\` (${finding.vocabulary} — "${finding.label}"): ${finding.message}`)
+          .join("\n");
+
+  const reachabilityRows = input.labelMappings.reachability
+    .map((entry) => {
+      const kbColumn = entry.kbApprovedSize !== undefined ? `${entry.kbApprovedSize}` : "—";
+      return `| ${entry.vocabulary} | ${entry.runtimeVocabularySize} | ${entry.reachableCount} | ${entry.reachablePercentage}% | ${kbColumn} |`;
+    })
+    .join("\n");
+
+  const unreachableDetail = input.labelMappings.reachability
+    .filter((entry) => entry.unreachable.length > 0)
+    .map(
+      (entry) =>
+        `- **${entry.vocabulary}** (${entry.unreachable.length} unreachable): ${entry.unreachable.join(", ")}`,
+    )
+    .join("\n") || "- None. Every runtime vocabulary value is reachable through at least one current mapping entry.";
 
   const content = `# Journey Intelligence Generation Report
 
@@ -123,6 +147,24 @@ Compares every KB §10/§11 \`ACTIVE\` destination and named Collection member r
 
 ${kbFindings}
 
+## Controlled Vocabulary Comparison & Reachability (WP-5)
+
+Compares the governed \`EMOTION_BY_LABEL\`/\`THEMES_BY_LABEL\`/\`TRAVELLER_BY_LABEL\` mapping (\`web/scripts/journey-intelligence/labelMappingSource.ts\`) against this workbook's \`Traveller Types\`/\`Emotional Goals\`/\`Desired Experiences\` sheets, and reports how much of each runtime vocabulary (\`EmotionId\`/\`ThemeId\`/\`TravellerType\`) is reachable through the resulting generated tables — the mechanical fix for RC-6 (\`docs/09-Development/EBC-R1.2-03.03-RAD-Destination-Intelligence-Source-Comparison-Runtime-Trace.md\` §7). This section is separate from the Warnings and KB Reconciliation sections above and is never omitted. See \`docs/09-Development/R1.2-WS3-IMP-02-EBC-RAD-WP5-Implementation.md\` for the full design rationale.
+
+### Comparison
+
+${labelComparison}
+
+### Reachability
+
+| Vocabulary | Runtime type size | Reachable | Reachable % | KB-approved size |
+| --- | ---: | ---: | ---: | ---: |
+${reachabilityRows}
+
+${unreachableDetail}
+
+**TravellerType governance note:** the runtime \`TravellerType\` type itself carries 5 values (100% of which are reachable today); the Knowledge Base (§8) approves 9. Extending the runtime type and the operational layer's \`Traveller Types\` sheet toward the KB's full vocabulary is Open Decision OD-4 (\`docs/09-Development/EBC-R1.2-03.05-RAD-Destination-Intelligence-Implementation-Planning.md\` §12) and remains unresolved — this report makes the gap visible, per this EBC's \`governance-compliant handling\` requirement, and does not resolve it.
+
 ## Determinism
 
 - Generator executions: ${input.determinism.generatorExecutions}
@@ -143,6 +185,8 @@ A successful generation run is not, by itself, automatically promotable to \`web
 
 - [ ] KB → Operational Reconciliation findings above have been reviewed.
 - [ ] ${kbFindingsOpen ? "This run has open KB reconciliation findings — confirm whether promoting this package changes destination inclusion relative to the currently promoted package before proceeding." : "This run has no open KB reconciliation findings."}
+- [ ] Controlled Vocabulary Comparison & Reachability findings above have been reviewed.
+- [ ] ${input.labelMappings.comparison.length > 0 ? "This run has open label-mapping comparison findings — confirm whether promoting this package changes vocabulary reach relative to the currently promoted package before proceeding." : "This run has no open label-mapping comparison findings."}
 - [ ] If destination inclusion or vocabulary reach changes as a result of promoting this package, Product & Experience approval has been obtained (ADR §9).
 - [ ] If this is routine content refresh only (no inclusion or vocabulary-reach change), promotion may proceed under Engineering's existing authority.
 

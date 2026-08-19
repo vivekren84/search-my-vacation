@@ -112,7 +112,7 @@ The production sequence is:
 1. load and checksum the workbook;
 2. validate workbook structure and cross-references;
 3. run the KB → Operational Reconciliation Check (Warn Mode — see below);
-4. create all seven data artifacts in memory;
+4. create all seven data artifacts in memory, including the generated controlled-vocabulary label mappings folded into `metadata.json` (see below);
 5. write them to a process-specific temporary directory;
 6. calculate artifact SHA-256 checksums;
 7. create metadata and the Intelligence Manifest;
@@ -123,7 +123,7 @@ The production sequence is:
 12. write the generation report; and
 13. confirm workbook immutability.
 
-If any step fails, the previous valid generated directory is restored and incomplete temporary output is removed. The KB → Operational Reconciliation Check never fails this sequence — see below.
+If any step fails, the previous valid generated directory is restored and incomplete temporary output is removed. The KB → Operational Reconciliation Check and the Controlled Vocabulary Mapping Generation step never fail this sequence — see below.
 
 ### KB → Operational Reconciliation Check (WP-4)
 
@@ -132,6 +132,12 @@ Added under `R1.2-WS3-IMP-01A-EBC-RAD`. `validateKbReconciliation.ts` compares e
 This is a **Warn Mode** check only, ratified by `DEC-R1.2-015` (`docs/09-Development/DEC-R1.2-015-Ratification-Warn-Mode-First.md`): findings are written to a dedicated, always-present "KB → Operational Reconciliation" section of the generation report, distinct from the existing `REVIEW_REQUIRED` warnings section, and never block or alter generation. The generation report also carries a Promotion Review Checklist (ADR-R1.2-WS3-001 §9) reminding whoever promotes a new package that a change to destination inclusion or vocabulary reach requires Product & Experience approval before promotion.
 
 Region-level reconciliation currently covers the two KB-defined Collections only (Northeast, Wildlife — KB §7.3); plain `Destination`-type KB entries are reconciled at destination level. See `docs/09-Development/R1.2-WS3-IMP-01A-EBC-RAD-WP4-Implementation.md` for the full design rationale and known follow-ups.
+
+### Controlled Vocabulary Mapping Generation (WP-5)
+
+Added under `R1.2-WS3-IMP-02-EBC-RAD`. `generateLabelMappings.ts` validates the governed `EMOTION_BY_LABEL`/`THEMES_BY_LABEL`/`TRAVELLER_BY_LABEL` mapping (`labelMappingSource.ts` — a mechanical transcription of the previously hand-authored tables in `release1Candidates.ts`, unchanged in value) against the operational layer's current `Traveller Types`/`Emotional Goals`/`Desired Experiences` sheets, and folds the result into `metadata.json`'s new `labelMappings` field: the generated tables themselves (restricted to operational-layer labels that still have a mapping), a comparison of labels-without-mapping/mappings-without-label, and a reachability count for each of `EmotionId`/`ThemeId`/`TravellerType` against the full runtime type union — the mechanical fix for RC-6 (`docs/09-Development/EBC-R1.2-03.03-RAD-Destination-Intelligence-Source-Comparison-Runtime-Trace.md` §7).
+
+`release1Candidates.ts` now reads `EMOTION_BY_LABEL`/`THEMES_BY_LABEL`/`TRAVELLER_BY_LABEL` from `runtimeJourneyIntelligence.metadata.labelMappings` instead of hand-authoring them inline. This never extends either vocabulary — the Traveller Type gap against the Knowledge Base's approved 9 (Open Decision OD-4, `EBC-R1.2-03.05` §12) remains open and unresolved; the report only makes it visible. See `docs/09-Development/R1.2-WS3-IMP-02-EBC-RAD-WP5-Implementation.md` for the full design rationale.
 
 ## Artifact responsibilities
 
@@ -143,7 +149,7 @@ Region-level reconciliation currently covers the two KB-defined Collections only
 | `reason-library.json` | Controlled reason-code definitions referenced by compatibility and constraints |
 | `journey-seeds.json` | Governed narrative seeds for later composition work |
 | `journey-templates.json` | Duration and journey-rhythm structure |
-| `metadata.json` | Package-level provenance, counts and validation summary |
+| `metadata.json` | Package-level provenance, counts, validation summary, and the generated controlled-vocabulary label mappings (WP-5) |
 | `intelligence-manifest.json` | Package identity, checksums, counts, validation and generation metadata |
 
 ## Intelligence Manifest

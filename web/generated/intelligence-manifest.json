@@ -21,7 +21,7 @@
       "path": "generated/journey-templates.json"
     },
     "metadata": {
-      "checksum": "1c614623bf0ee556d07f91baf17408836b79c2baa8e0384232b80487bb0a2c0c",
+      "checksum": "db4f43c46a2355516cc939bfe8a1894c63ec3e1da0d42703419c0b7dcfdeb557",
       "path": "generated/metadata.json"
     },
     "reasonLibrary": {
@@ -29,12 +29,12 @@
       "path": "generated/reason-library.json"
     }
   },
-  "generatedAt": "2026-08-19T13:30:14.787Z",
+  "generatedAt": "2026-08-19T16:32:54.158Z",
   "generatedFromWorkbook": "Journey Director Intelligence Enriched.xlsx",
   "generation": {
     "compatibilityRulesGenerated": 3382,
     "contradictionsGenerated": 244,
-    "durationMilliseconds": 129,
+    "durationMilliseconds": 108,
     "recordsProcessed": 107,
     "validationRulesExecuted": 12925
   },
