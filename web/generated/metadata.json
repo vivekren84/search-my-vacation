@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-30T13:55:15.295Z",
+  "generatedAt": "2026-08-19T13:30:14.787Z",
   "generatedFrom": "Journey Director Intelligence Enriched.xlsx",
   "generatorVersion": "1.0.0",
   "recordCounts": {
@@ -22,7 +22,7 @@
   "validation": {
     "reviewRequiredRecords": 15,
     "status": "PASS",
-    "warnings": 16
+    "warnings": 17
   },
-  "workbookChecksum": "b90a6af3d661197dcdebe75b941eb060788fbe2cb209b67ae4167560d5a1f8a8"
+  "workbookChecksum": "868271e5d094d0c0915f8963da57cce6b57a37d432b0c14869867791c0bc1047"
 }

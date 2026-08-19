@@ -1,40 +1,40 @@
 {
   "artifacts": {
     "compatibilityMatrix": {
-      "checksum": "9150b2d9f532a98c88b13ce3b8c03f0f31bfe6ad530a8c14f8e107a22d82fa53",
+      "checksum": "64390bc22016f889381c4a56a83bbf1d2ee80405f999bf092b3ae98ae39ae7c9",
       "path": "generated/compatibility-matrix.json"
     },
     "constraintLibrary": {
-      "checksum": "786f5ac4e30aad09e1bc092d109a204018121001aee7bb84024cb9f35ebc1f8e",
+      "checksum": "727a434e1dc93dd088d7fddbb6837ae9e4ad14338a0910c094339f61f99c2f2b",
       "path": "generated/constraint-library.json"
     },
     "journeyDNA": {
-      "checksum": "62fe9a15eac5e1fcb4a2163fe95fe6a34f620142f901c8ddc2e8bcd54f8d583a",
+      "checksum": "3194d80e324ae7908e11e2fc78eaa470c8fe68ca045dd6029eea507e3911ced6",
       "path": "generated/journey-dna.json"
     },
     "journeySeeds": {
-      "checksum": "9b61447b3ddc5ac1866a3484c9b828e7f087b3877f9375379614a1aa59f4da70",
+      "checksum": "f41260fdd9eb57fbac0a8c5ad15b4d97b351fb0210c571aa731ccd51e67174a3",
       "path": "generated/journey-seeds.json"
     },
     "journeyTemplates": {
-      "checksum": "d9b718487562e524cc63e4392123d6ddfbd5dd0c84717c3926340238f8c64281",
+      "checksum": "4fe806f2bf760d8354f01f374e9c2434e38c9027c1baa32d3f073afeb824a446",
       "path": "generated/journey-templates.json"
     },
     "metadata": {
-      "checksum": "9fb0505ee9fc1252883531d2da6dfdf9ec0991be7aa479e378baef06b28f594d",
+      "checksum": "1c614623bf0ee556d07f91baf17408836b79c2baa8e0384232b80487bb0a2c0c",
       "path": "generated/metadata.json"
     },
     "reasonLibrary": {
-      "checksum": "48a1452098775f05c889314a26abcd574d7d555d1486575f54b57b92bbcc31b9",
+      "checksum": "afb1b0432f8ee5ec2765da59804eacdb70239054aaba314e4b1d7e280a5e3d15",
       "path": "generated/reason-library.json"
     }
   },
-  "generatedAt": "2026-07-30T13:55:15.295Z",
+  "generatedAt": "2026-08-19T13:30:14.787Z",
   "generatedFromWorkbook": "Journey Director Intelligence Enriched.xlsx",
   "generation": {
     "compatibilityRulesGenerated": 3382,
     "contradictionsGenerated": 244,
-    "durationMilliseconds": 98,
+    "durationMilliseconds": 129,
     "recordsProcessed": 107,
     "validationRulesExecuted": 12925
   },
@@ -62,13 +62,13 @@
     "checksPassed": 12925,
     "reviewRequiredRecords": 15,
     "status": "PASS",
-    "warnings": 16
+    "warnings": 17
   },
-  "workbookChecksum": "b90a6af3d661197dcdebe75b941eb060788fbe2cb209b67ae4167560d5a1f8a8",
+  "workbookChecksum": "868271e5d094d0c0915f8963da57cce6b57a37d432b0c14869867791c0bc1047",
   "workbookMetadata": {
-    "createdAt": null,
+    "createdAt": "2026-08-18T13:06:29Z",
     "filename": "Journey Director Intelligence Enriched.xlsx",
-    "modifiedAt": null,
+    "modifiedAt": "2026-08-19T11:53:55Z",
     "version": null
   }
 }

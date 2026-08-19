@@ -111,18 +111,27 @@ The production sequence is:
 
 1. load and checksum the workbook;
 2. validate workbook structure and cross-references;
-3. create all seven data artifacts in memory;
-4. write them to a process-specific temporary directory;
-5. calculate artifact SHA-256 checksums;
-6. create metadata and the Intelligence Manifest;
-7. verify the complete temporary package;
-8. atomically swap it into `web/generated/`;
-9. verify the active package;
-10. run the two-execution determinism comparison;
-11. write the generation report; and
-12. confirm workbook immutability.
+3. run the KB → Operational Reconciliation Check (Warn Mode — see below);
+4. create all seven data artifacts in memory;
+5. write them to a process-specific temporary directory;
+6. calculate artifact SHA-256 checksums;
+7. create metadata and the Intelligence Manifest;
+8. verify the complete temporary package;
+9. atomically swap it into `web/generated/`;
+10. verify the active package;
+11. run the two-execution determinism comparison;
+12. write the generation report; and
+13. confirm workbook immutability.
 
-If any step fails, the previous valid generated directory is restored and incomplete temporary output is removed.
+If any step fails, the previous valid generated directory is restored and incomplete temporary output is removed. The KB → Operational Reconciliation Check never fails this sequence — see below.
+
+### KB → Operational Reconciliation Check (WP-4)
+
+Added under `R1.2-WS3-IMP-01A-EBC-RAD`. `validateKbReconciliation.ts` compares every `ACTIVE` destination and named Collection member region in the Destination Knowledge Base (`docs/02-Product/DESTINATION-KNOWLEDGE-BASE.md` §10–§11) against `kbApprovedPortfolio.ts` — a mechanical transcription of that same KB content — and reports any KB-approved item with no corresponding row in the loaded workbook's Destination Intelligence sheet.
+
+This is a **Warn Mode** check only, ratified by `DEC-R1.2-015` (`docs/09-Development/DEC-R1.2-015-Ratification-Warn-Mode-First.md`): findings are written to a dedicated, always-present "KB → Operational Reconciliation" section of the generation report, distinct from the existing `REVIEW_REQUIRED` warnings section, and never block or alter generation. The generation report also carries a Promotion Review Checklist (ADR-R1.2-WS3-001 §9) reminding whoever promotes a new package that a change to destination inclusion or vocabulary reach requires Product & Experience approval before promotion.
+
+Region-level reconciliation currently covers the two KB-defined Collections only (Northeast, Wildlife — KB §7.3); plain `Destination`-type KB entries are reconciled at destination level. See `docs/09-Development/R1.2-WS3-IMP-01A-EBC-RAD-WP4-Implementation.md` for the full design rationale and known follow-ups.
 
 ## Artifact responsibilities
 

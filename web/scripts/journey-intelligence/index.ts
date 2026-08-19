@@ -14,6 +14,12 @@
  * See also `docs/09-Development/JOURNEY-DIRECTOR-RUNTIME-CATALOGUE.md`.
  *
  * Documentation-only addition (EBC R1.2-03.07) — no generator behaviour changed.
+ *
+ * `R1.2-WS3-IMP-01A-EBC-RAD` (WP-4) added the KB → Operational Reconciliation
+ * Check as an additional, non-blocking validation step (Warn Mode, per
+ * `DEC-R1.2-015`) between workbook validation and artifact generation. It
+ * reports findings in the generation report; it never changes which records
+ * are generated or throws to fail the run.
  */
 
 import { resolve } from "node:path";
@@ -28,6 +34,7 @@ import {
   logEvent,
   sha256File,
 } from "./utils.js";
+import { reconcileKbToOperational } from "./validateKbReconciliation.js";
 import { validateWorkbook } from "./validateWorkbook.js";
 import { verifyArtifactPackage } from "./verifyArtifacts.js";
 import { verifyDeterminism } from "./verifyDeterminism.js";
@@ -112,6 +119,15 @@ export async function runGeneration(
     warnings: validation.warnings.length,
   });
 
+  logEvent("KB Reconciliation Started", "STARTED");
+  const kbReconciliation = reconcileKbToOperational(model);
+  logEvent("KB Reconciliation Complete", "COMPLETE", {
+    mode: kbReconciliation.mode,
+    destinationsChecked: kbReconciliation.destinationsChecked,
+    memberRegionsChecked: kbReconciliation.memberRegionsChecked,
+    findings: kbReconciliation.findings.length,
+  });
+
   logEvent("Generating Journey DNA", "STARTED");
   const artifacts = generateArtifactObjects(
     model,
@@ -182,6 +198,7 @@ export async function runGeneration(
       path: options.reportPath,
       model,
       validation,
+      kbReconciliation,
       result: { ...result, reportPath: options.reportPath },
       verification,
       determinism,

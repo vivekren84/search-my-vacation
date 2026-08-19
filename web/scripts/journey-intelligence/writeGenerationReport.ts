@@ -2,6 +2,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 
 import { ARTIFACT_NAMES } from "./artifactNames.js";
+import type { KbReconciliationReport } from "./validateKbReconciliation.js";
 import type { ArtifactVerificationReport } from "./verifyArtifacts.js";
 import type { DeterminismReport } from "./verifyDeterminism.js";
 import type {
@@ -23,6 +24,7 @@ export async function writeGenerationReport(input: {
   path: string;
   model: WorkbookModel;
   validation: ValidationReport;
+  kbReconciliation: KbReconciliationReport;
   result: GenerationResult;
   verification: ArtifactVerificationReport;
   determinism: DeterminismReport;
@@ -55,6 +57,14 @@ export async function writeGenerationReport(input: {
               `- \`${warning.code}\`${warning.recordId ? ` (${warning.recordId})` : ""}: ${warning.message}`,
           )
           .join("\n");
+
+  const kbFindings =
+    input.kbReconciliation.findings.length === 0
+      ? "- None. Every KB §10/§11 `ACTIVE` destination and named Collection member region has at least one corresponding operational workbook row."
+      : input.kbReconciliation.findings
+          .map((finding) => `- \`${finding.code}\` (KB §${finding.kbSection}): ${finding.message}`)
+          .join("\n");
+  const kbFindingsOpen = input.kbReconciliation.findings.length > 0;
 
   const content = `# Journey Intelligence Generation Report
 
@@ -102,6 +112,17 @@ ${rows}
 
 ${warnings}
 
+## KB → Operational Reconciliation (WP-4)
+
+Compares every KB §10/§11 \`ACTIVE\` destination and named Collection member region (\`docs/02-Product/DESTINATION-KNOWLEDGE-BASE.md\`) against this workbook's Destination Intelligence rows. This section is separate from the Warnings above and is never omitted, regardless of finding count — see \`docs/09-Development/R1.2-WS3-IMP-01A-EBC-RAD-WP4-Implementation.md\`.
+
+- Operating mode: **${input.kbReconciliation.mode}** (Warn Mode First — ratified \`DEC-R1.2-015\`; findings are reported and do not block this run; Block Mode is not approved for Release 1.2 Phase 2)
+- KB destinations/collections checked: ${input.kbReconciliation.destinationsChecked}
+- KB Collection member regions checked: ${input.kbReconciliation.memberRegionsChecked}
+- Findings: ${input.kbReconciliation.findings.length}
+
+${kbFindings}
+
 ## Determinism
 
 - Generator executions: ${input.determinism.generatorExecutions}
@@ -115,6 +136,15 @@ ${warnings}
 The generated package is the Journey Director runtime intelligence source. The runtime loader validates the manifest, schema versions, artifact checksums, record counts, reason references, hierarchy, and indexes before exposing candidates to the existing deterministic engine.
 
 No workbook access occurs at application runtime. No Journey Passport flow, Journey Director user interface, navigation, or recommendation-screen redesign is included.
+
+## Promotion Review Checklist (ADR §9)
+
+A successful generation run is not, by itself, automatically promotable to \`web/generated/\`. Per the ADR's Change Authority Matrix (§9, "Generator default source path / promotion of a new generated package"), Product & Experience approval is required before promotion whenever a change **alters destination inclusion or vocabulary reach**; it is not required for routine content refresh.
+
+- [ ] KB → Operational Reconciliation findings above have been reviewed.
+- [ ] ${kbFindingsOpen ? "This run has open KB reconciliation findings — confirm whether promoting this package changes destination inclusion relative to the currently promoted package before proceeding." : "This run has no open KB reconciliation findings."}
+- [ ] If destination inclusion or vocabulary reach changes as a result of promoting this package, Product & Experience approval has been obtained (ADR §9).
+- [ ] If this is routine content refresh only (no inclusion or vocabulary-reach change), promotion may proceed under Engineering's existing authority.
 
 ## Deferred limitations
 
