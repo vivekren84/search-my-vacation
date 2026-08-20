@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
+import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 
 import SiteBrand from "@/components/brand/SiteBrand";
 import PublicFooter from "@/components/layout/PublicFooter";
@@ -129,6 +130,20 @@ export default function JourneyPassport() {
     passport.dispatch({ type: "set-completion", value: "idle" });
   };
   const next = () => passport.moment.id === "discover" ? complete() : passport.next();
+  // EWP-R1.2-WS4-002: the exit-confirmation dialog is a true full-screen
+  // modal (aria-modal="true", backdrop) but had no keyboard focus trap —
+  // Tab could move focus out of the open dialog into the page behind it.
+  // This keeps Tab/Shift+Tab cycling within the dialog's own focusable
+  // elements; nothing else about the dialog changes.
+  const trapExitDialogFocus = (event: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (event.key !== "Tab") return;
+    const focusable = event.currentTarget.querySelectorAll<HTMLElement>("button, a[href]");
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+  };
 
   if (showAcknowledgement) {
     const issued = closureStage === "contact" || closureStage === "departing";
@@ -185,6 +200,6 @@ export default function JourneyPassport() {
     </section>
     </main>
     {passport.moment.id === "welcome" ? <PublicFooter/> : null}
-    {showExit ? <div className="fixed inset-0 z-50 grid place-items-center bg-black/45 p-5" role="presentation"><div role="dialog" aria-modal="true" aria-labelledby="exit-title" className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"><h2 id="exit-title" className="text-xl font-semibold text-[#2A211C]">Leave your Journey Passport?</h2><p className="mt-3 text-sm leading-6 text-[#2A211C]">Your temporary progress will remain available in this browser session.</p><div className="mt-6 flex flex-wrap justify-end gap-3"><button type="button" autoFocus onClick={() => setShowExit(false)} className="min-h-11 rounded-full border border-[#d8c4a7] px-5 py-2 text-sm font-semibold text-[#2A211C]">Keep exploring</button><Link href="/" className="inline-flex min-h-11 items-center rounded-full bg-[#F5951C] px-5 py-2 text-sm font-bold text-[#2A211C]">Leave Passport</Link></div></div></div> : null}
+    {showExit ? <div className="fixed inset-0 z-50 grid place-items-center bg-black/45 p-5" role="presentation"><div role="dialog" aria-modal="true" aria-labelledby="exit-title" onKeyDown={trapExitDialogFocus} className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"><h2 id="exit-title" className="text-xl font-semibold text-[#2A211C]">Leave your Journey Passport?</h2><p className="mt-3 text-sm leading-6 text-[#2A211C]">Your temporary progress will remain available in this browser session.</p><div className="mt-6 flex flex-wrap justify-end gap-3"><button type="button" autoFocus onClick={() => setShowExit(false)} className="min-h-11 rounded-full border border-[#d8c4a7] px-5 py-2 text-sm font-semibold text-[#2A211C]">Keep exploring</button><Link href="/" className="inline-flex min-h-11 items-center rounded-full bg-[#F5951C] px-5 py-2 text-sm font-bold text-[#2A211C]">Leave Passport</Link></div></div></div> : null}
   </div>;
 }

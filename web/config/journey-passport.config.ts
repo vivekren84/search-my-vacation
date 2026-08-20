@@ -4,20 +4,20 @@ const journeyPassportImage = (group: "companions" | "dream-journeys" | "travel-s
   `/images/journey-passport/${group}/${name}.webp`;
 
 export const companionOptions: JourneyOption[] = [
-  { value: "Solo", label: "Solo", description: "Just you, and the world slowing down.", imageSrc: journeyPassportImage("companions", "solo") },
-  { value: "Couple", label: "Couple", description: "Moments meant only for two.", imageSrc: journeyPassportImage("companions", "couple") },
-  { value: "Family", label: "Family", description: "Memories that stay for a lifetime.", imageSrc: journeyPassportImage("companions", "family") },
-  { value: "Friends", label: "Friends", description: "Stories you’ll talk about forever.", imageSrc: journeyPassportImage("companions", "friends") },
-  { value: "Business", label: "Business", description: "Purposeful travel with room to reconnect and recharge.", imageSrc: journeyPassportImage("companions", "business") },
+  { value: "Solo", label: "Solo", description: "Just you, and the world slowing down.", imageSrc: journeyPassportImage("companions", "solo"), imageAlt: "Solo traveller sitting quietly above a coastal town, journaling as the sun sets over the sea" },
+  { value: "Couple", label: "Couple", description: "Moments meant only for two.", imageSrc: journeyPassportImage("companions", "couple"), imageAlt: "Couple walking hand in hand through a sunlit historic town" },
+  { value: "Family", label: "Family", description: "Memories that stay for a lifetime.", imageSrc: journeyPassportImage("companions", "family"), imageAlt: "Family sharing a beach picnic together at sunset" },
+  { value: "Friends", label: "Friends", description: "Stories you’ll talk about forever.", imageSrc: journeyPassportImage("companions", "friends"), imageAlt: "Group of friends laughing together beside a camper van on a coastal cliff" },
+  { value: "Business", label: "Business", description: "Purposeful travel with room to reconnect and recharge.", imageSrc: journeyPassportImage("companions", "business"), imageAlt: "Colleagues reviewing a laptop together in an airport lounge" },
 ];
 
 export const dreamJourneyOptions: JourneyOption[] = [
-  { value: "Tropical Escape", label: "Tropical Escape", description: "Warm water, slower mornings and open skies.", imageSrc: journeyPassportImage("dream-journeys", "tropical-escape") },
-  { value: "Mountain Retreat", label: "Mountain Retreat", description: "Fresh air, far-reaching views and room to breathe.", imageSrc: journeyPassportImage("dream-journeys", "mountain-retreat") },
-  { value: "City Discovery", label: "City Discovery", description: "New neighbourhoods, culture and stories around every corner.", imageSrc: journeyPassportImage("dream-journeys", "city-discovery") },
-  { value: "Cruise Voyage", label: "Cruise Voyage", description: "A graceful way to let the horizon lead.", imageSrc: journeyPassportImage("dream-journeys", "cruise-voyage") },
-  { value: "Winter Wonderland", label: "Winter Wonderland", description: "Quiet landscapes and a beautiful change of pace.", imageSrc: journeyPassportImage("dream-journeys", "winter-wonderland") },
-  { value: "Wildlife Adventure", label: "Wildlife Adventure", description: "Wild places that make the everyday feel far away.", imageSrc: journeyPassportImage("dream-journeys", "wildlife-adventure") },
+  { value: "Tropical Escape", label: "Tropical Escape", description: "Warm water, slower mornings and open skies.", imageSrc: journeyPassportImage("dream-journeys", "tropical-escape"), imageAlt: "Traveller walking along a palm-fringed tropical beach with turquoise water" },
+  { value: "Mountain Retreat", label: "Mountain Retreat", description: "Fresh air, far-reaching views and room to breathe.", imageSrc: journeyPassportImage("dream-journeys", "mountain-retreat"), imageAlt: "Couple relaxing on a mountain lodge terrace overlooking snow-capped peaks" },
+  { value: "City Discovery", label: "City Discovery", description: "New neighbourhoods, culture and stories around every corner.", imageSrc: journeyPassportImage("dream-journeys", "city-discovery"), imageAlt: "Traveller exploring a lively, lantern-lit city street at dusk" },
+  { value: "Cruise Voyage", label: "Cruise Voyage", description: "A graceful way to let the horizon lead.", imageSrc: journeyPassportImage("dream-journeys", "cruise-voyage"), imageAlt: "Couple watching the sunset from a cruise ship deck" },
+  { value: "Winter Wonderland", label: "Winter Wonderland", description: "Quiet landscapes and a beautiful change of pace.", imageSrc: journeyPassportImage("dream-journeys", "winter-wonderland"), imageAlt: "Family walking together through a snowy alpine village" },
+  { value: "Wildlife Adventure", label: "Wildlife Adventure", description: "Wild places that make the everyday feel far away.", imageSrc: journeyPassportImage("dream-journeys", "wildlife-adventure"), imageAlt: "Travellers on a safari vehicle watching a herd of elephants at sunset" },
 ];
 
 export const travelStyleOptions: JourneyOption[] = [
