@@ -48,3 +48,12 @@ build/
 coverage/
 # Supabase CLI local state
 supabase/.temp/
+
+# ==========================================
+# Repository maintenance quarantine (see EWP-MAINT-001)
+# ==========================================
+# _to_delete/ is a standing quarantine location used when the local
+# execution environment cannot permanently remove a file. It can grow to
+# contain large tarballs, stale build caches and other non-source cruft
+# that must never be committed to repository history.
+_to_delete/
