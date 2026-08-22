@@ -60,6 +60,7 @@ export function createSupabaseJourneyLeadRepository(
           guest_name: lead.guestName,
           mobile_number: lead.mobileNumber,
           mobile_normalized: lead.mobileNormalized,
+          mobile_e164: lead.mobileE164,
           traveller_type: lead.passportSummary.entryContext?.feeling ?? null,
           companions: { selection: lead.passportSummary.companion },
           primary_dream: lead.passportSummary.dreamJourney,

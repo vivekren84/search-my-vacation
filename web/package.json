@@ -28,6 +28,7 @@
     "verify:destination-itineraries": "tsc -p tsconfig.itinerary-verification.json && node node_modules/.cache/smv-itinerary-verification/lib/journey-itineraries/validation/verifyDestinationItineraries.js"
   },
   "dependencies": {
+    "libphonenumber-js": "^1.13.11",
     "next": "16.2.10",
     "react": "19.2.4",
     "react-dom": "19.2.4"

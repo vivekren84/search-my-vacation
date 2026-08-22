@@ -29,6 +29,7 @@ const rawSubmission: JourneyLeadSubmission = {
   passportReference: "SMV-ABCD2345",
   guestName: "Test Traveller",
   mobileNumber: "9000000000",
+  verificationToken: "11111111-2222-4333-8444-555555555555",
   passportSummary: {
     name: "Test Traveller",
     mobile: "9000000000",
@@ -127,7 +128,10 @@ function withMobile(mobileNumber: string) {
 
 async function verifyValidation() {
   const valid = parseJourneyLeadSubmission(rawSubmission);
-  assert(valid.ok && valid.value.mobileNormalized === "9000000000", "valid lead is normalized to digits");
+  assert(valid.ok && valid.value.mobileNumber === "9000000000" && valid.value.mobileNormalized === "9000000000", "valid lead keeps its original bare mobileNumber/mobileNormalized format (dual-field strategy, Callback RPC backward compatibility)");
+  assert(valid.ok && valid.value.mobileE164 === "+919000000000", "valid lead additionally derives an E.164 mobileE164 field for OTP/SMS (DEC-R1.2-002/DEC-R1.2-017)");
+  assert(!parseJourneyLeadSubmission({ ...rawSubmission, verificationToken: undefined }).ok, "missing verification token is rejected");
+  assert(!parseJourneyLeadSubmission({ ...rawSubmission, verificationToken: "not-a-uuid" }).ok, "malformed verification token is rejected");
   assert(isJourneyPassportReference("SMV-ABCD2345"), "production Passport reference is accepted");
   assert(isJourneyPassportReference("JY-ABCD-2345"), "recoverable legacy Passport reference is accepted");
   assert(!isJourneyPassportReference("SMV-123"), "malformed Passport reference is rejected");
@@ -136,13 +140,15 @@ async function verifyValidation() {
   assert(!parseJourneyLeadSubmission({ ...rawSubmission, mobileNumber: "9000abc000" }).ok, "alphabetic mobile is rejected");
   assert(!parseJourneyLeadSubmission({ ...rawSubmission, mobileNumber: "12345" }).ok, "short mobile (5 digits) is rejected");
   assert(!parseJourneyLeadSubmission({ ...rawSubmission, mobileNumber: "123456789" }).ok, "short mobile (9 digits) is rejected");
-  assert(parseJourneyLeadSubmission(withMobile("1234567890")).ok, "10-digit mobile is accepted");
+  assert(!parseJourneyLeadSubmission(withMobile("1234567890")).ok, "a 10-digit fixed-line-shaped number (leading digit 1) is rejected (mobile-only, per WS5-01 §3 intent)");
   assert(!parseJourneyLeadSubmission({ ...rawSubmission, mobileNumber: "0000000000" }).ok, "all-zero mobile is rejected");
-  assert(parseJourneyLeadSubmission(withMobile("3456789012")).ok, "mobile starting with 3 is accepted");
+  assert(!parseJourneyLeadSubmission(withMobile("3456789012")).ok, "a 10-digit fixed-line-shaped number (leading digit 3) is rejected (mobile-only, per WS5-01 §3 intent)");
   assert(parseJourneyLeadSubmission(withMobile("9876543210")).ok, "mobile starting with 9 is accepted");
   assert(!parseJourneyLeadSubmission({ ...rawSubmission, mobileNumber: "12345678901" }).ok, "11-digit mobile is rejected");
-  assert(!parseJourneyLeadSubmission({ ...rawSubmission, mobileNumber: "+91 9000000000" }).ok, "mobile with a country code prefix is rejected");
-  assert(!parseJourneyLeadSubmission({ ...rawSubmission, mobileNumber: "900-000-0000" }).ok, "mobile with special characters is rejected");
+  assert(!parseJourneyLeadSubmission(withMobile("+91 9000000000")).ok, "mobile with an explicit country code prefix is rejected (mobileNumber keeps its original bare-10-digit-only contract, dual-field strategy)");
+  assert(!parseJourneyLeadSubmission(withMobile("900-000-0000")).ok, "mobile with formatting punctuation is rejected (mobileNumber keeps its original bare-10-digit-only contract, dual-field strategy)");
+  assert(!parseJourneyLeadSubmission({ ...rawSubmission, mobileNumber: "9876543219876" }).ok, "an implausibly long digit string is rejected");
+  assert(!parseJourneyLeadSubmission({ ...rawSubmission, mobileNumber: "1123456789" }).ok, "a 10-digit fixed-line-shaped number is rejected (mobile-only, per WS5-01 §3 intent)");
   assert(!parseJourneyLeadSubmission({ ...rawSubmission, passportReference: undefined }).ok, "missing Passport reference is rejected");
   assert(!parseJourneyLeadSubmission({ ...rawSubmission, passportReference: "anything" }).ok, "arbitrary Passport reference is rejected");
   assert(!parseJourneyLeadSubmission({ ...rawSubmission, unexpected: true }).ok, "unexpected request keys are rejected");
@@ -365,9 +371,9 @@ async function verifyClientAndSecurity() {
   const passportComponent = readFileSync(join(root, "components/journey-passport/JourneyPassport.tsx"), "utf8");
   const submitIndex = passportComponent.indexOf("await submitJourneyPassportLead");
   assert(submitIndex >= 0 && submitIndex < passportComponent.indexOf("savePassport(snapshot)", submitIndex), "client saves the Director snapshot only after server storage");
-  assert(submitIndex < passportComponent.indexOf('setClosureStage("departing")', submitIndex), "Director transition starts only after storage");
+  assert(submitIndex < passportComponent.indexOf('setClosureStage("stamping")', submitIndex), "Director transition (Passport Stamp) starts only after storage");
   assert(passportComponent.includes("JOURNEY_LEAD_FAILURE_MESSAGE") && passportComponent.includes('setContactSubmission("idle")'), "storage failure restores a retryable form with preserved values");
-  assert(passportComponent.includes('disabled={contactSubmission === "submitting" || contactSubmission === "success"}'), "submitting action is disabled against rapid double clicks");
+  assert(passportComponent.includes('disabled={otpStatus === "verifying" || contactSubmission !== "idle"}'), "submitting action is disabled against rapid double clicks");
 
   const browserSources = [
     passportComponent,

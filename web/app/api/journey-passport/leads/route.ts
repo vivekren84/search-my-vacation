@@ -1,8 +1,10 @@
+import { journeyPassportOtpConfig } from "@/config/journey-passport-otp.config";
 import { createJourneyLeadNotifier } from "@/lib/journey-leads/email";
 import { consumeJourneyLeadRateLimit, journeyLeadRateLimitKey } from "@/lib/journey-leads/rate-limit";
 import { createSupabaseJourneyLeadRepository, maskPassportReference } from "@/lib/journey-leads/repository";
 import { processJourneyLead } from "@/lib/journey-leads/service";
 import { parseJourneyLeadSubmission } from "@/lib/journey-leads/validation";
+import { createSupabaseJourneyPassportOtpRepository } from "@/lib/journey-passport-otp/repository";
 
 export const runtime = "nodejs";
 
@@ -31,6 +33,22 @@ export async function POST(request: Request) {
   if (!parsed.ok) return json({ ok: false, message: FAILURE_MESSAGE }, 400);
 
   try {
+    const otpRepository = createSupabaseJourneyPassportOtpRepository(
+      { NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SECRET_KEY: process.env.SUPABASE_SECRET_KEY },
+      journeyPassportOtpConfig,
+    );
+    // DEC-R1.2-006 / EBC-R1.2-WS5-01 §6: a Journey Passport submission is
+    // accepted only after successful, single-use OTP verification. This
+    // atomically consumes the token so a captured token cannot be replayed
+    // against a second submission.
+    const verified = await otpRepository.consumeVerificationToken(parsed.value.mobileNumber, parsed.value.verificationToken);
+    if (!verified) {
+      console.error("Journey Passport lead rejected — missing or invalid OTP verification.", {
+        passportReference: maskPassportReference(parsed.value.passportReference),
+      });
+      return json({ ok: false, message: FAILURE_MESSAGE }, 403);
+    }
+
     const repository = createSupabaseJourneyLeadRepository({
       NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
       SUPABASE_SECRET_KEY: process.env.SUPABASE_SECRET_KEY,

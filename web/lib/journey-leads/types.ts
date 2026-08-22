@@ -52,12 +52,23 @@ export type JourneyLeadSubmission = {
   passportReference: string;
   guestName: string;
   mobileNumber: string;
+  /** Single-use token from a successful POST /api/journey-passport/otp/verify (DEC-R1.2-006). */
+  verificationToken: string;
   passportSummary: JourneyLeadPassportSummary;
 };
 
 export type ValidatedJourneyLead = Omit<JourneyLeadSubmission, "passportSummary"> & {
   passportSummary: JourneyLeadPassportSummary & { source: "journey-passport" };
   mobileNormalized: string;
+  /**
+   * E.164-formatted mobile number (e.g. "+919000000000"), derived at validation time via
+   * libphonenumber-js. Dual-field strategy (EBC-R1.2-WS5-03 Product Owner resolution):
+   * mobileNumber/mobileNormalized retain their original bare-national-number format for
+   * backward compatibility with the existing Callback RPC (claim_journey_passport_callback);
+   * mobileE164 is a separate, additive field used for OTP verification / SMS delivery and
+   * intended for progressive adoption by future features.
+   */
+  mobileE164: string;
   source: "journey-passport";
   status: "entered-journey-director";
 };
