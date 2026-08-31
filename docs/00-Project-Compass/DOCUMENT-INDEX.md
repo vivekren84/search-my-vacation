@@ -4,7 +4,7 @@
 
 **Owner:** Search My Vacation — Product & Experience
 
-**Last updated:** 9 August 2026
+**Last updated:** 31 August 2026
 
 This index identifies the canonical repository location for the specifications that govern the current Search My Vacation product and EBC delivery workflow. Files outside these paths are not authoritative unless a later approved decision explicitly replaces them.
 
@@ -13,9 +13,10 @@ This index identifies the canonical repository location for the specifications t
 | Document | Canonical path | Purpose |
 | --- | --- | --- |
 | Project Compass | `docs/00-Project-Compass/COMPASS.md` | Project direction and operating context |
-| Decision Log | `docs/00-Project-Compass/DECISION-LOG.md` | Approved product, design and architecture decisions |
+| Decision Log | `docs/00-Project-Compass/DECISION-LOG.md` | Approved product, design and architecture decisions — pre-Release 1.2 baseline; resumes as canonical after Release 1.2 closes. Release 1.2 decisions are live in `RELEASE-1.2.md` §7 — see Governance Map |
 | Glossary | `docs/00-Project-Compass/GLOSSARY.md` | Shared terminology |
 | Project Standards | `docs/00-Project-Compass/PROJECT-STANDARDS.md` | Repository and documentation standards |
+| Release Governance Map | `docs/00-Project-Compass/GOVERNANCE-MAP.md` | Explains where release governance information lives (decisions, tracker, ADRs, governance backlog) and how the pieces relate |
 
 ## AI Operating Model
 
@@ -78,10 +79,23 @@ This index identifies the canonical repository location for the specifications t
 | Document | Canonical path | Purpose |
 | --- | --- | --- |
 | Architecture Decision Record Template | `docs/03-ADR/ADR-000.md` | ADR structure |
-| Architecture Decisions | `docs/03-ADR/DECISIONS.md` | Architecture decision register |
+| Architecture Decisions | `docs/03-ADR/DECISIONS.md` | Architecture decision register — currently unpopulated by design; see the file's own note for the current approach and where Release 1.2's ADRs actually live |
+| ADR-R1.2-WS3-001 — Destination Knowledge Governance | `docs/20-Architecture/ADR-R1.2-WS3-001-Destination-Knowledge-Governance.md` | Release 1.2 architecture decision record — Destination Intelligence governance |
+| ADR-R1.2-WS5-001 — DLT External Provider Onboarding | `docs/20-Architecture/ADR-R1.2-WS5-001-DLT-External-Provider-Onboarding.md` | Release 1.2 architecture decision record — external provider / DLT onboarding |
 | EBC Execution Standard | `docs/09-Development/EBC-EXECUTION-STANDARD.md` | Mandatory build-card execution and validation standard |
 | EBC-002 — Journey Passport | `docs/09-Development/EBC-002-JOURNEY-PASSPORT.md` | Journey Passport implementation contract |
 | Development Guide | `docs/09-Development/README.md` | Engineering documentation conventions |
+| Release 1.2 Decision Log (live) | `docs/10-Backlog/RELEASE-1.2.md` §7 | Authoritative, actively-maintained decision register for the current release — see Governance Map |
+| GOV-001 Status Reconciliation | `docs/09-Development/EBC-R1.2-GOV-001-STATUS-RECONCILIATION.md` | Records `EBC-R1.2-GOV-001`'s status: executed via its deliverables, no standalone card document exists |
+
+## Governance and Operations
+
+| Document | Canonical path | Purpose |
+| --- | --- | --- |
+| Provider Dependency Register | `docs/30-Governance/Provider-Dependency-Register.md` | Consolidated inventory of external providers the platform relies on |
+| External Integration Definition of Done | `docs/30-Governance/External-Integration-Definition-of-Done.md` | Standard for when an external-provider integration is considered done |
+| Release 1.2 Lessons Learned | `docs/40-Retrospectives/Release-1.2-Lessons-Learned.md` | Retrospective — currently scoped to Workstream 5's MSG91/DLT onboarding experience, not a general Release 1.2 retrospective |
+| SMS/OTP Operations Runbook | `docs/50-Operations/SMS-OTP-Operations-Runbook.md` | Operational runbook for the Journey Passport OTP/SMS integration |
 
 ## Journey Director Release 1 Architecture
 

@@ -30,6 +30,7 @@
 | 1.5 | 25-Aug-2026 | Tiger | Added `TD-R1.3-008` (Improve Journey Director Production Observability) to Section 9, sourced from `OBS-8-02` (Major, WS5 Engineering Review 1 Task 8, `EBC-R1.2-WS5-REV1-08-RAD`), per `EBC-R1.2-WS5-GOV-05-TIGER-Tasks7-8-Governance-Synchronization`. Added a new Section 10, "UX Improvements" (renumbering the former Section 10 "Governance Notes" to Section 11 and Section 11 "Recommendations" to Section 12), recording a "Journey Director Recovery Messaging" note sourced from `OBS-8-01` (Minor, Task 8) — deliberately not represented as engineering technical debt. `OBS-7-01` (Major, Task 7, `EBC-R1.2-WS5-REV1-07-RAD`) is recorded in the Observation Register as open but is not converted into a backlog or UX item by this update, per this card's scope. `TD-R1.3-001`–`007` confirmed unchanged. Documentation only — no Release 1.2 scope, product decision, or implementation file was changed. |
 | 1.6 | 26-Aug-2026 | Tiger | Closure synchronization for WS5 Engineering Review 1 (Tasks 9–10, `EBC-R1.2-WS5-REV1-09-RAD`/`10-RAD`), per `EBC-R1.2-WS5-GOV-06-TIGER-Engineering-Review1-Closure-and-Governance-Synchronization`. Expanded `TD-R1.3-008` (not a new item; retitled "Improve WS5 Production Observability (Journey Director + OTP/Lead Routes)") to also cover `OBS-9-01` (Major, Task 9) — all three OTP/lead API routes discard the causal error object before it can reach a log line, in every environment, compounding `OBS-8-02`. Added `TD-R1.3-009` (Strengthen OTP Endpoint Validation & Abuse Protection, Medium), sourced solely from `OBS-4-02` (Major, Task 4), per Task 10's own recommendation to bring it in line with this review's other Major findings. Added an "OTP Response Recovery" note to Section 10 (UX Improvements), sourced from `OBS-9-02` (Major, Task 9), owned by Sophie (UX) and Rad (Engineering) — deliberately not represented as engineering technical debt, the same pattern as `OBS-7-01`/`OBS-8-01`. `TD-R1.3-001`–`007` confirmed unchanged. This closes WS5 Engineering Review 1 — every open observation now has a documented disposition. Documentation only — no Release 1.2 scope, product decision, or implementation file was changed. |
 | 1.7 | 26-Aug-2026 | Tiger | Added "Journey Passport Cross-Step Intent Synchronization" to Section 10 (UX Improvements), per `EBC-R1.2-WS5-GOV-06A-TIGER-Governance-Amendment` (Amendment 01 to `EBC-R1.2-WS5-GOV-06-TIGER-Engineering-Review1-Closure-and-Governance-Synchronization`). Unlike every other Section 10 entry, this item was not sourced from a WS5 Engineering Review 1 task; it was raised directly by the Product Owner during exploratory validation conducted after the Review's closure. Owned by Sophie (UX), Arjun (Product Analysis), and Rad (Engineering); Priority Medium. Explicitly confirmed as not a defect and not Engineering Technical Debt. `TD-R1.3-001`–`009` confirmed unchanged; no Decision Log entry added; no Release 1.2 tracker change made. Documentation only — no Release 1.2 scope, product decision, or implementation file was changed. |
+| 1.8 | 31-Aug-2026 | Tiger | Added a new Section 11, "WS3 Search Behaviour Observations (Release 1.3 Candidates)" (renumbering the former Section 11 "Governance Notes" to Section 12 and Section 12 "Recommendations" to Section 13), per `EBC-R1.2-WS7-IMP-03`, closing the gap identified by `EBC-R1.2-WS7-AUD-01`/`EBC-R1.2-WS7-GOV-01`: `OBS-R1.3-WS3-01` (Destination Ranking Refinement) and `OBS-R1.3-WS3-02` (Country-Level Search Behaviour) previously existed only inside `RELEASE-1.2.md`'s Workstream 3 closure section and had not been transcribed here, despite that closure's own explicit instruction to do so. Wording carried forward faithfully, no technical meaning changed; Priority recorded as a Tiger recommendation, not yet Product-Owner-confirmed. `TD-R1.3-001`–`009` and all Section 10 items confirmed unchanged. Documentation only — no Release 1.2 scope, product decision, or implementation file was changed. |
 
 ---
 
@@ -210,19 +211,47 @@ This item enhances the Journey Passport so that traveller intent gathered in ear
 
 ---
 
-## 11. Governance Notes
+## 11. WS3 Search Behaviour Observations (Release 1.3 Candidates)
 
-### 11.1 Release Tracker Naming — housekeeping deferred until after Release 1.2 closes
+Captured from Workstream 3's destination-search closure, per its own explicit instruction that these items be "transcribed into `RELEASE-1.3-BACKLOG.md` by a future Tiger backlog update" (`docs/10-Backlog/RELEASE-1.2.md`, Workstream 3 — Destination Search Performance & Reliability (Closed), "Release 1.3 carry-forward observations"). Both items were classified during QA as observations, not defects, and were explicitly out of scope for that closure. Wording is carried forward faithfully from the tracker; no technical meaning has been changed.
+
+**Destination Ranking Refinement.**
+
+- **Observation ID:** `OBS-R1.3-WS3-01`
+- **Source:** Release 1.2, Workstream 3 (`docs/10-Backlog/RELEASE-1.2.md`, Workstream 3 closure — "Release 1.3 carry-forward observations")
+- **Description:** Bengaluru/Chennai and similar globally-ambiguous or administrative-name searches surface ranking behaviour QA flagged as an observation, not a defect. Investigate ranking refinement in Release 1.3 while preserving the function's existing global search capability.
+- **Suggested Release:** Release 1.3
+- **Priority:** Medium (recommended — not yet confirmed by the Product Owner; this document does not assign final priority ahead of formal Release 1.3 scoping)
+- **Owner:** Rad (Engineering — ranking implementation), with Archie (Architecture) to confirm whether a ranking-model change is required
+- **Status:** Open — not yet scoped
+
+**Country-Level Search Behaviour.**
+
+- **Observation ID:** `OBS-R1.3-WS3-02`
+- **Source:** Release 1.2, Workstream 3 (`docs/10-Backlog/RELEASE-1.2.md`, Workstream 3 closure — "Release 1.3 carry-forward observations")
+- **Description:** A search for "India" returns textual place-name matches before the country-level result itself. Root cause not confirmed — possibly a ranking factor, possibly dataset-completeness. Investigate during Release 1.3.
+- **Suggested Release:** Release 1.3
+- **Priority:** Medium (recommended — not yet confirmed by the Product Owner; this document does not assign final priority ahead of formal Release 1.3 scoping)
+- **Owner:** Rad (Engineering — ranking/dataset investigation), with Archie (Architecture) to confirm whether the cause is ranking-model or dataset-completeness before scoping
+- **Status:** Open — not yet scoped
+
+Both items were product/search-behaviour QA observations, not Engineering Technical Debt (Section 9, which is WS5-specific) and not UX Improvements (Section 10, which is traveller-facing interaction/copy) — recorded in their own section for that reason, consistent with this document's existing practice of keeping distinct categories of carried-forward item visually and structurally separate.
+
+---
+
+## 12. Governance Notes
+
+### 12.1 Release Tracker Naming — housekeeping deferred until after Release 1.2 closes
 
 `docs/10-Backlog/RELEASE-1.2.md` (the live master tracker) and `docs/10-Backlog/RELEASE-1.2-BACKLOG.md` (the earlier, pre-execution planning roadmap) have overlapping names and have been referred to somewhat interchangeably across recent EBCs — first flagged by `EBC-R1.2-WS6-03`, then again by `EBC-R1.2-WS6-04`. **Per explicit Product Owner direction (23-Aug-2026), these two files shall not be renamed or consolidated during the current release.** This is recorded here as a **documentation housekeeping task, to be completed after Release 1.2 closes**, not as an open risk to Release 1.2 or Release 1.3 delivery. No action is required on this item until Release 1.2 formally closes.
 
-### 11.2 Canonical location and working-copy relationship
+### 12.2 Canonical location and working-copy relationship
 
 This document, at `docs/10-Backlog/RELEASE-1.3-BACKLOG.md`, is the canonical, repository-resident source of truth for the Release 1.3 backlog, per explicit Product Owner direction (23-Aug-2026). The Claude Project retains `EBC-R1.2-WS6-04-TIGER-Release-1.3-Backlog-Consolidation.md` and its Addendum 01 as the governance working copy and historical record of how this backlog was assembled and subsequently updated — neither document is deleted or silently rewritten, consistent with this project's decision-governance convention of superseding rather than erasing. Where the two differ, this repository document governs.
 
 ---
 
-## 12. Recommendations
+## 13. Recommendations
 
 1. **Route the Google Ads Conversion Tag integration (Section 2) into Release 1.3's architecture review queue early**, given it now carries a Product Owner commitment with a specific, named integration point (Journey Passport completion, immediately before Journey Director/WhatsApp handoff) — Archie's review should be scheduled deliberately, not left to be discovered late in Release 1.3 planning.
 2. **Treat the region-level destination intelligence evolution (Decision 1) and the Journey Clusters/Companion Destinations half of the Journey Intelligence Engine (Decision 2) as one initiative for future EBC planning, not two.** They share the same underlying data extension (region/admin-hierarchy depth) already partially designed in `EBC-R1.2-WS6-03`'s `geo_places` schema.
