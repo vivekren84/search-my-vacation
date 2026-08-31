@@ -17,8 +17,8 @@ function readPositiveInt(name: string, fallback: number, min: number, max: numbe
 }
 
 export const journeyPassportOtpConfig = {
-  /** JOURNEY_PASSPORT_OTP_EXPIRY_SECONDS — default 300 (5 min). */
-  expirySeconds: readPositiveInt("JOURNEY_PASSPORT_OTP_EXPIRY_SECONDS", 300, 30, 3600),
+  /** JOURNEY_PASSPORT_OTP_EXPIRY_SECONDS — default 600 (10 min). */
+  expirySeconds: readPositiveInt("JOURNEY_PASSPORT_OTP_EXPIRY_SECONDS", 600, 30, 3600),
   /** JOURNEY_PASSPORT_OTP_RESEND_DELAY_SECONDS — default 30. */
   resendDelaySeconds: readPositiveInt("JOURNEY_PASSPORT_OTP_RESEND_DELAY_SECONDS", 30, 0, 3600),
   /** JOURNEY_PASSPORT_OTP_MAX_RESENDS — default 2, per the approved decision. */
