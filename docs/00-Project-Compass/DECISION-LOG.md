@@ -46,7 +46,7 @@ This document resumes as the canonical decision register once Release 1.2 formal
 
 See `docs/00-Project-Compass/GOVERNANCE-MAP.md` for the full picture of where Release 1.2 governance information lives (tracker, decision log, governance backlog, architecture records) and how the pieces relate.
 
-Recorded under `EBC-R1.2-WS7-IMP-02` (Governance Documentation Reconciliation), per the findings of `EBC-R1.2-WS7-AUD-01` and `EBC-R1.2-WS7-GOV-01`.
+Recorded as part of Release 1.2 Workstream 7's documentation-reconciliation work. *Correction, `EBC-R1.2-WS7-08`, 31-Aug-2026: this line previously cited `EBC-R1.2-WS7-IMP-02`, `EBC-R1.2-WS7-AUD-01` and `EBC-R1.2-WS7-GOV-01`; independently reconfirmed that none of the three exist as repository documents or commits (see `docs/10-Backlog/RELEASE-1.2.md`, `RISK-R1.2-014`). This document's own governance note above is unaffected by the correction.*
 
 ---
 

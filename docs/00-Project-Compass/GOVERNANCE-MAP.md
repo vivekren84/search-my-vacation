@@ -3,7 +3,7 @@
 **Status:** Living index
 **Owner:** Tiger (Programme and Delivery Lead)
 **Created:** 31 Aug 2026
-**Recorded under:** `EBC-R1.2-WS7-IMP-02`, per the findings of `EBC-R1.2-WS7-AUD-01` (Documentation Completeness Audit) and `EBC-R1.2-WS7-GOV-01` (Governance Reference Reconciliation)
+**Recorded as part of:** Release 1.2 Workstream 7 (Release Documentation & Governance) documentation-reconciliation work. *Correction, `EBC-R1.2-WS7-08`, 31-Aug-2026: this line previously cited `EBC-R1.2-WS7-IMP-02`, `EBC-R1.2-WS7-AUD-01` and `EBC-R1.2-WS7-GOV-01` as the recording authority for this document; independently reconfirmed that none of the three exist as repository documents or commits (see `docs/10-Backlog/RELEASE-1.2.md`, `RISK-R1.2-014`). This document's own content and purpose are unaffected by the correction.*
 
 ## Purpose
 
