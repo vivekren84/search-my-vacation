@@ -1,3 +1,4 @@
+import { hasNumericCharacter } from "../lib/journey-passport/traveller-name";
 import type { JourneyMoment, JourneyOption, JourneyPassportState } from "@/types/journey-passport.types";
 
 const journeyPassportImage = (group: "companions" | "dream-journeys" | "travel-styles" | "timing", name: string) =>
@@ -40,13 +41,13 @@ export const timingOptions: JourneyOption[] = [
   { value: "Exact Dates", label: "Exact Dates", description: "You already have a time in mind.", imageSrc: journeyPassportImage("timing", "exact-dates"), imageAlt: "Traveller confidently confirming a specific journey on a calendar and itinerary" },
 ];
 
-export const destinationSuggestions = [
-  "Bali", "Bhutan", "Dubai", "France", "Greece", "Iceland", "Italy", "Japan", "Maldives", "New Zealand", "Singapore", "South Africa", "Sri Lanka", "Switzerland", "Thailand", "Vietnam",
-];
-
+// EBC-R1.2-WS4-IMP-01 (DEC-R1.2-011): a name is valid only if it is also
+// free of numeric characters — both name inputs already sanitise on
+// change (sanitizeTravellerName), but this keeps the validator correct in
+// its own right rather than depending solely on upstream sanitisation.
 const hasValidName = (state: JourneyPassportState) => {
   const name = state.name.trim();
-  return name.length >= 2 && name.length <= 80 && /\p{L}/u.test(name);
+  return name.length >= 2 && name.length <= 80 && /\p{L}/u.test(name) && !hasNumericCharacter(name);
 };
 
 const localToday = () => {
@@ -56,10 +57,21 @@ const localToday = () => {
 };
 
 const hasValidDates = (state: JourneyPassportState) => state.timing !== "Exact Dates" || Boolean(state.startDate && state.endDate && state.startDate >= localToday() && state.endDate > state.startDate);
-const hasValidDestination = (state: JourneyPassportState) => {
-  const destination = state.destination.trim();
-  return state.destinationMode === "discovery" || (state.destinationMode === "known" && destination.length >= 2 && destination.length <= 100 && /[\p{L}\p{N}]/u.test(destination));
-};
+// EBC-R1.2-WS6-09 (Rad, Phase 4). Retired: the known/discovery gate this
+// validator enforced no longer exists — EBC-R1.2-WS6-08 Addendum 01 A2.1
+// (Product Owner) retires it, and Preferred Destinations / Describe Your
+// Ideal Getaway are both independently optional (A2.2/A2.3). Per Sophie's
+// EBC-R1.2-WS6-05 §3.4: "Because both fields are optional, the moment's
+// validation becomes unconditional." The destination moment's own
+// `validate` is `() => true` below, matching every other always-optional
+// step in this Passport.
+
+// EBC-R1.2-WS6-11 (Keerthi, DEF-01 — Major). The destination moment's
+// title/description still echoed the retired gate's two-path framing
+// ("...invite us to help you discover somewhere special") even though
+// the gate mechanism itself was fully retired in Phase 4. Corrected here
+// to describe the two-field, no-gate layout without implying a choice
+// between paths. Copy only — no change to `validate` or field behaviour.
 
 export const journeyMoments: JourneyMoment[] = [
   { id: "welcome", number: 1, navigationLabel: "Welcome", title: "Welcome to Your Journey Passport", type: "welcome", nextLabel: "Begin My Journey", validate: () => true },
@@ -67,7 +79,7 @@ export const journeyMoments: JourneyMoment[] = [
   { id: "companions", number: 3, navigationLabel: "Companions", title: "Who will be sharing this journey with you?", description: "Every journey feels different depending on who is beside you.", type: "single-select", nextLabel: "Continue", options: companionOptions, validate: (state) => Boolean(state.companion) },
   { id: "dream-journey", number: 4, navigationLabel: "Dream Journey", title: "What kind of journey has been living in your heart lately?", description: "Choose the one that excites you most right now.", type: "single-select", nextLabel: "Continue", options: dreamJourneyOptions, validate: (state) => Boolean(state.dreamJourney) },
   { id: "pace-and-timing", number: 5, navigationLabel: "Pace & Timing", title: "How should this journey feel—and when might it begin?", description: "Choose up to three travel styles, then share the timing that feels right.", type: "pace-and-timing", nextLabel: "Continue", options: timingOptions, validate: (state) => state.travelStyles.length >= 1 && state.travelStyles.length <= 3 && Boolean(state.timing) && hasValidDates(state) },
-  { id: "destination", number: 6, navigationLabel: "Destination", title: "Is there somewhere already calling you?", description: "Tell us what you have in mind, or invite us to help you discover somewhere special.", type: "destination", nextLabel: "Continue", validate: hasValidDestination },
+  { id: "destination", number: 6, navigationLabel: "Destination", title: "Tell us about the destination you have in mind.", description: "Search for a specific place below, or simply describe the kind of journey you’re picturing — either is a perfect place to start.", type: "destination", nextLabel: "Continue", validate: () => true },
   { id: "discover", number: 7, navigationLabel: "Review", title: "Wonderful. We have everything we need to begin crafting your journey.", description: "Review your Passport before we stamp it and begin discovering your possibilities.", type: "discover", nextLabel: "Stamp My Journey Passport", validate: (state) => journeyMoments.slice(1, -1).every((moment) => moment.validate(state)) },
 ];
 

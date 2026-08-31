@@ -40,8 +40,8 @@ const rawSubmission: JourneyLeadSubmission = {
     timing: "Within three months",
     startDate: "",
     endDate: "",
-    destinationMode: "discovery",
-    destination: "",
+    preferredDestinations: [],
+    getawayDescription: "",
     entryContext: { feeling: "escape", source: "direct" },
     completedAt: "2026-08-02T10:00:00.000Z",
     source: "journey-passport",
@@ -158,8 +158,8 @@ async function verifyValidation() {
     passportSummary: {
       ...rawSubmission.passportSummary,
       dreamJourney: "Mountain Retreat",
-      destinationMode: "known",
-      destination: "Kashmir",
+      preferredDestinations: [{ geoPlaceId: "fixture-kashmir", canonicalName: "Kashmir", placeType: "state" }],
+      getawayDescription: "",
       entryContext: { destination: "Kashmir", destinationTheme: "Mountain Retreat", source: "destination" },
     },
   });

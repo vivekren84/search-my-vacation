@@ -1,3 +1,11 @@
+// EBC-R1.2-WS6-09 (Rad, Phase 4). Deliberately NOT importing SelectedDestination
+// from lib/geo-validation — this module (lib/journey-leads/**) has never
+// depended on lib/geo-validation and, consistent with that existing
+// convention, is kept self-contained rather than introducing a new
+// cross-feature-module dependency. A local, plain structural type with
+// the same shape is defined below and populated by explicit field-copying
+// at the parseSummary() boundary in validation.ts.
+
 export const JOURNEY_LEAD_EVENT_TYPES = [
   "passport_issued",
   "lead_saved",
@@ -11,6 +19,12 @@ export const JOURNEY_LEAD_EVENT_TYPES = [
 export type JourneyLeadEventType = (typeof JOURNEY_LEAD_EVENT_TYPES)[number];
 export type JourneyLeadNotificationStatus = "pending" | "sent" | "failed" | "not-configured";
 
+export type JourneyLeadDestination = {
+  geoPlaceId: string;
+  canonicalName: string;
+  placeType: string;
+};
+
 export type JourneyLeadPassportSummary = {
   name: string;
   mobile: string;
@@ -21,8 +35,12 @@ export type JourneyLeadPassportSummary = {
   timing: string;
   startDate: string;
   endDate: string;
-  destinationMode: "known" | "discovery";
-  destination: string;
+  // EBC-R1.2-WS6-09 (Rad, Phase 4). Replaces the retired destinationMode/
+  // destination pair, matching the same change on JourneyPassportState
+  // (types/journey-passport.types.ts) and JourneyPassportSnapshot
+  // (types/journey-director.ts) this lead summary is built from.
+  preferredDestinations: JourneyLeadDestination[];
+  getawayDescription: string;
   travelScope?: "DOMESTIC" | "INTERNATIONAL" | "ANY";
   entryContext?: {
     // EBC-036 (D-08): "memory" added alongside the other five moods now that

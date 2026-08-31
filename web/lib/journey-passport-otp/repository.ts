@@ -51,6 +51,16 @@ export function createSupabaseJourneyPassportOtpRepository(
 ): JourneyPassportOtpRepository {
   const projectUrl = environment.NEXT_PUBLIC_SUPABASE_URL?.replace(/\/$/, "");
   const secretKey = environment.SUPABASE_SECRET_KEY?.trim();
+  // EBC-R1.2-WS5-DBG-01: TEMPORARY diagnostic logging only. No behaviour or
+  // response-shape change below — remove before closing this task.
+  console.error("[SMV-DBG][otp/repository.ts] repository construction check", {
+    projectUrl: projectUrl || "<empty>",
+    expectedUrl: EXPECTED_SUPABASE_URL,
+    urlMatches: projectUrl === EXPECTED_SUPABASE_URL,
+    hasSecretKey: Boolean(secretKey),
+    secretKeyLength: secretKey ? secretKey.length : 0,
+  });
+  // END TEMPORARY diagnostic logging (EBC-R1.2-WS5-DBG-01).
   if (projectUrl !== EXPECTED_SUPABASE_URL || !secretKey) throw new JourneyPassportOtpRepositoryError("database_not_configured");
   // Re-bind as explicitly-typed consts so TS retains the narrowing across the
   // nested rpc() closure below (mirrors journey-leads/repository.ts's shape,
@@ -61,13 +71,31 @@ export function createSupabaseJourneyPassportOtpRepository(
 
   async function rpc(name: string, body: Record<string, unknown>, code: string) {
     let response: Response;
+    // EBC-R1.2-WS5-DBG-01: TEMPORARY diagnostic logging only.
+    const __dbgUrl = `${verifiedProjectUrl}/rest/v1/rpc/${name}`;
+    const __dbgMaskedBody: Record<string, unknown> = { ...body };
+    if ("p_mobile_number" in __dbgMaskedBody) __dbgMaskedBody.p_mobile_number = "***MASKED***";
+    if ("p_otp_hash" in __dbgMaskedBody) __dbgMaskedBody.p_otp_hash = "***MASKED***";
+    console.error("[SMV-DBG][otp/repository.ts] Supabase RPC request", { url: __dbgUrl, method: "POST", payload: __dbgMaskedBody });
     try {
-      response = await fetcher(`${verifiedProjectUrl}/rest/v1/rpc/${name}`, {
+      response = await fetcher(__dbgUrl, {
         method: "POST", headers: createHeaders(verifiedSecretKey), body: JSON.stringify(body), signal: AbortSignal.timeout(7000),
       });
-    } catch {
+    } catch (__dbgErr) {
+      console.error("[SMV-DBG][otp/repository.ts] Supabase RPC network-level failure (fetch threw before any response)", {
+        name: __dbgErr instanceof Error ? __dbgErr.name : typeof __dbgErr,
+        message: __dbgErr instanceof Error ? __dbgErr.message : String(__dbgErr),
+      });
       throw new JourneyPassportOtpRepositoryError("database_unavailable");
     }
+    const __dbgBodyText = await response.clone().text().catch(() => "<unreadable body>");
+    console.error("[SMV-DBG][otp/repository.ts] Supabase RPC response", {
+      status: response.status,
+      statusText: response.statusText,
+      contentType: response.headers.get("content-type"),
+      body: __dbgBodyText,
+    });
+    // END TEMPORARY diagnostic logging (EBC-R1.2-WS5-DBG-01).
     if (!response.ok) throw new JourneyPassportOtpRepositoryError(code);
     return response.json();
   }

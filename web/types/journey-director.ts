@@ -1,5 +1,20 @@
 import type { JourneyPassportEntryContext } from "./journey-passport.types";
 
+// EBC-R1.2-WS6-09 (Rad, Phase 4). Deliberately NOT SelectedDestination
+// (lib/geo-validation) — DEC-R1.2-004/RISK-R1.2-006 (enforced by
+// lib/journey-director/validation/verifyNoGeoValidationCoupling.ts) require
+// geo-validation to never be imported by lib/journey-director/**, and this
+// principle is honoured here too even though this file sits under types/,
+// outside that guardrail's literal scan path. This is a plain, locally-
+// owned structural type with the same shape, populated at the
+// passport-adapter.ts boundary by copying fields — Journey Director never
+// needs to know geo-validation exists.
+export type JourneyPassportDestination = {
+  geoPlaceId: string;
+  canonicalName: string;
+  placeType: string;
+};
+
 /**
  * Presentation-facing personality. The deterministic engine owns selection;
  * this contract only preserves that selection for presentation consumers.
@@ -19,8 +34,11 @@ export type JourneyPassportSnapshot = {
   timing: string;
   startDate: string;
   endDate: string;
-  destinationMode: "known" | "discovery";
-  destination: string;
+  // EBC-R1.2-WS6-09 (Rad, Phase 4). Replaces the retired destinationMode/
+  // destination pair — see types/journey-passport.types.ts for the same
+  // change on JourneyPassportState, which this snapshot is adapted from.
+  preferredDestinations: JourneyPassportDestination[];
+  getawayDescription: string;
   travelScope?: "DOMESTIC" | "INTERNATIONAL" | "ANY";
   entryContext?: JourneyPassportEntryContext;
   completedAt: string;

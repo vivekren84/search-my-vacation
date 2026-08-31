@@ -17,7 +17,7 @@ import {
   type NormalizedJourneyPassport,
   type RankedCandidate,
 } from "./engine.types";
-import { normalizeJourneyPassport } from "./normalizePassport";
+import { deriveDestinationRawText, normalizeJourneyPassport } from "./normalizePassport";
 import { rankCandidates } from "./rankCandidates";
 import { scoreEligibleCandidate } from "./scoreCandidate";
 import { selectJourneyPossibilities } from "./selectPossibilities";
@@ -310,8 +310,8 @@ function applyKnownDestinationPreference(
 }
 
 function unresolvedDestination(snapshot: JourneyPassportSnapshot): EngineDestinationResolution {
-  const requestedText = snapshot.destination.trim();
-  return snapshot.destinationMode === "known" && requestedText
+  const requestedText = deriveDestinationRawText(snapshot);
+  return requestedText
     ? { status: "unserved", requestedText }
     : { status: "discovery", requestedText: "" };
 }

@@ -168,9 +168,7 @@ export type PassportValidationIssueCode =
   | "INVALID_DREAM_JOURNEY"
   | "INVALID_TRAVEL_STYLES"
   | "INVALID_TIMING"
-  | "INVALID_EXACT_DATES"
-  | "INVALID_DESTINATION_MODE"
-  | "MISSING_KNOWN_DESTINATION";
+  | "INVALID_EXACT_DATES";
 
 export type PassportValidationIssue = {
   code: PassportValidationIssueCode;

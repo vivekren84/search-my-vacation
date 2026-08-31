@@ -230,8 +230,8 @@ function verifyGeographicScope() {
 
   const internationalWithKnownDomestic = generate({
     ...representativeProfiles.internationalOnly,
-    destinationMode: "known",
-    destination: "Goa",
+    preferredDestinations: [{ geoPlaceId: "fixture-goa", canonicalName: "Goa", placeType: "state" }],
+    getawayDescription: "",
   });
   assertRejectedBeforeScoring(
     internationalWithKnownDomestic,
@@ -361,8 +361,11 @@ function regionProfile(
     companion: "Couple",
     dreamJourney,
     travelStyles,
-    destinationMode: "known",
-    destination,
+    // EBC-R1.2-WS6-09 (Rad, Phase 4). Faithful equivalent of the retired
+    // destinationMode: "known" / destination pair — a single Preferred
+    // Destination carrying the same name this function always received.
+    preferredDestinations: [{ geoPlaceId: `fixture-${destination.toLowerCase().replace(/\s+/g, "-")}`, canonicalName: destination, placeType: "region" }],
+    getawayDescription: "",
   };
 }
 

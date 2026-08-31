@@ -41,7 +41,14 @@ export async function POST(request: Request) {
     // accepted only after successful, single-use OTP verification. This
     // atomically consumes the token so a captured token cannot be replayed
     // against a second submission.
-    const verified = await otpRepository.consumeVerificationToken(parsed.value.mobileNumber, parsed.value.verificationToken);
+    // EBC-R1.2-WS5-IMP-01 / OBS-4-01: the OTP challenge lifecycle (send,
+    // verify, and the journey_passport_otp_challenges.mobile_number CHECK
+    // constraint) is keyed exclusively on the E.164 representation — see
+    // parseJourneyPassportOtpSendRequest/VerifyRequest and that table's
+    // migration. mobileE164, not the bare dual-field mobileNumber used for
+    // lead storage (DEC-R1.2-019), is the only value that can ever match
+    // the verified challenge row here.
+    const verified = await otpRepository.consumeVerificationToken(parsed.value.mobileE164, parsed.value.verificationToken);
     if (!verified) {
       console.error("Journey Passport lead rejected — missing or invalid OTP verification.", {
         passportReference: maskPassportReference(parsed.value.passportReference),

@@ -2,10 +2,15 @@ import Image from "next/image";
 import type { RefObject } from "react";
 
 import { journeyMoments, travelStyleOptions } from "@/config/journey-passport.config";
+import type { SelectedDestination } from "@/lib/geo-validation";
 import { JOURNEY_ENTRY_ADVISORY } from "@/lib/journey-passport/entry-context";
+import { isGetawayDescriptionEmpty } from "@/lib/journey-passport/getaway-description";
 import { journeyPassportBlurPlaceholder } from "@/lib/journey-passport/image-blur-placeholders";
-import type { DestinationMode, JourneyMoment, JourneyPassportState } from "@/types/journey-passport.types";
+import { sanitizeTravellerName } from "@/lib/journey-passport/traveller-name";
+import type { JourneyMoment, JourneyPassportState } from "@/types/journey-passport.types";
 
+import { GetawayDescriptionField } from "./GetawayDescriptionField";
+import { PreferredDestinationsField } from "./PreferredDestinationsField";
 import { SelectionCard } from "./SelectionCard";
 
 type HeadingRef = RefObject<HTMLHeadingElement | null>;
@@ -25,7 +30,7 @@ export function WelcomeMoment({ onBegin }: { onBegin: () => void }) {
 
 export function AboutYouMoment({ headingRef, moment, name, onChange }: { headingRef: HeadingRef; moment: JourneyMoment; name: string; onChange: (value: string) => void }) {
   const invalid = name.length > 0 && (name.trim().length < 2 || !/\p{L}/u.test(name));
-  return <section className="pt-8"><MomentHeading headingRef={headingRef} moment={moment} /><div className="mx-auto mt-9 max-w-2xl rounded-[2rem] border border-[#e6d5bb] bg-white/85 p-6 shadow-[0_16px_40px_rgba(93,59,21,0.08)] sm:p-10"><label htmlFor="passport-name" className="block text-lg font-semibold text-[#2A211C]">What should we call you?</label><input id="passport-name" name="name" type="text" value={name} maxLength={80} onChange={(event) => onChange(event.target.value.replace(/[\r\n]+/g, " "))} autoComplete="name" aria-invalid={invalid || undefined} aria-describedby="passport-name-help" className="mt-5 min-h-14 w-full rounded-2xl border border-[#d8c4a7] bg-[#FFFDFC] px-5 text-lg text-[#2A211C] outline-none transition focus:border-[#2A211C] focus:ring-4 focus:ring-[#FFFDFC]" /><div id="passport-name-help" className="mt-4 flex flex-wrap justify-between gap-2 text-sm leading-6 text-[#2A211C]"><span>{invalid ? "Please share the name you’d like us to use." : "We’ll use your name to make every conversation feel personal."}</span><span aria-label={`${name.length} of 80 characters`}>{name.length}/80</span></div></div></section>;
+  return <section className="pt-8"><MomentHeading headingRef={headingRef} moment={moment} /><div className="mx-auto mt-9 max-w-2xl rounded-[2rem] border border-[#e6d5bb] bg-white/85 p-6 shadow-[0_16px_40px_rgba(93,59,21,0.08)] sm:p-10"><label htmlFor="passport-name" className="block text-lg font-semibold text-[#2A211C]">What should we call you?</label><input id="passport-name" name="name" type="text" value={name} maxLength={80} onChange={(event) => onChange(sanitizeTravellerName(event.target.value))} autoComplete="name" aria-invalid={invalid || undefined} aria-describedby="passport-name-help" className="mt-5 min-h-14 w-full rounded-2xl border border-[#d8c4a7] bg-[#FFFDFC] px-5 text-lg text-[#2A211C] outline-none transition focus:border-[#2A211C] focus:ring-4 focus:ring-[#FFFDFC]" /><div id="passport-name-help" className="mt-4 flex flex-wrap justify-between gap-2 text-sm leading-6 text-[#2A211C]"><span>{invalid ? "Please share the name you’d like us to use." : "We’ll use your name to make every conversation feel personal."}</span><span aria-label={`${name.length} of 80 characters`}>{name.length}/80</span></div></div></section>;
 }
 
 export function SingleChoiceMoment({ headingRef, moment, value, showEntryAdvisory = false, onChange }: { headingRef: HeadingRef; moment: JourneyMoment; value: string; showEntryAdvisory?: boolean; onChange: (value: string) => void }) {
@@ -65,19 +70,18 @@ export function PaceAndTimingMoment({ headingRef, moment, state, showEntryAdviso
   </section>;
 }
 
-export function DestinationMoment({ headingRef, moment, state, onMode, onDestination }: { headingRef: HeadingRef; moment: JourneyMoment; state: JourneyPassportState; onMode: (value: DestinationMode) => void; onDestination: (value: string) => void }) {
+// EBC-R1.2-WS6-09 (Rad, Phase 4). Replaces the retired known/discovery
+// choice gate with the two independently-optional fields per
+// EBC-R1.2-WS6-05 §3.2 (Sophie): Preferred Destinations first (the more
+// concrete answer), a short connective line, then Describe Your Ideal
+// Getaway with equal visual weight — no dynamic show/hide between them
+// (§5.4). The carried-forward acknowledgement banner is retained
+// unchanged; the carried-forward text itself now pre-fills
+// getawayDescription (see lib/journey-passport/entry-context.ts), not a
+// resolved Preferred Destinations chip — see that file's comment for why.
+export function DestinationMoment({ headingRef, moment, state, onPreferredDestinationsChange, onGetawayDescriptionChange }: { headingRef: HeadingRef; moment: JourneyMoment; state: JourneyPassportState; onPreferredDestinationsChange: (value: SelectedDestination[]) => void; onGetawayDescriptionChange: (value: string) => void }) {
   const known = state.entryContext.destination;
-  const displayedMoment = known ? { ...moment, title: "Do you already have something in mind?" } : moment;
-  const choices = known ? [
-    { value: "known", label: "Yes", description: `${known} is ready below, and you can edit it anytime.`, imageSrc: "/images/journey-passport/destination-preferences/destination-known.webp", imageAlt: "Traveller confidently reviewing a map for a journey already chosen" },
-    { value: "discovery", label: "Surprise Me", description: "Invite us to widen the search and suggest somewhere special.", imageSrc: "/images/journey-passport/destination-preferences/guided-discovery.webp", imageAlt: "Traveller looking across an open landscape toward new possibilities" },
-  ] : [
-    { value: "known", label: "I already have somewhere in mind", description: "Share the place—or kind of place—you are imagining.", imageSrc: "/images/journey-passport/destination-preferences/destination-known.webp", imageAlt: "Traveller confidently reviewing a map for a journey already chosen" },
-    { value: "discovery", label: "Help me discover somewhere special", description: "Let us begin with what matters to you.", imageSrc: "/images/journey-passport/destination-preferences/guided-discovery.webp", imageAlt: "Traveller looking across an open landscape toward new possibilities" },
-  ];
-  const selectedValue = state.destinationMode;
-  const select = (value: string) => { if (value === "discovery") onMode("discovery"); else { onMode("known"); if (known && !state.destination.trim()) onDestination(known); } };
-  return <section className="pt-8"><MomentHeading headingRef={headingRef} moment={displayedMoment} />{known ? <p className="mx-auto mt-6 max-w-3xl rounded-2xl bg-[#f8eddd] px-5 py-4 text-center text-sm text-[#2A211C]">We carried {known} forward from the destination you were exploring. Every choice remains yours to change.</p> : null}<div role="radiogroup" aria-label="Destination preference" className="mx-auto mt-7 grid max-w-4xl gap-4 md:grid-cols-2">{choices.map((choice) => <SelectionCard key={choice.value} option={choice} compact selected={selectedValue === choice.value} onSelect={() => select(choice.value)} />)}</div>{state.destinationMode === "known" ? <div className="journey-passport-reveal mx-auto mt-6 max-w-2xl rounded-[1.5rem] border border-[#e1ceb0] bg-white/85 p-5 sm:p-6"><label htmlFor="destination-search" className="text-sm font-semibold text-[#2A211C]">Where would you love to go?</label><input id="destination-search" name="journey-destination" type="text" autoComplete="off" value={state.destination} maxLength={100} onChange={(event) => onDestination(event.target.value.replace(/[\r\n]+/g, " "))} className="mt-2 min-h-14 w-full rounded-xl border border-[#d8c4a7] bg-[#FFFDFC] px-4 text-base text-[#2A211C] focus:outline-2 focus:outline-offset-2 focus:outline-[#2A211C]" placeholder="A place, region or kind of destination" /><p className="mt-3 text-sm leading-6 text-[#2A211C]">Write any destination in your own words. A specific place or an idea such as “somewhere warm in Europe” is perfect.</p></div> : null}</section>;
+  return <section className="pt-8"><MomentHeading headingRef={headingRef} moment={moment} />{known ? <p className="mx-auto mt-6 max-w-3xl rounded-2xl bg-[#f8eddd] px-5 py-4 text-center text-sm text-[#2A211C]">We carried {known} forward from the destination you were exploring. Every choice remains yours to change.</p> : null}<PreferredDestinationsField value={state.preferredDestinations} onChange={onPreferredDestinationsChange} /><p className="mx-auto mt-6 max-w-2xl text-center text-sm font-semibold text-[#6e5a46]">Or, if it’s more of a feeling than a place yet —</p><GetawayDescriptionField value={state.getawayDescription} onChange={onGetawayDescriptionChange} /></section>;
 }
 
 const list = (values: string[]) => values.length < 2 ? (values[0] ?? "") : values.length === 2 ? `${values[0]} and ${values[1]}` : `${values.slice(0, -1).join(", ")}, and ${values.at(-1)}`;
@@ -86,7 +90,10 @@ const companionSummary = (companion: string) => companion === "Solo" ? "solo" : 
 
 export function DiscoverMoment({ headingRef, moment, state }: { headingRef: HeadingRef; moment: JourneyMoment; state: JourneyPassportState }) {
   const timing = state.timing === "Exact Dates" ? `Travelling from ${displayDate(state.startDate)} to ${displayDate(state.endDate)}.` : state.timing === "I’m Flexible" ? "Keeping the timing flexible." : `Hoping to travel ${state.timing.toLowerCase()}.`;
-  const items = [`Travelling ${companionSummary(state.companion)}.`, `Dreaming of a ${state.dreamJourney.toLowerCase()}.`, `Drawn to ${list(state.travelStyles.map((value) => value.toLowerCase()))}.`, timing, state.destinationMode === "discovery" ? "Open to discovering somewhere special." : `Beginning with ${state.destination.trim()}.`];
+  const preferredDestinationNames = state.preferredDestinations.length > 0 ? list(state.preferredDestinations.map((destination) => destination.canonicalName)) : "";
+  const getawayText = isGetawayDescriptionEmpty(state.getawayDescription) ? "" : state.getawayDescription.trim();
+  const destinationSummary = preferredDestinationNames && getawayText ? `Considering ${preferredDestinationNames}, and dreaming of ${getawayText}` : preferredDestinationNames ? `Considering ${preferredDestinationNames}.` : getawayText ? getawayText : "Open to discovering somewhere special.";
+  const items = [`Travelling ${companionSummary(state.companion)}.`, `Dreaming of a ${state.dreamJourney.toLowerCase()}.`, `Drawn to ${list(state.travelStyles.map((value) => value.toLowerCase()))}.`, timing, destinationSummary];
   return <section className="pt-8"><MomentHeading headingRef={headingRef} moment={moment} /><div className="mx-auto mt-8 max-w-4xl rounded-[2rem] border border-[#e7d6bd] bg-[linear-gradient(135deg,#FFFDFC,#FFFDFC)] p-6 shadow-[0_20px_44px_rgba(97,61,22,0.1)] sm:p-10"><p className="text-sm leading-7 text-[#745d45]">{state.name.trim()}, here is the beginning of a journey designed around you.</p><ul className="mt-6 grid gap-3 sm:grid-cols-2">{items.map((item) => <li key={item} className="flex gap-3 rounded-xl border border-white/80 bg-white/75 p-4 text-[#2A211C]"><span aria-hidden="true" className="text-[#F5951C]">✦</span><span>{item}</span></li>)}</ul><p className="mt-7 text-lg font-semibold text-[#2A211C]">Your Journey Director will begin with the choices that matter most to you.</p></div></section>;
 }
 

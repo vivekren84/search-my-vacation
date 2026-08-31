@@ -174,8 +174,19 @@ export function createInitialJourneyPassportState(entryContext: JourneyPassportE
     timing: preselection?.field === "timing" ? preselection.value : "",
     startDate: "",
     endDate: "",
-    destinationMode: entryContext.destination ? "known" : "",
-    destination: entryContext.destination ?? "",
+    // EBC-R1.2-WS6-09 (Rad, Phase 4). A carried-forward destination
+    // (entryContext.destination, e.g. from a destination page entry point)
+    // lands in getawayDescription as editable free text rather than an
+    // auto-resolved Preferred Destinations chip. Sophie's full design
+    // (EBC-R1.2-WS6-05 §4.4) describes an async "pending chip" resolved
+    // against geo-validation search with Keep/Not quite actions; building
+    // that live resolution is not in this phase's scope. This is the same
+    // fallback Sophie's own design specifies for when resolution fails —
+    // "open the input pre-filled with the raw carried-forward text" — used
+    // here as the phase's starting behaviour rather than only its failure
+    // case. Documented as a temporary simplification, not a silent one.
+    preferredDestinations: [],
+    getawayDescription: entryContext.destination ?? "",
     mobile: "",
     journeyReference: "",
     entryContext,

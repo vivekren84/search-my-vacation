@@ -63,7 +63,16 @@ export async function POST(request: Request) {
       return json({ ok: true, outcome: "otp_unavailable" }, 200);
     }
     return json({ ok: true, outcome: "sent", challengeId: result.challengeId, resendDelaySeconds: journeyPassportOtpConfig.resendDelaySeconds }, 200);
-  } catch {
+  } catch (__dbgErr) {
+    // EBC-R1.2-WS5-DBG-01: TEMPORARY diagnostic logging only. No behaviour
+    // or response-shape change below — remove before closing this task.
+    console.error("[SMV-DBG][route.ts otp/send] top-level error caught (this is what OBS-9-01 swallows in production code)", {
+      name: __dbgErr instanceof Error ? __dbgErr.name : typeof __dbgErr,
+      code: __dbgErr && typeof __dbgErr === "object" && "code" in __dbgErr ? (__dbgErr as { code: unknown }).code : undefined,
+      message: __dbgErr instanceof Error ? __dbgErr.message : String(__dbgErr),
+      stack: __dbgErr instanceof Error ? __dbgErr.stack : undefined,
+    });
+    // END TEMPORARY diagnostic logging (EBC-R1.2-WS5-DBG-01).
     console.error("Journey Passport OTP send failed.", { operation: "otp_send" });
     return json({ ok: false, message: FAILURE_MESSAGE }, 503);
   }

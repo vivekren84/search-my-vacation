@@ -32,7 +32,16 @@ function deploymentBrandLogoUrl(environment: NotificationEnvironment) {
 
 export function createJourneyLeadEmail(lead: ValidatedJourneyLead, brandLogoUrl?: string) {
   const summary = lead.passportSummary;
-  const destination = summary.destinationMode === "known" ? displayValue(summary.destination) : "Open to discovery";
+  // EBC-R1.2-WS6-09 (Rad, Phase 4). Faithful equivalent of the retired
+  // destinationMode/destination pair for this internal, staff-facing
+  // notification: preferred-destination names, the free-text getaway
+  // description, or both (joined with an em dash) when present; the same
+  // "Open to discovery" fallback wording when neither field was filled.
+  const preferredDestinationNames = summary.preferredDestinations.map((item) => item.canonicalName).join(", ");
+  const trimmedGetawayDescription = summary.getawayDescription.trim();
+  const destination = preferredDestinationNames && trimmedGetawayDescription
+    ? `${preferredDestinationNames} — ${trimmedGetawayDescription}`
+    : displayValue(preferredDestinationNames || trimmedGetawayDescription, "Open to discovery");
   const submittedAt = new Intl.DateTimeFormat("en-IN", {
     dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Kolkata",
   }).format(new Date(summary.completedAt));

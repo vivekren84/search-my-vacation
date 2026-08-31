@@ -1,3 +1,5 @@
+import type { SelectedDestination } from "@/lib/geo-validation";
+
 export const JOURNEY_PASSPORT_SCHEMA_VERSION = 1 as const;
 export const JOURNEY_FEELINGS = ["relax", "explore", "celebrate", "romance", "escape", "memory"] as const;
 export const JOURNEY_ENTRY_EXPERIENCES = ["Memory Makers", "Celebration Moments", "Family Time", "Weekend Getaways", "Global Escapes", "Nature & Serenity"] as const;
@@ -54,7 +56,6 @@ export type JourneyMomentType =
   | "destination"
   | "discover";
 
-export type DestinationMode = "" | "known" | "discovery";
 export type CompletionState = "idle" | "completing" | "complete" | "failed";
 export type NavigationDirection = "none" | "forward" | "backward";
 
@@ -84,8 +85,12 @@ export type JourneyPassportState = {
   timing: string;
   startDate: string;
   endDate: string;
-  destinationMode: DestinationMode;
-  destination: string;
+  // EBC-R1.2-WS6-09 (Rad, Phase 4). Replaces the retired single free-text
+  // `destination`/`destinationMode` fields per EBC-R1.2-WS6-03 Addendum 01
+  // §1 (Archie) and EBC-R1.2-WS6-08 Addendum 01 A2.1/A2.2/A2.3 (Product
+  // Owner). Both independently optional — no gating mode survives.
+  preferredDestinations: SelectedDestination[];
+  getawayDescription: string;
   mobile: string;
   journeyReference: string;
   entryContext: JourneyPassportEntryContext;

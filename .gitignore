@@ -46,8 +46,15 @@ build/
 # Misc
 # ==========================================
 coverage/
+
+# ==========================================
+# Local import datasets (not source-controlled)
+# ==========================================
+web/data/geonames/
+
 # Supabase CLI local state
 supabase/.temp/
+supabase/supabase/.temp/
 
 # ==========================================
 # Repository maintenance quarantine (see EWP-MAINT-001)

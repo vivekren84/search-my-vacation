@@ -14,6 +14,7 @@ import { JOURNEY_LEAD_FAILURE_MESSAGE, recordJourneyPassportEvent, submitJourney
 import { createJourneyPassportSnapshot } from "@/lib/journey-director/passport-adapter";
 import { createJourneyReference } from "@/lib/journey-director/journey-synopsis";
 import { isJourneyEntryPreselectionActive, resolveJourneyEntryPreselection } from "@/lib/journey-passport/entry-context";
+import { sanitizeTravellerName } from "@/lib/journey-passport/traveller-name";
 import { sendJourneyPassportOtp, verifyJourneyPassportOtp } from "@/lib/journey-passport-otp/client";
 import { isJourneyEntryExperience, isJourneyEntryInspiration, isJourneyFeeling, type JourneyPassportEntryContext, type JourneyPassportState } from "@/types/journey-passport.types";
 
@@ -133,7 +134,7 @@ export default function JourneyPassport() {
     return () => window.clearInterval(interval);
   }, [contactStage, otpNextResendAt]);
 
-  const update = (value: Partial<Pick<JourneyPassportState, "name" | "companion" | "dreamJourney" | "timing" | "startDate" | "endDate" | "destination" | "mobile" | "journeyReference">>) => passport.dispatch({ type: "update", value });
+  const update = (value: Partial<Pick<JourneyPassportState, "name" | "companion" | "dreamJourney" | "timing" | "startDate" | "endDate" | "preferredDestinations" | "getawayDescription" | "mobile" | "journeyReference">>) => passport.dispatch({ type: "update", value });
   const complete = () => {
     if (!passport.isValid || passport.state.completion === "completing") return;
     const reference = issuedReferenceRef.current || passport.state.journeyReference || createJourneyReference();
@@ -323,7 +324,7 @@ export default function JourneyPassport() {
           {contactStage === "details" ? <form onSubmit={handleDetailsSubmit} className="journey-passport-reveal mx-auto mt-7 max-w-md text-left" noValidate>
             <h2 className="text-center text-xl font-semibold text-[#2A211C]">Keep your journey connected</h2>
             <p className="mt-2 text-center text-sm leading-6 text-[#2A211C]">Confirm your details so your Journey Director can keep this Passport connected to you.</p>
-            <label htmlFor="issued-passport-name" className="mt-5 block text-sm font-semibold text-[#2A211C]">Name<input id="issued-passport-name" type="text" autoComplete="name" maxLength={80} value={passport.state.name} onChange={(event) => update({ name: event.target.value.replace(/[\r\n]+/g, " ") })} className="mt-2 min-h-12 w-full rounded-xl border border-[#d8c4a7] bg-white px-4 text-base focus:outline-2 focus:outline-offset-2 focus:outline-[#2A211C]" /></label>
+            <label htmlFor="issued-passport-name" className="mt-5 block text-sm font-semibold text-[#2A211C]">Name<input id="issued-passport-name" type="text" autoComplete="name" maxLength={80} value={passport.state.name} onChange={(event) => update({ name: sanitizeTravellerName(event.target.value) })} className="mt-2 min-h-12 w-full rounded-xl border border-[#d8c4a7] bg-white px-4 text-base focus:outline-2 focus:outline-offset-2 focus:outline-[#2A211C]" /></label>
             <label htmlFor="issued-passport-mobile" className="mt-4 block text-sm font-semibold text-[#2A211C]">Mobile number<input id="issued-passport-mobile" type="tel" autoComplete="tel" inputMode="numeric" maxLength={10} value={passport.state.mobile} onChange={(event) => update({ mobile: event.target.value.replace(/\D/g, "") })} aria-describedby="issued-passport-privacy issued-passport-error" className="mt-2 min-h-12 w-full rounded-xl border border-[#d8c4a7] bg-white px-4 text-base focus:outline-2 focus:outline-offset-2 focus:outline-[#2A211C]" placeholder="e.g. 9876543210" /></label>
             {contactError ? <p id="issued-passport-error" role="alert" className="mt-3 text-sm font-semibold text-[#a1463c]">{contactError}</p> : null}
             <p id="issued-passport-privacy" className="mt-4 text-xs leading-5 text-[#2A211C]">Used only to connect this Passport with your planning conversation. We do not sell your contact details.</p>
@@ -372,7 +373,7 @@ export default function JourneyPassport() {
         {passport.moment.id === "companions" ? <SingleChoiceMoment headingRef={headingRef} moment={passport.moment} value={passport.state.companion} showEntryAdvisory={isJourneyEntryPreselectionActive(entryPreselection, "companions", passport.state)} onChange={(companion) => update({ companion: passport.state.companion === companion ? "" : companion })} /> : null}
         {passport.moment.id === "dream-journey" ? <SingleChoiceMoment headingRef={headingRef} moment={passport.moment} value={passport.state.dreamJourney} showEntryAdvisory={isJourneyEntryPreselectionActive(entryPreselection, "dream-journey", passport.state)} onChange={(dreamJourney) => update({ dreamJourney: passport.state.dreamJourney === dreamJourney ? "" : dreamJourney })} /> : null}
         {passport.moment.id === "pace-and-timing" ? <PaceAndTimingMoment headingRef={headingRef} moment={passport.moment} state={passport.state} showEntryAdvisory={isJourneyEntryPreselectionActive(entryPreselection, "pace-and-timing", passport.state)} onUpdate={update} onToggle={(value) => passport.dispatch({ type: "toggle-style", value })} /> : null}
-        {passport.moment.id === "destination" ? <DestinationMoment headingRef={headingRef} moment={passport.moment} state={passport.state} onMode={(value) => passport.dispatch({ type: "set-destination-mode", value })} onDestination={(destination) => update({ destination })} /> : null}
+        {passport.moment.id === "destination" ? <DestinationMoment headingRef={headingRef} moment={passport.moment} state={passport.state} onPreferredDestinationsChange={(preferredDestinations) => update({ preferredDestinations })} onGetawayDescriptionChange={(getawayDescription) => update({ getawayDescription })} /> : null}
         {passport.moment.id === "discover" ? <DiscoverMoment headingRef={headingRef} moment={passport.moment} state={passport.state} /> : null}
       </div>
       {passport.moment.id !== "welcome" ? <JourneyPassportNavigation showBack onBack={passport.previous} onNext={next} disabled={!passport.isValid || passport.state.completion === "completing"} label={passport.moment.nextLabel} /> : null}
