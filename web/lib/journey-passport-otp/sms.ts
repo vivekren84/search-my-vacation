@@ -55,18 +55,9 @@ function createMsg91Provider(
       // config module's own minimum is 30s) never sends an invalid 0.
       const otpExpiryMinutes = Math.max(1, Math.ceil(expirySeconds / 60));
       let response: Response;
-      // EBC-R1.2-WS5-DBG-01: TEMPORARY diagnostic logging only. No behaviour
-      // or response-shape change below — remove before closing this task.
-      const __dbgUrl = "https://control.msg91.com/api/v5/otp";
-      console.error("[SMV-DBG][sms.ts] MSG91 request", {
-        url: __dbgUrl,
-        method: "POST",
-        payload: { mobile: `***${mobileDigits.slice(-2)}`, sender: senderId, template_id: templateId, otp: "******", otp_expiry: otpExpiryMinutes },
-        hasAuthkey: Boolean(apiKey),
-        authkeyLength: apiKey.length,
-      });
+      const msg91Url = "https://control.msg91.com/api/v5/otp";
       try {
-        response = await fetcher(__dbgUrl, {
+        response = await fetcher(msg91Url, {
           method: "POST",
           headers: { authkey: apiKey, "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -74,22 +65,9 @@ function createMsg91Provider(
           }),
           signal: AbortSignal.timeout(timeoutMs),
         });
-      } catch (__dbgErr) {
-        console.error("[SMV-DBG][sms.ts] MSG91 network-level failure (fetch threw before any response)", {
-          name: __dbgErr instanceof Error ? __dbgErr.name : typeof __dbgErr,
-          message: __dbgErr instanceof Error ? __dbgErr.message : String(__dbgErr),
-          cause: __dbgErr instanceof Error && __dbgErr.cause ? String(__dbgErr.cause) : undefined,
-        });
+      } catch {
         throw new JourneyPassportOtpSmsError("provider_unavailable");
       }
-      const __dbgBodyText = await response.text().catch(() => "<unreadable body>");
-      console.error("[SMV-DBG][sms.ts] MSG91 response", {
-        status: response.status,
-        statusText: response.statusText,
-        contentType: response.headers.get("content-type"),
-        body: __dbgBodyText,
-      });
-      // END TEMPORARY diagnostic logging (EBC-R1.2-WS5-DBG-01).
       if (!response.ok) throw new JourneyPassportOtpSmsError(response.status === 429 ? "provider_rate_limited" : "provider_rejected");
       return { status: "sent" };
     },
@@ -116,15 +94,6 @@ export function createJourneyPassportOtpSmsProvider(
   const apiKey = environment.SMS_PROVIDER_API_KEY?.trim();
   const senderId = environment.SMS_PROVIDER_SENDER_ID?.trim();
   const templateId = environment.SMS_PROVIDER_TEMPLATE_ID?.trim();
-  // EBC-R1.2-WS5-DBG-01: TEMPORARY diagnostic logging only.
-  console.error("[SMV-DBG][sms.ts] provider configuration check", {
-    hasApiKey: Boolean(apiKey),
-    hasSenderId: Boolean(senderId),
-    hasTemplateId: Boolean(templateId),
-    senderId: senderId || "<empty>",
-    templateId: templateId || "<empty>",
-  });
-  // END TEMPORARY diagnostic logging (EBC-R1.2-WS5-DBG-01).
   if (!apiKey || !senderId || !templateId) {
     return { async send() { return { status: "not-configured" }; } };
   }
