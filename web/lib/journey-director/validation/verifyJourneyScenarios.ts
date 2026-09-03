@@ -22,8 +22,8 @@ const basePassport: JourneyPassportSnapshot = {
   timing: "I’m Flexible",
   startDate: "",
   endDate: "",
-  destinationMode: "discovery",
-  destination: "",
+  preferredDestinations: [],
+  getawayDescription: "",
   completedAt: executionTimestamp,
   source: "journey-passport",
 };
@@ -80,7 +80,7 @@ const scenarios: readonly Scenario[] = [
   {
     id: 2,
     name: "Known Goa + Mountain Retreat",
-    passport: passport({ destinationMode: "known", destination: "Goa" }),
+    passport: passport({ preferredDestinations: [{ geoPlaceId: "fixture-goa", canonicalName: "Goa", placeType: "state" }] }),
     validate: (output) => failures(
       [served(output, false), "Goa must be acknowledged as served but advisory"],
       [capabilityFor(output, "mountain"), "alternatives must preserve mountain intent"],
@@ -101,7 +101,7 @@ const scenarios: readonly Scenario[] = [
   {
     id: 4,
     name: "Known Kashmir + Beach Exploration",
-    passport: passport({ dreamJourney: "Tropical Escape", travelStyles: ["Beaches & Islands", "Adventure"], destinationMode: "known", destination: "Kashmir" }),
+    passport: passport({ dreamJourney: "Tropical Escape", travelStyles: ["Beaches & Islands", "Adventure"], preferredDestinations: [{ geoPlaceId: "fixture-kashmir", canonicalName: "Kashmir", placeType: "region" }] }),
     validate: (output) => failures(
       [served(output, false), "Kashmir must be acknowledged as served but advisory"],
       [capabilityFor(output, "beach"), "alternatives must be coastal or island fits"],
@@ -133,19 +133,19 @@ const scenarios: readonly Scenario[] = [
   {
     id: 8,
     name: "Typed Kerala and Kerala aliases",
-    passport: passport({ dreamJourney: "City Discovery", travelStyles: ["Culture & Heritage", "Food & Dining"], destinationMode: "known", destination: "Kerala" }),
+    passport: passport({ dreamJourney: "City Discovery", travelStyles: ["Culture & Heritage", "Food & Dining"], preferredDestinations: [{ geoPlaceId: "fixture-kerala", canonicalName: "Kerala", placeType: "state" }] }),
     validate: (output) => {
       const aliases = ["Kerala", "Thekkady", "Alleppey", "Alappuzha", "Kochi", "Cochin", "Wayanad", "Kovalam", "Kumarakom"];
       return failures(
         [served(output), "Kerala must be served"],
-        [aliases.every((destination) => served(run({ ...basePassport, dreamJourney: "Cruise Voyage", travelStyles: ["Relaxation"], destinationMode: "known", destination }))), "every governed Kerala alias must resolve as served"],
+        [aliases.every((destination) => served(run({ ...basePassport, dreamJourney: "Cruise Voyage", travelStyles: ["Relaxation"], preferredDestinations: [{ geoPlaceId: `fixture-${destination.toLowerCase().replace(/\s+/g, "-")}`, canonicalName: destination, placeType: "region" }] }))), "every governed Kerala alias must resolve as served"],
       );
     },
   },
   {
     id: 9,
     name: "Typed Munnar",
-    passport: passport({ destinationMode: "known", destination: "Munnar" }),
+    passport: passport({ preferredDestinations: [{ geoPlaceId: "fixture-munnar", canonicalName: "Munnar", placeType: "town" }] }),
     validate: (output) => failures(
       [served(output, true), "Munnar must resolve as a recommended served Kerala region"],
       [output.engine.possibilities[0]?.candidateId === "kerala" && output.engine.possibilities[0]?.regionName === "Munnar", "Kerala/Munnar must lead"],
@@ -154,7 +154,7 @@ const scenarios: readonly Scenario[] = [
   {
     id: 10,
     name: "Typed Bali + Wellness",
-    passport: passport({ dreamJourney: "Cruise Voyage", travelStyles: ["Relaxation", "Food & Dining"], destinationMode: "known", destination: "Bali" }),
+    passport: passport({ dreamJourney: "Cruise Voyage", travelStyles: ["Relaxation", "Food & Dining"], preferredDestinations: [{ geoPlaceId: "fixture-bali", canonicalName: "Bali", placeType: "island" }] }),
     validate: (output) => failures(
       [served(output), "Bali must be served"],
       [output.engine.possibilities.some((item) => item.candidateId === "bali" && item.regionName === "Ubud"), "Ubud should represent the Bali wellness fit"],
@@ -163,7 +163,7 @@ const scenarios: readonly Scenario[] = [
   {
     id: 11,
     name: "Typed Bali + Beach Celebration",
-    passport: passport({ dreamJourney: "Tropical Escape", travelStyles: ["Beaches & Islands", "Celebrations"], destinationMode: "known", destination: "Bali" }),
+    passport: passport({ dreamJourney: "Tropical Escape", travelStyles: ["Beaches & Islands", "Celebrations"], preferredDestinations: [{ geoPlaceId: "fixture-bali", canonicalName: "Bali", placeType: "island" }] }),
     validate: (output) => failures(
       [served(output), "Bali must be served"],
       [output.engine.possibilities.some((item) => item.candidateId === "bali" && ["Nusa Dua", "Uluwatu", "Seminyak"].includes(item.regionName)), "a suitable coastal Bali region should be selected"],
@@ -172,7 +172,7 @@ const scenarios: readonly Scenario[] = [
   {
     id: 12,
     name: "Typed Nusa Dua",
-    passport: passport({ dreamJourney: "Tropical Escape", travelStyles: ["Beaches & Islands", "Celebrations"], destinationMode: "known", destination: "Nusa Dua" }),
+    passport: passport({ dreamJourney: "Tropical Escape", travelStyles: ["Beaches & Islands", "Celebrations"], preferredDestinations: [{ geoPlaceId: "fixture-nusa-dua", canonicalName: "Nusa Dua", placeType: "town" }] }),
     validate: (output) => failures(
       [served(output), "Nusa Dua must resolve under Bali"],
       [output.engine.destinationResolution.status !== "unserved", "Nusa Dua must never be called unserved"],
@@ -219,7 +219,10 @@ const hardContradictionErrors = scenarioOutputs.flatMap(({ scenario, output }) =
 const matrixErrors = generalMatrix.filter((item) => !item.passed).map((item) => `${item.companion} + ${item.dreamJourney} returned no possibility`);
 
 function inputSummary(value: JourneyPassportSnapshot) {
-  return `${value.companion}; ${value.dreamJourney}; ${value.travelStyles.join(", ")}; ${value.travelScope ?? "ANY"}; ${value.destinationMode === "known" ? value.destination : "open destination"}`;
+  const destinationNames = value.preferredDestinations.map((item) => item.canonicalName);
+  const trimmedGetawayDescription = value.getawayDescription.trim();
+  const destinationText = (trimmedGetawayDescription ? [...destinationNames, trimmedGetawayDescription] : destinationNames).join(", ");
+  return `${value.companion}; ${value.dreamJourney}; ${value.travelStyles.join(", ")}; ${value.travelScope ?? "ANY"}; ${destinationText || "open destination"}`;
 }
 
 function reportForScenario({ scenario, output, errors }: (typeof scenarioOutputs)[number]) {

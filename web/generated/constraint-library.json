@@ -11828,6 +11828,24 @@
       "type": "Operational"
     },
     {
+      "constraintId": "CTR-83D9F46016065399",
+      "reasonCode": "OPERATIONAL_REVIEW_REQUIRED",
+      "severity": "Contradiction",
+      "source": "REVIEW_REQUIRED",
+      "sourceRow": 53,
+      "target": "india-assam-assam",
+      "type": "Operational"
+    },
+    {
+      "constraintId": "CTR-A362BE08116C5C1C",
+      "reasonCode": "OPERATIONAL_REVIEW_REQUIRED",
+      "severity": "Contradiction",
+      "source": "REVIEW_REQUIRED",
+      "sourceRow": 80,
+      "target": "india-assam-kaziranga",
+      "type": "Operational"
+    },
+    {
       "constraintId": "CTR-81566F191E04E37B",
       "reasonCode": "OPERATIONAL_REVIEW_REQUIRED",
       "severity": "Contradiction",
@@ -11900,15 +11918,6 @@
       "type": "Operational"
     },
     {
-      "constraintId": "CTR-4C641DE4DF8368F0",
-      "reasonCode": "OPERATIONAL_REVIEW_REQUIRED",
-      "severity": "Contradiction",
-      "source": "REVIEW_REQUIRED",
-      "sourceRow": 53,
-      "target": "india-northeast-assam",
-      "type": "Operational"
-    },
-    {
       "constraintId": "CTR-ABF19A8168ABBA74",
       "reasonCode": "OPERATIONAL_REVIEW_REQUIRED",
       "severity": "Contradiction",
@@ -11933,15 +11942,6 @@
       "source": "REVIEW_REQUIRED",
       "sourceRow": 70,
       "target": "india-tamilnadu-temple-tour",
-      "type": "Operational"
-    },
-    {
-      "constraintId": "CTR-1D2CFE20A561D4D6",
-      "reasonCode": "OPERATIONAL_REVIEW_REQUIRED",
-      "severity": "Contradiction",
-      "source": "REVIEW_REQUIRED",
-      "sourceRow": 80,
-      "target": "india-wildlife-tours-assam",
       "type": "Operational"
     },
     {
@@ -14097,5 +14097,5 @@
     }
   ],
   "schemaVersion": "1.0",
-  "workbookChecksum": "b90a6af3d661197dcdebe75b941eb060788fbe2cb209b67ae4167560d5a1f8a8"
+  "workbookChecksum": "868271e5d094d0c0915f8963da57cce6b57a37d432b0c14869867791c0bc1047"
 }

@@ -28,7 +28,15 @@ export function createJourneySynopsis(set: JourneyRecommendationSet, activePossi
     travellerFirstName: passport.name.trim(), travellingParty: passport.companion,
     approximatePartySize: "to-be-confirmed", travelTiming: passport.timing,
     journeyIntent: set.reflection, preferredComfort: "to-be-discussed", preferredPace: "to-be-discussed",
-    ...(passport.destinationMode === "known" && passport.destination.trim() ? { knownDestination: passport.destination.trim() } : {}),
+    // EBC-R1.2-WS6-09 (Rad, Phase 4). Faithful equivalent of the retired
+    // destinationMode/destination pair: preferred-destination names first,
+    // then the free-text getaway description, comma-joined — same
+    // derivation as lib/journey-director/engine/normalizePassport.ts's
+    // deriveDestinationRawText, kept local here since this file does not
+    // otherwise depend on the engine layer.
+    ...(passport.preferredDestinations.length > 0 || passport.getawayDescription.trim()
+      ? { knownDestination: (passport.getawayDescription.trim() ? [...passport.preferredDestinations.map((destination) => destination.canonicalName), passport.getawayDescription.trim()] : passport.preferredDestinations.map((destination) => destination.canonicalName)).join(", ") }
+      : {}),
     recommendedPossibility: { id: possibility.id, destination: possibility.destination, region: possibility.region, personality: possibility.personality, personalityLabel: possibility.personalityLabel, whyThisFits: possibility.reasons.map((reason) => reason.description), planningConsiderations: [...possibility.cautions] },
     createdAt: new Date().toISOString(),
   };

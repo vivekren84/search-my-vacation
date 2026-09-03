@@ -1,3 +1,20 @@
+/**
+ * GOVERNANCE BOUNDARY — Generation Layer: Journey DNA inclusion gate.
+ *
+ * `generateJourneyDNA()` below contains the Generation Layer's single
+ * inclusion decision: only Operational Layer rows with
+ * `journeyBaseStatus === "Yes"` become runtime-eligible Journey DNA records.
+ * This is a mechanical pass-through of an Operational Layer field, not an
+ * independent business decision — see
+ * `docs/20-Architecture/ADR-R1.2-WS3-001-Destination-Knowledge-Governance.md`
+ * Section 6, and
+ * `docs/09-Development/EBC-R1.2-03.03-RAD-Destination-Intelligence-Source-Comparison-Runtime-Trace.md`
+ * Part 3 (Generator Behaviour), which traced this exact line as the root
+ * mechanism behind several destinations' current runtime absence.
+ *
+ * Documentation-only addition (EBC R1.2-03.07) — filter logic unchanged.
+ */
+
 import type {
   HierarchyNodeType,
   JourneyDNA,
@@ -110,6 +127,7 @@ function generateHierarchy(model: WorkbookModel): RegionHierarchyNode[] {
 
 export function generateJourneyDNA(model: WorkbookModel): JourneyDNAArtifact {
   const records: JourneyDNA[] = model.destinationIntelligence
+    // Generation Layer inclusion gate — see file-level governance comment above.
     .filter((record) => record.journeyBaseStatus === "Yes")
     .map((record) => ({
       sourceRow: record.sourceRow,

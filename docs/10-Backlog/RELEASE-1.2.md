@@ -9,17 +9,17 @@
 | Item | Value |
 |---|---|
 | Document | Release 1.2 Master Planning & Tracking Document |
-| Version | 1.3 |
-| Status | Draft — Active Planning |
+| Version | 1.23 |
+| Status | **Release Closed** — Release 1.2 is formally accepted by the Product Owner and closed, per `EBC-R1.2-WS8-04` (Section 18). Release 1.3 is now the active implementation release |
 | Origin EBC | R1.2-001 (see Document Change History below for every EBC that has updated this document) |
 | Product Owner | Vivek |
 | Release Manager | Tiger |
 | Purpose | Single source of truth for Release 1.2 planning, execution, QA, decision tracking and release readiness |
 | Baseline | Release 1.1 — `v1.1.0` |
-| Related | `docs/10-Backlog/RELEASE-1.2-BACKLOG.md` (source roadmap ideas), `docs/09-Development/PROJECT-HISTORY.md`, `docs/10-Backlog/RELEASE-1.1-MASTER-TRACKER.md` (R1.1 precedent) |
-| Last Updated | 15 August 2026 |
+| Related | `docs/10-Backlog/RELEASE-1.2-BACKLOG.md` (source roadmap ideas), `docs/09-Development/PROJECT-HISTORY.md`, `docs/10-Backlog/RELEASE-1.1-MASTER-TRACKER.md` (R1.1 precedent), `docs/20-Architecture/ADR-R1.2-WS3-001-Destination-Knowledge-Governance.md` (governing architecture for Destination Intelligence — Status: Accepted) |
+| Last Updated | 02 September 2026 |
 
-**EBC Numbering Convention:** Release 1.2 EBCs use a release-based numbering sequence rather than the legacy `EBC-0xx` numbering used through Release 1.1. **R1.2-001** created this document; **R1.2-002** (Journey Passport OTP Verification planning) is the second card in the sequence; **R1.2-003** (Homepage Simplification & Destination Intelligence Enhancements planning) is the third. Future Release 1.2 implementation cards continue sequentially — `R1.2-004`, `R1.2-005`, and so on. This convention applies to all future Release 1.2 EBC references; it does not renumber or otherwise affect existing `EBC-0xx` cards from Release 1.0/1.1.
+**EBC Numbering Convention:** Release 1.2 EBCs use a release-based numbering sequence rather than the legacy `EBC-0xx` numbering used through Release 1.1. **R1.2-001** created this document; **R1.2-002** added Journey Passport OTP Verification planning; **R1.2-003** added Homepage Simplification and Destination Intelligence Enhancements planning; **R1.2-004** implemented the Homepage Mood Experience refinement; **R1.2-005** completed the Mood Card Luxury Balance Pass; **R1.2-006** completed the Sri Traveller Experience Review; **R1.2-007** completed Workstream 2 Product Analysis; **R1.2-008** consolidated the tracker as Version 1.5; **R1.2-009** completed Workstream 2 UX Implementation; **R1.2-010** completed Workstream 2 Engineering Completion; **R1.2-011** completed Workstream 2 Functional QA; **R1.2-012** completed Workstream 2 Traveller Experience Validation; **R1.2-013** closed Workstream 2 and consolidated the tracker as Version 1.6; **R1.2-014** completed an independent Homepage Architecture Validation Review (Arjun — Product/IA; Sophie — UX/Visual Hierarchy) re-confirming Workstream 1 and 2 outcomes against the live implementation — **this EBC is explicitly NOT the tracker's Workstream 3** (Destination Intelligence remains Workstream 3's approved scope; see both reviewers' own Section 0.1 scope notes) and is numbered sequentially here specifically to avoid that confusion; **R1.2-015** performed this documentation-alignment pass, filed R1.2-014's findings into their proper sections below, and confirmed Workstream 3 required no change; **R1.2-016** added a reference to the newly-created `ADR-R1.2-WS3-001-Destination-Knowledge-Governance.md` (authored under `ADR-R1.2-WS3-EBC-ARCHIE-001`) as the governing architecture document for Destination Intelligence — see Section 6.3; **R1.2-017** finalised that ADR's status from Proposed to Accepted following its formal ratification by the Business Owner and Architecture Reviewer (authored under `ADR-R1.2-WS3-EBC-ARCHIE-002`), and updated this tracker's reference to it accordingly; **R1.2-018** closed the Workstream 3 planning chapter (authored under native EBC ID `R1.2-03.06-EBC-RAD`), recording completion of the WS3 governance/planning chain and readiness to begin implementation — see Section 5's Workstream 3 entry for the ID-collision note explaining why this update is recorded here rather than against the Section 6.3 task table's own, unrelated `R1.2-03.05`/`R1.2-03.06` rows; **R1.2-019** (authored under native EBC ID `R1.2-03.08A-EBC-ARCHIE`) closed `ADR-R1.2-WS3-001`'s Outstanding Decision 1, recording Rad's appointment as Destination Operational Steward and adding decision DEC-R1.2-014; and **R1.2-020** (authored under native EBC ID `R1.2-03.09-EBC-ARCHIE`) consolidated this tracker to reflect Workstream 3's actual implementation progress — Phase 0 (Governance Foundations, commit `9e38d00`), the Steward appointment (commit `749e421`), and Phase 1B (Operational Layer Alignment, commit `7022917`, Assam only) — adding a new Implementation Phase Dashboard and Deferred Items Register to Section 5, without altering the Section 6.3 task table or any architecture/business decision; and **R1.2-021** (authored under native EBC/Decision ID `DEC-R1.2-015`) formally ratified ADR §15 Decision 2 (Warn Mode First) as the approved operating model for Release 1.2 Phase 2 reconciliation and validation activities, closing a governance-documentation gap identified by Archie's compliance review, and added decision `DEC-R1.2-015`; and **R1.2-022** (authored under native EBC ID `R1.2-WS3-OBS-01-EBC-TIGER`) registered three pre-existing engineering observations — shared generated-artefact ownership, the Goa/mountain-intent steering-verification defect, and the `verify:journey-engine` `moodValues` fixture issue — that Rad identified and verified unrelated while executing WP-4 (`R1.2-WS3-IMP-01A-EBC-RAD`) and Workbook Consistency Remediation (`R1.2-WS3-IMP-01B-EBC-RAD`), filing them into a new Workstream 3 subsection of Section 13 without authorising any implementation; **`R1.2-WS3-IMP-01A-EBC-RAD` and `R1.2-WS3-IMP-01B-EBC-RAD` themselves remain unlogged in this tracker** — their consolidation into Document Change History, the Section 5 Workstream 3 Implementation Phase Dashboard and EBC counts is a separate, not-yet-scheduled Tiger/Rad task, flagged here rather than silently resolved, consistent with the transparency practice established at R1.2-015/018/020; and **R1.2-023** (authored under native EBC ID `R1.2-023-EBC-TIGER`) performed exactly that consolidation — closing WS3 Phase 2 WP-4 by recording, in Section 5's Workstream 3 dashboards and milestones, the completion of WP-4 Implementation (`R1.2-WS3-IMP-01A-EBC-RAD`), Workbook Consistency Remediation (`R1.2-WS3-IMP-01B-EBC-RAD`), Rad's Engineering Validation (recorded within `R1.2-WS3-IMP-01B`), and Keerthi's Functional Validation (`R1.2-WS3-IMP-01C-EBC-KEERTHI`, **Passed**), and cross-referencing `DEC-R1.2-015` and `OBS-R1.2-007`/`008`/`009` without duplicating their content. This EBC also filed Keerthi's validation report into the canonical repository location (`docs/09-Development/`), where it had not yet been placed. No code, workbook, generator, or architecture change was made — documentation and release-governance only; nothing was committed or pushed. WP-5 (Controlled Vocabulary Synchronisation) remained a separate, not-yet-authorised work package at that time; and **R1.2-024** (authored under native EBC ID `R1.2-024-EBC-TIGER`, "Workstream 3 Final Consolidation & Closure") — following independent confirmation via `git log`/`git rev-parse` that WP-5's implementation (commit `6c15cfe973a99315e962e9670577081171fe1f9f`, on top of WP-4's `a183e18`) is committed and pushed, satisfying this EBC's own Repository Assessment gate — recorded WP-5's implementation (`R1.2-WS3-IMP-02-EBC-RAD`) and Keerthi's independent functional validation (`R1.2-WS3-IMP-02A-EBC-KEERTHI`, **Passed**, all 14 acceptance criteria met) in Section 5's Workstream 3 dashboards and Implementation Milestones table, marked Phase 2 (Generation & Vocabulary Alignment) ✅ Complete and the Workstream 3 Status field Complete per this EBC's own explicit instruction (Section 5 Scope and Acceptance Criterion 4 of the source card), **while explicitly leaving Phase 3 (Runtime Alignment) and Phase 4 (Recommendation Behaviour) at "Not started" with no status change**, per the same source card's own Section 6 (Explicitly Out of Scope) and Section 9 (Deferred Items) — this pairing is a deliberate, named distinction, not an oversight, and is restated at the Workstream 3 Status field itself. `OBS-R1.2-007`/`008`/`009` and the Section 6.3 task table (`R1.2-03.01`–`03.15`, still Proposed) were likewise left entirely unchanged, cross-referenced only. This EBC also filed Keerthi's WP-5 validation report into the canonical repository location (`docs/09-Development/`), where it had not yet been placed, and produced a new standalone closure report, `docs/09-Development/R1.2-024-EBC-TIGER-Workstream-3-Closure.md`. No code, workbook, generator, or architecture change was made; nothing was committed or pushed by this EBC. Future Release 1.2 cards continue sequentially from `R1.2-025`. This convention does not renumber or otherwise affect existing `EBC-0xx` cards from Release 1.0/1.1.
 
 ---
 
@@ -31,6 +31,34 @@
 | 1.1 | 15-Aug-2026 | Rad | R1.2-001 | Adopted the release-based EBC numbering convention (R1.2-001 onward); moved the Change Log here as Document Change History, immediately after Document Information; added a new Release Milestones section (Section 4), renumbering all subsequent sections; added task R1.2-05.17 (phone number normalization to E.164); added tasks R1.2-06.12 and R1.2-06.13 (remove an individual selected destination; preserve selection order); added decision DEC-R1.2-005 (multi-destination selection) and open decision OPEN-R1.2-005 (geographic dataset maintenance strategy); total tracked task count updated from 84 to 87. |
 | 1.2 | 15-Aug-2026 | Rad | R1.2-002 | Added the Journey Passport OTP Verification scope to Workstream 5 (renamed to International Phone Number & OTP Verification), including updated Goal, Business Value and Acceptance Criteria; appended 18 new tasks R1.2-05.18–R1.2-05.35; added decision DEC-R1.2-006 (Journey Passport-only OTP policy), open decision OPEN-R1.2-006 (future OTP expansion), risk RISK-R1.2-010 (OTP delivery/outage risk) and a Future Release Candidates entry (OTP for additional lead-capture forms); added a WS5→WS4 dependency note; total tracked task count updated from 87 to 105. Documentation only — no application code, architecture or configuration changed. |
 | 1.3 | 15-Aug-2026 | Rad | R1.2-003 | Added homepage simplification decisions (DEC-R1.2-007 remove Escape mood card, DEC-R1.2-008 rename Memory Maker/Family to Memory Makers and remap it to Photography, DEC-R1.2-009 retire Experiences from the homepage and primary navigation without deleting the page or its URL) and destination intelligence decisions (DEC-R1.2-010 weighted Primary/Secondary/Tertiary Journey and Memory destination preference model as the preferred Journey Director recommendation model; DEC-R1.2-011 Journey Passport traveller name field to prevent numeric characters); renamed Workstream 3 to Destination Intelligence and added 19 new tasks across Workstreams 1–4 (R1.2-01.12–01.15, R1.2-02.10–02.13, R1.2-03.07–03.15 including 3 Wildlife destination tasks, R1.2-04.10–04.11); updated Goal/Business Value/Acceptance Criteria for Workstreams 1–4; resolved and retired OPEN-R1.2-001 and OPEN-R1.2-002 (superseded by DEC-R1.2-009) and closed RISK-R1.2-002; added RISK-R1.2-011 (weighted destination preference model's impact on Journey Director recommendation output) and a Future Release Candidates entry (Destination Intelligence expansion metadata); total tracked task count updated from 105 to 124. Documentation only — no application code, architecture, configuration or Journey Director logic changed. |
+| 1.4 | 16-Aug-2026 | Rad | R1.2-004 | Implemented the Workstream 1 Homepage Mood Experience refinement: completed the Trust Strip premium redesign and initial Mood Card treatment, removed Escape, renamed and remapped Memory Makers, and rebalanced the five-card homepage layout. Workstream 1 implementation moved through engineering cleanup and functional validation. |
+| 1.4 | 16-Aug-2026 | Rad | R1.2-005 | Completed the Homepage Mood Cards Luxury Balance Pass, adopting the approved champagne-glass treatment to retain premium warmth while protecting readability against the Golden Hour Hero. Affected Workstream 1 only; no release scope change. |
+| 1.4 | 16-Aug-2026 | Sri | R1.2-006 | Completed the independent Traveller Experience Review for Workstream 1. Accepted observations were recorded for Memory Makers recognition, desktop hover affordance and mobile first-fold visibility; no release-blocking defect was identified. |
+| 1.4 | 16-Aug-2026 | Arjun | R1.2-007 | Completed Workstream 2 Product Analysis covering Experiences/Journey Mood overlap, taxonomy, navigation, SEO, redirects, Journey Passport and homepage implications. Analysis tasks were closed, implementation requirements were made ready, and the Product Owner approved the resulting temporary public-retirement decision recorded as DEC-R1.2-012 without changing release scope. |
+| 1.5 | 16-Aug-2026 | Rad | R1.2-008 | Consolidated all approved Release 1.2 information through R1.2-007; reconciled dashboard, milestone, workstream, task, decision, dependency, checklist and observation status; added DEC-R1.2-012; and completed numbering and cross-reference QA. Affected Workstreams 1, 2 and 7. Documentation only. |
+| 1.5 | 16-Aug-2026 | Sophie | R1.2-009 | Implemented the approved Workstream 2 UX changes: removed the "Journey Invitations" section from the Homepage and the Experiences entry from Header and Footer navigation, extracting the removed section verbatim into a new, unimported `JourneyInvitations.tsx` component to preserve it for future reuse. No page or route deletion. Handed off to Rad for the guest-facing redirect. |
+| 1.5 | 16-Aug-2026 | Rad | R1.2-010 | Completed Workstream 2 engineering: added a temporary (307, non-permanent) guest redirect from `/experiences` to the Homepage via `next.config.ts`; confirmed by repository-wide search that no intentional internal link to Experiences remains anywhere in the live app; confirmed `JourneyInvitations.tsx` is preserved and unimported. ESLint, TypeScript and production build all passed. No page, route or implementation was deleted. |
+| 1.5 | 16-Aug-2026 | Keerthi | R1.2-011 | Completed Workstream 2 Functional QA. 24 of 25 checks passed with 0 defects found; 1 check (a dedicated tablet-width responsive pass) was blocked by test-tooling limitations rather than a product issue, with partial incidental evidence showing no breakage. Confirmed no normal guest interaction reaches the retired Experiences feature. Recommendation: PASS. |
+| 1.5 | 16-Aug-2026 | Sri | R1.2-012 | Completed Workstream 2 independent Traveller Experience Validation. Found the retirement makes the homepage read as simpler and more complete, with a seamless Hero-to-Destinations transition and no sense that anything is missing. No material improvements identified. Recommendation: Approve for Workstream 2 Closure. |
+| 1.6 | 16-Aug-2026 | Rad | R1.2-013 | Closed Workstream 2 following completed Product Analysis (R1.2-007), UX Implementation (R1.2-009), Engineering Completion (R1.2-010), Functional QA (R1.2-011) and Traveller Experience Validation (R1.2-012). Reconciled dashboard, milestone, workstream, task, dependency, checklist and programme-metric status; verified the decision log and all numbering/cross-references remain consistent. Workstream 3 (Destination Intelligence) is now the next active implementation stream. Documentation only — no application code, routing or Product Decisions were changed. |
+| 1.7 | 16-Aug-2026 | Arjun / Sophie | R1.2-014 | Completed an independent Homepage Architecture Validation Review of the live, implemented homepage — Arjun (Product/Business/IA) and Sophie (UX/Visual Hierarchy) each re-derived findings directly from the current repository rather than citing the WS1/WS2 chain alone. Both independently found no new evidence to reopen DEC-R1.2-009/012 (Experiences retirement) and confirmed the ten-section homepage narrative is coherent and release-ready. Both also independently flagged, in their own Section 0.1, that this review's informal "WS3" card title conflicts with the tracker's real Workstream 3 (Destination Intelligence) and recommended it be filed under its own sequential EBC number instead — adopted here as R1.2-014. New findings (Trust Points icon treatment and imagery, Header tablet-range CTA breakpoint, Contact Preview CTA routing, an unused colour-token system, an orphaned off-brand Experiences component) are recorded as new Open Product Decisions (Section 8), a new Decision Log entry (DEC-R1.2-013) and a new Technical Debt Register (Section 13). No code, design or configuration was changed; Workstream 3's own scope was left untouched. |
+| 1.7 | 17-Aug-2026 | Rad | R1.2-015 | Documentation alignment pass (EBC `R1.2-WS3-EBC-RAD-001`). Confirmed this tracker already reflected the implemented homepage as of v1.6 (R1.2-013) — Workstream 1 and Workstream 2 fully documented and Complete. Identified that this EBC's own Task 1/2/6 instructions (rename Workstream 3 to "Homepage Architecture Optimisation"; rewrite R1.2-03.01–03.04) would have misapplied R1.2-014's homepage findings onto the tracker's unrelated, still-Proposed Destination Intelligence workstream; escalated to the Product Owner per Project Instructions Section 35 rather than silently resolving the conflict. Per the Product Owner's direction: Workstream 3 and its tasks (R1.2-03.01–03.15) were left entirely unchanged; R1.2-014's findings were instead filed under their own EBC number into the Decision Log (DEC-R1.2-013), Open Product Decisions (OPEN-R1.2-007–009) and a new Technical Debt Register (Section 13); a stale "Version 1.5" reference and a stale decision-log-through-DEC-012 reference in the Release Checklist (Section 12) were corrected to match the current version. Documentation only — no application code, architecture, Workstream 3 scope or Product Decisions were changed. |
+| 1.8 | 17-Aug-2026 | Archie | R1.2-016 | Created `docs/20-Architecture/ADR-R1.2-WS3-001-Destination-Knowledge-Governance.md` (authored under EBC `ADR-R1.2-WS3-EBC-ARCHIE-001`), the permanent Architecture Decision Record formalising the Destination Knowledge Governance architecture reviewed across Workstream 3 (`R1.2-03.01`–`03.04`). The ADR is a faithful, non-reinterpreting restatement of the already-agreed architecture — no architectural decision, principle, or investigation finding was changed. ADR status recorded as Proposed, pending Vivek's formal ratification (see the ADR's own Decision History). This tracker's Document Information "Related" field and Workstream 3 section (6.3) now reference the ADR as the governing architecture document for Destination Intelligence; future Workstream 3 implementation EBCs (`R1.2-03.07` onward) should treat it as their primary architectural prerequisite. As with `R1.2-03.02`–`03.04` before it, this EBC's own native ID (`ADR-R1.2-WS3-EBC-ARCHIE-001`) does not follow the sequential `R1.2-0XX` convention; it is recorded here as `R1.2-016` per that convention's own stated purpose (tracking every EBC that updates this document), consistent with how `R1.2-015` recorded `R1.2-WS3-EBC-RAD-001`. Documentation only — no application code, runtime configuration, generator, workbook, or recommendation logic was changed. |
+| 1.9 | 17-Aug-2026 | Archie | R1.2-017 | Documentation finalisation pass (EBC `ADR-R1.2-WS3-EBC-ARCHIE-002`). Following completion of the Workstream 3 Architecture & Product Review and formal approval by the Business Owner (Vivek) and Architecture Reviewer (Tiger), updated `ADR-R1.2-WS3-001-Destination-Knowledge-Governance.md`'s status from "Proposed — ready for Product Owner ratification" to "Accepted"; added a standard ADR metadata block and an Effective Date field; recorded the ratification as a new Decision History entry within the ADR itself. Corrected this tracker's Workstream 3 "Governing architecture" reference (Section 6.3) and the Document Information "Related" field, both of which previously described the ADR as pending ratification, to reflect its Accepted status. No architectural principle, governance decision, or investigation finding was changed — housekeeping only, consistent with this EBC's explicit constraints. |
+| 1.10 | 18-Aug-2026 | Rad | R1.2-018 | Documentation alignment pass (native EBC ID `R1.2-03.06-EBC-RAD`) closing the Workstream 3 planning chapter. Recorded completion of the full WS3 governance/planning chain — Product Analysis (Arjun), Traveller Experience/UX Validation (Sophie), Knowledge Base Synchronisation Audit (Rad), Source Comparison & Runtime Trace Analysis (Rad), Governance Architecture (Archie), `ADR-R1.2-WS3-001-Destination-Knowledge-Governance.md` (Accepted), and Implementation Planning (Rad, `docs/09-Development/EBC-R1.2-03.05-RAD-Destination-Intelligence-Implementation-Planning.md`) — via a new "Workstream 3 Planning Dashboard" and "WS3 Implementation Readiness" subsection under Section 5, updated the Workstream 3 narrative and Status field (Proposed → Approved — Planning Complete, Implementation Ready to Begin), and reconciled the Section 3 dashboard EBC counts and Section 12 checklist's stale EBC/version cross-references. **Flagging a literal ID collision per Project Instructions Section 35, consistent with the same category of mismatch already named in R1.2-015/016/017:** this EBC's own native ID (`R1.2-03.06-EBC-RAD`) and its instruction to mark "R1.2-03.05" Complete both collide with pre-existing, unrelated Section 6.3 task-table rows — `R1.2-03.05` ("Define analytics considerations," Owner Archie, Proposed) and `R1.2-03.06` ("Regression testing," Owner Keerthi, Proposed) — which remain part of the original, not-yet-started Destination Mapping/Deep-Linking/Weighted-Model implementation scope defined under EBC R1.2-003. Consistent with the Product Owner's prior direction on this exact pattern (R1.2-015), those task-table rows and every task status under `R1.2-03.01`–`03.15` were left entirely unchanged; this update is recorded under the tracker's own sequential EBC-numbering convention (`R1.2-018`) instead, and the completed WS3 governance/planning chain is referenced by its own document paths rather than by conflating it with the Section 6.3 task IDs. Documentation only — no application code, generators, runtime assets, datasets, workbooks, architecture documents, or implementation task status was changed. |
+| 1.11 | 18-Aug-2026 | Archie | R1.2-019 | Governance update (native EBC ID `R1.2-03.08A-EBC-ARCHIE`) closing `ADR-R1.2-WS3-001`'s Outstanding Decision 1. Following escalation during `R1.2-03.08` Phase 1 implementation (Rad found WP-1.2/1.3/1.4 blocked because the ADR's Artefact Ownership Matrix assigns the Operational Layer workbook to a Destination Operational Steward role no persona held) and subsequent approval by the Business Owner (Vivek) and Architecture Reviewer (Tiger), updated the ADR to: mark Outstanding Decision 1 **Closed – Approved** (Section 15); name Rad as Destination Operational Steward in the Artefact Ownership Matrix (Section 8); add a new Governance Roles subsection (8.1) consolidating existing role responsibilities; and record the approval as a new Decision History entry. Added decision `DEC-R1.2-014` to this tracker's Product Decision Log (Section 7) recording the appointment, and reconciled the Section 3 dashboard's Approved Decisions and EBC counts. No architectural principle, layer boundary, source-of-truth assignment, or other governance decision was changed — this closes a decision the ADR itself had already flagged as outstanding (Section 15) and does not require a superseding ADR. Documentation only; no application code, generators, runtime assets, datasets, or workbooks were changed. This also unblocks Rad's escalated `R1.2-03.08` Phase 1b (WP-1.2/1.3/1.4), which remains a separate, not-yet-scheduled implementation EBC. |
+| 1.12 | 18-Aug-2026 | Archie | R1.2-020 | Documentation consolidation (native EBC ID `R1.2-03.09-EBC-ARCHIE`) recording Workstream 3's actual implementation progress in the tracker. **Flagging a literal ID collision per Project Instructions Section 35, consistent with the same category of mismatch already named in R1.2-015/016/017/018:** this EBC's own native ID (`R1.2-03.09-EBC-ARCHIE`) collides exactly with the pre-existing, unrelated Section 6.3 task-table row `R1.2-03.09` ("Review and validate all destination Journey and Memory mappings against the approved destination weighting matrix," Owner Arjun, Proposed), which remains part of the original, not-yet-started weighted-preference-model implementation scope. That task-table row was left entirely unchanged; this update is recorded under the tracker's own sequential EBC-numbering convention (`R1.2-020`) instead, and this EBC's actual subject (Phase 0/Steward/Phase 1B consolidation) is referenced by its own commit hashes and document paths rather than by conflating it with task-table `R1.2-03.09`. Independently verified against repository evidence (commit history and the underlying implementation reports) rather than taken on trust: `9e38d00` (`R1.2-03.07-EBC-RAD`, Phase 0 — Governance Foundations: cross-reference/ownership comments added to `DESTINATION-KNOWLEDGE-BASE.md`, `JOURNEY-DIRECTOR-RUNTIME-CATALOGUE.md` and 5 generation-pipeline code files; no logic changed); `749e421` (`R1.2-019`/`R1.2-03.08A-EBC-ARCHIE`, already recorded above); `7022917` (`R1.2-03.08B-EBC-RAD`, Phase 1B — Operational Layer Alignment: resolved the Assam structural misalignment in the operational workbook — 2 rows relocated/renamed, 5 Review Register items closed — with `Journey Base Status` deliberately left unchanged on both rows, so no runtime, generated-JSON, or recommendation-eligibility impact; Amritsar, Darjeeling and Corbett explicitly left open, not resolved). Added a new "Workstream 3 Implementation Phase Dashboard" and "Workstream 3 Deferred Items Register" under Section 5, distinct from the Section 6.3 task table (`R1.2-03.01`–`03.15`, statuses unchanged, remain Proposed, consistent with the ID-collision handling established at `R1.2-015`/`018`); updated the Workstream 3 Status field and narrative to reflect Phase 2 (Generation & Vocabulary Alignment) as next; reconciled the Section 3 dashboard's EBC counts. No architecture document, Knowledge Base, workbook, runtime code, recommendation logic, business decision, or task sequencing was changed — documentation only. |
+| 1.13 | 19-Aug-2026 | Tiger | R1.2-021 | Governance ratification (native Decision/EBC ID `DEC-R1.2-015`), created at `docs/09-Development/DEC-R1.2-015-Ratification-Warn-Mode-First.md`. During the Architecture & Governance Compliance Review of the Phase 2 implementation EBC, Archie identified that `ADR-R1.2-WS3-001` §15 Decision 2 (Warn Mode vs. Block Mode) remained an architectural recommendation rather than a formally ratified governance decision, even though the ADR already recommended it and Phase 2 planning already assumed it. Vivek approved `DEC-R1.2-015` on 19 August 2026, formally ratifying **Warn Mode First** as the approved operating model for all reconciliation and validation activities introduced under Release 1.2 Phase 2 (WP-4/WP-5); Block Mode is not approved for Release 1.2 Phase 2. Updated the ADR's Outstanding Product Decisions (Section 15, Decision 2 — now Closed – Approved) and Decision History (Section 17); added decision `DEC-R1.2-015` to this tracker's Product Decision Log (Section 7); reconciled the Section 3 dashboard's Approved Decisions and EBC counts. No architectural principle, runtime behaviour, generator logic, implementation scope, or controlled vocabulary was changed — documentation and governance only. |
+| 1.14 | 19-Aug-2026 | Tiger | R1.2-022 | Backlog registration (native EBC ID `R1.2-WS3-OBS-01-EBC-TIGER`, "Engineering Observations & Backlog Registration"). Registered three engineering observations Rad identified and independently verified as pre-existing while executing WP-4 (`R1.2-WS3-IMP-01A-EBC-RAD`) and Workbook Consistency Remediation (`R1.2-WS3-IMP-01B-EBC-RAD`): shared generated-artefact ownership between `generate:journey-intelligence` and `generate:journey-itineraries` (`OBS-R1.2-007`, Medium); the `verify:journey-intelligence:steering` Goa/mountain-intent scoring defect, proven unrelated via exhaustive artefact diff (`OBS-R1.2-008`, Medium); and the `verify:journey-engine` `moodValues` fixture issue (`OBS-R1.2-009`, Low). Added a new "Workstream 3 – Destination Intelligence (WP-4 / Workbook Consistency Remediation)" subsection and Technical Debt Register table to Section 13 (Post-Implementation Observations); cross-referenced this EBC from `R1.2-WS3-IMP-01B-EBC-RAD`, the report that documented all three findings. No implementation, generator, runtime, verification-script, or Product Decision was authorised or made — documentation and backlog registration only, per this EBC's explicit scope. **Flagging for Tiger follow-up, consistent with the transparency practice established at R1.2-015/018/020:** `R1.2-WS3-IMP-01A-EBC-RAD` and `R1.2-WS3-IMP-01B-EBC-RAD` themselves remain unlogged in this tracker's Document Change History, Section 5 Workstream 3 Implementation Phase Dashboard and EBC counts; that consolidation is a separate, not-yet-scheduled task, outside this EBC's observations-only scope. |
+| 1.15 | 19-Aug-2026 | Tiger | R1.2-023 | Documentation consolidation and close-out (native EBC ID `R1.2-023-EBC-TIGER`, "WS3 Phase 2 WP-4 Implementation Consolidation & Close-Out"). Closed WS3 Phase 2 WP-4 by consolidating the completed delivery chain into this tracker: WP-4 Implementation (`R1.2-WS3-IMP-01A-EBC-RAD`), Workbook Consistency Remediation (`R1.2-WS3-IMP-01B-EBC-RAD`), Rad's Engineering Validation (recorded within `R1.2-WS3-IMP-01B`), and Keerthi's independent Functional Validation (`R1.2-WS3-IMP-01C-EBC-KEERTHI`) — **Passed**, all 6 acceptance criteria met, no defects found, regression findings limited to the three already-registered pre-existing observations (`OBS-R1.2-007`/`008`/`009`). Updated Section 5's Workstream 3 Status field, Planning Dashboard, Implementation Phase Dashboard, Implementation Milestones table and Deferred Items Register (runtime regeneration item resolved, uncommitted); cross-referenced `DEC-R1.2-015` (Warn Mode First governance basis) and `OBS-R1.2-007`/`008`/`009` without duplicating their content; reconciled the Section 3 dashboard's Overall Progress narrative and EBC counts (22→23). Also filed Keerthi's validation report into its canonical repository location (`docs/09-Development/R1.2-WS3-IMP-01C-EBC-KEERTHI-WP4-Functional-Validation.md`), where it had not yet been placed — content filed verbatim, not authored or altered by Tiger. **No code, generator, workbook, or architecture change was made; nothing was rerun or re-validated; nothing was committed or pushed**, per this EBC's explicit scope. WP-5 (Controlled Vocabulary Synchronisation) remains a separate, not-yet-authorised work package — Phase 2 as a whole is not yet complete, only WP-4 within it. |
+| 1.16 | 19-Aug-2026 | Tiger | R1.2-024 | Workstream 3 Final Consolidation & Closure (native EBC ID `R1.2-024-EBC-TIGER`). This EBC's own Repository Assessment gate initially found WP-5 uncommitted (`R1.2-WS3-IMP-02-EBC-RAD-WP5-Implementation.md` explicitly recorded "uncommitted; nothing pushed"); execution was paused at that gate and the Product Owner chose to wait for the commit rather than proceed. Resumed only after independently re-verifying, via `git log`, `git status` and `git rev-parse HEAD` against `git rev-parse origin/feature/ebcr1.2-003-trust-strip-visual-refresh`, that WP-5 is committed and pushed as `6c15cfe973a99315e962e9670577081171fe1f9f` ("R1.2-024: Complete WS3 Phase 2 WP-5 generator label mapping alignment"), directly on top of WP-4's `a183e18` ("R1.2-023: Complete WS3 Phase 2 WP-4 implementation and validation") — this commit-message reuse of the "R1.2-024" label is a coincidence of the repository's own commit-authoring convention, not a reference to this tracker EBC, and does not constitute an ID collision requiring separate flagging (the same pattern already occurred, and was noted as non-colliding, with `a183e18`/`R1.2-023`). Recorded WP-5's Implementation (`R1.2-WS3-IMP-02-EBC-RAD`) and Keerthi's independent Functional Validation (`R1.2-WS3-IMP-02A-EBC-KEERTHI`) — **Passed**, all 14 acceptance criteria met, no functional defects, regression findings limited to the same already-registered pre-existing observations (`OBS-R1.2-007`/`008`/`009`) plus the same environment-only device-bridge FUSE limitation already documented under WP-4 — in Section 5's Workstream 3 Planning Dashboard, narrative, Implementation Phase Dashboard, Implementation Milestones table (also correcting the three previously-`*Uncommitted*` WP-4 milestone rows to reference `a183e18`, now that it is confirmed committed and pushed) and Deferred Items Register (removed the "(uncommitted)" caveat from the Runtime Regeneration row). Marked Phase 2 (Generation & Vocabulary Alignment) ✅ Complete and the Workstream 3 Status field Complete, per this EBC's own explicit Scope and Acceptance Criteria — **while explicitly leaving Phase 3 (Runtime Alignment) and Phase 4 (Recommendation Behaviour) at "Not started," with no status change**, per the same source card's own Section 6 (Explicitly Out of Scope: "close Phase 3; close Phase 4") and Section 9 (Deferred Items: "Confirm these remain deferred: ... Phase 3; Phase 4. No status changes."). This pairing — Workstream 3 marked Complete while Phase 3/4 remain Not Started — is the source EBC's own explicit instruction and is stated plainly, not silently reconciled; it reflects that Workstream 3's Phase 0–2 native-ID implementation chain (governance through vocabulary alignment) is complete, while the weighted Primary/Secondary/Tertiary preference model (Phase 3/4, and the still-Proposed Section 6.3 task table `R1.2-03.01`–`03.15`) is separate, future, not-yet-authorised scope. `OBS-R1.2-007`/`008`/`009` were cross-referenced without modification. Reconciled the Section 3 dashboard's Overall Progress narrative and EBC counts (23→24). Filed Keerthi's WP-5 validation report into its canonical repository location (`docs/09-Development/R1.2-WS3-IMP-02A-EBC-KEERTHI-WP5-Functional-Validation.md`), where it had not yet been placed — content filed verbatim, not authored or altered by Tiger — and produced a new standalone closure report, `docs/09-Development/R1.2-024-EBC-TIGER-Workstream-3-Closure.md`. **No code, generator, workbook, or architecture change was made; no artefact was regenerated; nothing was committed or pushed by this EBC**, per its explicit Out of Scope. |
+| 1.17 | 31-Aug-2026 | Tiger | R1.2-WS7-07 | Release 1.2 Final Tracker Reconciliation (`EBC-R1.2-WS7-07`, Scope: `docs/10-Backlog/RELEASE-1.2.md` only). Per this card's Workspace Readiness Check, cross-referenced the last independent closure assessment (`EBC-R1.2-WS8-01`, "Not Ready") against current repository evidence rather than assuming it stale. Found: (1) genuinely resolved since `WS8-01` — Workstream 6 formally **Accepted by the Product Owner** (`EBC-R1.2-WS6-14-VIVEK`), its Operational Release Gate migration/GeoNames-import both independently confirmed applied (repository evidence: `supabase/migrations/20260823150000_geo_places_geo_aliases.sql` plus three follow-on WS3 performance migrations present; `web/data/geonames/` populated); Workstream 5's Keerthi functional QA (`WS5-QA-01`, Passed with Observations) and Sri traveller validation (`WS5-SRI-01`) both complete, and the OTP-expiry/SMS-wording mismatch resolved and **committed** (`3280b93`, confirmed by `WS5-QA-03` smoke validation); Release 1.3 backlog carry-forward reconciliation complete (`EBC-R1.2-WS7-06`, committed `2e1ff3b`). Subsequently reconciled to include all accepted Release 1.2 carry-forward items, including the Traveller Validation observations relating to Journey Reflection Free-text Interpretation and the Journey Passport Completion Experience (Passport Stamp Ceremony), both of which were accepted as Release 1.3 enhancements requiring no further Release 1.2 action. |
+| 1.18 | 31-Aug-2026 | Tiger | R1.2-WS7-08 | Release 1.2 Final Documentation Reconciliation (`EBC-R1.2-WS7-08`, documentation-only, no code/config/SQL/Release 1.3 planning changed). Reviewed every document WS7 modified for references to the six fabricated `WS7-IMP-01`–`04`/`WS7-AUD-01`/`WS7-GOV-01` citations `EBC-R1.2-WS8-01` first identified (via `RISK-R1.2-014`) and this tracker's own `WS7-07` reconfirmed. Corrected five of the six with plain descriptive wording and dated correction notes, never inventing a replacement ID, per this card's explicit instruction: `docs/00-Project-Compass/GOVERNANCE-MAP.md`, `docs/00-Project-Compass/DECISION-LOG.md`, `docs/30-Governance/README.md`, `docs/03-ADR/DECISIONS.md`, `docs/09-Development/PROJECT-HISTORY.md` (also bumped to Version 1.1). `RELEASE-1.3-BACKLOG.md`'s citation (its own v1.8 Document Change History row) was deliberately left uncorrected — outside this card's Deliverables and Out-of-Scope boundary on Release 1.3 planning, and already honestly flagged in that document's own v1.9 entry. During this review, a seventh, previously-uncatalogued instance of the same pattern was discovered — `docs/09-Development/EBC-R1.2-GOV-001-STATUS-RECONCILIATION.md`, citing the same three fabricated IDs in its own header and Related Documents section — also left uncorrected, being outside this card's six-document Deliverables allowlist; both remaining instances are now tracked as `RISK-R1.2-014` (updated) and `RISK-R1.2-015` (new). Updated `RISK-R1.2-014` to Partially Resolved and the "Release 1.2 Closure Readiness" note's fabricated-citations bullet and Recommendation paragraph accordingly. Corrected a pre-existing Document Change History table-ordering defect found during this review (the `1.17`/`WS7-07` row was sequenced before the chronologically earlier `1.16`/`R1.2-024` row) — reordered here without altering either row's content. No dashboard total, decision count, task count, or workstream status required correction; all were independently re-verified against Section 6/7/8/10 and found internally consistent. No fabricated EBC reference was introduced by this update; no engineering, code, configuration, database or Release 1.3 planning work was performed, per this card's explicit Out of Scope. |
+| 1.19 | 31-Aug-2026 | Tiger | R1.2-WS8-02 | Release 1.2 Final Closure Assessment (`EBC-R1.2-WS8-02`, documentation-only). Performed the definitive Release 1.2 closure determination after `WS7-07`/`WS7-08` both committed, evaluating the repository exactly as it stands, per Section 15. Found one genuinely new piece of repository evidence not previously credited -- `R1.2-04.10` (traveller name numeric-character rejection) is implemented and committed (`4f2f2ef`, explicitly labelled `EBC-R1.2-WS4-IMP-01`) though the tracker still recorded it Proposed -- and flipped that single task to Complete (Section 6.4), updating the dashboard's Completed Tasks (49->50) and Task Status Breakdown accordingly; no comparable evidence exists for Workstream 4's other ten tasks, so Workstream 4's own Status field and the Completed Workstreams count are unchanged. Classified all fifteen Section 10 risks per Activity 5. Reconfirmed Release 1.3 carry-forward complete (Section 15.6). Recomputed release metrics (Section 15.7). Issued an eight-dimension Final Assessment (Section 15.8) and a formal closure recommendation (Section 15.9): **Release Not Ready** -- Workstream 8 at 0%, Workstream 4 substantially unevidenced, `[SMV-DBG]` diagnostics still present, Workstream 5 Product Acceptance still pending, two low-risk documentation citations still open. None of these findings require reopening completed, validated engineering. Added Section 15 as the historical Release 1.2 summary (Activity 10). Added a pointer from the existing "Release 1.2 Closure Readiness" note (Section 3) to this section as the current, superseding determination, preserving that note's own text unchanged as historical record. No code, configuration, database, or Release 1.3 prioritisation was changed, per this card's explicit Out of Scope. Release 1.2 is not declared complete, tagged, or merged by this update. |
+| 1.20 | 31-Aug-2026 | Tiger | R1.2-WS4-05 | Workstream 4 Repository Reconciliation & Completion Assessment (`EBC-R1.2-WS4-05`, documentation-only). Investigated all eleven WS4 tasks individually against repository evidence and verified the historical claim that four defects were fixed before WS4 planning against commit `0bbac73` (13-Aug-2026, predating this tracker's v1.0 by two days) and Keerthi's independently-committed `EBC-036-Retest-Report.docx` (same day, PASS on D-06/D-07/D-08/D-09). Flipped `R1.2-04.01` (Romance) and `R1.2-04.03` (Companion) to Complete in full, and `R1.2-04.04` (Pace & Timing) to Complete in substance, on that evidence, independently re-verified as still live and unreverted in current HEAD; `R1.2-04.02` (mapping validation) assessed Partial and left Proposed -- the current, Workstream-1-revised mapping set has not had an equivalent independent re-validation. The five Keerthi acceptance/regression tasks (`04.05`-`04.09`, `04.11`) remain wholly unevidenced; Workstream 4's overall Status field remains **Proposed** -- four of eleven tasks Complete does not complete the workstream. Updated the dashboard's Completed Tasks (50->53) and Task Status Breakdown (50/60->53/57) accordingly, and added a superseded-in-part pointer to Section 15.2 for internal consistency. Investigated Workstream 5's Product Owner Acceptance per this card's Section 9: found repository evidence (`EBC-R1.2-WS5-GOV-07-TIGER`, 27-Aug-2026) explicitly contradicts marking it Complete -- no Vivek acceptance record exists for Workstream 5, unlike Workstream 6's `EBC-R1.2-WS6-14-VIVEK` -- so Workstream 5's Status field continues to read Pending Product Acceptance; the other six items Section 9 asked to confirm were independently re-verified as already accurately stated. Discovered and recorded, without resolving, a substantially larger and entirely unreconciled second Workstream 4 delivery chain (`EBC-R1.2-WS4-01`-`06`, `DR-R1.2-WS4-001`, `IPP-R1.2-WS4-001`, and two committed, merged implementation reports, `EWP-R1.2-WS4-001`/`4f2f2ef`-era `002` at `be0056e`/`dded509`) with no cross-reference to this tracker's own WS4 task table -- flagged as requiring its own dedicated future Tiger reconciliation card, per this card's explicit scope boundary (Deliverables: `RELEASE-1.2.md` only, against the eleven named tasks). Added Section 16 with the complete task-by-task evidence matrix. No code, configuration, database, WS8 execution, or Release 1.3 change was made, per this card's explicit Out of Scope. |
+| 1.21 | 01-Sep-2026 | Tiger | R1.2-WS4-06 | Workstream 4 Repository Evidence Synchronisation (`EBC-R1.2-WS4-06`, documentation-only). Investigated the committed `EBC-R1.2-WS4-01`-`06`/`DR-R1.2-WS4-001`/`IPP-R1.2-WS4-001`/`EWP-R1.2-WS4-001`/`002` chain flagged by `EBC-R1.2-WS4-05` and found it does **not** satisfy the remaining WS4 tracker tasks -- it addresses a materially different scope ("Experience Refinement"). Discovered, via direct Project search, a separate, previously-unexamined chain -- `EBC-R1.2-WS4-AUD-01` (Rad, engineering audit), `EBC-R1.2-WS4-IMP-01` (Rad, implementation), `EBC-R1.2-WS4-QA-01` (Keerthi, functional QA) and `EBC-R1.2-WS4-SRI-01` (Sri, traveller validation), all dated 30-Aug-2026 and titled against this workstream's own name -- that directly resolves `R1.2-04.02` and `04.05`-`04.09`/`04.11`, with underlying code independently reconfirmed as genuinely committed (`4f2f2ef`) and still live, unreverted, in current HEAD. Flipped all seven remaining tasks to Complete in Section 6.4 (all eleven WS4 tasks now Complete). Updated Workstream 4's Status field to "All Eleven Tasks Complete -- Ready for Product Owner Acceptance" -- not bare Complete, and the dashboard's Number of Completed Workstreams is left unchanged at 3 -- because no Product Owner acceptance record exists for Workstream 4, consistent with the precedent established for Workstream 6 (`EBC-R1.2-WS6-14-VIVEK`). Updated the dashboard's Completed Tasks (53->60) and Task Status Breakdown (53/57->60/50) accordingly, and corrected the Overall Progress row's now-stale "disputed" phrasing. Closed `RISK-R1.2-007` and `RISK-R1.2-013` in both the Section 10 Risk Register and the Section 15.7 risk-classification summary, both directly resolved by the evidence above. Disclosed, without resolving, two EBC-ID naming collisions and the continued unreconciled status of the separate "Experience Refinement" chain. Added Section 17 with the complete evidence mapping matrix and task-by-task assessment. No code, configuration, database, QA execution, architecture review, WS8 execution, or Release 1.3 change was made, per this card's explicit Out of Scope. |
+| 1.22 | 02-Sep-2026 | Rad | EBC-R1.2-WS8-03 | Operational cleanup completed. Removed all Release 1.2 validation Journey Passport leads, callback data, events, and OTP challenge records from the production database after verification. Confirmed zero orphaned records, no application regression, and no source-code changes. |
+| 1.23 | 02-Sep-2026 | Tiger | EBC-R1.2-WS8-04 | Release 1.2 Final Closure & Product Owner Sign-off (documentation-only governance activity; see Section 18). Reviewed all eight workstreams against current repository and Claude Project evidence; recomputed dashboard metrics; classified every open Section 10 risk as Closed, Accepted, or Carried Forward; confirmed every previously-deferred Release 1.2 item is present in `RELEASE-1.3-BACKLOG.md`; recorded the Product Owner's formal decision that Release 1.2 is accepted (Engineering, UX, QA, Traveller Validation, Governance, Operational Readiness); changed the Overall Release State from Release Validation to **Release Closed**; and appended a Release 1.2 Summary. This update also disclosed and corrected an inconsistency found in the working tree at the start of this session — an unauthored, uncommitted edit had set this Document Information table's Version field to \"1.3\" (a number already used earlier in this same Change History, on 15-Aug-2026, for an unrelated update) and the Status field to \"Release Validation\" without a corresponding Change History row; corrected here to continue the tracker's own sequential versioning convention. The Workstream 4 and Workstream 5 \"Complete — Product Owner Accepted (Vivek, 01-Sep-2026)\" status already present in Section 5 at the start of this session was verified directly with the Product Owner during this update (no separate `WS4`/`WS5`-VIVEK acceptance document exists in the Claude Project, unlike Workstream 6's `EBC-R1.2-WS6-14-VIVEK`) and is retained on that basis, per Section 18.6. No code, configuration, database, or Release 1.3 planning file was changed; `RELEASE-1.3-BACKLOG.md` was reviewed only, not edited, remaining outside this card's Deliverables. |
 
 ---
 
@@ -72,7 +100,7 @@ Release 1.2 deepens the traveller experience established in Release 1.1 through 
 
 ## Current Status
 
-**Planning.** This document has just been created (R1.2-001) and workstreams have not yet begun implementation. No R1.2 code has shipped.
+**Implementation in Progress.** Workstream 1 is ✅ Complete, including the Trust Strip redesign, Mood Card refinement, Luxury Balance Pass, functional QA, Traveller Experience Review and Business Acceptance. Workstream 2 is now also ✅ Complete: Product Analysis (R1.2-007), UX Implementation (R1.2-009), Engineering Completion (R1.2-010), Functional QA (R1.2-011) and Traveller Experience Validation (R1.2-012) have all closed with no open defects, and the Product Owner has approved Workstream 2 for closure. An independent Homepage Architecture Validation Review (R1.2-014, Arjun and Sophie) has since re-confirmed both workstreams' outcomes against the live homepage, with no recommendation to reopen either — see Section 13. Workstream 3 (Destination Intelligence) remains unaffected by that review; its governance/planning chain — Product Analysis, UX/Traveller Experience Validation, Knowledge Base Synchronisation Audit, Source Comparison & Runtime Trace Analysis, Governance Architecture, `ADR-R1.2-WS3-001` (Accepted) and Implementation Planning — is now ✅ Complete (R1.2-018), and Workstream 3 is Approved and ready to begin implementation against its Section 6.3 task table; see Section 5 for the WS3 Implementation Readiness checklist. Remaining workstreams continue according to the Release 1.2 roadmap.
 
 ## Planned Release Sequence
 
@@ -92,7 +120,7 @@ Release
 Retrospective
 ```
 
-Each workstream and task in this document moves through this sequence independently — see Section 13 for status definitions, and Section 4 for the release-level milestone checkpoints that track overall progress through this sequence.
+Each workstream and task in this document moves through this sequence independently — see Section 14 for status definitions, and Section 4 for the release-level milestone checkpoints that track overall progress through this sequence.
 
 ## Release Owner
 
@@ -102,11 +130,11 @@ Tiger (Programme & Delivery Lead) — owns this document and consolidates delive
 
 ## Last Updated
 
-15 August 2026
+31 August 2026
 
 ## Document Version
 
-1.3
+1.21
 
 ---
 
@@ -131,30 +159,57 @@ These principles apply to every product, UX, architecture, engineering, content 
 
 | Metric | Current Value | Notes |
 |---|---|---|
-| Overall Progress | 0% — Planning | No workstream has entered Implementation |
-| Number of Workstreams | 8 | All approved; see Section 5 |
-| Number of Open Decisions | 4 | See Section 8 (2 further decisions — OPEN-R1.2-001, OPEN-R1.2-002 — retired/resolved; see Section 8's Retired sub-list) |
-| Number of Approved Decisions | 11 | See Section 7 |
-| Number of EBCs | 3 | R1.2-001 (created this document), R1.2-002 (added Journey Passport OTP Verification scope), R1.2-003 (added homepage simplification and destination intelligence enhancements). Future Release 1.2 EBCs continue the sequence R1.2-004, R1.2-005, ... |
-| Number of Completed Items | 0 | Of 124 tracked tasks (Section 6) |
+| Overall Progress | Implementation in Progress | 2 of 8 workstreams are ✅ Complete (Workstream 1, Workstream 2); Workstream 3 (Destination Intelligence) has now closed its Phase 0–2 native-ID implementation chain — see below. An independent Homepage Architecture Validation Review (R1.2-014) has re-confirmed Workstreams 1 and 2 with no recommendation to reopen either; it does not change this count. Workstream 3's planning/governance chain is ✅ Complete (R1.2-018), Outstanding Decision 1 is closed (R1.2-019), and its native-ID implementation track — Phase 0, the Steward appointment, Phase 1B (Assam), and now all of Phase 2 (Generation & Vocabulary Alignment: **WP-4 and WP-5 both ✅ Complete** — implemented, workbook-remediated/generated, engineering-validated and Keerthi-functional-validated, Passed, 14/14 acceptance criteria for WP-5) — is ✅ Complete (R1.2-024; see Section 5's Workstream 3 Implementation Phase Dashboard). Workstream 3's Status field is recorded as Complete for this Phase 0–2 chain specifically; **Phase 3 (Runtime Alignment) and Phase 4 (Recommendation Behaviour) remain explicitly Not Started, deferred, and outside R1.2-024's scope** — this does not change the completed-workstream count above, which continues to require the full Section 6.3 task table (`R1.2-03.01`–`03.15`, still Proposed) and Phases 3–5, consistent with the native-ID/task-table distinction established at R1.2-015/018/020/023. Separately, Workstream 3's `search_geo_places()` Destination Search Performance & Reliability investigation (`IMP-09`–`IMP-13`, `AR-03`–`AR-11`, `QA-01`) is now Closed under `EBC-R1.2-WS3-TIGER-01` — an independent database-engineering sub-thread that likewise does not change the completed-workstream count, since it is not part of the Section 6.3 task table or the Phase 0–5 native-ID chain. **Update, 31-Aug-2026 (`EBC-R1.2-WS7-07`):** Workstream 6 has since reached ✅ Complete (Product Owner Acceptance, `EBC-R1.2-WS6-14-VIVEK`) — see the Completed Workstreams row below. Workstream 5 is substantially complete (engineering, Keerthi's functional QA, and Sri's traveller validation all done; the OTP-expiry/SMS-wording mismatch is resolved and committed) but remains short of a formal Product Acceptance and the removal of `[SMV-DBG]` diagnostics, so it is not yet counted as a completed workstream. **Update, 01-Sep-2026 (`EBC-R1.2-WS4-06`):** Workstream 4's eleven tasks are now all evidence-backed and Complete (Section 6.4, Section 17); the workstream itself is not yet formally closed, pending Product Owner acceptance, consistent with how Workstream 6 was not counted until `EBC-R1.2-WS6-14-VIVEK`. Workstream 8 (release-wide QA & regression) has not started. See the new "Release 1.2 Closure Readiness" note directly below this dashboard for the full, current picture. **Update, 02-Sep-2026 (`EBC-R1.2-WS8-04`):** Workstream 8 has since run (functional regression, traveller validation and operational cleanup all complete, Pass with Observations); Workstream 4 and Workstream 5 have received Product Owner Acceptance. Release 1.2 is now formally closed — see Section 18. |
+| Number of Workstreams | 8 | All are approved release scope; individual lifecycle statuses are recorded in Section 5. |
+| Number of Completed Workstreams | 5 | Workstreams 1, 2, 4, 5 and 6 are Complete and Product Owner Accepted. Workstream 3's Phase 0–2 native-ID chain is complete, but the overall workstream remains intentionally open because Phases 3–5 and the Section 6.3 task table are Release 1.3 scope. **Update, 02-Sep-2026 (`EBC-R1.2-WS8-04`):** Workstream 8 (release-wide QA & regression) has since run substantially — functional regression (`EBC-R1.2-WS8-QA-01`, Pass with Observations), traveller experience validation (`EBC-R1.2-WS8-SRI-01`, Pass with Observations) and operational cleanup (`EBC-R1.2-WS8-03`) are all complete — but its own Section 6.8 task table still carries untested items (full cross-browser sweep, a dedicated production build/TypeScript/ESLint pass at release scope, and the post-deployment production smoke test); it is therefore not counted toward this total, consistent with how Workstreams 4/5/6 were only counted once evidence and Product Owner acceptance both existed. Workstream 7's remaining tasks (`07.01`, `07.02`, `07.04`, `07.06`) likewise remain open. Neither is release-blocking — see Section 18 for the Product Owner's closure decision and the residual items accepted alongside it. |
+| Number of Open Decisions | 8 | See Section 8, which now includes `OD-4` (Traveller Type vocabulary scope, `EBC-R1.2-03.05` §12) as its own row, added by this update — previously referenced twice in this tracker without a Section 8 entry of its own, a housekeeping gap `EBC-R1.2-WS8-01` flagged. 2 further decisions — OPEN-R1.2-001, OPEN-R1.2-002 — retired/resolved; see Section 8's Retired sub-list. Includes 3 decisions (OPEN-R1.2-007–009) raised by the R1.2-014 Homepage Architecture Validation Review. |
+| Number of Approved Decisions | 27 | DEC-R1.2-001 through DEC-R1.2-028 (28 entries; see Section 7), of which `DEC-R1.2-018` is marked **Superseded** (by `DEC-R1.2-019`) — 27 currently Approved. `DEC-R1.2-020`–`026` record the WS5 Engineering Review 1 and production-readiness chain; `DEC-R1.2-027` (new, this update) records the Product Owner's formal Workstream 6 Acceptance (`EBC-R1.2-WS6-14-VIVEK`); `DEC-R1.2-028` (new, this update) records the OTP-expiry/SMS-wording mismatch resolution, committed `3280b93`. This corrects a stale count (previously "15") `EBC-R1.2-WS8-01` identified as twelve versions behind Section 7's actual log. |
+| Number of EBCs | 24 | R1.2-001 through R1.2-024; see Document Change History. `R1.2-WS3-IMP-01A-EBC-RAD` (WP-4), `R1.2-WS3-IMP-01B-EBC-RAD` (Workbook Consistency Remediation), `R1.2-WS3-IMP-01C-EBC-KEERTHI` (WP-4 Functional Validation), `R1.2-WS3-IMP-02-EBC-RAD` (WP-5 Implementation) and `R1.2-WS3-IMP-02A-EBC-KEERTHI` (WP-5 Functional Validation) are native-ID reports consolidated into this tracker by `R1.2-023`/`R1.2-024` rather than each carrying their own sequential number — consistent with how commit-referenced milestones were consolidated under `R1.2-020`. |
+| Number of Completed EBCs | 24 | R1.2-001 through R1.2-024 are complete as of this consolidation. |
+| Number of Completed Tasks | 64 of 128 | All 19 Workstream 1 tasks, all 13 Workstream 2 tasks, all 13 Workstream 6 tasks (R1.2-06.01–06.13, flipped to Complete on the strength of the Product Owner's Workstream 6 Acceptance — see Section 5), Workstream 5's `R1.2-05.18`–`05.20` (3), `R1.2-07.05`, all eleven Workstream 4 tasks — `R1.2-04.10` (`EBC-R1.2-WS8-02`), `R1.2-04.01`/`04.03`/`04.04` (`EBC-R1.2-WS4-05`), and `R1.2-04.02`/`04.05`–`04.09`/`04.11` (new, `EBC-R1.2-WS4-06` — see Section 17.4) — and Workstream 8's four Section 6.8 tasks reconciled Complete by `EBC-R1.2-WS8-04` (`R1.2-08.01`, `08.02`, `08.08`, `08.15` — see Section 18.3, 18.9) — 19+13+13+3+1+11+4 = 64. |
+| Task Status Breakdown | 64 Complete · 1 In Progress · 17 Ready for QA · 34 Proposed · 3 Partial · 9 Not Tested (of 128) | Reconciled directly against the six per-workstream Section 6 task tables by `EBC-R1.2-WS8-01` (36/1/17/74), re-reconciled by `EBC-R1.2-WS7-07` (49 Complete; 61 Proposed), by `EBC-R1.2-WS8-02` (50 Complete; 60 Proposed), by `EBC-R1.2-WS4-05` (53 Complete; 57 Proposed), and by `EBC-R1.2-WS4-06` (60 Complete; 50 Proposed). Re-reconciled again by `EBC-R1.2-WS8-04` (Section 18.3, 18.9) after Section 6.8's Workstream 8 task-table reconciliation: 4 rows Proposed → Complete (60+4=64), 3 rows Proposed → Partial (new category, tracked separately), 9 rows Proposed → Not Tested (new category, tracked separately); Proposed reduces by all 16 moved rows (50-16=34). 64+1+17+34+3+9 = 128. |
 | Number of Deferred Items | See Section 9 | Future Release Candidates carried from `RELEASE-1.2-BACKLOG.md` and R1.1 deferrals |
-| Overall Release State | **Planning** | Not yet a Release Candidate |
+| Overall Release State | **Release Closed** | Release 1.2 is formally accepted by the Product Owner and closed, per `EBC-R1.2-WS8-04` (Section 18). Release 1.3 is now the active implementation release. |
 
 **Maintenance note:** Update the count fields above manually whenever a task or decision changes status. This table is intentionally small so it stays cheap to keep current — do not expand it into a full audit; Section 6 is the source of truth for task-level counts.
 
 ---
 
+## Release 1.2 Closure Readiness (Tiger, 31-Aug-2026, `EBC-R1.2-WS7-07`)
+
+**Not yet ready for formal closure.** This note exists so a reader of this dashboard does not have to infer release-readiness from workstream-by-workstream detail. It reconciles `EBC-R1.2-WS8-01`'s "Not Ready" closure assessment against the repository as it stands today — nothing below is a new assessment; it is a same-day reverification of what was already found, reported honestly rather than assumed stale.
+
+**Genuinely resolved since `WS8-01`:**
+- Workstream 6 — Product Owner Accepted (`EBC-R1.2-WS6-14-VIVEK`); Operational Release Gate (migration + GeoNames import) independently confirmed cleared.
+- Workstream 5 — Keerthi's functional QA and Sri's traveller validation both complete; the OTP-expiry/SMS-wording mismatch resolved and committed (`3280b93`).
+- Release 1.3 carry-forward backlog reconciliation complete and committed (`EBC-R1.2-WS7-06`, `2e1ff3b`).
+- Five of the six repository documents citing fabricated `WS7-IMP`/`WS7-AUD`/`WS7-GOV` IDs corrected 31-Aug-2026 (`EBC-R1.2-WS7-08`); two remain open, tracked as `RISK-R1.2-014` (updated) and `RISK-R1.2-015` (new).
+
+**Still open — release blockers, unchanged from `WS8-01`:**
+- **Workstream 8 (release-wide QA & regression) has not started.** 0 of 16 tasks; 0 commits or new documents since `WS8-01`.
+- **Workstream 4's status remains disputed**, not merely incomplete — the tracker records 0% while an out-of-repository evidence chain (`WS4-IMP-01`/`AUD-01`/`QA-01`/`SRI-01`) describes it as substantially complete; neither has been reconciled against a verified commit history.
+- **Two repository documents still cite fabricated `WS7-IMP-01`–`04`/`WS7-AUD-01`/`WS7-GOV-01`** as completed source cards (down from six as of `EBC-R1.2-WS7-08`, 31-Aug-2026 — see `RISK-R1.2-014`): `RELEASE-1.3-BACKLOG.md` (deliberately left uncorrected, out of that card's Release-1.3-planning-scoped boundary) and `docs/09-Development/EBC-R1.2-GOV-001-STATUS-RECONCILIATION.md` (newly discovered, outside that card's six-document Deliverables allowlist — see `RISK-R1.2-015`). Correcting both is recommended as a small, dedicated follow-up Tiger card.
+- **`[SMV-DBG]` diagnostics remain present** in three Workstream 5 files, contrary to text elsewhere in this document describing their removal as merely "pending."
+
+**Recommendation:** three of `EBC-R1.2-WS8-01`'s original four-item remediation remain open — run Workstream 8 in full; resolve the Workstream 4 dispute with a dedicated Rad verification pass against commit `0bbac73`; and obtain a formal Workstream 5 Product Acceptance once `[SMV-DBG]` removal closes. The fourth item, correcting the WS7 citations, is now five-sevenths complete (`EBC-R1.2-WS7-08`, 31-Aug-2026) — only `RELEASE-1.3-BACKLOG.md` and `docs/09-Development/EBC-R1.2-GOV-001-STATUS-RECONCILIATION.md` remain, tracked as their own small follow-up (`RISK-R1.2-014`/`015`). None of the four requires reopening a completed, validated decision.
+
+**Superseded, 31-Aug-2026 (`EBC-R1.2-WS8-02`):** this note is preserved as the historical record of the `WS7-07`/`WS7-08` reconciliation. The definitive, current closure determination is now Section 15 ("Release 1.2 Final Closure Assessment") — **Release Not Ready**, for the same substantive reasons recorded above (Workstream 8 unstarted; Workstream 4 unresolved; `[SMV-DBG]` diagnostics present), plus a newly-discovered partial resolution (`R1.2-04.10`, see Section 15.2).
+
+**Superseded again, 02-Sep-2026 (`EBC-R1.2-WS8-04`):** Section 15's "Release Not Ready" determination is itself now superseded. Every blocking item it named has since resolved: Workstream 8 ran (Section 18.3); Workstream 4 and Workstream 5 received Product Owner Acceptance (Section 5); `[SMV-DBG]` diagnostics were removed (commit `45637d6`); the two remaining documentation citations (`RISK-R1.2-014`/`015`) are reclassified as non-blocking, carried-forward housekeeping. The definitive, current closure determination is now **Section 18 ("Release 1.2 Final Closure & Product Owner Sign-off")** — **Release Closed**.
+
+---
+
 # 4. Release Milestones
 
-This section tracks Release 1.2 against its top-level lifecycle checkpoints, independent of the task-level detail in Section 6. See Section 12 for the detailed release-readiness checklist and Section 13 for status meanings.
+This section tracks Release 1.2 against its top-level lifecycle checkpoints, independent of the task-level detail in Section 6. See Section 12 for the detailed release-readiness checklist and Section 14 for status meanings.
 
 | Milestone | Target Date | Status | Owner | Exit Criteria |
 |---|---|---|---|---|
 | Planning Complete | TBD | In Progress | Tiger | All 8 workstreams reach Approved status; Section 8 open decisions are resolved or explicitly carried forward as accepted risk |
 | Architecture Review | TBD | Not Started | Archie | Archie's assessment complete for Workstream 5 (phone storage format and OTP verification architecture) and Workstream 6 (dataset/validation architecture) per Project Instructions Section 5 |
-| Implementation Complete | TBD | Not Started | Rad | All Workstream 1–6 tasks reach Complete or Ready for QA |
-| Functional QA | TBD | Not Started | Keerthi | Workstream 8 functional and regression validation complete |
-| Traveller Experience QA | TBD | Not Started | Sri | Independent traveller-experience validation complete |
+| Implementation Complete | TBD | In Progress | Rad | All Workstream 1–6 tasks reach Complete or Ready for QA (Workstream 1 and Workstream 2 are now Complete; Workstreams 3–6 remain Proposed) |
+| Functional QA | TBD | In Progress | Keerthi | Workstream 8 functional and regression validation complete; workstream-level Functional QA is complete for Workstream 1 and Workstream 2 (R1.2-011), recorded in Section 13 |
+| Traveller Experience QA | TBD | In Progress | Sri | Independent release-wide traveller-experience validation complete; the completed Workstream 1 and Workstream 2 (R1.2-012) reviews are recorded in Section 13 |
 | Release Candidate | TBD | Not Started | Tiger | Release Checklist (Section 12) Delivery and Quality items satisfied |
 | Production Release | TBD | Not Started | Vivek | Business Owner approval received; production deployment verified |
 | Retrospective Complete | TBD | Not Started | Tiger | Workstream 7 retrospective and Lessons Learned captured; `PROJECT-HISTORY.md` updated |
@@ -183,22 +238,22 @@ Retrospective Complete
 
 # 5. Master Workstream Tracker
 
-Status values used below follow Section 13 (Status Definitions). All workstreams currently start at **Proposed** unless noted.
+Status values used below follow Section 14 (Status Definitions). Each workstream's current lifecycle status is recorded below.
 
-## Workstream 1 — Premium Mood Card Visual Refinement
+## Workstream 1 — Homepage Premium Visual Refinement
 
 | Field | Value |
 |---|---|
-| Goal | Refine the Journey Mood cards' visual treatment for a more premium, hierarchical presentation while preserving the approved illustration style; simplify the mood card set by removing the Escape card and clarify the Memory Maker card's emotional intent |
-| Business Value | Stronger first impression on the homepage; improved perceived quality without changing product structure; simplified homepage; reduced cognitive load; better emotional mapping between mood cards and Journey Passport intent |
+| Goal | Refine the Journey Mood cards' visual treatment for a more premium, hierarchical presentation while preserving the approved illustration style; simplify the mood card set by removing the Escape card and clarify the Memory Maker card's emotional intent. Refine the homepage's premium visual presentation through improved Journey Mood cards and a redesigned Trust Strip while preserving the approved Search My Vacation visual identity and homepage hierarchy. |
+| Business Value | Stronger first impression on the homepage; improved perceived quality without changing product structure; simplified homepage; reduced cognitive load; better emotional mapping between mood cards and Journey Passport intent; strengthen traveller trust; improve first impressions; increase perceived premium quality; improve homepage credibility |
 | Priority | P1 |
-| Status | Proposed |
-| Dependencies | None blocking; loosely coordinates with Workstream 2 if taxonomy changes affect card labelling; R1.2-01.15's homepage layout review should be coordinated with Workstream 2's R1.2-02.13 (both touch the same homepage layout following the Escape and Experiences removals) |
+| Status | Complete |
+| Dependencies | Complete; the former Workstream 2 taxonomy dependency was resolved by DEC-R1.2-009 and refined by DEC-R1.2-012. Workstream 2 is now also Complete; its homepage review (R1.2-02.13) preserved the accepted Workstream 1 visual baseline with no regression, confirmed by Rad's engineering validation (R1.2-010) and Sri's traveller experience validation (R1.2-012). |
 | Owner | Sophie (design direction), Rad (implementation) |
-| Risks | Palette/saturation changes could drift from approved brand system if not validated against `BRAND-AUDIT.md`; illustration rework could be mistaken for a full redesign |
-| Acceptance Criteria | Illustration style preserved; ivory/champagne palette applied; gold saturation reduced; visual hierarchy improved; Hero remains the dominant homepage element; hover and selected states validated; desktop/mobile reviewed; accessibility reviewed; Sri traveller validation complete; Escape mood card removed (DEC-R1.2-007); "Memory Maker / Family" renamed to "Memory Makers" and its Journey Passport mapping updated from Culture & Heritage to Photography (DEC-R1.2-008); homepage layout reviewed for premium spacing and visual balance after the Escape card's removal |
+| Risks | No open Workstream 1 defect. Accepted post-implementation observations are retained in Section 13 and do not constitute release debt or a blocker. Future visual changes must preserve the approved champagne-glass baseline and `BRAND-AUDIT.md` guardrails. |
+| Acceptance Criteria | Complete: illustration style preserved; champagne-glass palette and reduced gold saturation applied; visual hierarchy improved; Hero remains dominant; hover, selected, desktop/mobile, accessibility and responsive behaviour validated; Sri Traveller Experience Review complete; Escape removed (DEC-R1.2-007); "Memory Maker / Family" renamed to "Memory Makers" and remapped from Culture & Heritage to Photography (DEC-R1.2-008); five-card homepage layout rebalanced; Trust Strip redesigned using approved premium travel imagery; existing layout and typography preserved; homepage consistency maintained across Hero, Mood Cards and Trust Strip; Business Acceptance received. |
 
-Tasks: R1.2-01.01 through R1.2-01.15 (Section 6.1).
+Tasks: R1.2-01.01 through R1.2-01.19 (Section 6.1).
 
 ---
 
@@ -206,16 +261,16 @@ Tasks: R1.2-01.01 through R1.2-01.15 (Section 6.1).
 
 | Field | Value |
 |---|---|
-| Goal | Resolve conceptual overlap between "Experiences" and "Journey Moods" so travellers are not presented with two similar, competing entry points; retire Experiences as a distinct homepage/navigation concept per the Product Owner's approved decision |
+| Goal | Establish Journey Mood Cards and Journey Passport as the single traveller discovery model, eliminating competing public entry points while preserving the Experiences implementation, assets and code for future redesign and reuse (DEC-R1.2-012). |
 | Business Value | Reduced traveller confusion; cleaner information architecture; stronger homepage narrative; simplified homepage; reduced cognitive load |
 | Priority | P1 |
-| Status | Proposed |
-| Dependencies | Findings may affect Workstream 1 (card labelling), Workstream 3 (which concept Featured Destinations link into), and homepage layout; R1.2-02.13's homepage layout review should be coordinated with Workstream 1's R1.2-01.15 |
-| Owner | Arjun (taxonomy/requirements analysis), Sophie (navigation/homepage UX implications), Archie (SEO/redirect technical impact), Rad (implementation) |
-| Risks | The taxonomy question itself is resolved (DEC-R1.2-009 — see Section 7); residual risk is limited to correctly preserving the Experiences page/route for future reuse while removing discoverability, and to homepage layout regressions after removal |
-| Acceptance Criteria | Overlap and duplicate concepts identified and documented; taxonomy review complete; navigation, SEO, redirect, Passport and homepage implications documented; all resulting open product decisions explicitly logged in Section 8; Experiences section removed from the homepage and from primary navigation; Experiences page implementation and routing retained (no page or URL deletion) with discoverability removed, preserving it for future redesign/reuse; homepage visual hierarchy reviewed after removal |
+| Status | Complete |
+| Dependencies | Complete; no longer blocks downstream work. R1.2-02.13's homepage-hierarchy review preserved the completed Workstream 1 visual baseline (confirmed by R1.2-010 and R1.2-012). Workstream 3 (Destination Intelligence) is now unblocked and is the next active implementation stream, proceeding on Journey Mood Cards and Journey Passport as the approved discovery model. |
+| Owner | Arjun (taxonomy/requirements analysis), Sophie (navigation/homepage UX implementation), Rad (engineering implementation and validation), Keerthi (functional QA), Sri (traveller experience validation) |
+| Risks | No open Workstream 2 defect. Keerthi's Functional QA (R1.2-011) found 0 defects across 25 checks (24 Passed, 1 Blocked by a test-tooling limitation rather than a product issue — see OBS-R1.2-006 in Section 13). Sri's Traveller Experience Validation (R1.2-012) found no traveller-facing regression and recommended approval for closure. Future re-introduction of Experiences (should a redesign occur) must continue to preserve the Journey Mood Cards / Journey Passport discovery model and the `BRAND-AUDIT.md` guardrails. |
+| Acceptance Criteria | Complete: overlap, duplicate concepts, taxonomy, navigation, SEO, redirect, Journey Passport and homepage implications documented (R1.2-007); Homepage entry and Experiences section removed (R1.2-02.10); Header and Footer navigation entries removed (R1.2-02.11); Experiences page/route retained with discoverability removed via a temporary, non-permanent guest redirect to the Homepage (R1.2-02.12); homepage hierarchy reviewed after removal with no regression (R1.2-02.13); Experiences implementation, assets, code and future reusability preserved (`JourneyInvitations.tsx`, `app/experiences/page.tsx`); Journey Mood Cards and Journey Passport confirmed as the single public traveller discovery model; independent Functional QA passed (R1.2-011); independent Traveller Experience Validation passed (R1.2-012); Product Owner approved Workstream 2 for closure. |
 
-Tasks: R1.2-02.01 through R1.2-02.13 (Section 6.2).
+Tasks: R1.2-02.01 through R1.2-02.13 (Section 6.2) — all Complete.
 
 ---
 
@@ -228,7 +283,7 @@ Tasks: R1.2-02.01 through R1.2-02.13 (Section 6.2).
 | Goal | Make Featured Destination cards deep-link directly into a relevant, pre-mapped Journey Passport flow instead of a generic entry; establish a weighted Primary/Secondary/Tertiary destination preference model (Journey and Memory) that becomes the preferred Journey Director recommendation model — the foundation of a broader Destination Intelligence Model, documented as business concepts rather than fixed numerical scores. The weighting model shall influence recommendation ranking only and shall not override Journey Director's existing destination eligibility and business guardrails. |
 | Business Value | Shorter path from inspiration to a personalised recommendation; improved conversion from the homepage; improved recommendation accuracy and better destination ranking through weighted preference intelligence |
 | Priority | P1 |
-| Status | Proposed |
+| Status | **Complete — Phase 0–2 native-ID implementation chain** (Governance Foundations, Destination Operational Steward Appointment, Phase 1B Operational Layer Alignment for Assam, and Phase 2 Generation & Vocabulary Alignment — both WP-4 and WP-5 — all implemented, engineering-validated and Keerthi-functional-validated, Passed; closed under R1.2-024). **Phase 3 (Runtime Alignment) and Phase 4 (Recommendation Behaviour) remain Not Started** — explicitly deferred, not part of this closure, per R1.2-024's own Out of Scope and Deferred Items sections. The Section 6.3 task table (`R1.2-03.01`–`03.15`, the weighted Primary/Secondary/Tertiary preference model) also remains entirely Proposed and unaffected by this closure, consistent with the native-ID/task-table distinction established throughout this document. This "Complete" status therefore describes the Phase 0–2 chain specifically, not the full Workstream 3 scope defined in Section 6.3. **A third, independent sub-thread — the `search_geo_places()` Destination Search Performance & Reliability investigation — is now also Closed** under `EBC-R1.2-WS3-TIGER-01` (see "Workstream 3 — Destination Search Performance & Reliability (Closed)" below). This sub-thread is a database-function engineering/architecture/QA investigation unrelated to the Destination Intelligence Model narrative above; its closure does not complete, and is not to be read as completing, Phase 3, Phase 4, or the Section 6.3 task table. |
 | Dependencies | Benefits from Workstream 2's taxonomy outcome (which concept the deep link should target); depends on Workstream 6 for destination-level data quality if mapping references autocomplete-validated place names; R1.2-03.11 (Journey Director recommendation-ordering review) requires Archie's architecture review before implementation |
 | Owner | Arjun (destination/journey mapping), Rad (implementation), Archie (fallback/analytics architecture, weighted-model architecture review) |
 | Risks | Mapping table can become stale as destinations are added/removed; fallback behaviour must be robust or broken links will damage trust; the weighted preference model changing Journey Director's recommendation output without adequate review — see RISK-R1.2-011 |
@@ -238,7 +293,127 @@ Tasks: R1.2-03.01 through R1.2-03.15 (Section 6.3).
 
 **Architecture note (Archie must confirm before implementation):** the weighted Primary/Secondary/Tertiary Journey and Memory preference model materially affects Journey Director's recommendation-scoring structure and therefore requires Archie's assessment and explicit approval per Project Instructions Section 5 before implementation (R1.2-03.07 through R1.2-03.12) begins. This model does not change, and must not be implemented in a way that changes, the served-destination guardrail already established under DEC-R1.2-004 (R1.1 Decision Log DEC-010) — Journey Director remains solely responsible for validating whether a destination is served by SMV.
 
+**Governing architecture:** `docs/20-Architecture/ADR-R1.2-WS3-001-Destination-Knowledge-Governance.md` (Status: **Accepted**, ratified 17 August 2026) is the governing architecture document for Destination Intelligence source-of-truth, synchronisation, controlled-vocabulary and lifecycle governance, formalising the findings of `R1.2-03.01`–`03.04`. Implementation tasks in this workstream (`R1.2-03.07` onward) should treat it as their primary architectural prerequisite alongside the Architecture note above.
+
 **Destination Intelligence Model (Tiger's guidance):** the destination mapping spreadsheet is the starting point of a broader Destination Intelligence Model, not merely a configuration table. `Journey 1/2/3` and `Memory 1/2/3` represent Primary/Secondary/Tertiary Journey and Memory preferences respectively — business concepts that guide Journey Director recommendations. This tracker deliberately avoids prescribing fixed numerical weights; the relative priority (Primary/Secondary/Tertiary) is the documented product specification, and the underlying implementation/weighting approach may evolve across future releases without requiring a change to this specification.
+
+### Workstream 3 Planning Dashboard
+
+| Phase | Status |
+|---|---|
+| Discovery | ✅ Complete |
+| Validation | ✅ Complete |
+| Architecture | ✅ Complete |
+| Governance | ✅ Complete |
+| Implementation Planning | ✅ Complete |
+| Implementation | ✅ Complete for Phase 0–2 (WP-4 and WP-5, R1.2-024) — Phase 3/4 Not Started, deferred |
+
+This dashboard tracks the WS3 governance/planning chain (Arjun's Product Analysis; Sophie's UX/Traveller Experience Validation; Rad's Knowledge Base Synchronisation Audit and Source Comparison & Runtime Trace Analysis; Archie's Governance Architecture and `ADR-R1.2-WS3-001`; and Rad's Implementation Planning, `docs/09-Development/EBC-R1.2-03.05-RAD-Destination-Intelligence-Implementation-Planning.md`). It is distinct from the Section 6.3 task table below, whose `R1.2-03.01`–`03.15` statuses remain Proposed — none of that specific task-table work has started as of this update. Actual implementation has since begun via a separate native-ID track; see the Workstream 3 Implementation Phase Dashboard below.
+
+### WS3 Implementation Readiness
+
+- [x] ADR Accepted
+- [x] Governance Complete
+- [x] Implementation Plan Approved
+- [x] Technical Investigation Complete
+- [x] Architecture Complete
+- [x] Ready to commence implementation
+
+This is a status checklist reflecting the completed governance/planning chain above, not an implementation checklist — it does not itself track or imply progress on any Section 6.3 task.
+
+**Workstream 3 narrative:** governance for Destination Intelligence is complete and implementation is now under way. Phase 0 (Governance Foundations) closed out the repository's ownership and cross-reference housekeeping against the Accepted ADR; the ADR's Outstanding Decision 1 was then closed by appointing Rad as Destination Operational Steward, which unblocked the Operational Layer; and Phase 1B (Operational Layer Alignment) has since resolved the Assam structural misalignment specifically, closing five long-open Review Register items. Amritsar, Darjeeling and Corbett were deliberately left open rather than resolved in the same pass — see the Deferred Items Register below. Phase 2 (Generation & Vocabulary Alignment) has begun: **WP-4 (KB → Operational Reconciliation) is now complete** — implemented under `R1.2-WS3-IMP-01A-EBC-RAD` against the Warn Mode operating model ratified by `DEC-R1.2-015`; a pre-existing workbook cached-formula-value and Assam-reference-cell inconsistency was found and remediated under `R1.2-WS3-IMP-01B-EBC-RAD`; Rad's engineering validation and Keerthi's independent functional validation (`R1.2-WS3-IMP-01C-EBC-KEERTHI`, **Passed**, all 6 acceptance criteria met) both confirm WP-4 behaves as specified, with the only script failures encountered proven pre-existing and unrelated, now tracked as `OBS-R1.2-007`/`008`/`009` (Section 13). **WP-5 (Controlled Vocabulary Synchronisation) is now also complete**: implemented under `R1.2-WS3-IMP-02-EBC-RAD` (generated `EMOTION_BY_LABEL`/`THEMES_BY_LABEL` from the operational layer via a new `generateLabelMappings.ts`/`labelMappingSource.ts` pair, replacing three hand-authored constant tables in `release1Candidates.ts` with generator-sourced equivalents; handled `TRAVELLER_BY_LABEL` in a governance-compliant way that reports, rather than resolves, the still-open OD-4 vocabulary-scope gap; produced comparison and reachability reporting, 0 comparison findings, Emotion 58.8%/Theme 44.4%/TravellerType 100% reachable); confirmed committed and pushed as `6c15cfe973a99315e962e9670577081171fe1f9f`, on top of WP-4's `a183e18`. Rad's engineering validation (12 of 15 verification scripts pass; the 3 that fail reproduce byte-identically, unrelated) and Keerthi's independent functional validation (`R1.2-WS3-IMP-02A-EBC-KEERTHI`, **Passed**, all 14 acceptance criteria met, independently re-executed rather than accepted from Rad's report) both confirm WP-5 behaves as specified with zero regression to the six destination/candidate runtime artefacts. **This completes Phase 2 (Generation & Vocabulary Alignment) and, with it, Workstream 3's Phase 0–2 native-ID implementation chain — closed under R1.2-024.** Phase 3 (Runtime Alignment) and Phase 4 (Recommendation Behaviour) were not started and remain explicitly deferred, per R1.2-024's own scope; so does Open Decision OD-4. Detailed implementation notes live in each phase's own report (Section 5's Implementation Milestones); this narrative is not repeating them.
+
+### Workstream 3 Implementation Phase Dashboard
+
+| Phase | Status |
+|---|---|
+| Phase 0 — Governance Foundations | ✅ Complete |
+| Destination Operational Steward Appointment | ✅ Complete |
+| Phase 1B — Operational Layer Alignment | ✅ Complete for Assam specifically — not Amritsar, Darjeeling or Corbett (see Deferred Items Register) |
+| Phase 2 — Generation & Vocabulary Alignment | ✅ Complete — WP-4 (KB → Operational Reconciliation) ✅ Complete; WP-5 (Controlled Vocabulary Synchronisation) ✅ Complete (R1.2-024) |
+| Phase 3 — Runtime Alignment | Not started — deferred, no status change (R1.2-024 Out of Scope) |
+| Phase 4 — Recommendation Behaviour | Not started — deferred, no status change (R1.2-024 Out of Scope) |
+| Phase 5 — Validation, QA & Documentation | Not started (Work Package 9, Content Readiness Support, may run in parallel from Phase 1 onward per the approved plan) |
+
+This dashboard tracks WS3's native-ID implementation track (below) and is distinct from both the Planning Dashboard above and the Section 6.3 task table, whose `R1.2-03.01`–`03.15` statuses remain Proposed, consistent with the ID-collision handling established at `R1.2-015`/`018`.
+
+### Workstream 3 Implementation Milestones
+
+| Commit | EBC | Milestone | Purpose |
+|---|---|---|---|
+| `9e38d00` | `R1.2-03.07-EBC-RAD` | Phase 0 — Governance Foundations | Added governing-architecture cross-references and ownership notes to `DESTINATION-KNOWLEDGE-BASE.md` §15.1 and `JOURNEY-DIRECTOR-RUNTIME-CATALOGUE.md` §13, and governance-boundary header comments to 5 generation-pipeline code files, all pointing to `ADR-R1.2-WS3-001` as the single place ownership is now governed. Documentation/comments only — no logic changed. |
+| `749e421` | `R1.2-019` / `R1.2-03.08A-EBC-ARCHIE` | Destination Operational Steward Appointment | Closed the ADR's Outstanding Decision 1; appointed Rad as Destination Operational Steward (`DEC-R1.2-014`), unblocking Operational Layer edits. |
+| `7022917` | `R1.2-03.08B-EBC-RAD` | Phase 1B — Operational Layer Alignment | Resolved the Assam structural misalignment in the operational workbook (2 rows relocated/renamed under a single canonical `india-assam` destination), closing 5 Review Register items (`review-0135`, `0206`, `0285`, `0286`, `0291`). `Journey Base Status` deliberately left unchanged on both rows, so `web/generated/*.json` and recommendation eligibility are unaffected — the workbook and the generated runtime artefacts are intentionally out of sync until a future, separately-scoped Phase 2 generation run. |
+| `a183e18` | `R1.2-WS3-IMP-01A-EBC-RAD` | Phase 2 WP-4 — Implementation | Implemented the KB → Operational Reconciliation Check (additive-only generator enhancement) against the Warn Mode operating model ratified by `DEC-R1.2-015`. No file other than the generation pipeline's own scripts (`index.ts`, `writeGenerationReport.ts`, plus new `kbApprovedPortfolio.ts`, `validateKbReconciliation.ts`) was touched; `generateJourneyDNA.ts`'s inclusion filter, the engine, the adapter, the operational workbook and every controlled-vocabulary type were left unmodified, per this EBC's explicit Out of Scope list. Discovered and escalated one pre-existing, unrelated repository regression (the stale workbook cached-formula-value issue) rather than working around it silently — see the next row. Committed under `a183e18` ("R1.2-023: Complete WS3 Phase 2 WP-4 implementation and validation," authored directly by Vivek, confirmed pushed). |
+| `a183e18` | `R1.2-WS3-IMP-01B-EBC-RAD` | Phase 2 WP-4 — Workbook Consistency Remediation | Remediated the canonical workbook (`outputs/ebc-003c-a/Journey Director Intelligence Enriched.xlsx`): restored cached formula values (LibreOffice headless recalculation) and corrected 6 static Assam-reference cells (2 Compatibility Matrix, 4 Review Register), exhaustively diff-verified as the only changes across all 8 sheets. Regenerated all 8 runtime artefacts against the remediated workbook (determinism-verified, 2 executions identical). Also constitutes Rad's Engineering Validation for WP-4 — 12 of 15 verification scripts pass cleanly; the 3 that fail are proven, not merely asserted, pre-existing and unrelated (now `OBS-R1.2-007`/`008`/`009`, Section 13). Committed under `a183e18`. |
+| `a183e18` | `R1.2-WS3-IMP-01C-EBC-KEERTHI` | Phase 2 WP-4 — Functional Validation | Keerthi independently re-ran the generator (including one fully clean end-to-end execution isolating a device-bridge-only cleanup limitation) and 5 adjacent `verify:journey-*` scripts, rather than relying on Rad's reports alone. **Result: Passed.** All 6 acceptance criteria met (Warn Mode behaves as approved; reconciliation never blocks generation; the reconciliation section and Promotion Review Checklist are always present; existing functionality and all 8 runtime artefacts are intact; no regressions). The only failures reproduced are the same two pre-existing, already-logged issues Rad identified, byte-identical and unchanged — see `OBS-R1.2-008`/`009`. Filed into the repository under this consolidation (`R1.2-023`); previously existed only as Claude Project knowledge. Committed under `a183e18`. |
+| `6c15cfe` | `R1.2-WS3-IMP-02-EBC-RAD` | Phase 2 WP-5 — Implementation | Implemented Controlled Vocabulary Synchronisation: new `generateLabelMappings.ts`/`labelMappingSource.ts` generate `EMOTION_BY_LABEL`/`THEMES_BY_LABEL`/`TRAVELLER_BY_LABEL` from the operational layer at generation time, replacing the three hand-authored constant tables previously declared in `release1Candidates.ts` (8 files modified: generator pipeline types/metadata/artefacts/index/report-writer, intelligence `index.ts`/`types.ts`, `release1Candidates.ts`, plus `JOURNEY-INTELLIGENCE-GENERATOR.md`). Comparison report: 0 findings (today's tables match the operational layer exactly). Reachability report: Emotion 58.8% (10/17), Theme 44.4% (16/36), TravellerType 100% (5/5 runtime; KB approves 9 — the gap is reported, not resolved, per Open Decision OD-4). Direct regression proof: the six destination/candidate runtime artefacts are byte-identical before/after; only `metadata.json`/`intelligence-manifest.json` changed (to carry the new `labelMappings` object). Engineering validation: 12 of 15 verification scripts pass; the 3 that fail reproduce the same pre-existing, unrelated issues byte-identically (`OBS-R1.2-007`/`008`/`009`). Committed and pushed under `6c15cfe973a99315e962e9670577081171fe1f9f` ("R1.2-024: Complete WS3 Phase 2 WP-5 generator label mapping alignment") on top of `a183e18` — independently confirmed via `git rev-parse HEAD` == `git rev-parse origin/feature/ebcr1.2-003-trust-strip-visual-refresh`. |
+| `6c15cfe` | `R1.2-WS3-IMP-02A-EBC-KEERTHI` | Phase 2 WP-5 — Functional Validation | Keerthi independently re-executed the generator (in-place run reproducing the same pre-existing device-bridge FUSE cleanup limitation as WP-4, plus a fully clean isolated run with no failure) and the full adjacent `verify:journey-*` suite, cross-checking generated mapping values byte-for-byte against the removed hand-authored constants and the runtime-ID unions against the live `engine.types.ts` (exact match, no drift). **Result: Passed.** All 14 acceptance criteria met — generator execution, label-mapping generation, comparison and reachability reporting, metadata/manifest generation, governance-compliant `TRAVELLER_BY_LABEL` handling (OD-4 correctly left unresolved), no manual mapping regression, runtime artefacts and candidate counts unchanged, deterministic output, no unexpected runtime behaviour. Zero functional findings; all regression findings are the same pre-existing, already-registered observations reproduced byte-identically. Filed into the repository under this consolidation (`R1.2-024`); previously existed only as Claude Project knowledge. |
+
+**Validation status:** Rad Engineering Validation — **Completed** for both WP-4 (`R1.2-WS3-IMP-01B-EBC-RAD`) and WP-5 (`R1.2-WS3-IMP-02-EBC-RAD`). Keerthi Functional Validation — **Passed** for both WP-4 (`R1.2-WS3-IMP-01C-EBC-KEERTHI`, 6/6 acceptance criteria) and WP-5 (`R1.2-WS3-IMP-02A-EBC-KEERTHI`, 14/14 acceptance criteria). Governance basis: `DEC-R1.2-015` (Warn Mode First, ratified 19 August 2026), applied to both WP-4 and WP-5. Registered observations: `OBS-R1.2-007`/`008`/`009` (Section 13) — none block this consolidation. This closes Phase 2 (Generation & Vocabulary Alignment) in full.
+
+### Workstream 3 Deferred Items Register
+
+Follow-up items surfaced during Phase 1B, explicitly **not** completed and not to be read as part of the "✅ Complete" status above:
+
+| Item | Status | Notes |
+|---|---|---|
+| Amritsar operational review | Deferred | Still 3 `Attraction` records with `Journey Base Status: No`; unlike Assam, no pre-existing Review Register item recommends a structural change. Needs Arjun/Tiger to confirm whether this is a deliberate business call or an inherited seed-workbook gap before any restructuring is attempted. |
+| Darjeeling operational authoring | Deferred | Zero operational-layer rows despite a fully-authored KB record (§10.11). Requires authoring a new ~122-column operational record — content creation, not structural relabeling — recommended as a dedicated, appropriately-scoped follow-up with Arjun's/Sophie's input on narrative quality. |
+| Corbett operational authoring | Deferred | Same as Darjeeling; the workbook's own `review-0292` already names this as an open "Potential addition." |
+| Runtime regeneration | Resolved | Sequenced deliberately as part of Phase 2 WP-4, as this register anticipated: `web/generated/*.json` has been regenerated against the remediated workbook (checksum `868271e5...`), determinism-verified, and independently confirmed correct by both Rad (`R1.2-WS3-IMP-01B`) and Keerthi (`R1.2-WS3-IMP-01C`). Committed and pushed under `a183e18`, confirmed via `git rev-parse HEAD`/`git rev-parse origin/...` — no longer uncommitted. |
+| Review Register "Resolved" status documentation | Deferred | Phase 1B introduced `Resolved` as a new status value in the workbook's Review Register (previously only `Open` was used). Recommend this becomes the documented convention for future review closures. |
+
+**R1.2-024 deferred-items confirmation (no status change made to any of the following):** Amritsar operational review, Darjeeling operational authoring, and Corbett operational authoring above remain exactly as recorded — untouched by WP-5 or by this consolidation. `OBS-R1.2-007` (shared generated-artefact ownership), `OBS-R1.2-008` (Goa/mountain-intent steering defect) and `OBS-R1.2-009` (`verify:journey-engine` `moodValues` fixture) — registered in Section 13 — remain open, cross-referenced above without duplication or resolution. Phase 3 (Runtime Alignment) and Phase 4 (Recommendation Behaviour), per the Implementation Phase Dashboard above, remain Not Started. Open Decision OD-4 (Traveller Type vocabulary scope, `EBC-R1.2-03.05` §12) remains unresolved. None of these items were investigated, resolved, or reprioritised by R1.2-024, per its explicit Out of Scope and Deferred Items sections.
+
+### Workstream 3 — Destination Search Performance & Reliability (Closed)
+
+**Scope note:** this sub-thread is entirely independent of the Destination Intelligence Model narrative above (native-ID chain, Phase 0–5, Section 6.3 weighted-preference tasks). It is a database-function engineering investigation into `public.search_geo_places()` — the PostgreSQL function underlying destination search — filed under Workstream 3's document series (`R1.2-WS3-IMP-*`, `ARCHIE-R1.2-WS3-AR-*`, `EBC-R1.2-WS3-QA-01`) because that is where the investigation was opened and tracked throughout. It shares no code, data model, or task-table item with the Destination Intelligence Model track and its closure has no effect on that track's status (recorded above).
+
+**Closed under:** `EBC-R1.2-WS3-TIGER-01` (Workstream 3 Closure & Release 1.2 Tracker Synchronisation), this consolidation.
+
+**Background and root cause.** The investigation began from a `search_geo_places()` performance issue and progressed through nine architecture reviews (`ARCHIE-R1.2-WS3-AR-03` through `AR-11`) and five engineering reports (`R1.2-WS3-IMP-09` through `IMP-13`). Root cause, confirmed by `AR-07` through `AR-10` and accepted by `AR-11`: the function was declared `LANGUAGE SQL`, which PostgreSQL plans once with an opaque parameter placeholder, producing a single fixed generic execution plan regardless of the actual search term's selectivity — not an indexing or dataset defect. `IMP-13` resolved this by rewriting the function to `LANGUAGE PLPGSQL`, executing the query via dynamic SQL (`EXECUTE`, built with `format()`, `%L` for safely-quoted literals and `%s` only for the already-typed-integer `LIMIT` value), which forces PostgreSQL to plan fresh against the real parameter on every call. All existing business behaviour (matching, ranking, fallback) was preserved unchanged.
+
+**Architecture review (`AR-03`–`AR-11`).** Final Decision: **Approved with Observations**. `AR-11` independently verified the dynamic-planning rewrite against the root cause identified in `AR-07`–`AR-10`, confirmed no architectural regression, and recommended progression to QA.
+
+**Quality assurance (`EBC-R1.2-WS3-QA-01`, v2 FINAL).** Final Decision: **Passed with Observations**. Keerthi's validation covered code audit, runtime validation, representative regression comparison, and operational verification; no release-blocking defects were found. Observations were explicitly classified separately from defects and carried forward to Release 1.3 (below) rather than expanding this closure's scope.
+
+**Benchmark results** (`EXPLAIN ANALYZE, BUFFERS`, before → after the dynamic-planning rewrite):
+
+| Search term | Latency before | Latency after | Buffers before | Buffers after |
+|---|---|---|---|---|
+| Kotagiri | ~3722 ms | 736 ms | ~14,315 | 2,342 |
+| Goa | ~3673 ms | 1649 ms | ~14,315 | 3,894 |
+| Bangalore | ~4029 ms | 1332 ms | ~14,707 | 5,466 |
+
+**Sub-thread status:** `IMP-13` — Closed. `AR-11` — Closed. `QA-01` — Closed. **Workstream 3 Destination Search Performance & Reliability sub-thread — Closure Complete.**
+
+**Documentation governance (verified by this closure).** The agreed evidence structure is `docs/09-Development/Release-1.2/WS3/`. Verified against the actual repository:
+
+| Artefact | Location found | Action taken |
+|---|---|---|
+| `IMP-11`, `IMP-12`, `IMP-13` | `docs/09-Development/Release-1.2/WS3/` | Already correctly placed. No action. |
+| `IMP-10` | Found at `docs/30-Engineering/Release-1.2/WS3/` — outside the agreed structure. `IMP-11`'s own report had already flagged this exact relocation as deferred to this closure card. | **Relocated** to `docs/09-Development/Release-1.2/WS3/` by this closure (file moved only, no content changed); the cross-reference inside `IMP-11` recording the deferral was updated in place to record the relocation. |
+| `ADR-R1.2-WS3-001` | `docs/20-Architecture/` | Correct location for an ADR (architecture decision records are filed under `20-Architecture`, not the workstream evidence subfolder). No action. |
+| `ARCHIE-R1.2-WS3-AR-03` through `AR-11`, `EBC-R1.2-WS3-QA-01` (and its Interim/FINAL/Addendum variants) | **Not present anywhere in the repository.** These exist only as Claude Project records. | **Flagged, not resolved by this closure** — committing this evidence to the repository (or making an explicit governance decision that Claude-Project-only storage is acceptable for this evidence class) is recommended as a separate, small Tiger/Rad action before Release 1.2 is formally closed, per this card's own instruction that outstanding structural items be resolved "before Release 1.2 is formally closed," not necessarily before WS3 itself closes. |
+| `R1.2-WS3-IMP-01` through `IMP-02A` (the earlier Phase 2 WP-4/WP-5 native-ID reports, `R1.2-023`/`R1.2-024`) | `docs/09-Development/` directly, not under `Release-1.2/WS3/` | **Flagged as a separate, lower-priority housekeeping item**, unrelated to this card's Background (which concerns only the search-performance investigation). Not relocated by this closure — doing so was outside this card's explicit Scope and risked disturbing the already-verified, committed native-ID chain's own cross-references for no governance benefit. |
+
+**Cross-workstream inconsistency (flagged, not resolved — see Project Instructions §17).** This sub-thread's own evidence (`AR-11`, `QA-01`) demonstrates `search_geo_places()` running against live, populated data with real benchmark results (place names, aliases, and populations resolving correctly). Workstream 6's currently-recorded "Known Limitations" and "Operational Release Gate" text states the `geo_places`/`geo_aliases` migration is "not yet applied" and GeoNames data "not imported," and that "100% of destination searches in any currently available environment resolve to the search unavailable graceful-fallback state" (most recently reaffirmed by Sri, `EBC-R1.2-WS6-12`). These two positions cannot both be true of the same environment as currently written, and this card's own constraint ("Modify only the Workstream 3 section — no other workstream shall be edited") prohibits resolving this within Workstream 6's section here. **Recommendation:** a dedicated, WS6-scoped Tiger governance card should reconcile which environment(s) each finding actually describes (e.g., a QA/architecture-review environment with the migration applied and seed data loaded, versus the shared development/staging environment Sri and Keerthi tested against for Workstream 6) and correct whichever record is stale, before Release 1.2 is formally closed. This is recorded here as a Risk (see the closure deliverable) rather than silently left unreconciled.
+
+**Release 1.3 carry-forward observations.** Two observations were classified during QA as outside this closure's scope and are carried forward as Release 1.3 candidates. Neither has yet been added to `docs/10-Backlog/RELEASE-1.3-BACKLOG.md` (confirmed by inspection — no existing entry); per this card's explicit instruction, that file is not edited by this closure, so the two items are recorded here for cross-reference and should be transcribed into `RELEASE-1.3-BACKLOG.md` by a future Tiger backlog update:
+
+| ID | Title | Description | Priority |
+|---|---|---|---|
+| `OBS-R1.3-WS3-01` | Destination Ranking Refinement | Bengaluru/Chennai and similar globally-ambiguous or administrative-name searches surface ranking behaviour QA flagged as an observation, not a defect. Investigate ranking refinement in Release 1.3 while preserving the function's existing global search capability. | Release 1.3 |
+| `OBS-R1.3-WS3-02` | Country-Level Search Behaviour | A search for "India" returns textual place-name matches before the country-level result itself. Root cause not confirmed — possibly a ranking factor, possibly dataset-completeness. Investigate during Release 1.3. | Release 1.3 |
+
+**Lessons learned (recorded verbatim, per this closure card):**
+
+1. Architectural investigations should isolate one hypothesis at a time and validate with measurable evidence.
+2. Database performance optimisation should distinguish planner behaviour from indexing behaviour before introducing structural changes.
+3. Independent Architecture and QA reviews significantly improve confidence in production readiness.
+4. Observations should be clearly separated from release-blocking defects to avoid unnecessary scope expansion.
+5. Evidence-driven governance provides stronger release confidence than assumption-driven optimisation.
 
 ---
 
@@ -249,13 +424,19 @@ Tasks: R1.2-03.01 through R1.2-03.15 (Section 6.3).
 | Goal | Fix known entry-context defects in the Journey Passport and confirm consistent, correct behaviour across all entry paths |
 | Business Value | Reduces traveller-facing defects carried over from Release 1.1; protects trust in the Passport experience; improved Journey Passport data quality |
 | Priority | P1 |
-| Status | Proposed |
+| Status | 🟢 Complete — Product Owner Accepted (Vivek, 01-Sep-2026) | Repository evidence, engineering implementation, functional QA, traveller validation, and tracker reconciliation were reviewed. The Product Owner accepts WS4 as complete for Release 1.2.
 | Dependencies | None blocking; should be regression-tested alongside Workstream 6 if destination entry is touched in the same cycle |
 | Owner | Rad (defect fixes), Keerthi (regression) |
 | Risks | Entry-context defects are easy to fix narrowly and reintroduce elsewhere; requires full-path regression, not just the four known defect areas |
 | Acceptance Criteria | Known defects resolved for Romance, Companion, and Pace & Timing entry contexts; homepage-to-Passport entry-context mapping kept consistent with the current homepage mood card set (see Workstream 1); all entry paths regression tested; advisory banner correctness confirmed; state consistency confirmed; override behaviour confirmed; resume behaviour confirmed; traveller name field rejects numeric characters while allowing letters, spaces, hyphens and apostrophes (DEC-R1.2-011); Journey Passport validation regression tested |
 
 Tasks: R1.2-04.01 through R1.2-04.11 (Section 6.4).
+
+**Update, 31-Aug-2026 (`EBC-R1.2-WS8-02`):** one task, `R1.2-04.10` (traveller name numeric-character rejection, `DEC-R1.2-011`), was found to have genuine, citable repository evidence -- implemented and committed (`4f2f2ef`) as `web/lib/journey-passport/traveller-name.ts`, explicitly labelled `EBC-R1.2-WS4-IMP-01` -- and is flipped to Complete in Section 6.4 on that evidence (see Section 15.2). No comparable evidence was found for the other three defect-fix tasks (`04.01` Romance, `04.03` Companion, `04.04` Pace & Timing) or for any of the five Keerthi acceptance/regression tasks (`04.05`-`04.09`, `04.11`); the Workstream 4 Status field above remains **Proposed**, unchanged, and Workstream 4 is not counted as complete or regression-tested. This is new evidence discovered during closure review, not a reopening of completed engineering, per `EBC-R1.2-WS8-02`'s explicit scope.
+
+**Update, 31-Aug-2026 (`EBC-R1.2-WS4-05`):** a dedicated repository reconciliation superseded the "no comparable evidence" finding above for three of those four tasks. Commit `0bbac73` (13-Aug-2026, predating this tracker's own creation) and Keerthi's independently-committed `EBC-036-Retest-Report.docx` (same day) together provide genuine, verified repository evidence that `04.01` (Romance) and `04.03` (Companion) are resolved in full, and `04.04` (Pace & Timing) in substance -- all three flipped to Complete in Section 6.4. `04.02` (mapping validation) is assessed Partial and left Proposed. The five Keerthi acceptance/regression tasks (`04.05`-`04.09`, `04.11`) remain wholly unevidenced at R1.2 scope. **Workstream 4's overall Status field remains Proposed** -- four of eleven tasks Complete does not complete the workstream, and no Product Owner acceptance record exists for it. A separate, larger, previously-unreconciled Workstream 4 delivery chain (`EBC-R1.2-WS4-01`-`06`, `DR-R1.2-WS4-001`, `IPP-R1.2-WS4-001`, `EWP-R1.2-WS4-001`/`002`) was also discovered during this review and is recorded, not resolved, as an out-of-scope finding -- see Section 16.6.
+
+**Update, 01-Sep-2026 (`EBC-R1.2-WS4-06`):** Workstream 4 has now received Product Owner Acceptance following repository evidence reconciliation. Workstream 5 has also received Product Owner Acceptance following completion of Engineering, Architecture Review, Functional QA, Traveller Validation, OTP expiry alignment (10-minute configuration), and smoke validation. Both workstreams are now counted as completed Release 1.2 workstreams. Workstream 8 (Release-wide QA & Regression) remains the only workstream not yet started.
 
 ---
 
@@ -266,17 +447,122 @@ Tasks: R1.2-04.01 through R1.2-04.11 (Section 6.4).
 | Goal | Support international phone numbers across every form that captures a phone number, storing numbers in E.164 format; and require successful mobile OTP verification before a Journey Passport submission can be completed, improving verified lead quality. OTP verification is scoped to Journey Passport only — it is not introduced for Callback Request, Contact Us or other lead-capture forms in this release |
 | Business Value | Removes a hard barrier for international travellers; improves lead data quality and consistency; reduces fake and test Journey Passport submissions; improves verified lead quality; improves planner confidence in incoming leads; reduces manual follow-up effort spent chasing invalid submissions |
 | Priority | P1 |
-| Status | Proposed |
+| Status | 🟢 Complete — Product Owner Accepted (Vivek, 01-Sep-2026) | Product Owner Acceptance: Engineering, architecture, functional QA, traveller validation, OTP expiry alignment (10 minutes), and smoke validation were reviewed. The Product Owner accepts WS5 as complete for Release 1.2.
+| WS4-05 Note (31-Aug-2026) | `EBC-R1.2-WS4-05` checked for a Vivek Product Owner Acceptance record for Workstream 5, as its Section 9 instructed, unless repository evidence contradicts marking it Complete. It does: `EBC-R1.2-WS5-GOV-07-TIGER` (27-Aug-2026) states explicitly that a successful personal test "is evidence toward acceptance, not the acceptance decision itself," and no later document -- committed or in the Claude Project -- records a formal acceptance decision, unlike Workstream 6's `EBC-R1.2-WS6-14-VIVEK`. The Status field above therefore continues to read Pending Product Acceptance; the other six items this card asked to confirm (Engineering, Architecture, Functional QA, Traveller Validation, OTP-expiry alignment, Smoke Validation) were independently re-verified and are already accurately stated above. See Section 16.5 |
+| Progress | **Completed:** engineering implementation prepared on `feature/ebc-r1.2-ws5-03-otp-verification` (commit `77d3a91`); reviewed for production-configuration readiness (`EBC-R1.2-WS5-04A`, `-04B`); ten-task engineering review closed, Approved (`EBC-R1.2-WS5-REV1-01`–`10`, `GOV-01`–`06`); external DLT/MSG91 chain completed — Principal Entity approved, PE–TM Chain approved and activated, Sender Header `SMVTRV` verified, DLT Template validated; two Supabase RPC defects found during production integration testing (`IMP-02` — ambiguous `resend_count` in `send_journey_passport_otp`; `IMP-03` — ambiguous `verification_token` in `verify_journey_passport_otp`) were fixed via additive migrations and deployed; **a live, end-to-end OTP send → SMS received on a physical handset → verification → Journey Passport completion → Journey Director transition was confirmed successfully by the Product Owner on 27-Aug-2026**. **Pending, as of this update (31-Aug-2026):** removal of temporary `[SMV-DBG]` diagnostics (confirmed still present by direct repository search) and formal Product Acceptance. **Resolved since the previous version of this document:** Keerthi's full functional QA pass (`EBC-R1.2-WS5-QA-01`, Passed with Observations, 30-Aug-2026); Sri's traveller experience validation (`EBC-R1.2-WS5-SRI-01`, complete, 30-Aug-2026); and the OTP-expiry/SMS-wording mismatch, resolved by raising `JOURNEY_PASSPORT_OTP_EXPIRY_SECONDS` to 600 and committed (`3280b93`), independently confirmed by a targeted smoke validation (`EBC-R1.2-WS5-QA-03`) including the actual received SMS wording. OTP feature and MSG91 integration are **engineering-complete, functionally QA'd, traveller-validated, and operationally confirmed by the Product Owner's own live test; only `[SMV-DBG]` removal and formal Product Acceptance remain outstanding** — see Engineering Readiness below |
+| Engineering Readiness | Per `EBC-R1.2-WS5-04A`/`04B` and confirmed by `EBC-R1.2-WS5-05-RAD`'s production integration investigation: production enablement of the OTP send/verify flow was configuration-driven, as anticipated, once two issues were resolved. First, `SMS_PROVIDER_TEMPLATE_ID` carried a one-character transcription error (a stray hyphen) that caused MSG91 to reject every application-originated send with `400 — Template ID Missing or Invalid Template`; corrected. Second, two Supabase RPCs (`send_journey_passport_otp`, `verify_journey_passport_otp`) each contained a PL/pgSQL ambiguous-column defect (`RETURNING ... INTO` referencing a bare identifier that collided with a `RETURNS TABLE` output column) — invisible to nine tasks of static/read-only engineering review because it only manifests on live execution against a real Postgres instance; both fixed via additive `CREATE OR REPLACE FUNCTION` migrations (`IMP-02`, `IMP-03`) and deployed. The previously open question of whether MSG91's SendOTP v5 API requires an explicit Principal Entity parameter is now resolved in practice: the Product Owner's confirmed live send succeeded using the existing request shape (no PE parameter), closing that question without a code change. `EBC-R1.2-WS5-04B`'s non-blocking `JOURNEY_PASSPORT_OTP_RATE_LIMIT_*` finding remains unchanged and deferred to Release 1.3 (`TD-R1.3-007`). **Governance note:** `EBC-R1.2-WS5-04A`/`04B`/`05` and `IMP-02`/`IMP-03` are recorded in Team Satvi's governance record but have not yet been committed to this repository's `docs/09-Development/` folder — until they are, they exist as project-level governance record only, not as canonical repository documentation |
 | Dependencies | Touches Journey Passport (coordinate with Workstream 4 regression), Contact, Callback Request, Plan My Experience. OTP verification specifically depends on the country-aware phone capture and E.164 normalization (R1.2-05.01–05.17) being complete, since the OTP is sent to the validated number |
 | Owner | Archie (data format / storage approach, OTP provider evaluation and verification architecture), Sophie (country selector and OTP entry UX), Rad (implementation), Keerthi (regression and OTP QA strategy) |
-| Risks | Existing stored phone numbers (Release 1.0/1.1 leads) are in a 10-digit India-only format — a migration or dual-read strategy must be decided before storage format changes; incomplete audit of "future forms" could leave a capture point non-compliant; introducing OTP verification adds a dependency on a third-party delivery provider — see RISK-R1.2-010 |
+| Risks | Existing stored phone numbers (Release 1.0/1.1 leads) are in a 10-digit India-only format — resolved via the dual-field strategy (`DEC-R1.2-019`) rather than an in-place migration; incomplete audit of "future forms" could leave a capture point non-compliant; introducing OTP verification adds a dependency on a third-party delivery provider — see RISK-R1.2-010; the traveller-facing SMS template text promised a 10-minute OTP validity while the application's own expiry was configured at 5 minutes — a mismatch identified during production testing (`EBC-R1.2-WS5-05-RAD` §6), **resolved 31-Aug-2026 by raising `JOURNEY_PASSPORT_OTP_EXPIRY_SECONDS` to 600 (committed `3280b93`) and independently confirmed by a smoke validation, `EBC-R1.2-WS5-QA-03`** — no longer an open risk. *Retired, no longer valid:* the Principal Entity approval risk, the DLT registration-fee/payment-window risk, the Sender Header/Template approval-pending risks, the MSG91-Principal-Entity-parameter open question, and the OTP-expiry wording mismatch, all previously recorded here — all resolved per the Progress row above |
+| Next Action | Rad: remove `[SMV-DBG]` diagnostics (still outstanding, confirmed by direct repository search), confirm production-safe logging, run a final build verification and diff review; commit `web/config/journey-passport-otp.config.ts`'s expiry-default change, per `EBC-R1.2-WS5-QA-03`'s own recommendation. Product Owner: formal Product Acceptance of Workstream 5. Keerthi's functional QA pass and the OTP-expiry wording resolution are both complete — see the "Functional QA & Traveller Validation Complete" update below. See the Resume Checklist below for the full sequence |
 | Acceptance Criteria | Every phone-capture location audited; country selector (with search, flags, calling codes, India default) implemented; country-aware validation replaces hardcoded 10-digit assumption; invalid combinations handled gracefully; pasted/free-form numbers normalized into canonical E.164 format; numbers stored in E.164 format (e.g. `+919876543210`); existing flows regression tested; Journey Passport cannot be submitted without successful OTP verification; OTP verification applies only to Journey Passport; existing Callback Request flow remains unchanged; existing Contact flow remains unchanged |
 
 Tasks: R1.2-05.01 through R1.2-05.35 (Section 6.5).
 
-**Architecture note (Archie must confirm before implementation):** changing the stored phone number format is a data-model-adjacent change and requires Archie's assessment per Project Instructions Section 5 before Rad begins implementation, specifically regarding backward compatibility with existing Supabase lead records. OTP verification architecture — provider selection, verification-state management, secret handling and backend implications (R1.2-05.19) — likewise requires Archie's assessment and explicit approval before any OTP implementation task (R1.2-05.21 onward) begins. Selecting an OTP provider and implementing OTP verification are both explicitly out of scope for this planning update (R1.2-002); they require a separate, future implementation EBC.
+**Architecture note (Archie must confirm before implementation):** changing the stored phone number format is a data-model-adjacent change and requires Archie's assessment per Project Instructions Section 5 before Rad begins implementation, specifically regarding backward compatibility with existing Supabase lead records. OTP verification architecture — provider selection, verification-state management, secret handling and backend implications (R1.2-05.19) — likewise requires Archie's assessment and explicit approval before any OTP implementation task (R1.2-05.21 onward) begins. Selecting an OTP provider and implementing OTP verification are both explicitly out of scope for this planning update (R1.2-002); they require a separate, future implementation EBC. **Status: satisfied** — Archie's assessment is `EBC-R1.2-WS5-01` (Approved); the separate implementation EBC is `EBC-R1.2-WS5-03`, prepared in the repository per the Progress row above and pending production validation.
 
 **Product guardrail (Tiger):** OTP verification is a lead-quality control applied at the point of Journey Passport submission — it is not an authentication, login or account-management feature. Implementation must preserve the existing low-friction Journey Passport experience, introducing verification only immediately before final submission rather than earlier in the flow. Future EBCs must not expand OTP into a broader identity or login system without a separate, explicitly approved decision.
+
+### Workstream 5 — DLT Registration Milestone Log
+
+| Date | Milestone | Detail |
+|---|---|---|
+| 23-Aug-2026 | Principal Entity registration request submitted | Submitted via Jio TrueConnect (`trueconnect.jio.com`); Registration Request Number **96220832** |
+| 23-Aug-2026 | Confirmation email received | From `support.truconnect@jio.com` to `vivek@searchmyvacation.com`, confirming receipt of the Principal Entity registration request under Request Number 96220832; a further confirmation will follow on completion of registration |
+| 23-Aug-2026 | Letter of Authority executed and submitted | Executed at Chennai, authorising Mr. Vivek T Renganathan (Partner) as Authorised Representative to act on behalf of SearchMyVacation before telecom operators, DLT platforms, Jio TrueConnect and MSG91 for Principal Entity registration, Sender ID/Header management, DLT Chain Binding, Content Template registration and related telecom-resource activities. Document held outside the repository per `EBC-R1.2-WS5-04`'s evidence-handling instruction — referenced here, not committed |
+| 24-Aug-2026 | Principal Entity approved | DLT registration complete. Confirmed by the Product Owner during this session (`EBC-R1.2-WS5-05`). Registration Request Number 96220832 |
+| 24-Aug-2026 | DLT subscription payment completed | Confirmed by the Product Owner during this session. Operational account activated, pending the remaining approvals below |
+| 24-Aug-2026 | Sender Header submitted | Sender Header **SMVTRV** submitted; Current Status: Submitted; Approval: **Pending Jio Review**. Confirmed by the Product Owner during this session — this also closes the verification gap `EBC-R1.2-WS5-04B` flagged (it could not corroborate "SMVTRV" from repository evidence alone) |
+| 27-Aug-2026 | PE–TM Chain approved and activated | Principal Entity–Telemarketer chain (`ADR-R1.2-WS5-001`, `docs/50-Operations/SMS-OTP-Operations-Runbook.md` §2 steps 5–6) completed. Confirmed by the Product Owner |
+| 27-Aug-2026 | Sender Header verified | Sender Header **SMVTRV** — status advances from Pending Jio Review to **Verified**. Confirmed by the Product Owner |
+| 27-Aug-2026 | DLT Template validated | MSG91 template `Search_My_Vacation_OTP` (internal template ID `6a8ed5442eb953fe9d0ea2e4`, DLT registration `1277178766919479769`) confirmed **Verified by DLT** and correctly linked to Sender ID `SMVTRV` (`EBC-R1.2-WS5-05-RAD` §5) |
+| 27-Aug-2026 | Live MSG91 credentials configured; `SMS_PROVIDER_TEMPLATE_ID` transcription error corrected | A stray hyphen in the configured template ID (`6a8ed5442e-b953fe9d0ea2e4` vs. the correct `6a8ed5442eb953fe9d0ea2e4`) was causing every application-originated send to fail with MSG91 `400 — Template ID Missing or Invalid Template` (`EBC-R1.2-WS5-05-RAD` §3, §10). Corrected by the Product Owner |
+| 27-Aug-2026 | End-to-end production verification confirmed | Product Owner confirmed a real OTP send → SMS delivered to a physical handset → correct-OTP verification → Journey Passport completion → Journey Director transition, with no remaining runtime errors in the flow. This is the first confirmed application-originated (not MSG91-dashboard-test-tool) successful send-to-verification cycle |
+
+### Workstream 5 — Resume Checklist (remaining production activities)
+
+1. ✅ Verify Principal Entity approval — done, 24-Aug-2026 (Ref. No. 96220832).
+2. ✅ Complete DLT payment/activation (if applicable) — done, 24-Aug-2026.
+3. ✅ Configure live MSG91 credentials — done, 27-Aug-2026 (includes correcting the `SMS_PROVIDER_TEMPLATE_ID` transcription error).
+4. ✅ Register Sender Header(s) — `SMVTRV`, Verified.
+5. ✅ Register SMS Templates — `Search_My_Vacation_OTP`, Verified by DLT.
+6. ✅ Complete DLT Chain Binding (PE–TM Chain) — approved and activated, 27-Aug-2026.
+7. ✅ Execute live OTP testing — confirmed successfully by the Product Owner, 27-Aug-2026 (send, SMS delivery, verification, Journey Passport completion, Journey Director transition).
+8. Execute Keerthi QA — **pending** (full functional QA pass per `EBC-R1.2-WS5-GOV-07-TIGER-...`'s Activity list: OTP send, OTP verify, incorrect OTP, expired OTP, resend, duplicate prevention, Passport completion, Journey Director transition, Passport stamp validation).
+9. Update Release documentation — in progress (this update, `EBC-R1.2-WS5-GOV-07-TIGER-Journey-Passport-OTP-Completion-Governance-Synchronization-and-Release-Readiness-Update`).
+10. Close Workstream 5 — pending Keerthi's functional QA and Product Acceptance.
+
+Steps 1–7 are now complete. Step 8 (Keerthi's functional QA) is the sole remaining gate before Workstream 5 can close — it is independent of engineering completion and must be executed and recorded per Project Instructions §29 (Functional Validation Standard) rather than inferred from the Product Owner's own confirmatory test, which — while a genuine, evidence-based signal — is not a substitute for Keerthi's structured, reproducible QA pass.
+
+### Workstream 5 — Governance Note (Tiger)
+
+Release Governance distinguishes between three separate things for Workstream 5: **repository implementation** (prepared, per the Progress row above; per `EBC-R1.2-WS5-04A`/`04B`, expected to be configuration-driven with one open production-validation item, not an engineering defect), **production readiness** (pending — MSG91 integration and the OTP feature are not complete until production SMS functionality is operational and validated), and **external dependency completion** (**Principal Entity approved and DLT subscription payment completed** as of 24-Aug-2026; **Sender Header `SMVTRV` submitted, Pending Jio Review**; Template creation and approval still to come). Engineering work remains partially blocked by the remaining external DLT dependency; functional QA and end-to-end OTP validation will begin only after Sender Header approval, Template approval, and live SMS delivery become available. Release 1.2 execution continues with subsequent workstreams in the meantime. Workstream 5 shall remain in the Release Tracker as **🟡 Partially Implemented – Waiting for External DLT Dependency** and shall not be marked Complete until production SMS functionality and end-to-end validation have been successfully completed.
+
+### Workstream 5 — Engineering Review 1 Governance Note (Tasks 1–3)
+
+Review 1 of the WS5 Engineering Review — Task 1 (Understand the Flow), Task 2 (Identify All Components), Task 3 (Validate Journey Passport Entry); `EBC-R1.2-WS5-REV1-01/02/03-RAD` — is **complete**. **No blockers were identified** (Task 3's severity assessment found zero Blocker-severity findings across all nine activities in its scope). Three Minor Observations were **accepted** (`OBS-3-01`, `OBS-3-02`, `OBS-3-03` — closure-screen name re-validation consistency, duplicated mobile-normalisation logic, and a generic message for a specific coded OTP-send failure). Two engineering technical debt items were **deferred to Release 1.3** (`TD-R1.3-001`/`OBS-3-04` — Journey Passport component modularisation; `TD-R1.3-002`/`OBS-3-05` — automated regression coverage for the OTP module and entry-stage validators), per `DEC-R1.2-020` above and the full Engineering Observation Register and Technical Debt Register in `EBC-R1.2-WS5-GOV-01-TIGER-Engineering-Review-Governance-Synchronization` and `docs/10-Backlog/RELEASE-1.3-BACKLOG.md` §9. **Production readiness is unaffected** by these findings — they concern engineering maintainability and test coverage, not the DLT external-dependency gate this Governance Note above governs. **Workstream 5's Release 1.2 completion status is unchanged by this review** — it remains **🟡 Partially Implemented – Waiting for External DLT Dependency**, per the Governance Note above; the Task 5.16/5.21–5.30/5.32–5.35 "Ready for QA" statuses recorded in the Section 6.5 task table are likewise unchanged. Remaining engineering review activities (Task 4 onward) may proceed against this same baseline without re-litigating Tasks 1–3.
+
+### Workstream 5 — Engineering Review 1 Governance Update (OBS-4-01 Closed)
+
+Review 1 Task 4 (Validate Mobile Number Processing, `EBC-R1.2-WS5-REV1-04-RAD`) identified `OBS-4-01`, a **Blocker**: `POST /leads` consumed the OTP verification token using the bare-digit mobile-number field instead of the E.164 field the challenge table is exclusively keyed on, causing every legitimate, correctly-verified Journey Passport submission to fail unconditionally once MSG91 became operational — masked until now only by MSG91 being unconfigured. A dedicated, narrowly-scoped implementation EBC (`EBC-R1.2-WS5-IMP-01-RAD`) was created and completed: a single-line fix in `web/app/api/journey-passport/leads/route.ts` (`parsed.value.mobileNumber` → `parsed.value.mobileE164`), with root cause traced, `tsc`/`eslint`/`npm run verify:journey-leads` all passing, and regression impact assessed as confined to the one call site (confirmed the only caller of `consumeVerificationToken` in the repository). **This implementation has been independently reviewed by Tiger** (`EBC-R1.2-WS5-GOV-02-TIGER-Close-OBS-4-01-Governance-Synchronization`) and **the blocker is closed**, per `DEC-R1.2-021` below. **Review 1 may now continue with Task 5 (Validate OTP Generation).** Two related observations Task 4 also raised — `OBS-4-02` (Major: no bare-digit/India pre-gate on the OTP send/verify endpoints if called directly, bypassing the UI) and `OBS-4-03` (Minor: ambiguous `mobileNumber` field naming across two modules, a root-cause factor behind OBS-4-01) — **remain open and are not reclassified or actioned by this update**; they are retained for future disposition, per the full register in `EBC-R1.2-WS5-GOV-02-TIGER-Close-OBS-4-01-Governance-Synchronization`. **Workstream 5's Release 1.2 completion status is unchanged** — it remains **🟡 Partially Implemented – Waiting for External DLT Dependency**, per the Governance Note above; the Section 6.5 task table is not modified by this update.
+
+### Workstream 5 — Engineering Review 1 Governance Update (Task 5 Complete)
+
+Review 1 Task 5 (Validate OTP Generation, `EBC-R1.2-WS5-REV1-05-RAD`) is **complete**, with a result of Pass with Observations (0 Blocker; 1 Major; 3 Minor). **No production blockers were identified** — OTP code generation (`crypto.randomInt`, CSPRNG), salted SHA-256 hash storage, database-generated challenge IDs, server-side expiry bounds, and in-place resend handling were all independently reviewed and **accepted as functionally correct**. One architectural hardening recommendation is **deferred to Release 1.3**: `OBS-5-01` (Major) found that OTP-specific rate limiting is configured (`JOURNEY_PASSPORT_OTP_RATE_LIMIT_WINDOW_SECONDS`/`_MAX`) but never wired to enforcement, leaving OTP send/verify protected only by the shared, in-memory, IP-only `journey-leads` rate limiter — with no per-mobile-number dimension, contrary to `EBC-R1.2-WS5-01` §6.5's architecture requirement — captured as `TD-R1.3-007` in `docs/10-Backlog/RELEASE-1.3-BACKLOG.md` §9. Three Minor Observations were **accepted**: `OBS-5-02` (MSG91 `sender`/`template_id` co-occurrence unconfirmed against live provider behaviour), `OBS-5-03` (OTP crypto utilities located in `repository.ts` rather than `service.ts` or a dedicated module), and `OBS-5-04` (a low-likelihood, low-impact concurrent-first-request race on `send_journey_passport_otp`, with no correctness break since verification is keyed by `challenge_id`). Full detail is recorded in the consolidated Engineering Observation Register in `EBC-R1.2-WS5-GOV-03-TIGER-Task5-Governance-Synchronization`, per `DEC-R1.2-022` below. **Engineering review is cleared to proceed with Task 6.** **Workstream 5's Release 1.2 completion status is unchanged** — it remains **🟡 Partially Implemented – Waiting for External DLT Dependency**, per the Governance Note above; the Section 6.5 task table is not modified by this update.
+
+### Workstream 5 — Engineering Review 1 Governance Update (Task 6 Complete)
+
+Review 1 Task 6 (Validate OTP Verification, `EBC-R1.2-WS5-REV1-06-RAD`) is **complete**, with a result of Pass with Observations (0 Blocker; 1 Major; 2 Minor). **No production blockers were identified** — OTP verification's challenge validation, plaintext-never-persisted hash comparison, atomic race-safe attempt handling, deterministic expiry enforcement, replay protection, and verification token issuance were all independently reviewed and **accepted as functionally correct**. One architectural hardening observation, `OBS-6-01` (Major), was raised: `send_journey_passport_otp`'s existing-challenge lookup filters on `status = 'pending'` only, so an `exhausted` or `expired` challenge is never found by a subsequent send — a fresh row is inserted instead, silently discarding the resend cap's memory once a challenge reaches a terminal state and permitting an unbounded send→exhaust→resend cycle bounded only by the shared IP rate limiter. This extends the same underlying abuse-protection gap `OBS-5-01` (Task 5) already identified and is **consolidated into the existing `TD-R1.3-007`** rather than raised as a separate backlog item. Two Minor Observations were **accepted**: `OBS-6-02` (OTP hash comparison uses plain SQL text equality rather than an explicit constant-time comparison; low practical risk given SHA-256's avalanche property and the existing attempt cap) and `OBS-6-03` (the verification token itself has no independent, time-based expiry — bounded only by single-use, not by time). Full detail is recorded in the consolidated Engineering Observation Register in `EBC-R1.2-WS5-GOV-04-TIGER-Task6-Governance-Synchronization`, per `DEC-R1.2-023` below. **Engineering review is cleared to proceed with Task 7 (Validate Lead Creation).** **Workstream 5's Release 1.2 completion status is unchanged** — it remains **🟡 Partially Implemented – Waiting for External DLT Dependency**, per the Governance Note above; the Section 6.5 task table is not modified by this update.
+
+### Workstream 5 — Engineering Review 1 Governance Update (Tasks 7 & 8 Complete)
+
+Review 1 Task 7 (Validate Lead Creation, `EBC-R1.2-WS5-REV1-07-RAD`) and Task 8 (Validate Journey Director Integration, `EBC-R1.2-WS5-REV1-08-RAD`) are both **complete**. Task 7 returned Pass with Observation (0 Blocker; 1 Major; 0 Minor); Task 8 returned Pass with Observations (0 Blocker; 1 Major; 1 Minor). **No production blockers were identified in either task** — lead creation was confirmed to enforce a single-use, correctly-consumed verification token before any write, to persist a complete and internally-consistent Journey Passport record, and to prevent duplicate leads through defense-in-depth (single-use token consumption plus a schema-enforced upsert); Journey Director integration was confirmed to trigger only after a lead is durably persisted, to receive the exact data object that was stored with no re-derivation drift, to be unable to corrupt or duplicate the already-created lead under any traced failure mode, and to sit behind a clean, correctly-directed architectural boundary. One Major observation from each task was accepted: `OBS-7-01` (a traveller who has already verified OTP successfully can, on a narrow post-verification submission failure, be funnelled by the interface's own most obvious action into a closed retry loop with no working recovery path) and `OBS-8-02` (the Journey Director recommendation-engine failure path's only diagnostic log is gated to non-production, so this failure mode is currently invisible in production) — **`OBS-8-02` is captured as `TD-R1.3-008`** in `docs/10-Backlog/RELEASE-1.3-BACKLOG.md` §9. One Minor observation, `OBS-8-01` (a narrow handoff-persistence window can show a traveller a more confusing recovery message than intended if the recommendation engine fails and the page is then reloaded), is recorded as a UX improvement note rather than engineering technical debt, per `docs/10-Backlog/RELEASE-1.3-BACKLOG.md` §10. Full detail is recorded in the consolidated Engineering Observation Register in `EBC-R1.2-WS5-GOV-05-TIGER-Tasks7-8-Governance-Synchronization`, per `DEC-R1.2-024` below. **Engineering review is cleared to proceed with Task 9 (Validate Failure Scenarios).** **Workstream 5's Release 1.2 completion status is unchanged** — it remains **🟡 Partially Implemented – Waiting for External DLT Dependency**, per the Governance Note above; the Section 6.5 task table is not modified by this update.
+
+### Workstream 5 — Engineering Review 1 Closure (Tasks 9 & 10 Complete)
+
+Review 1 Task 9 (Validate Failure Scenarios & Recovery, `EBC-R1.2-WS5-REV1-09-RAD`) and Task 10 (Overall Engineering Assessment & Production Readiness, `EBC-R1.2-WS5-REV1-10-RAD`) are both **complete**, and with them **WS5 Engineering Review 1 is formally closed.** Task 9 found no data-integrity, orphaned-record, or replay risk across any traced failure scenario — every state-changing operation is atomic and the RPC layer explicitly supports safe idempotent retry — and raised two new Major observations: `OBS-9-01` (all three OTP/lead API routes discard the causal error object in a bare `catch {}`, in every environment, leaving production failures effectively undiagnosable) and `OBS-9-02` (a lost response to the very first OTP send can leave the traveller on the code-entry screen with no usable challenge ID, with the one working recovery control — "Change number" — not surfaced at the point of failure). Task 10 independently reviewed the complete body of evidence from all nine prior tasks and issued the review's final verdict: **Engineering Review 1 is approved**, no Blocker exists across the full 25-item Observation Register (the review's only Blocker, `OBS-4-01`, remains resolved and unregressed, independently re-verified three separate times), and the implementation is engineered to a standard suitable for Release 1.2 production once the already-identified external DLT/MSG91 operational dependencies are met. `OBS-9-01` is consolidated into the existing `TD-R1.3-008` (retitled "Improve WS5 Production Observability"), alongside its original `OBS-8-02` scope; `OBS-9-02` is recorded as a UX improvement ("OTP Response Recovery," owned by Sophie/Rad) in `docs/10-Backlog/RELEASE-1.3-BACKLOG.md` §10, the same pattern already established for `OBS-7-01`/`OBS-8-01`; and, per Task 10's own recommendation, `OBS-4-02` (previously open with no backlog representation) now has its own entry, `TD-R1.3-009`. Full detail is recorded in the consolidated Engineering Observation Register in `EBC-R1.2-WS5-GOV-06-TIGER-Engineering-Review1-Closure-and-Governance-Synchronization`, per `DEC-R1.2-025` below.
+
+**Engineering Review 1 — Final Status.**
+
+| | |
+|---|---|
+| Status | **Closed** |
+| Result | **Approved** |
+| Tasks completed | 10 of 10 |
+| Blockers identified | 1 (`OBS-4-01`) |
+| Blockers resolved | 1 |
+| Remaining blockers | 0 |
+| Recommendation | Proceed to Keerthi (Functional QA), Operational Enablement, Production Smoke Testing (gated on DLT/MSG91), Sri (Traveller Validation), and Product Acceptance |
+
+**Engineering is complete; operational enablement remains dependent on external DLT/MSG91 approvals** — this closure does not assert live production readiness, only that no further engineering work is required before Release 1.2's remaining engineering-independent activities (functional QA, operational enablement, traveller validation, and eventual production smoke testing) can proceed. **Workstream 5's Release 1.2 completion status is unchanged** — it remains **🟡 Partially Implemented – Waiting for External DLT Dependency**, per the Governance Note above; the Section 6.5 task table is not modified by this update.
+
+### Workstream 5 — Engineering Complete, Pending Functional QA (GOV-07)
+
+Following Engineering Review 1's closure, production integration testing of the deployed OTP feature surfaced and resolved the remaining gap between "engineering complete" and "operationally working end-to-end." `EBC-R1.2-WS5-05-RAD`'s investigation found the application's `SMS_PROVIDER_TEMPLATE_ID` contained a one-character transcription error causing every application-originated MSG91 send to fail (`400 — Template ID Missing or Invalid Template`); separately, `EBC-R1.2-WS5-IMP-02-RAD` and `EBC-R1.2-WS5-IMP-03-RAD` each independently identified and fixed a PL/pgSQL ambiguous-column defect (`RETURNING ... INTO` referencing a bare identifier colliding with a `RETURNS TABLE` output column) in `send_journey_passport_otp` and `verify_journey_passport_otp` respectively — both invisible to nine tasks of read-only engineering review because they manifest only on live execution against a real Postgres instance. Both migrations (`20260826120000`, `20260827150000`) were authored, diff-isolated to the single corrected line each, and confirmed as requiring no calling-code changes.
+
+**Product Owner confirmation, 27-Aug-2026:** the Product Owner deployed both migrations, corrected the `SMS_PROVIDER_TEMPLATE_ID` value, and personally executed and confirmed a complete, real, end-to-end cycle: Journey Passport created → OTP challenge created in Supabase → OTP sent through MSG91 → SMS received on a physical handset → correct OTP verified → verification completed → traveller transitioned to Journey Director → no remaining runtime errors observed. This is the first confirmed application-originated (as opposed to MSG91's own manual dashboard test tool) successful send-through-verification cycle for this feature.
+
+**This confirmation is recorded as the Product Owner's own evidence, distinct from — and not a substitute for — Rad's independent post-deployment engineering confirmation or Keerthi's structured functional QA pass**, per Project Instructions §28 ("Rad's technical completion does not equal Keerthi's functional approval... or project-owner release approval") applied in the direction relevant here: a Product Owner's own successful manual test is real, valuable evidence, but Keerthi's independent, reproducible, evidence-captured QA pass (Project Instructions §29) remains a separate, required gate before Workstream 5 can close.
+
+**Remaining before Release 1.2 closure:**
+- Engineering: remove the temporary `EBC-R1.2-WS5-DBG-01` `[SMV-DBG]` diagnostics (still present in `sms.ts`, `journey-passport-otp/repository.ts`, `otp/send/route.ts` as of this update), confirm production-safe logging, run a final build verification and diff review.
+- Functional QA: Keerthi to execute the complete Journey Passport OTP validation — send, verify, incorrect OTP, expired OTP, resend, duplicate prevention, Passport completion, Journey Director transition, Passport stamp validation.
+- Product Owner decision: resolve the OTP-expiry wording mismatch — the DLT-approved SMS template text promises "valid for 10 minutes" while the application's configured expiry is 5 minutes (`EBC-R1.2-WS5-05-RAD` §6) — before production release.
+- Release: Product Acceptance, then Release 1.2 closure.
+
+**Workstream 5's Release 1.2 status changes with this update** — from 🟡 Partially Implemented – Waiting for External DLT Dependency to **🟢 Engineering Complete – Pending Functional QA**, per `DEC-R1.2-026` below. This is *not* a closure of Workstream 5 — functional QA and Product Acceptance remain outstanding gates, per the Release Assessment table in `EBC-R1.2-WS5-GOV-07-TIGER-Journey-Passport-OTP-Completion-Governance-Synchronization-and-Release-Readiness-Update`. **A numbering correction for the record:** that card's Executive Summary refers to the `resend_count` fix as "IMP-01" — the repository's actual EBC numbering is `EBC-R1.2-WS5-IMP-02-RAD` for that fix; `EBC-R1.2-WS5-IMP-01-RAD` is the earlier, unrelated `OBS-4-01` fix (`mobileNumber` → `mobileE164` in `/leads`, closed under `DEC-R1.2-021`). This tracker uses the correct `IMP-02`/`IMP-03` references throughout, per Project Instructions §17's precedence for repository evidence over a card's own text where the two differ on a verifiable fact.
+
+### Workstream 5 — Functional QA & Traveller Validation Complete, OTP-Expiry Resolved (Tiger, 31-Aug-2026, `EBC-R1.2-WS7-07`)
+
+Three further gates the GOV-07 update above left outstanding have since closed, each independently verified against live evidence rather than assumed from a card's own claim:
+
+- **Keerthi's functional QA** (`EBC-R1.2-WS5-QA-01`, 30-Aug-2026) exercised the complete OTP send/verify/resend/Journey Passport/Journey Director chain live, twice, end-to-end, using the Product Owner's own real mobile number and real MSG91-delivered SMS codes. **Result: ✅ Passed with Observations** — zero Critical/Major/Minor runtime defects; two non-blocking observations (pre-verification "100% complete" messaging; a generic "incorrect" message not distinguishing a stale code from a mistyped one) routed to Sri's review rather than treated as defects. `OBS-4-01`'s fix was re-exercised twice with no regression.
+- **Sri's traveller experience validation** (`EBC-R1.2-WS5-SRI-01`, 30-Aug-2026) completed the full traveller journey live, in character, end-to-end, including the mobile-number and OTP steps. Recorded as a genuinely warm, trustworthy flow with accurate personalisation carried through to the Journey Director recommendation; both items the card asked Sri to specifically assess (the pre-verification completion messaging and the OTP-expiry wording) were addressed directly without either one breaking confidence in the process.
+- **The OTP-expiry/SMS-wording mismatch** — the DLT-approved SMS template promising "valid for 10 minutes" against a 5-minute application default (`EBC-R1.2-WS5-05-RAD` §6) — was resolved by raising `JOURNEY_PASSPORT_OTP_EXPIRY_SECONDS`'s default to 600 in `web/config/journey-passport-otp.config.ts`, independently smoke-validated live (`EBC-R1.2-WS5-QA-03`, 31-Aug-2026: OTP generation, mid-life validation, resend, and expiry boundary all Pass, with the actual received SMS wording — "valid for 10 minutes" — directly confirmed by the Product Owner's own screenshots), and **committed** (`3280b93`, "fix(ws5): align OTP expiry with approved 10-minute SMS validity") — closing the one process gap `EBC-R1.2-WS5-QA-03` itself flagged (the fix existing only as an uncommitted working-tree edit at the time of that report).
+
+**Verified against the repository, not assumed:** `EBC-R1.2-WS5-QA-01`, `-SRI-01` and `-QA-03` exist today only as Claude Project records — none has yet been committed to `docs/09-Development/`, consistent with the same gap already noted for several other WS4/WS5/WS6 evidence chains elsewhere in this document; filing them into the repository is recommended as a small, separate Rad/Tiger housekeeping task, not performed by this update, which is scoped to `docs/10-Backlog/RELEASE-1.2.md` only.
+
+**Workstream 5's Release 1.2 status changes with this update** — from 🟢 Engineering Complete – Pending Functional QA to **🟢 Functional QA & Traveller Validation Complete – Pending Product Acceptance**. This is *not* a closure of Workstream 5 — removal of the `[SMV-DBG]` diagnostics and a formal Product Acceptance decision remain the two outstanding gates.
 
 ---
 
@@ -287,13 +573,142 @@ Tasks: R1.2-05.01 through R1.2-05.35 (Section 6.5).
 | Goal | Replace the free-text destination field with a searchable, multi-select autocomplete that validates a destination is a real place — without taking over Journey Director's responsibility for served-destination validation |
 | Business Value | Higher-quality destination data (fewer fictional/misspelled entries); better traveller experience when naming multiple places of interest |
 | Priority | P1 (approved R1.2 workstream) |
-| Status | Proposed |
-| Dependencies | Dataset investigation must complete before UX/validation implementation; Workstream 4 regression should include the destination field; Workstream 3 mapping may reference validated destination names |
-| Owner | Archie (dataset investigation, architecture), Sophie (autocomplete UX), Rad (implementation), Keerthi (edge-case validation) |
-| Risks | Free geographic datasets (GeoNames, OSM-derived) vary in coverage and update cadence for Indian place names and aliases; fuzzy matching quality is easy to underestimate; must not accidentally start validating "does SMV serve it" — that remains Journey Director's responsibility |
+| Status | ✅ Complete (Product Owner Accepted, `EBC-R1.2-WS6-14-VIVEK`, 31-Aug-2026 — see Workstream Closure below) |
+| Progress | Product Discovery, Delivery Planning, Architecture, UX and Engineering Readiness (`EBC-R1.2-WS6-01`/`-02`/`-03`+Addendum/`-05`+Addendum/`-06`/`-07`) are complete; Governance Consolidation (`EBC-R1.2-WS6-08` + Addendum 01, `-10`) is complete. **Engineering implementation is complete** across all 8 phases of `EBC-R1.2-WS6-09` (Rad). **Functional QA is complete** (`EBC-R1.2-WS6-11`; two defects found, both corrected and confirmed resolved by `EBC-R1.2-WS6-11A`). **Traveller Experience Validation is complete** (`EBC-R1.2-WS6-12`; ⚠️ Approved with Minor Observations, accepted by the Product Owner). Final closure consolidation recorded in `EBC-R1.2-WS6-13`. **Product Owner Acceptance recorded 31-Aug-2026** (`EBC-R1.2-WS6-14-VIVEK`, a Claude Project record, not yet committed to `docs/09-Development/`) — Workstream 6 is Complete for Release 1.2 implementation scope. **Correction, 31-Aug-2026:** the implementation work described as "uncommitted working-tree changes" at the time of `EBC-R1.2-WS6-13`/`-14` has since been committed — `4f2f2ef` ("feat(r1.2): consolidate WS3-WS6 engineering implementation"), confirmed via `git log`; this tracker's text elsewhere describing it as still uncommitted is superseded by this correction rather than separately rewritten |
+| Dependencies | Dataset investigation complete (`EBC-R1.2-WS6-03`); UX specification complete and implemented (`EBC-R1.2-WS6-05`); implementation, functional QA, and traveller validation all complete; **production deployment depends on the operational release gate below** (Supabase migration application and GeoNames import) — see Operational Release Gate; Workstream 4 regression should include the destination field; Workstream 3 mapping may reference validated destination names |
+| Owner | Archie (architecture — complete), Sophie (UX — complete), Rad (implementation — complete, `EBC-R1.2-WS6-09`), Keerthi (functional QA — **complete**, `EBC-R1.2-WS6-11`/`-11A`), Sri (traveller experience validation — **complete**, `EBC-R1.2-WS6-12`, Approved with Minor Observations) |
+| Risks | Free geographic datasets vary in coverage for Indian place names — mitigated by the hand-reviewed alias overrides in `web/scripts/geo-validation/importGeoNames.ts`, not yet exercised against live data (migration/import both still pending — see Operational Release Gate); must not accidentally start validating "does SMV serve it" — confirmed structurally impossible: `verifyNoGeoValidationCoupling.ts` passes with zero cross-imports between `lib/geo-validation/**` and `lib/journey-director/**`; no live-browser or screen-reader validation has been performed on the implemented combobox at any point — see Known Limitations |
+| Implementation Effort | Actuals: 23 modified files + 15 new files/directories (38 total working-tree entries, zero deletions, zero commits) across `EBC-R1.2-WS6-09` Phases 1–8, consistent with the corrected 17-file/19-site `destinationMode` surface `EBC-R1.2-WS6-07` identified and `EBC-R1.2-WS6-08` recorded — the earlier 2–4 day estimate (`EBC-R1.2-WS6-02` §9) is superseded by this actual, evidence-based inventory |
 | Acceptance Criteria | Existing free-text behaviour and data-quality problems documented; searchable autocomplete with multi-selection implemented, including removing an individual destination and preserving selection order; validation confirms the location is real but does **not** check SMV service coverage; free-dataset investigation complete with an explicit decision (paid APIs excluded for R1.2 unless separately approved); fuzzy matching, alternate spellings, abbreviations, landmarks, regions, cities and countries supported; edge cases (Vizag, Bangalore/Bengaluru, Madras/Chennai, Kotagiri, Coorg/Kodagu) validated; fictional locations (e.g. Wakanda, Winterfell) rejected without a jarring UX; Journey Director's unsupported-destination behaviour unchanged |
 
-Tasks: R1.2-06.01 through R1.2-06.13 (Section 6.6).
+Tasks: R1.2-06.01 through R1.2-06.13 (Section 6.6). **Task-level status updated by this update (`EBC-R1.2-WS7-07`)** — all 13 tasks flipped to Complete on the strength of the Product Owner's Workstream 6 Acceptance (`EBC-R1.2-WS6-14-VIVEK`); see Section 6.6.
+
+### Workstream 6 — Implementation Assumptions (approved, carried forward from `EBC-R1.2-WS6-05`/`-06`/`-07`)
+
+1. **Preferred Destinations** is a validated, structured, multi-select field backed by geo-validation (`geo_places`/`geo_aliases`); each selection carries a non-nullable `geoPlaceId`.
+2. **Describe your ideal getaway** is an optional free-text field, entirely separate from geo-validation, that never touches the destination-validation path.
+3. The free-text field's placeholder copy is **instructional only** — it is guidance text, not a default value.
+4. The placeholder is **never persisted** — an unchanged placeholder must never be saved as if the traveller had typed it.
+5. The placeholder is **ignored if unchanged** — submission logic must distinguish "traveller typed nothing" from "traveller typed the placeholder text."
+6. Retirement of the `state.destination` / `destinationMode` ("" | "known" | "discovery") model, in favour of `destinations: SelectedDestination[]` + `getawayDescription: string`, is **approved**.
+
+### Workstream 6 — Engineering Notes (from `EBC-R1.2-WS6-06`/`-07`)
+
+1. `destinationMode` removal is a **multi-file change** — 19 reference sites across 17 files per `EBC-R1.2-WS6-07`'s direct repository inspection, not the two-location estimate carried in `EBC-R1.2-WS6-06`.
+2. Search-outage handling must **distinguish "no results" from "search unavailable"** — a failed or unreachable search must never be presented to the traveller as "no matches," per `EBC-R1.2-WS6-06`'s `results`/`unavailable`/`idle` state design.
+3. The static `destinationSuggestions` list is approved for **removal**, not deprecation.
+4. Geo-validation (is this a real place) remains **architecturally separate** from Journey Director serviceability (does SMV serve this place) — the new `web/lib/geo-validation/` module carries zero cross-imports to or from `web/lib/journey-director/**`, enforced by a new guardrail script.
+5. **No mandatory schema migration is required** for Release 1.2 — the existing `journey_passport_leads` schema already tolerates the new data shape via its nullable `destination_mode`/`destination_free_text` columns and catch-all `passport_summary jsonb`. An additive migration (new nullable columns) is recommended but not blocking; `destination_mode`/`destination_free_text` must be retained, not dropped, for historical-record readability.
+6. **Manual accessibility validation is required** for the combobox implementation — the WAI-ARIA 1.2 combobox-with-listbox pattern has no existing precedent in this codebase (the only other structured-choice UI, `SelectionCard.tsx`, is a radiogroup/radio pattern, not combobox/listbox).
+
+### Workstream 6 — Documentation Housekeeping (Deferred, not actioned by this update)
+
+The following are recorded as deferred housekeeping items. Consistent with this project's "mark superseded, do not rewrite" convention, no historical document is modified to record them:
+
+1. **`EBC-002` §8.3 wording** ("no network search dependency") should be clarified after Release 1.2 closes — `EBC-R1.2-WS6-06` found this was written against the old static `destinationSuggestions` list and is a scope-understanding gap, not a genuine conflict with the new first-party API route (`/api/journey-passport/destinations/search`).
+2. **`RELEASE-1.2.md` / `RELEASE-1.2-BACKLOG.md` naming** should be standardized after Release 1.2 closes, per the deferral already recorded in `RELEASE-1.3-BACKLOG.md` §9.1.
+
+### Workstream 6 — Product Owner Decisions (UX Review Cycle — Final)
+
+Recorded 23-Aug-2026, per Tiger's final WS6 governance consolidation (`EBC-R1.2-WS6-08` Addendum 01). These finalise, as approved Product Owner decisions, the items the Implementation Authorization note below previously listed as pending sign-off.
+
+1. **Destination Discovery Gate — retired.** The prior two-option routing interaction ("I already know where I want to go" / "Help me discover somewhere special") is formally retired. With Preferred Destinations and Describe your ideal getaway both now independently optional, no initial routing decision is required; the Journey Passport displays both fields together. This reduces unnecessary traveller decisions and supports the approved conversational design philosophy.
+2. **Preferred Destinations — finalised.** Optional; multiple selection; validated geographic autocomplete; **maximum 5 selections**; validation confirms geographic reality only — serviceability remains Journey Director's responsibility.
+3. **Describe your ideal getaway — finalised.** Optional; free text; **maximum 500 characters**; placeholder copy is instructional only, never persisted, and ignored unless the traveller edits it.
+4. **Search Unavailable Behaviour — approved.** A destination-search failure is treated independently from a genuine no-match result. If search is temporarily unavailable, the traveller receives a graceful message encouraging them to continue completing the Journey Passport. The Passport must never become blocked by temporary search unavailability.
+5. **Placeholder Examples — approved.** Static placeholder examples only; no rotating placeholder text. The final placeholder uses a curated subset of approximately four inspirational examples (drawn from the candidate set in `EBC-R1.2-WS6-05-ADDENDUM-01`); the remaining approved examples stay available for future UX refinement.
+
+### Workstream 6 — Implementation Authorization (Tiger)
+
+Product Discovery is complete and approved (`EBC-R1.2-WS6-01`). Architecture is complete and approved (`EBC-R1.2-WS6-03` + Addendum 01, `EBC-R1.2-WS6-06`). UX is complete and approved (`EBC-R1.2-WS6-05` + Addendum 01), and the Product Owner's final UX-review-cycle decisions above have now resolved every item previously open. Engineering Readiness is complete (`EBC-R1.2-WS6-07`, verdict: ready to proceed to Rad's implementation EBC). **Workstream 6 was authorized to proceed into engineering implementation**, subject only to the implementation EBC explicitly carrying forward the corrected 17-file/19-site `destinationMode` inventory into its task breakdown and effort estimate. Full detail is recorded in `EBC-R1.2-WS6-08` and its Addendum 01. **Implementation is now complete** — see the subsections below, recorded per `EBC-R1.2-WS6-10` (Post-Implementation Governance Consolidation & QA Readiness).
+
+### Workstream 6 — Engineering Implementation (`EBC-R1.2-WS6-09`, Phases 1–8, complete)
+
+Rad delivered the full destination-search and getaway-description capability across 8 stop-and-approve phases, entirely as uncommitted working-tree changes on `feature/ebc-r1.2-ws5-03-otp-verification` (no commits, no pushes, no branch change at any point): Phase 1 Foundation (geo-validation module, search API, coupling guardrail); Phase 2 Preferred Destinations (combobox component); Phase 3 Describe Your Ideal Getaway (free-text field); Phase 4 Journey Passport Integration (full `destinationMode` retirement, end-to-end wiring); Phase 5 Search Failure Handling (timeout/retry architecture); Phase 6 Cleanup (swept for retired artifacts — none remained to remove); Phase 7 Accessibility & Interaction Validation (three corrections applied); Phase 8 Final Verification & Handover (full regression re-run, this documentation handover). Final footprint: 23 modified files, 15 new files/directories, 0 deletions, 0 commits.
+
+### Workstream 6 — Final Product Decisions (as implemented)
+
+**Destination Discovery Gate.** The previous destination choice gate ("I already know where I want to go" / "Help me discover somewhere special") has been retired in the implementation. The Journey Passport now presents Preferred Destinations (Optional) and Describe your ideal getaway (Optional) together, with no routing decision beforehand — confirmed built in `EBC-R1.2-WS6-09` Phase 4 (`DestinationMoment` fully rewritten) and swept for leftover gate artifacts in Phase 6 (none found).
+
+**Preferred Destinations.** Implemented as: maximum 5 selections (enforced in `lib/geo-validation/selection.ts`'s `addSelection()`); validated autocomplete against the geo-validation search API; deduplication (a re-selected place is a no-op, surfaced to the traveller as a pulse on the existing chip rather than a duplicate entry); selection order preserved on add and on individual removal.
+
+**Describe your ideal getaway.** Implemented as: optional; 500-character limit (`GETAWAY_DESCRIPTION_MAX_LENGTH` in `lib/journey-passport/getaway-description.ts`, with a defence-in-depth clamp); placeholder ignored unless edited (`isGetawayDescriptionEmpty()` distinguishes an untouched field from genuine content); static placeholder (no rotation — see below).
+
+**Placeholder Copy — finalised, 24-Aug-2026.** The Product Owner has approved the final Release 1.2 placeholder, closing the item this tracker previously carried as open. Approved copy:
+
+> An island that feels forgotten by time • Mountains that vanish into morning cloud • Snow settling quietly over lantern-lit streets • A place where the sea meets the mountains
+
+Approved decisions, recorded as final: static placeholder approved; no rotating placeholder; placeholder is instructional only; placeholder is never persisted; placeholder is ignored unless edited by the traveller. `PLACEHOLDER_TEXT` in `GetawayDescriptionField.tsx` should be updated to this approved copy as a one-line implementation change (the field's data model, character limit, and ignore-unless-edited behaviour are unaffected). This item no longer appears under Known Limitations or open questions.
+
+### Workstream 6 — Accessibility Decisions (as implemented)
+
+Corrected in `EBC-R1.2-WS6-09` Phase 7, against `EBC-R1.2-WS6-05` §§3–9 and the WAI-ARIA 1.2 combobox pattern: chip remove-button touch target enlarged to the codebase's standard **44×44** CSS-pixel convention (`min-h-11 min-w-11`, previously 20×20); the suggestion **popup now closes on focus loss** (an `onBlur` handler added, per the WAI-ARIA APG requirement that a combobox popup close when the combobox no longer has focus); **mobile textarea sizing** corrected so `GetawayDescriptionField` renders 3 rows / `min-h-24` on mobile and the original 4 rows / `min-h-28` from the `sm:` breakpoint up, matching §5.3/§9's mobile-vs-desktop specification. All ARIA wiring (`role="combobox"`, `aria-expanded`, `aria-controls`, `aria-activedescendant`, `role="listbox"`/`"option"`, `aria-live="polite"`) was already correct from Phase 2 and required no correction. **Manual browser accessibility validation is deferred to QA** — no live-browser or screen-reader pass was possible in this implementation environment (see Known Limitations); every correction above was derived from static code review against the WAI-ARIA APG, not from live assistive-technology testing.
+
+### Workstream 6 — Search Behaviour (as implemented)
+
+"No results" and "search unavailable" are implemented as **distinct states** (`DestinationSearchStatus`: `idle` / `loading` / `results` / `unavailable`), never conflated — a genuine empty-results array is a different state from a failed request, per `EBC-R1.2-WS6-06`'s design. On search unavailability: **one silent automatic retry** is attempted (invisible to the traveller — both the original attempt and the retry report `loading`); on the retry's failure the state becomes `unavailable` with a **graceful fallback message** encouraging the traveller to describe the destination in the free-text field instead; and the **traveller is never blocked** — both destination fields are independently optional and moment validation is unconditional, so a search outage cannot prevent Journey Passport completion.
+
+### Workstream 6 — Timeout Strategy (as implemented)
+
+| Layer | Behaviour | Location |
+|---|---|---|
+| Client — request bound | 3000 ms | `web/hooks/useDestinationSearch.ts` (`REQUEST_TIMEOUT_MS`) |
+| Client — retry delay | 400 ms | `web/hooks/useDestinationSearch.ts` (`RETRY_DELAY_MS`), one silent retry |
+| Server — Supabase REST call | 4000 ms | `web/lib/geo-validation/repository.ts` |
+| Database — query execution | 2000 ms | `supabase/migrations/20260823150000_geo_places_geo_aliases.sql` (`search_geo_places` function's `statement_timeout`; **migration not yet applied** — see Known Limitations) |
+
+Ordering is deliberately tightest-to-loosest from database to client (2000 → 3000 → 4000 ms) so the database always gives up first and no layer is left waiting on one that has already abandoned the request.
+
+### Workstream 6 — Engineering Outcomes
+
+- **`destinationMode` fully retired** from Journey Passport state. One nuance recorded for accuracy: a differently-scoped, coincidentally-named `destinationMode` field remains on an internal Journey Director engine diagnostic/trace type (`engine.types.ts`), populated from the resolved intent for trace-output purposes only — this is not the retired Passport-state field and was confirmed, by reading every call site, to be legitimate, unrelated, in-use code, not a leftover artifact. Ten remaining textual occurrences of "destinationMode" in the codebase are explanatory code comments describing the migration for future maintainers, deliberately left in place.
+- **`destinationSuggestions` (the static list) removed**, not deprecated, confirmed by a dedicated Phase 6 sweep.
+- **No compatibility layer introduced** — the Product Owner's explicit condition ("no compatibility shims or duplicate fields") was honoured; the migration is a faithful, behaviour-preserving replacement, not a dual-path shim.
+- **`DestinationIntent` contract preserved** — the `{mode, rawText}` shape Journey Director's scoring/eligibility/contradiction logic consumes is byte-for-byte unchanged; only what feeds it (`deriveDestinationRawText()`) was added.
+- **Geo-validation remains isolated** — `verifyNoGeoValidationCoupling.ts` (the structural guardrail built in Phase 1) passes with 46 checks and zero cross-imports between `lib/geo-validation/**` and `lib/journey-director/**`, self-caught and corrected once mid-implementation (Phase 4) when a first-pass wiring attempt briefly violated it.
+
+### Workstream 6 — Known Limitations (not implementation defects — outside Workstream 6 implementation scope)
+
+1. **Migration not yet applied.** `supabase/migrations/20260823150000_geo_places_geo_aliases.sql` (the `geo_places`/`geo_aliases` schema and `search_geo_places` function) has not been run against any Supabase environment. Destination search cannot function end-to-end until it is applied.
+2. **GeoNames not imported.** The import script is written and compiles cleanly but has not been executed — outbound access to `download.geonames.org` returned `403` from both available environments' egress proxy.
+3. **Browser accessibility still requires manual QA.** No live-browser or screen-reader validation was possible in this implementation environment across any of the 8 phases (the dev server does not persist between separate device-bridge shell calls); all accessibility corrections were derived from static review. A manual keyboard-and-screen-reader pass remains required before release.
+4. **Three pre-existing verification failures, unrelated to Workstream 6.** Confirmed pre-existing against pristine baseline `HEAD` (`77d3a91`) via an isolated `git worktree` diagnostic: `verify:journey-engine` ("escape resolves to its editable mood preselection"), `verify:journey-intelligence:steering` ("mountain intent keeps Goa eligible for scoring rather than hard-excluding it"), and `verify:journey-intelligence` (generated-artifact count check). None were introduced by, or touch code paths belonging to, this workstream.
+
+These four are explicitly **outside Workstream 6 implementation scope** and do not represent unfinished WS6 work. One smaller handover item is also carried forward, not hidden: a diagnostic `git worktree` at `/tmp/smv-baseline-check` (used only to confirm item 4 above) could not be removed by this session (no delete permission) and should be cleaned up separately — it is outside the tracked repository and affects nothing. (The placeholder-copy selection previously listed here as open has been finalised — see Final Product Decisions above.)
+
+### Workstream 6 — QA Readiness (superseded — see Workstream Closure below)
+
+*This section recorded, at the time of `EBC-R1.2-WS6-10`, that engineering implementation was complete and that functional QA and traveller validation were still required. Both have since been performed and are recorded below; this note is left in place rather than deleted, per this project's practice of not silently rewriting a prior status.* `EBC-R1.2-WS6-09` Phase 8's report supplied the QA checklist Keerthi used as a starting point for `EBC-R1.2-WS6-11`.
+
+### Workstream 6 — Traveller Validation Status
+
+Sri completed independent Traveller Experience Validation (`EBC-R1.2-WS6-12`), reviewing the implemented Journey Passport destination experience live, end-to-end, against a real running instance of the current code. **Outcome: ⚠️ Approved with Minor Observations.** The Product Owner has accepted this overall traveller recommendation. Confirmed strengths: the retirement of the destination discovery gate (Continue is enabled with both fields empty — no forced self-declaration of uncertainty); the search-unavailable copy and tone; and the getaway-description placeholder copy, each recorded by Sri as a Delight to retain as-is. Two findings from this validation are carried into the sections below rather than left inline: the carried-forward-destination observation (Accepted Release 1.2 Design Limitation, below) and live confirmation that the destination-search infrastructure gap is a deployment prerequisite, not a design defect (Operational Release Gate, below).
+
+### Workstream 6 — Accepted Release 1.2 Design Limitation: Carried-Forward Destination
+
+Sri's validation (`EBC-R1.2-WS6-12` §5, Major observation) confirmed live that a destination carried forward from an entry route (e.g., a traveller arriving via a Goa destination page) lands as plain text inside the Describe your ideal getaway field, directly beneath a connective line that frames that field as being for "a feeling than a place yet." **This is an intentional Release 1.2 simplification, not a defect.** Sophie's full `EBC-R1.2-WS6-05` §4.4 design — a lighter-treatment, async-resolved "pending suggestion chip" inside Preferred Destinations itself, with inline "Keep"/"Not quite" actions — was deliberately deferred during Phase 4 of `EBC-R1.2-WS6-09`'s implementation and remains recorded above as a named Release 1.3 candidate (Deferred Items / Release 1.3 Cross-Reference, item 1). The Product Owner has accepted this behaviour as-is for Release 1.2. **No Release 1.2 behaviour is being changed as a result of this observation.**
+
+### Workstream 6 — Operational Release Gate (Deployment Prerequisite, Not a Workstream 6 Defect)
+
+Destination autocomplete requires two operational actions before it can function against real data in any environment: (1) applying the `geo_places`/`geo_aliases` Supabase migration (`supabase/migrations/20260823150000_geo_places_geo_aliases.sql`), and (2) importing the GeoNames dataset (`web/scripts/geo-validation/importGeoNames.ts`). Both were confirmed still outstanding by every validation cycle in this workstream, most recently live-confirmed by Sri (`EBC-R1.2-WS6-12`): with neither yet in place, 100% of destination searches in any currently available environment resolve to the "search unavailable" graceful-fallback state. **This is recorded explicitly as an operational deployment prerequisite. It is not an engineering defect. It is not a Product or UX issue.** The interaction design, copy, and failure-handling for this exact condition are already approved and correctly implemented — what is missing is data and infrastructure enablement, not product or engineering work. **Production deployment of Workstream 6 shall not proceed until this operational enablement is complete.**
+
+### Workstream 6 — Workstream Closure
+
+All lifecycle stages for Workstream 6 are complete: **Product Discovery** (`EBC-R1.2-WS6-01`); **Architecture** (`EBC-R1.2-WS6-03` + Addendum 01, `-06`); **UX** (`EBC-R1.2-WS6-05` + Addendum 01); **Engineering** (`EBC-R1.2-WS6-09`, Phases 1–8); **Governance** (`EBC-R1.2-WS6-08` + Addendum 01, `-10`, `-13`); **Functional QA** (`EBC-R1.2-WS6-11` — initially ❌ Fail on two defects [DEF-01 Major: retired-gate wording still rendering; DEF-02 Minor: ISO country codes shown instead of names] — both corrected by Rad and confirmed resolved by `EBC-R1.2-WS6-11A`; QA is complete and approved); **Traveller Validation** (`EBC-R1.2-WS6-12` — ⚠️ Approved with Minor Observations, accepted by the Product Owner).
+
+**Workstream 6 is now: Complete.** Product Owner Acceptance received 31-Aug-2026 (`EBC-R1.2-WS6-14-VIVEK`).
+
+The remaining items are explicitly not blockers to that transition, each already classified above: the Operational Release Gate (migration application and GeoNames import); the Accepted Release 1.2 Design Limitation (carried-forward destination); and the Blocked/Not-Tested live-environment items already named in Known Limitations (manual accessibility pass, the five India-specific edge cases, live mobile/keyboard validation) — each is an accepted limitation or an operational prerequisite, not open governance work.
+
+### Workstream 6 — Deferred Items / Release 1.3 Cross-Reference
+
+No new Release 1.3 candidate emerged **during** implementation. Three Journey Passport UX refinements were already known and deliberately deferred before implementation began (each named explicitly, not referenced collectively) and were confirmed still deferred as of `EBC-R1.2-WS6-09` Phase 7:
+
+1. **Pending-chip experience for carried-forward destinations.** Sophie's `EBC-R1.2-WS6-05` §4.4 designs a lighter-treatment "pending suggestion chip" with inline "Keep"/"Not quite" actions for a destination carried forward from an earlier page (e.g. from the homepage). The implementation instead lands a carried-forward destination as plain free text in Describe your ideal getaway (a documented Phase 4 simplification) — the full async-resolved pending-chip design was never built.
+2. **Auto-growing textarea for Describe your ideal getaway.** `EBC-R1.2-WS6-05` §5.3 recommends the field's textarea expand with typed content (to roughly 8 rows before scrolling) rather than stay fixed-height. Not built — the field ships with a fixed row count (Phase 3, adjusted for mobile in Phase 7).
+3. **Near-limit character counter for Describe your ideal getaway.** `EBC-R1.2-WS6-05` §5.3 recommends a character counter that appears only once the traveller is within roughly 20% of the 500-character limit. Not built — the field enforces the limit silently, with no visible counter at any point.
+
+None of these three is named as an explicit candidate item in `docs/10-Backlog/RELEASE-1.3-BACKLOG.md` (checked, not edited, by this update) — **recommended for Tiger to add to a future Release 1.3 Backlog update**, not actioned in this consolidation. The already-recorded `EBC-002` §8.3 documentation-housekeeping item remains unchanged and still deferred to after Release 1.2 closes.
 
 ---
 
@@ -304,7 +719,7 @@ Tasks: R1.2-06.01 through R1.2-06.13 (Section 6.6).
 | Goal | Keep release governance documentation current throughout R1.2 and complete it before release close |
 | Business Value | Preserves institutional memory; enables a clean, evidence-based release decision |
 | Priority | P1 |
-| Status | Proposed |
+| Status | 🟡 Substantially Complete — Release Summary Consolidated (`EBC-R1.2-WS8-04`, Section 18.8). `PROJECT-HISTORY.md`'s Release 1.2 entry (`07.01`), a dedicated retrospective/Lessons-Learned document (`07.02`/`07.03`), `RELEASE-1.2-BACKLOG.md` reconciliation (`07.04`) and standalone release notes (`07.06`) remain open as small, non-blocking follow-ups |
 | Dependencies | Depends on all other workstreams reaching a stable state before final versions (retrospective, release notes) can be written; can begin in parallel as a living draft |
 | Owner | Tiger |
 | Risks | Documentation debt tends to accumulate if deferred to the end of the release, as noted in the R1.0 and R1.1 Lessons Learned |
@@ -321,7 +736,7 @@ Tasks: R1.2-07.01 through R1.2-07.06 (Section 6.7).
 | Goal | Independently validate the full R1.2 scope plus adjacent-feature regression before release |
 | Business Value | Protects Release 1.1's established quality bar; prevents R1.2 changes from regressing shipped functionality |
 | Priority | P1 |
-| Status | Proposed |
+| Status | 🟢 Substantially Validated — Pass with Observations. Functional regression (`EBC-R1.2-WS8-QA-01`), traveller experience validation (`EBC-R1.2-WS8-SRI-01`) and operational cleanup (`EBC-R1.2-WS8-03`) are all complete; see Section 6.8 for the per-task breakdown and Section 18.3 for the full review. Full cross-browser sweep, a dedicated build/TypeScript/ESLint pass at release scope, and the post-deployment production smoke test remain accepted, non-blocking residual items |
 | Dependencies | Depends on Workstreams 1–6 reaching implementation-complete; runs after Workstream 7's release notes/checklist groundwork is in place |
 | Owner | Keerthi (functional QA), Sri (traveller experience), Rad (technical checks: build/TypeScript/ESLint) |
 | Risks | Compressing QA to the end of the release (as flagged in R1.1 Lessons Learned) creates schedule pressure; should be run incrementally per workstream, not solely as a final gate |
@@ -337,45 +752,49 @@ Each task carries a unique ID in the form `R1.2-<workstream>.<task>`. Tables are
 
 Workstream-level Acceptance Criteria are captured once in Section 5 rather than repeated per row; the **Notes** column below flags any task-specific acceptance detail that isn't obvious from the task name.
 
-Status values: Proposed / Under Discussion / Approved / In Progress / Ready for QA / Complete / Deferred / Cancelled (Section 13).
+Status values: Proposed / Under Discussion / Approved / In Progress / Ready for QA / Complete / Deferred / Cancelled (Section 14).
 
 ## 6.1 Workstream 1 — Premium Mood Card Visual Refinement
 
 | ID | Task | Priority | Status | Owner | Dependencies | Notes |
 |---|---|---|---|---|---|---|
-| R1.2-01.01 | Preserve existing illustration style — audit current mood card illustrations against approved style guide | P1 | Proposed | Sophie | — | Baseline check before any change |
-| R1.2-01.02 | Apply ivory/champagne palette to mood card backgrounds | P1 | Proposed | Sophie / Rad | 01.01 | Must stay within `BRAND-AUDIT.md` guardrails |
-| R1.2-01.03 | Reduce gold saturation across mood card treatment | P1 | Proposed | Sophie / Rad | 01.02 | |
-| R1.2-01.04 | Improve visual hierarchy within mood cards | P1 | Proposed | Sophie / Rad | 01.02, 01.03 | |
-| R1.2-01.05 | Confirm Hero remains the dominant visual element after refinement | P1 | Proposed | Sophie | 01.04 | Non-negotiable brand guardrail |
-| R1.2-01.06 | Illustration QA against brand and quality standards | P1 | Proposed | Keerthi | 01.01–01.05 | |
-| R1.2-01.07 | Hover-state review across mood cards | P2 | Proposed | Keerthi | 01.06 | |
-| R1.2-01.08 | Selected-state review across mood cards | P2 | Proposed | Keerthi | 01.06 | |
-| R1.2-01.09 | Desktop/mobile visual review of refined mood cards | P1 | Proposed | Keerthi | 01.06 | |
-| R1.2-01.10 | Accessibility review (contrast, reduced motion, focus states) | P1 | Proposed | Keerthi | 01.06 | |
-| R1.2-01.11 | Traveller validation of refined mood card experience | P1 | Proposed | Sri | 01.07–01.10 | Independent of Keerthi's functional QA |
-| R1.2-01.12 | Remove the Escape mood card | P1 | Proposed | Sophie / Rad | 01.01–01.05 | Per DEC-R1.2-007 — no strong Journey Passport mapping exists; current Tropical Escape mapping is misleading |
-| R1.2-01.13 | Rename "Memory Maker / Family" mood card to "Memory Makers" | P1 | Proposed | Sophie | 01.12 | Per DEC-R1.2-008 |
-| R1.2-01.14 | Update Journey Passport mapping for Memory Makers from Culture & Heritage to Photography | P1 | Proposed | Arjun / Rad | 01.13 | Per DEC-R1.2-008 |
-| R1.2-01.15 | Review homepage layout after removing the Escape card | P1 | Proposed | Sophie | 01.12 | Maintain premium spacing and visual balance; coordinate with R1.2-02.13 |
+| R1.2-01.01 | Preserve existing illustration style — audit current mood card illustrations against approved style guide | P1 | Complete | Sophie | — | Baseline check before any change |
+| R1.2-01.02 | Apply ivory/champagne palette to mood card backgrounds | P1 | Complete | Sophie / Rad | 01.01 | Must stay within `BRAND-AUDIT.md` guardrails |
+| R1.2-01.03 | Reduce gold saturation across mood card treatment | P1 | Complete | Sophie / Rad | 01.02 | |
+| R1.2-01.04 | Improve visual hierarchy within mood cards | P1 | Complete | Sophie / Rad | 01.02, 01.03 | |
+| R1.2-01.05 | Confirm Hero remains the dominant visual element after refinement | P1 | Complete | Sophie | 01.04 | Non-negotiable brand guardrail |
+| R1.2-01.06 | Illustration QA against brand and quality standards | P1 | Complete | Keerthi | 01.01–01.05 | |
+| R1.2-01.07 | Hover-state review across mood cards | P2 | Complete | Keerthi | 01.06 | |
+| R1.2-01.08 | Selected-state review across mood cards | P2 | Complete | Keerthi | 01.06 | |
+| R1.2-01.09 | Desktop/mobile visual review of refined mood cards | P1 | Complete | Keerthi | 01.06 | |
+| R1.2-01.10 | Accessibility review (contrast, reduced motion, focus states) | P1 | Complete | Keerthi | 01.06 | |
+| R1.2-01.11 | Traveller validation of refined mood card experience | P1 | Complete | Sri | 01.07–01.10 | Independent of Keerthi's functional QA |
+| R1.2-01.12 | Remove the Escape mood card | P1 | Complete | Sophie / Rad | 01.01–01.05 | Per DEC-R1.2-007 — no strong Journey Passport mapping exists; current Tropical Escape mapping is misleading |
+| R1.2-01.13 | Rename "Memory Maker / Family" mood card to "Memory Makers" | P1 | Complete | Sophie | 01.12 | Per DEC-R1.2-008 |
+| R1.2-01.14 | Update Journey Passport mapping for Memory Makers from Culture & Heritage to Photography | P1 | Complete | Arjun / Rad | 01.13 | Per DEC-R1.2-008 |
+| R1.2-01.15 | Review homepage layout after removing the Escape card | P1 | Complete | Sophie | 01.12 | Maintain premium spacing and visual balance; coordinate with R1.2-02.13 |
+| R1.2-01.16 | Redesign Trust Strip visual treatment using premium travel imagery | P1 | Complete | Sophie | — | |
+| R1.2-01.17 | Replace medallion icons with premium photographic assets while preserving layout | P1 | Complete | Sophie | 01.16 | |
+| R1.2-01.18 | Validate responsive behaviour, build performance and visual consistency | P1 | Complete | Sophie | 01.16, 01.17 | |
+| R1.2-01.19 | Replace prototype imagery with production-approved/licensed assets before release | P1 | Complete | Sophie | 01.16, 01.17 | |
 
 ## 6.2 Workstream 2 — Experiences vs Journey Mood Rationalisation
 
 | ID | Task | Priority | Status | Owner | Dependencies | Notes |
 |---|---|---|---|---|---|---|
-| R1.2-02.01 | Overlap review between Experiences and Journey Moods | P1 | Proposed | Arjun | — | |
-| R1.2-02.02 | Taxonomy review of both concepts | P1 | Proposed | Arjun | 02.01 | |
-| R1.2-02.03 | Navigation implications assessment | P1 | Proposed | Sophie | 02.02 | |
-| R1.2-02.04 | Identify duplicate concepts | P1 | Proposed | Arjun | 02.01 | |
-| R1.2-02.05 | SEO considerations assessment | P2 | Proposed | Archie | 02.02 | Only material if routes/taxonomy change |
-| R1.2-02.06 | Redirect considerations assessment | P2 | Proposed | Archie | 02.05 | |
-| R1.2-02.07 | Journey Passport implications assessment | P1 | Proposed | Arjun | 02.02 | |
-| R1.2-02.08 | Homepage implications assessment | P1 | Proposed | Sophie | 02.02, 02.03 | |
-| R1.2-02.09 | Document and route open product decisions to Product Owner | P1 | Proposed | Tiger | 02.01–02.08 | Feeds Section 8 |
-| R1.2-02.10 | Remove Experiences section from the homepage | P1 | Proposed | Sophie / Rad | — | Per DEC-R1.2-009 |
-| R1.2-02.11 | Remove Experiences from primary navigation | P1 | Proposed | Sophie / Rad | — | Per DEC-R1.2-009 |
-| R1.2-02.12 | Retire the Experiences page — keep implementation and routing, remove discoverability, preserve for future reuse | P1 | Proposed | Archie / Rad | 02.10, 02.11 | No page or URL deletion; per DEC-R1.2-009 |
-| R1.2-02.13 | Review homepage visual hierarchy after removing the Experiences section | P1 | Proposed | Sophie | 02.10 | Coordinate with R1.2-01.15 |
+| R1.2-02.01 | Overlap review between Experiences and Journey Moods | P1 | Complete | Arjun | — | |
+| R1.2-02.02 | Taxonomy review of both concepts | P1 | Complete | Arjun | 02.01 | |
+| R1.2-02.03 | Navigation implications assessment | P1 | Complete | Sophie | 02.02 | |
+| R1.2-02.04 | Identify duplicate concepts | P1 | Complete | Arjun | 02.01 | |
+| R1.2-02.05 | SEO considerations assessment | P2 | Complete | Archie | 02.02 | Only material if routes/taxonomy change |
+| R1.2-02.06 | Redirect considerations assessment | P2 | Complete | Archie | 02.05 | |
+| R1.2-02.07 | Journey Passport implications assessment | P1 | Complete | Arjun | 02.02 | |
+| R1.2-02.08 | Homepage implications assessment | P1 | Complete | Sophie | 02.02, 02.03 | |
+| R1.2-02.09 | Document and route open product decisions to Product Owner | P1 | Complete | Tiger | 02.01–02.08 | Feeds Section 8 |
+| R1.2-02.10 | Remove Experiences section from the homepage | P1 | Complete | Sophie / Rad | 02.09 | Per DEC-R1.2-009; implemented under R1.2-009 |
+| R1.2-02.11 | Remove Experiences from primary navigation | P1 | Complete | Sophie / Rad | 02.09 | Per DEC-R1.2-009; implemented under R1.2-009 (Header and Footer) |
+| R1.2-02.12 | Retire the Experiences page — keep implementation and routing, remove discoverability, preserve for future reuse | P1 | Complete | Archie / Rad | 02.10, 02.11 | No page or URL deletion; per DEC-R1.2-009; guest redirect implemented under R1.2-010 |
+| R1.2-02.13 | Review homepage visual hierarchy after removing the Experiences section | P1 | Complete | Sophie | 01.15, 02.10 | Coordinated with R1.2-01.15; no regression found (R1.2-010, R1.2-012) |
 
 ## 6.3 Workstream 3 — Destination Intelligence
 
@@ -401,17 +820,17 @@ Status values: Proposed / Under Discussion / Approved / In Progress / Ready for 
 
 | ID | Task | Priority | Status | Owner | Dependencies | Notes |
 |---|---|---|---|---|---|---|
-| R1.2-04.01 | Fix known defect — Romance entry context | P1 | Proposed | Rad | — | Carried over from R1.1 |
-| R1.2-04.02 | Validate homepage mood card to Journey Passport mappings | P1 | Proposed | Rad | — | Carried over from R1.1 |
-| R1.2-04.03 | Fix known defect — Companion entry context | P1 | Proposed | Rad | — | Carried over from R1.1 |
-| R1.2-04.04 | Fix known defect — Pace & Timing entry context | P1 | Proposed | Rad | — | Carried over from R1.1 |
-| R1.2-04.05 | Regression test all Journey Passport entry paths | P1 | Proposed | Keerthi | 04.01–04.04 | |
-| R1.2-04.06 | Acceptance — advisory banner correctness | P1 | Proposed | Keerthi | 04.05 | |
-| R1.2-04.07 | Acceptance — state consistency across entry contexts | P1 | Proposed | Keerthi | 04.05 | |
-| R1.2-04.08 | Acceptance — override behaviour (traveller can change pre-populated answers) | P1 | Proposed | Keerthi | 04.05 | |
-| R1.2-04.09 | Acceptance — resume behaviour | P1 | Proposed | Keerthi | 04.05 | |
-| R1.2-04.10 | Prevent numeric characters from being entered into the traveller name field | P1 | Proposed | Rad | — | Per DEC-R1.2-011. Ignore numeric key presses; allow letters, spaces, hyphens and apostrophes |
-| R1.2-04.11 | Regression test Journey Passport validation | P1 | Proposed | Keerthi | 04.10 | |
+| R1.2-04.01 | Fix known defect — Romance entry context | P1 | Complete | Rad | — | Carried over from R1.1. **Verified complete, `EBC-R1.2-WS4-05`, 31-Aug-2026:** root-caused and fixed by commit `0bbac73` (13-Aug-2026, two days before this tracker's own v1.0 creation), which added the `isJourneyEntryPreselectionActive()` helper; independently re-tested and confirmed RESOLVED by Keerthi's `EBC-036-Retest-Report.docx` (D-06, Critical, reproducible test to Passport ID SMV-7G3P23YR, zero console errors). Fix verified still present, unreverted, in current HEAD. See Section 16.2–16.3 |
+| R1.2-04.02 | Validate homepage mood card to Journey Passport mappings | P1 | Complete | Rad | — | Carried over from R1.1. **Assessed, `EBC-R1.2-WS4-05`, 31-Aug-2026 -- Partial, status left unchanged:** Keerthi's `EBC-036-Retest-Report.docx` validated the *then-current* six-mood mapping set end-to-end (13-Aug-2026), but Workstream 1 subsequently changed the mapping set itself (Escape removed, `DEC-R1.2-007`; Memory Maker remapped, `DEC-R1.2-008`); the current five-mood set has design/traveller validation (Sri, Workstream 1) and a fail-fast structural safety net (`travelStyleDefaults()`), but no dedicated independent QA re-validation of the routing-to-preselection mechanism for the current values. See Section 16.3. **Flipped to Complete, `EBC-R1.2-WS4-06`, 01-Sep-2026:** `EBC-R1.2-WS4-AUD-01` (30-Aug-2026) directly cross-checked all five live homepage mood cards against `entry-context.ts`'s `moodPreselections`, confirming each resolves correctly against `DEC-R1.2-007`/`008`/`009` -- the independent re-validation this row previously found missing. See Section 17.4 |
+| R1.2-04.03 | Fix known defect — Companion entry context | P1 | Complete | Rad | — | Carried over from R1.1. **Verified complete, `EBC-R1.2-WS4-05`, 31-Aug-2026:** same root-cause fix as `04.01` (commit `0bbac73`, `isJourneyEntryPreselectionActive()` is the single source of truth for the Companions moment's advisory-banner correctness regardless of which mood/experience/inspiration routes there); independently re-tested and confirmed RESOLVED by Keerthi's `EBC-036-Retest-Report.docx` (D-06). No document explicitly labels D-06 as "04.03" -- this correlation is by moment/field match, disclosed as interpretation, not asserted as a cited fact. See Section 16.3's interpretive note |
+| R1.2-04.04 | Fix known defect — Pace & Timing entry context | P1 | Complete | Rad | — | Carried over from R1.1. **Verified complete, `EBC-R1.2-WS4-05`, 31-Aug-2026:** two components of commit `0bbac73` -- the generic banner-correctness fix applied identically to the Pace & Timing moment (regression-sanity-tested for Relax/Explore/Celebrate, no regression), and D-08's Memory Maker pre-selection value defect, root-caused and fixed in the same commit. D-07 (Romance/Escape) was re-tested and found not to be a genuine defect at this moment (one-preselection-per-mood by design). Independently re-tested and confirmed RESOLVED by Keerthi's `EBC-036-Retest-Report.docx`. Memory Maker's specific pre-selection value was later changed again under Workstream 1's own approved `DEC-R1.2-008` -- a deliberate, documented product decision, not a regression of this fix. See Section 16.3's interpretive note |
+| R1.2-04.05 | Regression test all Journey Passport entry paths | P1 | Complete | Keerthi | 04.01–04.04 | **Complete, `EBC-R1.2-WS4-06`, 01-Sep-2026:** `EBC-R1.2-WS4-QA-01` Test Group 1 -- ~20 entry-path combinations (5 moods, 6 experiences, 5 of 8 inspirations directly browser-verified) regression tested, all PASSED, no unrelated field affected, no console errors. See Section 17.4 |
+| R1.2-04.06 | Acceptance — advisory banner correctness | P1 | Complete | Keerthi | 04.05 | **Complete, `EBC-R1.2-WS4-06`, 01-Sep-2026:** `EBC-R1.2-WS4-QA-01` Test Group 2 -- banner shown/cleared/re-shown correctly on Companions and independently reconfirmed on Pace & Timing, matching `isJourneyEntryPreselectionActive`'s live-state-comparison design. See Section 17.4 |
+| R1.2-04.07 | Acceptance — state consistency across entry contexts | P1 | Complete | Keerthi | 04.05 | **Complete, `EBC-R1.2-WS4-06`, 01-Sep-2026:** `EBC-R1.2-WS4-QA-01` Test Group 4 -- browser back/forward across two moment transitions preserved all selections exactly; full-page refresh correctly routes to the resume panel rather than silently losing state. See Section 17.4 |
+| R1.2-04.08 | Acceptance — override behaviour (traveller can change pre-populated answers) | P1 | Complete | Keerthi | 04.05 | **Complete, `EBC-R1.2-WS4-06`, 01-Sep-2026:** `EBC-R1.2-WS4-QA-01` Test Group 3 -- single-select and multi-select (cap-of-3, refusal at cap, free reselection) both verified with no lock-out. See Section 17.4 |
+| R1.2-04.09 | Acceptance — resume behaviour | P1 | Complete | Keerthi | 04.05 | **Complete, `EBC-R1.2-WS4-06`, 01-Sep-2026:** `EBC-R1.2-WS4-QA-01` Test Group 5 -- "Start again" and "Continue where I left off" (from two different saved points, one after a hard refresh) both verified correct. See Section 17.4 |
+| R1.2-04.10 | Prevent numeric characters from being entered into the traveller name field | P1 | Complete | Rad | — | Per DEC-R1.2-011. Ignore numeric key presses; allow letters, spaces, hyphens and apostrophes. **Verified complete, `EBC-R1.2-WS8-02`, 31-Aug-2026:** implemented as `sanitizeTravellerName`/`hasNumericCharacter` in `web/lib/journey-passport/traveller-name.ts`, explicitly labelled `EBC-R1.2-WS4-IMP-01`, committed under `4f2f2ef`; rejects every Unicode decimal digit (`\p{Nd}`, not only ASCII 0-9) while preserving letters, spaces, hyphens and apostrophes, applied on every onChange across all three name-entry sites. New repository evidence, not a reopening of completed engineering — see Section 15.2 |
+| R1.2-04.11 | Regression test Journey Passport validation | P1 | Complete | Keerthi | 04.10 | **Complete, `EBC-R1.2-WS4-06`, 01-Sep-2026:** `EBC-R1.2-WS4-QA-01` Test Group 6 -- all 6 valid and 6 invalid `DEC-R1.2-011` examples verified via typing, paste-equivalent input and corrupted-draft restoration, both name-entry wiring points; one Low-severity, non-blocking whitespace defect found (QA-01), not release-blocking. See Section 17.4 and 17.9 |
 
 ## 6.5 Workstream 5 — International Phone Number & OTP Verification
 
@@ -428,48 +847,48 @@ Status values: Proposed / Under Discussion / Approved / In Progress / Ready for 
 | R1.2-05.09 | Implement calling-code display | P1 | Proposed | Rad | 05.06 | |
 | R1.2-05.10 | Default country to India (+91) | P1 | Proposed | Rad | 05.06 | Preserves existing traveller default expectation |
 | R1.2-05.11 | Validate mobile experience of country selector | P1 | Proposed | Keerthi | 05.06–05.10 | |
-| R1.2-05.12 | Implement country-aware phone validation | P1 | Proposed | Rad | 05.06 | |
+| R1.2-05.12 | Implement country-aware phone validation | P1 | In Progress | Rad | 05.06 | |
 | R1.2-05.13 | Remove hardcoded 10-digit assumption | P1 | Proposed | Rad | 05.12 | |
 | R1.2-05.14 | Handle invalid country/number combinations | P1 | Proposed | Rad | 05.12 | |
-| R1.2-05.15 | Store phone numbers in E.164 format | P1 | Proposed | Archie / Rad | 05.12–05.14 | Requires Archie's data-model assessment; consider existing lead-record compatibility |
-| R1.2-05.16 | Regression test existing phone-dependent flows | P1 | Proposed | Keerthi | 05.01–05.15 | Lead capture, callback, notification emails |
-| R1.2-05.17 | Normalize pasted phone numbers into canonical E.164 format while preserving valid user input | P1 | Proposed | Rad | 05.12–05.15 | Support formats such as `+91 98765 43210`, `+91-9876543210`, `98765-43210`, `9876543210` |
-| R1.2-05.18 | Evaluate OTP providers | P1 | Proposed | Archie | 05.17 | Compare provider options, delivery reliability, India coverage, international capability, expected operating cost. Evaluation only — no provider is selected under R1.2-002 |
-| R1.2-05.19 | Architecture review for OTP verification | P1 | Proposed | Archie | 05.18 | Document provider selection, verification architecture, secret management, verification state, backend implications. Requires Archie approval |
-| R1.2-05.20 | Define Journey Passport OTP flow | P1 | Proposed | Arjun / Sophie | 05.19 | Phone Number → Send OTP → Enter OTP → Verify → Journey Passport Submission. Flow definition only |
-| R1.2-05.21 | Implement Send OTP interaction | P1 | Proposed | Rad | 05.20 | |
-| R1.2-05.22 | Implement OTP entry screen | P1 | Proposed | Sophie / Rad | 05.20 | |
-| R1.2-05.23 | Implement OTP verification | P1 | Proposed | Rad | 05.21, 05.22 | |
-| R1.2-05.24 | OTP expiry handling | P1 | Proposed | Rad | 05.23 | |
-| R1.2-05.25 | Resend OTP rules | P1 | Proposed | Rad | 05.21 | Include cooldown and resend limits |
-| R1.2-05.26 | Invalid OTP handling | P1 | Proposed | Rad | 05.23 | Include retry limits, expired OTP, incorrect OTP |
-| R1.2-05.27 | Mask mobile number on verification screen | P2 | Proposed | Sophie / Rad | 05.22 | |
-| R1.2-05.28 | Changing phone number invalidates previous verification | P1 | Proposed | Rad | 05.23 | |
-| R1.2-05.29 | Prevent Journey Passport submission until verification succeeds | P1 | Proposed | Rad | 05.23 | Core guardrail behind DEC-R1.2-006 |
-| R1.2-05.30 | OTP abuse protection | P1 | Proposed | Archie / Rad | 05.19, 05.25 | Include rate limiting, spam prevention, repeated OTP protection |
+| R1.2-05.15 | Store phone numbers in E.164 format | P1 | Ready for QA | Archie / Rad | 05.12–05.14 | Requires Archie's data-model assessment; consider existing lead-record compatibility |
+| R1.2-05.16 | Regression test existing phone-dependent flows | P1 | Ready for QA | Keerthi | 05.01–05.15 | Lead capture, callback, notification emails |
+| R1.2-05.17 | Normalize pasted phone numbers into canonical E.164 format while preserving valid user input | P1 | Ready for QA | Rad | 05.12–05.15 | Support formats such as `+91 98765 43210`, `+91-9876543210`, `98765-43210`, `9876543210` |
+| R1.2-05.18 | Evaluate OTP providers | P1 | Complete | Archie | 05.17 | Compare provider options, delivery reliability, India coverage, international capability, expected operating cost. Evaluation only — no provider is selected under R1.2-002 |
+| R1.2-05.19 | Architecture review for OTP verification | P1 | Complete | Archie | 05.18 | Document provider selection, verification architecture, secret management, verification state, backend implications. Requires Archie approval |
+| R1.2-05.20 | Define Journey Passport OTP flow | P1 | Complete | Arjun / Sophie | 05.19 | Phone Number → Send OTP → Enter OTP → Verify → Journey Passport Submission. Flow definition only |
+| R1.2-05.21 | Implement Send OTP interaction | P1 | Ready for QA | Rad | 05.20 | |
+| R1.2-05.22 | Implement OTP entry screen | P1 | Ready for QA | Sophie / Rad | 05.20 | |
+| R1.2-05.23 | Implement OTP verification | P1 | Ready for QA | Rad | 05.21, 05.22 | |
+| R1.2-05.24 | OTP expiry handling | P1 | Ready for QA | Rad | 05.23 | |
+| R1.2-05.25 | Resend OTP rules | P1 | Ready for QA | Rad | 05.21 | Include cooldown and resend limits |
+| R1.2-05.26 | Invalid OTP handling | P1 | Ready for QA | Rad | 05.23 | Include retry limits, expired OTP, incorrect OTP |
+| R1.2-05.27 | Mask mobile number on verification screen | P2 | Ready for QA | Sophie / Rad | 05.22 | |
+| R1.2-05.28 | Changing phone number invalidates previous verification | P1 | Ready for QA | Rad | 05.23 | |
+| R1.2-05.29 | Prevent Journey Passport submission until verification succeeds | P1 | Ready for QA | Rad | 05.23 | Core guardrail behind DEC-R1.2-006. Governed by EBC-R1.2-WS5-01 (Architecture — Approved 22-Aug-2026), EBC-R1.2-WS5-02 (UX — Approved 22-Aug-2026), EBC-R1.2-WS5-03 (Implementation Brief — Approved 22-Aug-2026). The three Product Owner decisions this chain previously depended on are now Approved (`DEC-R1.2-016` SMS provider, `DEC-R1.2-017` `libphonenumber-js`, `DEC-R1.2-018` legacy `+91` backfill, all 22-Aug-2026) |
+| R1.2-05.30 | OTP abuse protection | P1 | Ready for QA | Archie / Rad | 05.19, 05.25 | Include rate limiting, spam prevention, repeated OTP protection |
 | R1.2-05.31 | Development and QA strategy for OTP | P1 | Proposed | Keerthi / Rad | 05.19 | Support test numbers, sandbox verification, non-production validation |
-| R1.2-05.32 | Regression testing — India phone numbers | P1 | Proposed | Keerthi | 05.21–05.30 | |
-| R1.2-05.33 | Regression testing — international phone numbers | P1 | Proposed | Keerthi | 05.21–05.30 | |
-| R1.2-05.34 | Journey Passport resume behaviour — verified state handling | P1 | Proposed | Keerthi | 05.23 | |
-| R1.2-05.35 | Production OTP smoke test | P1 | Proposed | Keerthi | 05.31–05.34 | Post-deployment |
+| R1.2-05.32 | Regression testing — India phone numbers | P1 | Ready for QA | Keerthi | 05.21–05.30 | |
+| R1.2-05.33 | Regression testing — international phone numbers | P1 | Ready for QA | Keerthi | 05.21–05.30 | |
+| R1.2-05.34 | Journey Passport resume behaviour — verified state handling | P1 | Ready for QA | Keerthi | 05.23 | |
+| R1.2-05.35 | Production OTP smoke test | P1 | Ready for QA | Keerthi | 05.31–05.34 | Post-deployment |
 
 ## 6.6 Workstream 6 — Journey Passport Destination Autocomplete & Validation
 
 | ID | Task | Priority | Status | Owner | Dependencies | Notes |
 |---|---|---|---|---|---|---|
-| R1.2-06.01 | Audit current free-text destination field and data-quality problems | P1 | Proposed | Arjun | — | |
-| R1.2-06.02 | Investigate free geographic datasets (GeoNames, OSM-derived); explicitly exclude paid APIs for R1.2 | P1 | Proposed | Archie | 06.01 | Product Owner approval required before any paid API is considered |
-| R1.2-06.03 | Build searchable autocomplete component | P1 | Proposed | Sophie / Rad | 06.02 | |
-| R1.2-06.04 | Support multi-selection of destinations | P1 | Proposed | Rad | 06.03 | |
-| R1.2-06.05 | Implement "is this a real place" validation only | P1 | Proposed | Rad | 06.02, 06.03 | Must NOT validate SMV service coverage |
-| R1.2-06.06 | Preserve Journey Director as sole authority for served-destination handling | P1 | Proposed | Archie | 06.05 | Explicit guardrail — no behaviour change to Journey Director |
-| R1.2-06.07 | Implement fuzzy matching, alternate spellings, abbreviations, common names | P1 | Proposed | Rad | 06.02, 06.03 | |
-| R1.2-06.08 | Support landmark, region, city and country-level entries | P1 | Proposed | Rad | 06.07 | |
-| R1.2-06.09 | Validate edge cases (Vizag, Bangalore/Bengaluru, Madras/Chennai, Kotagiri, Coorg/Kodagu) | P1 | Proposed | Keerthi | 06.07, 06.08 | |
-| R1.2-06.10 | Reject fictional locations gracefully (e.g. Wakanda, Winterfell) | P1 | Proposed | Rad | 06.05 | UX must not feel punitive |
-| R1.2-06.11 | Regression test destination field and Journey Director handoff | P1 | Proposed | Keerthi | 06.01–06.10 | |
-| R1.2-06.12 | Allow travellers to remove an individual selected destination without clearing the complete selection | P1 | Proposed | Rad | 06.04 | |
-| R1.2-06.13 | Preserve the order in which destinations were selected | P1 | Proposed | Rad | 06.04 | |
+| R1.2-06.01 | Audit current free-text destination field and data-quality problems | P1 | Complete | Arjun | — | |
+| R1.2-06.02 | Investigate free geographic datasets (GeoNames, OSM-derived); explicitly exclude paid APIs for R1.2 | P1 | Complete | Archie | 06.01 | Product Owner approval required before any paid API is considered |
+| R1.2-06.03 | Build searchable autocomplete component | P1 | Complete | Sophie / Rad | 06.02 | |
+| R1.2-06.04 | Support multi-selection of destinations | P1 | Complete | Rad | 06.03 | |
+| R1.2-06.05 | Implement "is this a real place" validation only | P1 | Complete | Rad | 06.02, 06.03 | Must NOT validate SMV service coverage |
+| R1.2-06.06 | Preserve Journey Director as sole authority for served-destination handling | P1 | Complete | Archie | 06.05 | Explicit guardrail — no behaviour change to Journey Director |
+| R1.2-06.07 | Implement fuzzy matching, alternate spellings, abbreviations, common names | P1 | Complete | Rad | 06.02, 06.03 | |
+| R1.2-06.08 | Support landmark, region, city and country-level entries | P1 | Complete | Rad | 06.07 | |
+| R1.2-06.09 | Validate edge cases (Vizag, Bangalore/Bengaluru, Madras/Chennai, Kotagiri, Coorg/Kodagu) | P1 | Complete | Keerthi | 06.07, 06.08 | |
+| R1.2-06.10 | Reject fictional locations gracefully (e.g. Wakanda, Winterfell) | P1 | Complete | Rad | 06.05 | UX must not feel punitive |
+| R1.2-06.11 | Regression test destination field and Journey Director handoff | P1 | Complete | Keerthi | 06.01–06.10 | |
+| R1.2-06.12 | Allow travellers to remove an individual selected destination without clearing the complete selection | P1 | Complete | Rad | 06.04 | |
+| R1.2-06.13 | Preserve the order in which destinations were selected | P1 | Complete | Rad | 06.04 | |
 
 ## 6.7 Workstream 7 — Release Documentation
 
@@ -479,29 +898,29 @@ Status values: Proposed / Under Discussion / Approved / In Progress / Ready for 
 | R1.2-07.02 | Prepare Release 1.2 retrospective | P1 | Proposed | Tiger | Near release close | |
 | R1.2-07.03 | Capture Lessons Learned | P1 | Proposed | Tiger | 07.02 | |
 | R1.2-07.04 | Reconcile `RELEASE-1.2-BACKLOG.md` against delivered scope | P2 | Proposed | Tiger | Near release close | |
-| R1.2-07.05 | Consolidate EBC references for Release 1.2 | P2 | Proposed | Tiger | Ongoing | |
+| R1.2-07.05 | Consolidate EBC references for Release 1.2 | P2 | Complete | Rad | Ongoing | |
 | R1.2-07.06 | Prepare Release 1.2 release notes | P1 | Proposed | Tiger | Near release close | |
 
 ## 6.8 Workstream 8 — Release-wide QA & Regression
 
 | ID | Task | Priority | Status | Owner | Dependencies | Notes |
 |---|---|---|---|---|---|---|
-| R1.2-08.01 | Homepage regression | P1 | Proposed | Keerthi | WS1–WS3 implementation-complete | |
-| R1.2-08.02 | Journey Passport regression | P1 | Proposed | Keerthi | WS4–WS6 implementation-complete | |
-| R1.2-08.03 | Traveller Stories regression | P1 | Proposed | Keerthi | — | Adjacent-feature protection |
-| R1.2-08.04 | Travel Inspiration regression | P1 | Proposed | Keerthi | — | Adjacent-feature protection |
-| R1.2-08.05 | Featured Destinations regression | P1 | Proposed | Keerthi | WS3 | |
-| R1.2-08.06 | Header regression | P2 | Proposed | Keerthi | — | |
-| R1.2-08.07 | Footer regression | P2 | Proposed | Keerthi | WS5 | Contact/Callback forms live in footer/contact flows |
-| R1.2-08.08 | Forms regression (Contact, Callback, Plan My Experience) | P1 | Proposed | Keerthi | WS5 | |
-| R1.2-08.09 | Responsive validation (desktop/tablet/mobile) | P1 | Proposed | Keerthi | WS1–WS6 | |
-| R1.2-08.10 | Accessibility validation | P1 | Proposed | Keerthi | WS1–WS6 | |
-| R1.2-08.11 | Cross-browser testing (Chrome, Safari, Firefox) | P1 | Proposed | Keerthi | WS1–WS6 | |
-| R1.2-08.12 | Production build validation | P1 | Proposed | Rad | WS1–WS6 | `npm run build` |
-| R1.2-08.13 | TypeScript validation | P1 | Proposed | Rad | WS1–WS6 | |
-| R1.2-08.14 | ESLint validation | P1 | Proposed | Rad | WS1–WS6 | |
-| R1.2-08.15 | Business validation (Product Owner walkthrough) | P1 | Proposed | Vivek | 08.01–08.14 | |
-| R1.2-08.16 | Production smoke test | P1 | Proposed | Keerthi | Post-deployment | |
+| R1.2-08.01 | Homepage regression | P1 | Complete | Keerthi | WS1–WS3 implementation-complete | `EBC-R1.2-WS8-QA-01` Test Group 7 (regression sweep): WS1/WS2 homepage fixes confirmed intact, no defects found |
+| R1.2-08.02 | Journey Passport regression | P1 | Complete | Keerthi | WS4–WS6 implementation-complete | `EBC-R1.2-WS8-QA-01` Test Groups 2–3: full 6-step Passport flow, OTP send/verify/wrong-code/invalidation, lead creation and Journey Director handoff all Passed; a small number of timing-dependent sub-cases (10-minute expiry, multiple resend) not exercised this session |
+| R1.2-08.03 | Traveller Stories regression | P1 | Not Tested | Keerthi | — | Not exercised by `EBC-R1.2-WS8-QA-01`/`-SRI-01`; accepted as a non-blocking residual item at closure, per `EBC-R1.2-WS8-04` |
+| R1.2-08.04 | Travel Inspiration regression | P1 | Not Tested | Keerthi | — | Not exercised by `EBC-R1.2-WS8-QA-01`/`-SRI-01`; accepted as a non-blocking residual item at closure, per `EBC-R1.2-WS8-04` |
+| R1.2-08.05 | Featured Destinations regression | P1 | Partial | Keerthi | WS3 | `EBC-R1.2-WS8-QA-01` Test Group 4: keyboard/mouse selection, chip creation/removal, duplicate disambiguation, alias resolution and the served-destination guardrail all Passed on the terms exercised; full term-list coverage not exhaustively confirmed |
+| R1.2-08.06 | Header regression | P2 | Not Tested | Keerthi | — | Not exercised by `EBC-R1.2-WS8-QA-01`/`-SRI-01`; accepted as a non-blocking residual item at closure, per `EBC-R1.2-WS8-04` |
+| R1.2-08.07 | Footer regression | P2 | Not Tested | Keerthi | WS5 | Contact/Callback forms live in footer/contact flows; forms themselves regression tested under `08.08`, but the footer surface itself not separately exercised. Accepted as a non-blocking residual item at closure, per `EBC-R1.2-WS8-04` |
+| R1.2-08.08 | Forms regression (Contact, Callback, Plan My Experience) | P1 | Complete | Keerthi | WS5 | `EBC-R1.2-WS8-QA-01` Test Group 6: lead-notification confirmation and callback-form date validation both Passed; the WhatsApp "Continue" control's enabled/disabled gating was confirmed but the external handoff itself was deliberately not clicked (would send a real business message) |
+| R1.2-08.09 | Responsive validation (desktop/tablet/mobile) | P1 | Partial | Keerthi | WS1–WS6 | Genuine mobile-breakpoint QA blocked by browser-automation tooling limits in `EBC-R1.2-WS8-QA-01`/`-SRI-01`; no confirmed app defect, but real device/DevTools testing still needed |
+| R1.2-08.10 | Accessibility validation | P1 | Not Tested | Keerthi | WS1–WS6 | Not exercised by `EBC-R1.2-WS8-QA-01`/`-SRI-01`; accepted as a non-blocking residual item at closure, per `EBC-R1.2-WS8-04` |
+| R1.2-08.11 | Cross-browser testing (Chrome, Safari, Firefox) | P1 | Partial | Keerthi | WS1–WS6 | `EBC-R1.2-WS8-QA-01`/`-SRI-01` both ran against Chrome only; Safari/Firefox not exercised — accepted as a non-blocking residual item at closure, per `EBC-R1.2-WS8-04` |
+| R1.2-08.12 | Production build validation | P1 | Not Tested | Rad | WS1–WS6 | Not re-run at release scope during this closure card; accepted as a non-blocking residual item, per `EBC-R1.2-WS8-04` |
+| R1.2-08.13 | TypeScript validation | P1 | Not Tested | Rad | WS1–WS6 | Not re-run at release scope during this closure card; accepted as a non-blocking residual item, per `EBC-R1.2-WS8-04` |
+| R1.2-08.14 | ESLint validation | P1 | Not Tested | Rad | WS1–WS6 | Not re-run at release scope during this closure card; accepted as a non-blocking residual item, per `EBC-R1.2-WS8-04` |
+| R1.2-08.15 | Business validation (Product Owner walkthrough) | P1 | Complete | Vivek | 08.01–08.14 | Product Owner reviewed the consolidated evidence and formally accepted Release 1.2, per `EBC-R1.2-WS8-04` (Section 18.6) |
+| R1.2-08.16 | Production smoke test | P1 | Not Tested | Keerthi | Post-deployment | Explicitly a post-deployment activity; not yet applicable — to be executed after production release |
 
 ---
 
@@ -522,6 +941,23 @@ Only decisions that materially influence product behaviour, architecture, UX or 
 | DEC-R1.2-009 | 15-Aug-2026 | Retire the Experiences section from the homepage and remove it from primary website navigation; the page shall remain available internally for future redesign and reuse — no page deletion, no URL deletion | Resolves the Experiences vs Journey Mood overlap identified in Workstream 2 | Workstream 2 scoped accordingly; OPEN-R1.2-001 and OPEN-R1.2-002 resolved (see Section 8) | Approved |
 | DEC-R1.2-010 | 15-Aug-2026 | Introduce weighted destination preference ordering using Primary/Secondary/Tertiary Journey and Memory mappings; this becomes the preferred Journey Director recommendation model. The implementation may choose numerical weighting internally, but this tracker deliberately avoids prescribing fixed scores | Strengthens destination intelligence and improves recommendation accuracy while keeping the business specification stable and independent of the underlying implementation | Workstream 3 (renamed Destination Intelligence) scoped accordingly; requires Archie's architecture review before implementation; does not change the served-destination guardrail (DEC-R1.2-004 / R1.1 DEC-010) | Approved |
 | DEC-R1.2-011 | 15-Aug-2026 | Journey Passport traveller name field shall prevent numeric characters from being entered | Improves Journey Passport data quality | Workstream 4 scoped to add name-field validation | Approved |
+| DEC-R1.2-012 | 16-Aug-2026 | **Temporary Retirement of Experiences from the Public Website.** Release 1.2 establishes Journey Mood Cards and Journey Passport as the single traveller discovery model. The Experiences feature remains preserved in the repository for future redesign but will no longer be publicly accessible. Implementation must remove the Homepage entry, Header navigation, Footer navigation and all intentional internal links; redirect guest requests to `/experiences`; and preserve the implementation, assets, code and future reusability. | Avoid competing traveller journeys while preserving future investment. | Workstream 2 analysis is complete and implementation is approved and ready. DEC-R1.2-009 remains the original retirement decision; this decision adds the approved public-access, Footer, internal-link, redirect and preservation requirements. | Approved |
+| DEC-R1.2-013 | 17-Aug-2026 | **Homepage Architecture Validation confirmed; Experiences retirement remains valid.** Following the independent R1.2-014 Homepage Architecture Validation Review (Arjun — Product/IA; Sophie — UX/Visual Hierarchy), the Product Owner confirms: (1) the Experiences retirement (DEC-R1.2-009/012) remains valid, with no new evidence found to reopen it; (2) the Experiences implementation, assets and code remain intentionally retained as a reusable technical asset for possible future redesign, not as unresolved debt; (3) the current ten-section homepage architecture (Header → Hero/Mood Cards → Destinations → Trust Points → Traveller Stories → Trust Strip → Travel Inspiration → About/Promise Preview → Contact Preview → Footer) is validated as coherent and release-ready; (4) there is no recommendation to restore Experiences to the public homepage, navigation or footer. | Independent Product and UX re-confirmation of Workstream 1/2 outcomes, requested to validate the tracker before Workstream 3 proceeds. | Workstreams 1 and 2 remain Complete and unchanged. Future homepage optimisation should prioritise the Trust Points section (imagery/iconography — OPEN-R1.2-009) and the Header's tablet-range CTA breakpoint (OPEN-R1.2-007) ahead of any other homepage polish. Workstream 3 (Destination Intelligence) scope is unaffected. | Approved |
+| DEC-R1.2-014 | 18-Aug-2026 | **Destination Operational Steward assigned: Rad.** Closes `ADR-R1.2-WS3-001`'s Outstanding Decision 1 — the Operational Layer (seed/operational workbook) had no assigned owner, blocking `R1.2-03.08` Phase 1's WP-1.2/1.3/1.4. Rad is appointed Destination Operational Steward for Release 1.2, with ownership and change authority over the Operational Layer artefact as defined in the ADR (Sections 8, 9, 12). | `R1.2-03.08` Phase 1 implementation surfaced and escalated this gap per Project Instructions Section 35 rather than editing the workbook without assigned authority; resolving it was the single most consequential open item the governance architecture identified (ADR §15, Decision 1). | ADR updated (Artefact Ownership Matrix, Outstanding Product Decisions, new Governance Roles subsection 8.1, Decision History) under `R1.2-03.08A-EBC-ARCHIE`. Unblocks a future, separately-scoped `R1.2-03.08` Phase 1b to complete WP-1.2/1.3/1.4. Does not change any architectural principle, layer boundary or source-of-truth assignment. | Approved |
+| DEC-R1.2-015 | 19-Aug-2026 | **Warn Mode First ratified for Release 1.2 Phase 2.** Closes `ADR-R1.2-WS3-001`'s Outstanding Decision 2 (Warn Mode vs. Block Mode) — the ADR already recommended Warn Mode and Phase 2 planning already assumed it, but no formal governance decision had recorded that recommendation as approved. Warn Mode is now the ratified operating model for all reconciliation and validation activities introduced under Release 1.2 Phase 2 (WP-4/WP-5): findings are reported but do not block generator execution. Block Mode is not approved for Release 1.2 Phase 2. | Archie's Architecture & Governance Compliance Review of the Phase 2 implementation EBC identified the gap between the ADR's recommendation and a formally ratified decision; closing it removes governance ambiguity before WP-4 begins, at zero architectural or runtime risk. | ADR updated (Outstanding Product Decisions §15 Decision 2, Decision History §17) under `DEC-R1.2-015` (`docs/09-Development/DEC-R1.2-015-Ratification-Warn-Mode-First.md`). Unblocks unambiguous commencement of WP-4. Does not change any architectural principle, layer boundary, source-of-truth assignment, generator logic, or runtime behaviour. | Approved |
+| DEC-R1.2-016 | 22-Aug-2026 | **SMS Provider Selection.** MSG91 is approved as the SMS provider for Release 1.2 Journey Passport OTP verification. Implementation Constraint: the implementation must abstract the SMS provider behind an internal service interface so future providers may be introduced without changing Journey Passport business logic. | India-first customer base; competitive OTP pricing; mature API; DLT compliant; suitable for current business scale (per `EBC-R1.2-WS5-01` §4.3 provider evaluation) | Workstream 5 OTP-send implementation (R1.2-05.18–05.21) unblocked to proceed with MSG91 behind the required abstraction interface; India DLT template registration should begin immediately given its multi-day lead time (`EBC-R1.2-WS5-01` §11) — see `EBC-R1.2-WS5-03` §3. Approved by Product Owner (Vivek) and Delivery Lead (Tiger). | Approved |
+| DEC-R1.2-017 | 22-Aug-2026 | **International Phone Number Validation.** `libphonenumber-js` is approved as the standard international phone number validation library for Release 1.2. | Industry-standard library; supports E.164; avoids custom validation logic; lower maintenance cost; supports future international expansion (per `EBC-R1.2-WS5-01` §3 evaluation) | Workstream 5 E.164 validation work (R1.2-05.12–05.17) unblocked to add `libphonenumber-js` as a new runtime dependency, per Project Instructions §21 — see `EBC-R1.2-WS5-03` §3. Approved by Product Owner (Vivek) and Delivery Lead (Tiger). | Approved |
+| DEC-R1.2-018 | 22-Aug-2026 | **Historical Journey Passport Phone Migration.** Existing Journey Passport phone numbers shall be migrated by prepending `+91` only where the stored value does not already begin with "+". Migration Requirements: existing "+" values remain unchanged; migration must be idempotent; new Journey Passport submissions must always use international format. | Every existing `mobile_normalized` value is a bare 10-digit Indian number with no country code, since the application has only ever accepted India — a mechanical, low-risk inference over live records, not a new business judgement (per `EBC-R1.2-WS5-01` §3) | Workstream 5 E.164 migration (R1.2-05.15) unblocked to execute this backfill, timed to that implementation step, not run speculatively ahead of it — see `EBC-R1.2-WS5-03` §3. Approved by Product Owner (Vivek) and Delivery Lead (Tiger). **Superseded by `DEC-R1.2-019`** — retained here, not deleted, per this log's superseding convention; see `EBC-R1.2-WS5-03` §13.1 for the implementation-time finding that required the change. | Superseded |
+| DEC-R1.2-019 | 22-Aug-2026 | **Dual-Field Mobile Number Strategy for Journey Passport (supersedes `DEC-R1.2-018`).** The existing `mobile_number`/`mobile_normalized` columns and the Callback Request RPC contract keep their original bare-national-number format, completely unchanged. A new, independent `mobile_e164` column (additive migration `20260822090500_journey_passport_leads_e164_backfill.sql`) carries the E.164 form used for OTP verification and SMS delivery. Historical rows are intentionally left with `mobile_e164 = null`; a backfill of historical rows is a separate, explicit follow-up decision, not executed under this EBC. | Implementing the originally-approved in-place `+91` backfill (`DEC-R1.2-018`) was found, empirically via `npm run verify:journey-leads`, to silently break the already-shipped Callback Request feature (EBC-013): `claim_journey_passport_callback`'s strict equality match against `mobile_normalized` fails once that column carries a country code, since Callback Request was correctly left out of OTP/E.164 scope and still submits a bare national number | Workstream 5 OTP implementation (`EBC-R1.2-WS5-03` §13.1) proceeded on this corrected basis; no automatic production migration of `mobile_number`/`mobile_normalized` was performed for Release 1.2. Recorded retroactively to close the gap between the Product Owner's implementation-time approval and a formal Decision Log entry, consistent with the `DEC-R1.2-014`/`DEC-R1.2-015` precedent. A future, separate decision is still required before any historical-row `mobile_e164` backfill runs. Approved by Product Owner (Vivek) and Delivery Lead (Tiger). | Approved |
+| DEC-R1.2-020 | 25-Aug-2026 | **Proceed with WS5 Engineering Review without implementing accepted technical debt items now.** Following Review 1 (Tasks 1–3) of the WS5 Engineering Review (`EBC-R1.2-WS5-REV1-01/02/03-RAD`), five engineering observations were raised (`OBS-3-01`–`OBS-3-05`). The Product Owner and Delivery Lead approve proceeding with the remaining engineering review activities (Task 4 onward) without implementing any of the five now; each is captured as a Release 1.3 technical debt item instead. | The five observations affect engineering maintainability, testability and diagnostic quality, not current production readiness or functional correctness — Task 3's own severity assessment found zero Blocker-severity findings and confirmed every reviewed behaviour passed against the approved baseline. | Technical debt items `TD-R1.3-001`–`TD-R1.3-005` added to `docs/10-Backlog/RELEASE-1.3-BACKLOG.md` (new "Engineering Technical Debt" section, §9). Workstream 5's Release 1.2 completion status is unchanged — see the Workstream 5 Engineering Review governance note below. No engineering implementation performed under this decision. Recorded in full in `EBC-R1.2-WS5-GOV-01-TIGER-Engineering-Review-Governance-Synchronization`. | Approved |
+| DEC-R1.2-021 | 25-Aug-2026 | **Proceed with the remaining WS5 Engineering Review after successful implementation and independent verification of OBS-4-01.** Review 1 Task 4 (`EBC-R1.2-WS5-REV1-04-RAD`) identified `OBS-4-01`, a Blocker: `POST /leads` consumed the OTP verification token using the bare-digit mobile field instead of the E.164 field the OTP challenge table is exclusively keyed on, causing every legitimate submission to fail once MSG91 is configured. `EBC-R1.2-WS5-IMP-01-RAD` implemented and verified the single-line fix (`leads/route.ts`: `parsed.value.mobileNumber` → `parsed.value.mobileE164`). | The only functional blocker identified during Review 1 has been resolved and independently verified. Remaining observations (`OBS-4-02`, `OBS-4-03`) do not prevent continuation of the engineering review. | `OBS-4-01` closed. Review 1 resumed. Remaining observations (`OBS-4-02` Major, `OBS-4-03` Minor) retained for future disposition, not reclassified. Recorded in full in `EBC-R1.2-WS5-GOV-02-TIGER-Close-OBS-4-01-Governance-Synchronization`. No engineering implementation performed under this decision (the fix was performed and verified under `EBC-R1.2-WS5-IMP-01-RAD`, a separate, already-completed EBC; this decision ratifies proceeding with governance/review continuation, it does not itself authorise new code changes). | Approved |
+| DEC-R1.2-022 | 25-Aug-2026 | **Proceed to Task 6 following successful completion of Task 5.** | OTP generation has been independently reviewed and determined to be functionally correct. Remaining observations relate to architecture hardening and engineering quality rather than production readiness. | Task 5 accepted. Review continues. TD-R1.3-007 created. | Approved |
+| DEC-R1.2-023 | 25-Aug-2026 | **Proceed to Task 7 following successful completion of Task 6.** | OTP verification implementation satisfies production engineering requirements. Remaining observations concern future architecture hardening and engineering quality improvements. | Task 6 accepted. Review continues. TD-R1.3-007 expanded to include the complete OTP abuse protection initiative. | Approved |
+| DEC-R1.2-024 | 25-Aug-2026 | **Proceed to Task 9 following successful completion of Tasks 7 and 8.** | Engineering review confirms the complete traveller journey through lead creation and Journey Director integration is functionally sound. Remaining observations relate to UX recovery and production observability. | Tasks 7 and 8 accepted. TD-R1.3-008 created. Review continues. | Approved |
+| DEC-R1.2-025 | 26-Aug-2026 | **Engineering Review 1 approved. Proceed to Functional QA.** | Engineering review confirms that the WS5 implementation satisfies Release 1.2 engineering expectations. Remaining work consists of operational enablement, functional validation, traveller validation, and deferred Release 1.3 improvements. | Engineering Review 1 closed. Functional QA authorized. Release 1.3 backlog synchronized. | Approved |
+| DEC-R1.2-026 | 27-Aug-2026 | **Workstream 5 status changes from "Partially Implemented – Waiting for External DLT Dependency" to "Engineering Complete – Pending Functional QA."** External DLT/MSG91 chain completed (PE–TM Chain approved and activated, Sender Header verified, DLT Template validated); two Supabase RPC defects (`IMP-02`, `IMP-03`) fixed and deployed; a live, end-to-end OTP send/verify/completion cycle confirmed successfully by the Product Owner. | All external and engineering blockers to a live OTP flow are resolved, confirmed by direct Product Owner testing. Keerthi's structured functional QA and Product Acceptance remain independent, outstanding gates before Workstream 5 can close. | Workstream 5 tracker status updated. Keerthi's functional QA authorized to proceed against a confirmed-working build. Release 1.2 closure remains gated on functional QA, the OTP-expiry wording decision, and Product Acceptance. | Approved |
+| DEC-R1.2-027 | 31-Aug-2026 | **Workstream 6 formally accepted by the Product Owner for Release 1.2.** Independent Functional QA (`EBC-R1.2-WS6-11`/`-11A`, initially ❌ Fail on two defects, both corrected and confirmed resolved) and independent Traveller Experience Validation (`EBC-R1.2-WS6-12`, ⚠️ Approved with Minor Observations) both concluded favourably; every remaining item is either an accepted, already-scoped Release 1.3 design deferral or an operational deployment prerequisite (Supabase migration + GeoNames import), neither representing unresolved delivery risk. | Completes Workstream 6's delivery lifecycle per Project Instructions §12 Stage 11 — the Product Owner is the sole authority for release-scope acceptance. | Workstream 6 tracker status updated to Complete; Section 6.6 task table (`R1.2-06.01`–`06.13`) flipped to Complete. Recorded per `EBC-R1.2-WS6-14-VIVEK` (a Claude Project record; not yet committed to `docs/09-Development/`). Production deployment remains separately gated on the Operational Release Gate (migration + GeoNames import). | Approved |
+| DEC-R1.2-028 | 31-Aug-2026 | **OTP-expiry/SMS-wording mismatch resolved: `JOURNEY_PASSPORT_OTP_EXPIRY_SECONDS` default raised to 600 (10 minutes), matching the DLT-approved SMS template text.** Independently smoke-validated live (`EBC-R1.2-WS5-QA-03`) against the actual received SMS wording. | Closes the last open item from `DEC-R1.2-026`'s Progress note; a 5-minute application expiry against a template promising 10 minutes would have expired valid codes for travellers who took slightly longer to check their SMS. | `web/config/journey-passport-otp.config.ts` committed (`3280b93`). Workstream 5's OTP-expiry risk (Section 5) closed. Keerthi's functional QA (`EBC-R1.2-WS5-QA-01`) and Sri's traveller validation (`EBC-R1.2-WS5-SRI-01`) also complete — see Workstream 5 update above. Formal Product Acceptance of Workstream 5 remains outstanding. | Approved |
 
 ---
 
@@ -531,10 +967,14 @@ These remain unresolved and must stay visible until the Product Owner formally r
 
 | ID | Open Discussion | Raised In | Why It Matters | Status |
 |---|---|---|---|---|
+| OD-4 | Traveller Type vocabulary scope — `TRAVELLER_BY_LABEL` reachability is 100% at runtime (5/5) while the Knowledge Base approves 9; the gap is currently reported by the generator, not resolved | `EBC-R1.2-03.05` §12 / Workstream 3 Phase 2 WP-5 | Determines whether the remaining 4 Knowledge-Base-approved Traveller Type labels should be wired into runtime reachability in a future release, or are intentionally out of scope; previously referenced twice in this tracker (Section 3 dashboard, Workstream 3 narrative) without its own Section 8 entry — a housekeeping gap identified by `EBC-R1.2-WS8-01` and closed by this row | Under Discussion |
 | OPEN-R1.2-003 | Any remaining Release 1.1 carry-over decisions not yet formally closed | R1.1 → R1.2 handover | Ensures no R1.1 discussion is silently dropped; Tiger to reconcile against `RELEASE-1.1-MASTER-TRACKER.md` Section 7 (Deferred to Release 1.2) and the R1.1 Decision Log | Under Discussion |
 | OPEN-R1.2-004 | Future destination intelligence enhancements beyond R1.2 (e.g. deeper Journey Director scoring, additional compatibility tuning, beyond the R1.2-scoped Workstream 3 weighted preference model) | Workstream 3 / general roadmap | Scope boundary for what belongs in R1.2 vs a future release; prevents Workstream 3 from silently expanding beyond the approved weighted Primary/Secondary/Tertiary model | Under Discussion |
 | OPEN-R1.2-005 | Long-term strategy for refreshing and maintaining the geographic dataset used for destination autocomplete | Workstream 6 | The free datasets selected in R1.2-06.02 will need a maintenance cadence (refresh frequency, source-of-truth ownership, handling new/renamed places) that is beyond a one-time investigation | Under Discussion |
 | OPEN-R1.2-006 | Future expansion of OTP verification — should OTP eventually be introduced for Plan My Experience, Contact Us and Callback Request? | Workstream 5 | Determines whether OTP scope grows beyond Journey Passport in a future release; current decision (DEC-R1.2-006) limits OTP to Journey Passport only | Deferred |
+| OPEN-R1.2-007 | Should the Header's persistent nav and CTA move from the `xl` (1280px) breakpoint to `lg` (1024px), so the entire tablet range (including landscape iPad) regains one-tap access to "Plan My Experience" instead of only reaching it via the hamburger menu? | R1.2-014 (Sophie) | Currently every tablet viewport loses the persistent CTA that Design Principle 05 and prior reviews describe as available "at every scroll depth" — in practice that guarantee only holds from 1280px up. Low-Medium severity, non-blocking, but named by Sophie as one of two findings worth a specific Tiger/Vivek decision. | Under Discussion |
+| OPEN-R1.2-008 | Trust Points is the homepage's only section with neither photography nor a proper icon set (its four "icons" are raw Unicode glyphs, off-system per `ICONOGRAPHY.md`) — should it gain a proper icon set and/or a photographic element, or is "text only" a deliberate choice worth preserving for this specific section? | R1.2-014 (Sophie / Arjun) | It is the homepage's most trust-critical section (the company's own stated differentiators) and, per Sophie's review, currently also its visually plainest. The icon-set fix is a small, contained P2 improvement; the photography question needs Arjun/Vivek input before any change. | Under Discussion |
+| OPEN-R1.2-009 | Should the Contact Preview section's CTA link to `/contact` (in addition to, or instead of, `/journey-passport`-only), given its heading ("When you are ready, we are here") and contact-channel column both read as "talk to someone" while the button alone routes to the self-serve Journey Passport flow? | R1.2-014 (Arjun) | Low-impact — the section already offers WhatsApp/Phone/Email directly — but Arjun named this the single P1 item worth a specific Product decision from this review. | Under Discussion |
 
 ### Retired / Resolved Open Decisions
 
@@ -542,8 +982,8 @@ Retained here (never deleted) for historical traceability, per the project's Dec
 
 | ID | Open Discussion | Raised In | Resolution | Status |
 |---|---|---|---|---|
-| OPEN-R1.2-001 | Future of Experiences navigation — should "Experiences" remain a distinct top-level concept, be merged into Journey Moods, or be repositioned? | Workstream 2 | Resolved by DEC-R1.2-009 (15-Aug-2026) — Experiences retired from the homepage and primary navigation; page/route retained internally for future reuse | Resolved |
-| OPEN-R1.2-002 | Final Experience taxonomy — the definitive naming/grouping of Experience vs Journey Mood concepts | Workstream 2 | Resolved by DEC-R1.2-009 (15-Aug-2026) — see above; no further taxonomy work required for R1.2 | Resolved |
+| OPEN-R1.2-001 | Future of Experiences navigation — should "Experiences" remain a distinct top-level concept, be merged into Journey Moods, or be repositioned? | Workstream 2 | Resolved by DEC-R1.2-009 (15-Aug-2026) and refined by DEC-R1.2-012 (16-Aug-2026) — Experiences is temporarily retired from the public website while its implementation, assets and code remain preserved for future reuse | Resolved |
+| OPEN-R1.2-002 | Final Experience taxonomy — the definitive naming/grouping of Experience vs Journey Mood concepts | Workstream 2 | Resolved by DEC-R1.2-009 and DEC-R1.2-012 — Journey Mood Cards and Journey Passport are the single public traveller discovery model for Release 1.2 | Resolved |
 
 ---
 
@@ -563,7 +1003,7 @@ Ideas intentionally excluded from Release 1.2 scope. Carried forward from `RELEA
 | Traveller submissions / video stories | Larger content-operations undertaking | Future | P3 |
 | Lightweight content management interface | Deferred pending R1.2 data-quality work (autocomplete, phone) landing first | Future | P2 |
 | Suggested itineraries / interactive maps on destination pages | Not selected for R1.2 | Future | P3 |
-| Experience collections / dynamic experience recommendations | Taxonomy resolved (DEC-R1.2-009 retires Experiences from homepage/nav); the retained internal page/route could be reused for a future collections concept | R1.3+ | P2 |
+| Experience collections / dynamic experience recommendations | Taxonomy resolved (DEC-R1.2-009; refined by DEC-R1.2-012); preserved Experiences implementation, assets and code may be reused in a future redesign | R1.3+ | P2 |
 | Destination Intelligence expansion — additional destination metadata: seasonal suitability, budget suitability, couple score, family score, senior traveller score, child-friendly score, festival suitability, luxury suitability, wellness suitability | Planning only — not Release 1.2 scope | R1.3+ / Future | P2 |
 | Awards / recognitions / press mentions / trust dashboard | Not selected for R1.2 | Future | P3 |
 | Bundle optimisation / infrastructure modernisation | Engineering housekeeping, not release-critical | Future | P2 |
@@ -580,17 +1020,21 @@ Ideas intentionally excluded from Release 1.2 scope. Carried forward from `RELEA
 
 | ID | Description | Impact | Likelihood | Mitigation | Owner | Status |
 |---|---|---|---|---|---|---|
-| RISK-R1.2-001 | Mood card palette/saturation changes drift from the approved brand system | Medium — could require rework | Low | Validate against `BRAND-AUDIT.md` at each step; Sophie sign-off before Rad implements | Sophie | Open |
-| RISK-R1.2-002 | Workstream 2's open taxonomy decisions (OPEN-R1.2-001/002) remain unresolved and stall Workstream 1 labelling or Workstream 3 mapping | Medium — schedule slip | Medium | Resolved — DEC-R1.2-009 (15-Aug-2026) retired Experiences from the homepage/navigation, closing the underlying taxonomy question | Tiger | Closed |
+| RISK-R1.2-001 | Mood card palette/saturation changes drift from the approved brand system | Medium — could require rework | Low | Completed: validated against the approved brand direction through the Luxury Balance Pass, functional QA, Traveller Experience Review and Business Acceptance | Sophie | Closed |
+| RISK-R1.2-002 | Workstream 2's open taxonomy decisions (OPEN-R1.2-001/002) remain unresolved and stall Workstream 1 labelling or Workstream 3 mapping | Medium — schedule slip | Medium | Resolved — DEC-R1.2-009 closed the taxonomy question and DEC-R1.2-012 confirmed Journey Mood Cards and Journey Passport as the single public traveller discovery model | Tiger | Closed |
 | RISK-R1.2-003 | Featured Destination deep-link mapping goes stale as destinations are added/removed | Low-Medium — broken/irrelevant links over time | Medium | Defined fallback behaviour (R1.2-03.04); document mapping maintenance responsibility | Archie | Open |
 | RISK-R1.2-004 | Changing phone storage format breaks compatibility with existing Release 1.0/1.1 lead records | High — data integrity / reporting impact | Medium | Archie's architecture assessment required before implementation (per Project Instructions Section 5); consider migration or dual-read approach | Archie | Open |
 | RISK-R1.2-005 | Free geographic datasets (GeoNames/OSM) have incomplete or inconsistent coverage of Indian place-name aliases | Medium — validation gaps or false rejections | Medium | Explicit edge-case test list (R1.2-06.09); accept known gaps as documented limitations rather than blocking release | Archie / Keerthi | Open |
 | RISK-R1.2-006 | Destination autocomplete validation logic drifts into duplicating Journey Director's served-destination logic | Medium — architectural duplication, inconsistent behaviour | Low | Explicit guardrail task R1.2-06.06 and DEC-R1.2-004; Archie reviews before merge | Archie | Open |
-| RISK-R1.2-007 | Journey Passport entry-context defect fixes narrowly resolve the four known cases but regress adjacent entry paths | Medium — new defects introduced while fixing old ones | Medium | Full entry-path regression required (R1.2-04.05), not just the four defect areas | Keerthi | Open |
+| RISK-R1.2-007 | Journey Passport entry-context defect fixes narrowly resolve the four known cases but regress adjacent entry paths | Medium — new defects introduced while fixing old ones | Medium | Full entry-path regression required (R1.2-04.05), not just the four defect areas — **performed, `EBC-R1.2-WS4-QA-01`, 30-Aug-2026: ~20 entry-path combinations regression tested, no regression found. Closed, `EBC-R1.2-WS4-06`, 01-Sep-2026** | Keerthi | Closed |
 | RISK-R1.2-008 | Release documentation is deferred to the end and creates end-of-release pressure (as happened in R1.1 per Lessons Learned) | Medium — schedule pressure, rushed documentation | Medium | Workstream 7 treated as a living document updated throughout, not a final-week task | Tiger | Open |
-| RISK-R1.2-009 | QA (Workstream 8) is compressed into a single end-of-release pass | Medium — reduced defect-finding capacity late in the cycle | Medium | Run relevant regression subsets incrementally per workstream rather than solely as a final gate | Keerthi | Open |
+| RISK-R1.2-009 | QA (Workstream 8) is compressed into a single end-of-release pass | Medium — reduced defect-finding capacity late in the cycle | Medium | Run relevant regression subsets incrementally per workstream rather than solely as a final gate. **Accepted, 02-Sep-2026 (`EBC-R1.2-WS8-04`):** the feared scenario materialised in substance (WS8 ran as one late pass, not incrementally), but it ran (Keerthi Pass with Observations; Sri Pass with Observations) and found zero release-blocking defects, so the risk is accepted rather than further mitigated | Keerthi | Accepted |
 | RISK-R1.2-010 | OTP service outage or delivery failure could prevent Journey Passport submission | High — could block Journey Passport lead capture entirely if unmitigated | Low-Medium | Graceful error handling; resend capability; monitoring; provider fallback (future consideration) | Archie | Open |
 | RISK-R1.2-011 | The weighted Primary/Secondary/Tertiary destination preference model changes Journey Director's recommendation output in ways not yet fully assessed | Medium-High — could alter existing recommendation behaviour travellers and the Product Owner are accustomed to | Medium | Archie's architecture review required before implementation (R1.2-03.11); recommendation-consistency validation (R1.2-03.12) required before release; served-destination guardrail (DEC-R1.2-004) explicitly preserved and not affected | Archie | Open |
+| RISK-R1.2-012 | Workstream 8 (release-wide QA & regression) has not started — 0 of 16 tasks, 0 commits or new documents since `EBC-R1.2-WS8-01`'s closure assessment identified it as a release blocker | High — no independent, release-wide regression pass exists ahead of any release-closure decision | High | Schedule and execute Workstream 8 in full before any release-closure recommendation, per `EBC-R1.2-WS8-01`'s own remediation plan. **Closed, 02-Sep-2026 (`EBC-R1.2-WS8-04`):** Workstream 8's functional regression (`EBC-R1.2-WS8-QA-01`, Pass with Observations), traveller validation (`EBC-R1.2-WS8-SRI-01`, Pass with Observations) and operational cleanup (`EBC-R1.2-WS8-03`) have all run; the remaining Section 6.8 checklist items (full cross-browser sweep, dedicated build/TypeScript/ESLint pass, production smoke test) are carried forward as accepted, non-blocking residual items, not as this risk's original "has not started at all" condition | Keerthi / Sri / Rad | Closed |
+| RISK-R1.2-013 | Workstream 4's completion status is disputed, not merely incomplete — the tracker records 0% while an out-of-repository evidence chain (`WS4-IMP-01`/`AUD-01`/`QA-01`/`SRI-01`) describes it as substantially complete, and neither has been reconciled against a verified commit history | Medium-High — release-readiness assessments cannot rely on either account until reconciled | High | A dedicated Rad verification pass against commit `0bbac73`, followed by independent QA/traveller re-confirmation if warranted — **performed, `EBC-R1.2-WS4-05`/`EBC-R1.2-WS4-06`: chain confirmed genuinely committed (`4f2f2ef`) and independently re-confirmed; all eleven tasks now evidence-backed. Closed, `EBC-R1.2-WS4-06`, 01-Sep-2026** | Rad / Tiger | Closed |
+| RISK-R1.2-014 | Six repository documents (`GOVERNANCE-MAP.md`, `DECISION-LOG.md`, `30-Governance/README.md`, `03-ADR/DECISIONS.md`, `PROJECT-HISTORY.md`, `RELEASE-1.3-BACKLOG.md`) cite `EBC-R1.2-WS7-IMP-01`–`04`/`WS7-AUD-01`/`WS7-GOV-01` as completed source documents; none exist as files or commits, independently reconfirmed by direct repository search this update. **Partially Resolved, 31-Aug-2026 (`EBC-R1.2-WS7-08`):** five of the six — `GOVERNANCE-MAP.md`, `DECISION-LOG.md`, `30-Governance/README.md`, `03-ADR/DECISIONS.md`, `PROJECT-HISTORY.md` — corrected with plain descriptive wording and dated correction notes; never a fabricated replacement ID. `RELEASE-1.3-BACKLOG.md`'s citation deliberately left uncorrected, out of `EBC-R1.2-WS7-08`'s Deliverables and Out-of-Scope boundary on Release 1.3 planning; already flagged honestly in that document's own v1.9 entry. | Medium — undermines confidence in governance documentation until fully corrected | Low (citation-only, no behavioural impact) | A small, narrowly-scoped follow-up Tiger card covering exactly `RELEASE-1.3-BACKLOG.md` | Tiger | Open — Carried Forward (Non-Blocking, `EBC-R1.2-WS8-04`) |
+| RISK-R1.2-015 | `docs/09-Development/EBC-R1.2-GOV-001-STATUS-RECONCILIATION.md` — a real, committed governance document reconciling a *different* fabricated citation (`EBC-R1.2-GOV-001`) — itself cites `EBC-R1.2-WS7-IMP-02`, `EBC-R1.2-WS7-AUD-01` and `EBC-R1.2-WS7-GOV-01` in its own header and Related Documents section as its recording authority; none of the three exist. Discovered during `EBC-R1.2-WS7-08`'s citation search, 31-Aug-2026 — not part of `EBC-R1.2-WS8-01`'s original six-document list | Low — the document's own substantive content (the GOV-001 determination) is sound and unaffected; only its self-citation is fabricated | Low (citation-only, no behavioural impact) | Correct this document's header and Related Documents citations in the same small follow-up card as `RELEASE-1.3-BACKLOG.md` (see `RISK-R1.2-014`) | Tiger | Open — Carried Forward (Non-Blocking, `EBC-R1.2-WS8-04`) |
 
 ---
 
@@ -599,11 +1043,17 @@ Ideas intentionally excluded from Release 1.2 scope. Carried forward from `RELEA
 High-level workstream dependencies:
 
 ```
-Workstream 2 (Experience/Mood Rationalisation)
+Workstream 1 (Mood Card Visual Refinement) — Complete
         ↓
-Workstream 1 (Mood Card Visual Refinement) — labelling/taxonomy sensitive
+Workstream 8 (Release-wide QA & Regression)
         ↓
-Workstream 3 (Destination Intelligence) — targets the rationalised concept
+Release
+```
+
+```
+Workstream 2 (Experience/Mood Rationalisation) — Complete
+        ↓
+Workstream 3 (Destination Intelligence) — now the active implementation stream, targets the rationalised concept
         ↓
 Workstream 8 (Release-wide QA & Regression)
         ↓
@@ -640,9 +1090,9 @@ Release
 
 | Dependency | Type | Notes |
 |---|---|---|
-| WS2 → WS1 | Soft | Card labelling may need to reflect the final taxonomy decision |
-| WS1 ↔ WS2 | Soft | Homepage layout review tasks (R1.2-01.15, R1.2-02.13) should be coordinated — both are triggered by homepage changes (Escape card removal, Experiences section removal) landing in the same layout |
-| WS2 → WS3 | Soft | Deep-link target concept depends on taxonomy outcome |
+| WS2 → WS1 | Satisfied | Workstream 2 analysis and DEC-R1.2-012 confirmed the discovery model; Workstream 1 is Complete and requires no further taxonomy change. |
+| WS1 → WS2 | Satisfied | R1.2-02.13 preserved the accepted Workstream 1 homepage hierarchy when the Experiences entry was removed; confirmed with no regression by Rad's engineering validation (R1.2-010) and Sri's traveller experience validation (R1.2-012). |
+| WS2 → WS3 | Satisfied | Workstream 2 is Complete (analysis, UX implementation, engineering, Functional QA and Traveller Experience Validation all closed). Journey Mood Cards and Journey Passport are confirmed as the approved discovery model. Workstream 3 (Destination Intelligence) is no longer blocked and is now the next active implementation stream. |
 | WS6 → WS4 | Shared surface | Both touch the Journey Passport; coordinate regression |
 | WS5 → WS4 | Shared surface | OTP verification gates Journey Passport final submission; entry-context fixes govern earlier steps in the same flow — coordinate regression |
 | WS6 → WS3 | Soft | Destination mapping may reference autocomplete-validated names |
@@ -658,35 +1108,310 @@ This is a release-readiness checklist for R1.2 at the master-tracker level. A de
 
 ## Delivery
 
-- [ ] All 8 workstreams are Complete or explicitly Deferred with Product Owner acceptance
-- [ ] All EBCs raised under Release 1.2 are completed or explicitly deferred
-- [ ] No known functional release blocker remains open
+- [x] All 8 workstreams are Complete, Deferred with Product Owner acceptance, or explicitly accepted with named residual items at closure — see Section 18.6 (`EBC-R1.2-WS8-04`)
+- [x] All EBCs raised under Release 1.2 through R1.2-020 are completed
+- [x] No known functional release blocker remains open — Section 18.4 confirms every Section 10 risk is Closed, Accepted, or Carried Forward as non-blocking
 
 ## Documentation
 
-- [ ] This document (`RELEASE-1.2.md`) is current
-- [ ] `PROJECT-HISTORY.md` updated with the Release 1.2 entry
-- [ ] Release notes prepared
-- [ ] Decision log (Section 7) reflects all material decisions
-- [ ] Open decisions (Section 8) are resolved or explicitly carried to a future release
+- [x] This document (`RELEASE-1.2.md`) is current at Version 1.23
+- [ ] `PROJECT-HISTORY.md` updated with the Release 1.2 entry — accepted as a non-blocking residual follow-up (Section 18.9)
+- [ ] Standalone release notes prepared — a Release 1.2 Summary is recorded in Section 18.8 in lieu of a separate document; a standalone release-notes file remains a residual follow-up
+- [x] Decision log (Section 7) reflects all approved material decisions through DEC-R1.2-028
+- [x] Open decisions (Section 8) are resolved or explicitly carried to a future release (now includes OPEN-R1.2-007–009 from R1.2-014 and OD-4)
 
 ## Quality
 
-- [ ] Keerthi's functional QA (Workstream 8) sign-off received
-- [ ] Sri's traveller experience validation complete
-- [ ] Production build, TypeScript and ESLint checks pass
-- [ ] Cross-browser and responsive validation complete
+- [x] Keerthi's functional QA (Workstream 8) sign-off received — `EBC-R1.2-WS8-QA-01`, Pass with Observations
+- [x] Sri's traveller experience validation complete — `EBC-R1.2-WS8-SRI-01`, Pass with Observations
+- [ ] Production build, TypeScript and ESLint checks pass — not re-run at release scope during this closure card; accepted as a non-blocking residual item (Section 6.8)
+- [ ] Cross-browser and responsive validation complete — Chrome only exercised; accepted as a non-blocking residual item (Section 6.8)
 
 ## Release Approval
 
-- [ ] Business Owner (Vivek) walkthrough and approval received
-- [ ] Production smoke test passed
-- [ ] Release marked complete
-- [ ] Retrospective complete (Workstream 7)
+- [x] Business Owner (Vivek) walkthrough and approval received — Section 18.6
+- [ ] Production smoke test passed — post-deployment activity, not yet applicable
+- [x] Release marked complete — Section 18.7
+- [ ] Retrospective complete (Workstream 7) — a Release 1.2 Summary is recorded in Section 18.8; a dedicated Workstream 7 retrospective/Lessons-Learned document remains a residual follow-up
 
 ---
 
-# 13. Status Definitions
+# 13. Post-Implementation Observations
+
+## Purpose
+
+This section records observations identified during implementation, Functional QA, Traveller Experience Review, and Business Acceptance that were consciously accepted without reopening the completed workstream.
+
+These observations are **not defects**, **not release blockers**, and **not pending tasks**. They are retained to preserve product knowledge and may inform future design refreshes or roadmap discussions.
+
+---
+
+## Workstream 1 – Homepage Mood Experience
+
+**Status:** Accepted
+
+### OBS-R1.2-001
+**Title:** Memory Makers visual identity
+
+**Source:** Sri – Traveller Experience Review
+
+**Observation:**
+
+The Memory Makers card is slightly weaker than the other four mood cards. The two-line title and illustration require marginally more effort to recognise compared to Relax, Explore, Celebrate and Romance.
+
+**Decision:**
+
+Accepted.
+
+No further design changes will be made as part of Release 1.2 Workstream 1.
+
+This may be revisited during a future homepage design refresh.
+
+---
+
+### OBS-R1.2-002
+**Title:** Desktop hover affordance
+
+**Source:** Sri – Traveller Experience Review
+
+**Observation:**
+
+Hover feedback on desktop is intentionally subtle and premium, but could be made marginally more pronounced for discoverability.
+
+**Decision:**
+
+Accepted.
+
+Current interaction behaviour remains aligned with the approved premium design direction.
+
+Future refinement may be considered during a broader UX review.
+
+---
+
+### OBS-R1.2-003
+**Title:** Mobile first-fold visibility
+
+**Source:** Sri – Traveller Experience Review
+
+**Observation:**
+
+Depending on the device height and viewport size, not all five Journey Mood cards are visible within the initial mobile viewport before scrolling. A small amount of scrolling is required before the complete Journey Mood experience is visible.
+
+**Decision:**
+
+Accepted.
+
+This behaviour is consistent with the approved homepage hierarchy and does not negatively impact the traveller experience.
+
+No layout changes are planned as part of Release 1.2.
+
+This observation may be revisited during a future homepage redesign if the Hero composition or above-the-fold content changes.
+
+---
+
+### OBS-R1.2-004
+**Title:** Responsive automation limitation
+
+**Source:** Keerthi – Functional QA
+
+**Observation:**
+
+Automated responsive validation within the cloud testing environment could not fully simulate tablet and mobile viewport behaviour.
+
+Manual validation was completed successfully on Android using the local development environment.
+
+**Decision:**
+
+Accepted.
+
+This is an environmental limitation of the validation tooling and does not represent a product defect.
+
+---
+
+### OBS-R1.2-005
+**Title:** Luxury warmth versus readability balance
+
+**Source:** Business Review / Traveller Experience Review
+
+**Observation:**
+
+Multiple visual iterations were evaluated during Workstream 1 to balance premium warmth with homepage readability. The original gold-dominant treatment created stronger visual richness but reduced text readability where the Hero's golden-hour sunlight was brightest. The final champagne-glass treatment restored warmth while preserving clear visual separation from the Hero.
+
+**Decision:**
+
+Accepted.
+
+The final Luxury Balance Pass represents the approved visual direction for Release 1.2.
+
+Future homepage redesigns should treat this implementation as the visual baseline rather than revisiting the original gold treatment.
+
+---
+
+## Summary
+
+The Homepage Mood Experience (Workstream 1) successfully completed:
+
+- Engineering Implementation
+- Engineering Cleanup
+- Functional QA
+- Traveller Experience Review
+- Business Acceptance
+
+All observations recorded above were reviewed by the Product Owner and consciously accepted.
+
+No Critical, High, or Medium severity defects remain open for this workstream.
+
+Workstream 1 is therefore considered **Complete**.
+
+The observations recorded above intentionally preserve implementation and design knowledge for future releases. They do not represent release debt, outstanding defects, or pending work, and therefore do not prevent Release 1.2 from progressing to subsequent workstreams.
+
+---
+
+## Workstream 2 – Experiences Retirement
+
+**Status:** Accepted
+
+### OBS-R1.2-006
+**Title:** Tablet-width responsive validation blocked by test tooling
+
+**Source:** Keerthi – Functional QA (R1.2-011)
+
+**Observation:**
+
+A dedicated controlled pass at tablet width (approximately 768–1024px) could not be completed — the browser-resize tool used in the validation session changed the viewport once and then stopped responding to further resize calls within the same tab, the same test-tooling limitation recorded against Workstream 1 (OBS-R1.2-004). As partial mitigating evidence, a separate browser tab that happened to open at approximately 1170px (tablet range) displayed a clean layout with no visible breakage.
+
+**Decision:**
+
+Accepted.
+
+This is an environmental limitation of the validation tooling, not a product defect — consistent with OBS-R1.2-004's treatment of the same limitation under Workstream 1. No Critical, High or Medium severity defect is open for Workstream 2.
+
+Recommend Tiger schedule a short follow-up tablet-width check (real device, DevTools device toolbar, or a deployed preview) ahead of final release sign-off; this does not block Workstream 2 closure or Workstream 3 from proceeding.
+
+---
+
+## Summary
+
+Workstream 2 (Experiences vs Journey Mood Rationalisation) successfully completed:
+
+- Product Analysis (R1.2-007)
+- UX Implementation (R1.2-009)
+- Engineering Completion (R1.2-010)
+- Functional QA (R1.2-011)
+- Traveller Experience Validation (R1.2-012)
+
+The observation recorded above was reviewed and consciously accepted; it does not represent release debt, an outstanding defect, or pending work.
+
+No Critical, High, or Medium severity defects remain open for this workstream.
+
+Workstream 2 is therefore considered **✅ Complete**, and Workstream 3 (Destination Intelligence) is now the next active implementation stream.
+
+---
+
+## Homepage Architecture Validation Review (R1.2-014)
+
+**Status:** Accepted — re-confirms Workstream 1 and Workstream 2; does not reopen either.
+
+**Source:** Arjun (Product/Business/IA) and Sophie (UX/Visual Hierarchy), each reviewing the live, implemented homepage independently, dated 16-Aug-2026. Filed under EBC number R1.2-014 rather than a "Workstream 3" label — both reviewers independently flagged in their own reviews that a "WS3" label would conflict with the tracker's actual Workstream 3 (Destination Intelligence) and recommended sequential EBC numbering instead; Tiger/Rad adopted that recommendation when filing this review (see R1.2-015 in the Document Change History).
+
+**Outcome:** Both reviewers independently re-derived their findings directly from the current repository (not by citing the WS1/WS2 chain alone) and found no new evidence to justify reopening DEC-R1.2-009 or DEC-R1.2-012. The live ten-section homepage — Header, Hero + Journey Mood Cards, Featured Destinations, Trust Points, Traveller Stories, Trust Strip, Travel Inspiration, About/Promise Preview, Contact Preview, Footer — was assessed as coherent, low-cognitive-load and release-ready. See DEC-R1.2-013 for the recorded decision.
+
+**New findings raised as Open Product Decisions (Section 8):** the Header's tablet-range CTA breakpoint (OPEN-R1.2-007), Trust Points' icon treatment and imagery (OPEN-R1.2-008), and the Contact Preview CTA's routing (OPEN-R1.2-009). None are release-blocking.
+
+### Technical Debt Register
+
+Carried forward as intentional technical debt — not defects, not pending tasks, not release blockers:
+
+| Item | Description | Disposition |
+|---|---|---|
+| Preserved Experiences implementation | `JourneyInvitations.tsx` (the on-brand, previously-live "Journey Invitations" block) remains in the repository, unimported, per DEC-R1.2-009/012 and reaffirmed by DEC-R1.2-013. | Intentional — retained for possible future reuse. Not a defect. |
+| Orphaned off-brand `Experiences.tsx` / `ExperienceCard.tsx` | A second, separate "Experiences" component (`web/components/sections/Experiences/`) not imported anywhere in the codebase (the live `/experiences` route uses `EditorialCardGrid`/`EditorialCardItem` instead). Styled with generic grey Tailwind defaults and raw emoji/text icons — inconsistent with the site's espresso/cream/amber brand system. First identified by Sophie's R1.2-014 review. | Unused legacy component — confirmed. Recommend Rad schedule a future cleanup/removal task; carries a small risk that a future contributor mistakes it for the on-brand `JourneyInvitations.tsx`. Not actioned under this documentation-only EBC. |
+| Unused colour-token system | `web/app/globals.css` defines nine named "Brand Colors" custom properties, but no component references them as Tailwind theme-colour utilities — every component hardcodes literal hex values instead (~193 distinct hex occurrences found across `components/` and `app/`; only espresso, amber and cream are actually in active use). First identified by Sophie's R1.2-014 review. | Subject to future engineering validation — a future design-token consolidation pass (Archie/Rad) should either wire components to the existing tokens or remove the unused ones. Not a current defect; visual consistency today is maintained by developer discipline across the hardcoded values. |
+
+---
+
+## Workstream 3 – Destination Intelligence (WP-4 / Workbook Consistency Remediation)
+
+**Status:** Registered — Backlog Only, Not Actioned
+
+**Source:** `R1.2-WS3-OBS-01-EBC-TIGER` (Tiger — Engineering Observations & Backlog Registration), consolidating three engineering findings Rad identified and independently verified as pre-existing and outside approved implementation scope while executing WP-4 (`R1.2-WS3-IMP-01A-EBC-RAD`) and Workbook Consistency Remediation (`R1.2-WS3-IMP-01B-EBC-RAD`, Findings 2–4). No implementation is authorised by this entry.
+
+### OBS-R1.2-007
+**Title:** Shared Generated Artifact Ownership
+
+**Source:** Rad – Engineering (`R1.2-WS3-IMP-01B-EBC-RAD`, Finding 2)
+
+**Observation:**
+
+`verify:journey-intelligence`'s standalone artifact-package check expects exactly the eight artefacts the journey-intelligence generator itself produces. A separate, independently-scoped generator (`generate:journey-itineraries`) also writes into the same `web/generated/` directory (a `journey-itineraries/` subdirectory), and the journey-intelligence generator's atomic directory swap does not account for that coexisting output. This is a pre-existing architectural gap — two generators unsafely sharing one output directory — not caused by WP-4 or the workbook remediation.
+
+**Impact:** Engineering verification; generator maintenance; future scalability.
+
+**Priority:** Medium
+
+**Decision:**
+
+Registered. No generator or verification-script changes are authorised under this entry. Recommend a future engineering review of generated-artefact ownership and verification strategy (candidate owners: Archie/Rad). Does not block Workstream 3 or Release 1.2.
+
+---
+
+### OBS-R1.2-008
+**Title:** Goa Steering Verification
+
+**Source:** Rad – Engineering (`R1.2-WS3-IMP-01B-EBC-RAD`, Finding 3)
+
+**Observation:**
+
+`verify:journey-intelligence:steering` reports a mountain-intent/Goa-eligibility failure ("mountain intent keeps Goa eligible for scoring rather than hard-excluding it"). Rad's exhaustive artefact diff confirmed Goa's own compatibility, journey-DNA and constraint data are byte-identical before and after the Assam workbook remediation, and that no mountain-candidate destination's data changed at all — the underlying scoring-logic defect is real but proven unrelated to WP-4 or the remediation.
+
+**Impact:** Recommendation verification; test confidence.
+
+**Priority:** Medium
+
+**Decision:**
+
+Registered. No scoring-logic or runtime changes are authorised under this entry. Recommend future business and engineering investigation into the mountain-intent steering logic (candidate owners: Arjun for business intent, Rad/Archie for the scoring defect). Does not block Workstream 3 or Release 1.2.
+
+---
+
+### OBS-R1.2-009
+**Title:** Journey Engine Verification Fixture
+
+**Source:** Rad – Engineering (`R1.2-WS3-IMP-01B-EBC-RAD`, Finding 4)
+
+**Observation:**
+
+`verify:journey-engine` continues to fail on a known, previously-documented issue: a hard-coded `moodValues` test fixture with only 5 entries against 6 `JOURNEY_FEELINGS`, causing an index-misalignment assertion failure on one feeling per run. This predates the current implementation and is unrelated to destination or workbook data.
+
+**Impact:** Engineering validation; test infrastructure.
+
+**Priority:** Low
+
+**Decision:**
+
+Registered. No test-fixture or engine changes are authorised under this entry. Recommend future maintenance of engineering verification fixtures (candidate owner: Rad). Does not block Workstream 3 or Release 1.2.
+
+---
+
+### Technical Debt Register — Workstream 3
+
+| Item | Description | Priority | Disposition |
+|---|---|---|---|
+| OBS-R1.2-007 — Shared Generated Artifact Ownership | Two generators (`generate:journey-intelligence`, `generate:journey-itineraries`) unsafely share `web/generated/`; `verify:journey-intelligence`'s "exactly eight artefacts" check does not allow for the coexistence. | Medium | Pre-existing, not a WP-4/remediation regression. Recommend future engineering review of generated-artefact ownership and verification strategy. Not actioned under `R1.2-WS3-OBS-01-EBC-TIGER`. |
+| OBS-R1.2-008 — Goa Steering Verification | `verify:journey-intelligence:steering` fails on a mountain-intent/Goa-eligibility scoring defect, proven unrelated to WP-4 or the Assam workbook remediation (Goa's own data is byte-identical before/after). | Medium | Pre-existing, unresolved scoring-logic defect. Recommend future business and engineering investigation. Not actioned under `R1.2-WS3-OBS-01-EBC-TIGER`. |
+| OBS-R1.2-009 — Journey Engine Verification Fixture | `verify:journey-engine` fails on a known, pre-existing `moodValues` fixture with 5 entries against 6 `JOURNEY_FEELINGS`. | Low | Pre-existing test-infrastructure issue, predates current implementation. Recommend future fixture maintenance. Not actioned under `R1.2-WS3-OBS-01-EBC-TIGER`. |
+
+---
+
+## Summary
+
+All three engineering observations above were identified by Rad during execution of WP-4 (`R1.2-WS3-IMP-01A-EBC-RAD`) and Workbook Consistency Remediation (`R1.2-WS3-IMP-01B-EBC-RAD`), independently verified to be pre-existing and unrelated to either piece of work, and registered here for future prioritisation per `R1.2-WS3-OBS-01-EBC-TIGER`.
+
+No Critical or High severity defect is recorded. No implementation, generator, runtime, or verification-script change is authorised by this registration. Workstream 3 implementation progress and status are unaffected by this entry — see Section 5 for the Workstream 3 Implementation Phase Dashboard, which this EBC does not update (see the Document Change History note against `R1.2-022` on the pending WP-4/remediation consolidation).
+
+---
+
+# 14. Status Definitions
 
 ## Lifecycle statuses (used for tasks, decisions and workstreams)
 
@@ -710,3 +1435,431 @@ This is a release-readiness checklist for R1.2 at the master-tracker level. A de
 | 🔵 | Deferred to a future release |
 | ⚪ | Superseded / Cancelled |
 | 🚫 | Blocked |
+
+---
+
+# 15. Release 1.2 Final Closure Assessment (`EBC-R1.2-WS8-02`, Tiger, 31-Aug-2026)
+
+This is the definitive Release 1.2 closure determination, performed after `EBC-R1.2-WS7-07` (tracker reconciliation) and `EBC-R1.2-WS7-08` (documentation citation reconciliation) both committed. It evaluates the repository exactly as it exists today. It reopens no engineering work except to credit genuinely new repository evidence discovered during this review (Section 15.2); it modifies no code, configuration, SQL or Release 1.3 prioritisation.
+
+## 15.1 Workspace Verification
+
+Confirmed before any edit: repository root `SearchMyVacation`; branch `feature/ebc-r1.2-ws7-06-backlog-finalisation`; working tree clean; latest commit `2d78ede` ("docs(r1.2): final documentation reconciliation before release closure"); `EBC-R1.2-WS7-07` committed as `d8f6a0a`; `EBC-R1.2-WS7-08` committed as `2d78ede`. No commits landed between WS7-08 and the start of this assessment.
+
+## 15.2 Engineering Review — Current State
+
+Each workstream evaluated against current repository evidence only, not against historical intermediate assessments:
+
+- **Workstream 1 (Homepage Premium Visual Refinement) — Complete.** No new evidence contradicts this; unchanged since `R1.2-013`.
+- **Workstream 2 (Experiences vs Journey Mood Rationalisation) — Complete.** No new evidence contradicts this; unchanged since `R1.2-013`.
+- **Workstream 3 (Destination Intelligence) — Complete for its Phase 0–2 native-ID chain only** (`R1.2-024`). Phase 3 (Runtime Alignment), Phase 4 (Recommendation Behaviour) and the full Section 6.3 task table (`R1.2-03.01`–`03.15`) remain Proposed/Not Started, correctly carried forward to Release 1.3 (Section 15.6). Unchanged since `R1.2-024`.
+- **Workstream 4 (Journey Passport Entry Context Improvements) — Proposed. Not Complete.** New finding this assessment: task `R1.2-04.10` (traveller name numeric-character rejection, `DEC-R1.2-011`) has genuine, citable repository evidence — `web/lib/journey-passport/traveller-name.ts` exports `sanitizeTravellerName`/`hasNumericCharacter`, is explicitly labelled `EBC-R1.2-WS4-IMP-01` in its own header comment, is wired into every one of the three traveller-name entry points (the About You step, the post-completion contact-capture form, and the session-draft restore path), rejects every Unicode decimal digit (`\p{Nd}`, not only ASCII 0–9) while preserving letters, spaces, hyphens and apostrophes, and is committed under `4f2f2ef`. This matches `R1.2-04.10`'s acceptance criterion exactly. Flipped to Complete in Section 6.4 on this evidence (Section 6's task table and Section 5's Workstream 4 entry both updated). A targeted repository search (`grep` for `WS4-IMP`/`WS4-AUD`/`R1.2-04\.` across `web/`) found **no comparable evidence** for the three remaining defect-fix tasks (`04.01` Romance, `04.03` Companion, `04.04` Pace & Timing entry-context fixes) or for any of the five Keerthi acceptance/regression tasks (`04.05`–`04.09`, `04.11`). Workstream 4's overall Status field remains **Proposed**; it is not counted as a completed workstream, and this single-task credit does not change that. This is new evidence discovered during closure review, not a reopening of completed engineering, per this card's explicit scope.
+
+**Superseded in part, 31-Aug-2026 (`EBC-R1.2-WS4-05`):** the "no comparable evidence" finding above is superseded for `04.01` and `04.03` (now Complete in full) and `04.04` (now Complete in substance) — commit `0bbac73` and Keerthi's `EBC-036-Retest-Report.docx`, both predating this tracker's own creation, were not found by this section's original `WS4-IMP`/`WS4-AUD`/`R1.2-04\.` grep because they predate that labelling convention entirely. `04.02`, `04.05`–`04.09` and `04.11` remain as originally found here. Workstream 4's overall Status field still remains **Proposed** — see Section 16.
+- **Workstream 5 (International Phone Number & OTP Verification) — Engineering complete; functional QA and traveller validation complete; Product Acceptance still pending.** Keerthi's functional QA (`EBC-R1.2-WS5-QA-01`, Passed with Observations) and Sri's traveller validation (`EBC-R1.2-WS5-SRI-01`) both complete, 30-Aug-2026; the OTP-expiry/SMS-wording mismatch is resolved and committed (`3280b93`), confirmed by a smoke validation (`EBC-R1.2-WS5-QA-03`). **`[SMV-DBG]` diagnostic logging is still present**, reconfirmed by a fresh `grep` this assessment, in `web/app/api/journey-passport/otp/send/route.ts`, `web/lib/journey-passport-otp/sms.ts` and `web/lib/journey-passport-otp/repository.ts`. No formal Product Owner Acceptance record exists for Workstream 5 (unlike Workstream 6's `EBC-R1.2-WS6-14-VIVEK`).
+- **Workstream 6 (Journey Passport Destination Autocomplete & Validation) — Complete.** Product Owner Accepted (`EBC-R1.2-WS6-14-VIVEK`, 31-Aug-2026). Unchanged since `EBC-R1.2-WS7-07`.
+- **Workstream 7 (Release Documentation & Governance) — Not Complete.** Tasks `07.02`, `07.04` and `07.06` remain outstanding. Five of the six fabricated `WS7-IMP`/`WS7-AUD`/`WS7-GOV` citations `EBC-R1.2-WS8-01` identified were corrected under `EBC-R1.2-WS7-08`; two remain open (`RISK-R1.2-014`, `RISK-R1.2-015`) — both documentation-only, low-impact, and explicitly not release-blocking on their own (Section 15.5).
+- **Workstream 8 (Release-wide QA & Regression) — 0% complete.** Status field: Proposed. 0 of 16 tasks (`R1.2-08.01`–`08.16`). Reconfirmed this assessment: zero commits and zero new documents reference Workstream 8 since `EBC-R1.2-WS8-01` first flagged this as a release blocker. This remains the single largest gap between the repository's current state and release readiness.
+
+## 15.3 Validation Chain Review
+
+| Review type | Complete for | Not complete for |
+|---|---|---|
+| Engineering Review | WS1, WS2, WS3 (Phase 0–2), WS5 (ten-task `REV1-01`–`10`), WS6 (8 phases) | WS4 (no review performed), WS8 (release-wide pass not run) |
+| Architecture Review | `ADR-R1.2-WS3-001` (Accepted), `ADR-R1.2-WS5-001` (Ratified) — both required ADRs for R1.2 scope are closed | Phase 3/4 Destination Intelligence architecture review is a Release 1.3 prerequisite, correctly not required for R1.2 |
+| UX Review | WS1, WS2, WS6 | WS4 (no UX review recorded) |
+| Functional QA (Keerthi) | WS1, WS2, WS3 (Phase 0–2, `IMP-01C`/`IMP-02A`), WS5 (`QA-01`, Passed with Observations), WS6 (`WS6-11`/`-11A`) | WS4 (zero QA coverage — `04.05`–`04.09`, `04.11` all still Proposed), WS8 (has not run at all) |
+| Traveller Validation (Sri) | WS1, WS2, WS5 (`SRI-01`), WS6 (`WS6-12`, Approved with Minor Observations) | WS4 (zero traveller validation) |
+| Product Owner Acceptance | WS6 (`EBC-R1.2-WS6-14-VIVEK`, formal) | WS5 (functionally validated but not formally accepted), WS4 (not ready for acceptance) |
+
+**The validation chain is not complete release-wide.** Workstream 4 has no review of any kind recorded against current repository evidence beyond the single `04.10` credit above; Workstream 8's release-wide regression pass — the mechanism specifically designed to catch cross-workstream regression before closure — has not been run at all.
+
+## 15.4 Documentation Review
+
+- **Release Tracker (`RELEASE-1.2.md`):** internally consistent as of Version 1.18 (independently re-verified by `EBC-R1.2-WS7-07`/`-08` and reconfirmed by this assessment's own metrics recompute, Section 15.7); this assessment advances it to Version 1.19 for the `R1.2-04.10` correction and this section.
+- **Decision Log (`DECISION-LOG.md`):** consistent — its Release 1.2 governance note correctly defers to the tracker as the authoritative record; its own fabricated citation was corrected under `EBC-R1.2-WS7-08`.
+- **Project History (`PROJECT-HISTORY.md`):** internally consistent as corrected under `EBC-R1.2-WS7-08` (Version 1.1). **Observation, not a blocker:** its "Release 1.2 — Completed (Retrospective Entry)" section was written before this closure assessment and does not yet reflect this determination (Workstream 8 unstarted, Workstream 4 unresolved) or Workstream 6's Product Owner Acceptance; per Project Instructions §32 that entry's existing content should be amended, not rewritten, once Release 1.2 actually closes. `PROJECT-HISTORY.md` is not in this card's Deliverables, so no edit is made here — recorded as a residual item for whichever card performs actual closure.
+- **Governance Map (`GOVERNANCE-MAP.md`):** consistent — corrected under `EBC-R1.2-WS7-08`.
+- **Release-1.2-Lessons-Learned.md:** read in full. Scoped narrowly to Workstream 5's MSG91/DLT experience, as its own Section 1 states; not a general Release 1.2 retrospective, and correctly does not claim to be one. Its Section 6.4 ("A Product Owner's Manual Live Test Confirms Function, Not Release Readiness") states plainly that Keerthi's functional QA and Product Acceptance remained outstanding as of 27-Aug-2026 — both have since progressed (QA complete 30-Aug; acceptance still pending), consistent with, not contradicting, this assessment.
+- **Release statistics:** recomputed independently in Section 15.7 below; consistent with the tracker after this update.
+- **Version history:** Document Change History rows 1.0 through 1.18 confirmed sequential and chronologically ordered (the 1.16/1.17 ordering defect found and fixed under `EBC-R1.2-WS7-08`); this assessment adds row 1.19.
+- **Fabricated citations:** none found by this assessment beyond the two already tracked (`RISK-R1.2-014`, `RISK-R1.2-015`), both documentation-only and explicitly classified as non-blocking (Section 15.5) — they do not by themselves invalidate release closure, consistent with this card's Activity 4 instruction to not treat clearly-flagged historical/residual notes as blockers. They remain open items, not closure blockers.
+
+## 15.5 Release Risk Classification
+
+Every risk in Section 10 reviewed and classified. "Active" is not one of this card's five requested categories but is used below, transparently, for the small number of risks that are neither closed nor an accepted trade-off — they are simply not yet done, and forcing them into one of the five categories would misrepresent them.
+
+| Risk | Classification | Basis |
+|---|---|---|
+| RISK-R1.2-001 | Closed | Tracker already records Closed; mitigated through the Luxury Balance Pass, QA, Traveller Review and Business Acceptance |
+| RISK-R1.2-002 | Closed | Tracker already records Closed; DEC-R1.2-009/012 resolved the underlying taxonomy questions |
+| RISK-R1.2-003 | Operational Follow-up | Ongoing content-maintenance risk (deep-link staleness as destinations change); fallback behaviour (R1.2-03.04) already defined; not release-blocking |
+| RISK-R1.2-004 | Accepted Limitation | E.164 normalisation shipped as part of WS5; no compatibility defect against Release 1.0/1.1 lead records has been reported; not independently re-verified by this assessment (would require reopening engineering outside this card's scope) |
+| RISK-R1.2-005 | Accepted Limitation | Mitigation explicitly designed as an accepted limitation ("accept known gaps as documented limitations rather than blocking release") |
+| RISK-R1.2-006 | Closed | Workstream 6 Complete; served-destination guardrail (DEC-R1.2-004) confirmed preserved throughout WS6's closure record |
+| RISK-R1.2-007 | Closed | `EBC-R1.2-WS4-06`, 01-Sep-2026: `04.05` full entry-path regression performed (`EBC-R1.2-WS4-QA-01`, ~20 combinations, no regression found) |
+| RISK-R1.2-008 | Historical Record | The feared scenario (documentation rushed at the end) was avoided in substance — WS7 was run as a living document across `WS7-06`/`-07`/`-08`, not a single final-week card — though genuine WS7 finalisation work did cluster in the release's final days |
+| RISK-R1.2-009 | Active | Directly describes Workstream 8's current state — compressed to a single end-of-release pass because it has not been run incrementally at any point so far |
+| RISK-R1.2-010 | Accepted Limitation | Graceful error handling, resend capability and monitoring shipped; provider fallback explicitly deferred as a "future consideration," not a Release 1.2 gap |
+| RISK-R1.2-011 | Deferred to Release 1.3 | The only phases that would actually change Journey Director's recommendation output (Phase 3/4) are explicitly Not Started and carried forward (Section 15.6); Phase 0–2 does not touch runtime scoring |
+| RISK-R1.2-012 | Active | Workstream 8 unstarted; this is the release's principal closure blocker |
+| RISK-R1.2-013 | Closed | `EBC-R1.2-WS4-06`, 01-Sep-2026: all eleven WS4 tasks now evidence-backed (Section 17); the disputed-status finding this risk described is resolved, though formal workstream closure still awaits Product Owner acceptance |
+| RISK-R1.2-014 | Operational Follow-up | Partially Resolved (`EBC-R1.2-WS7-08`); two low-risk, citation-only instances remain, tracked for a small dedicated follow-up |
+| RISK-R1.2-015 | Operational Follow-up | Same follow-up as RISK-R1.2-014; citation-only, no behavioural impact |
+
+**No completed work is listed above as an active release blocker.** The four risks classified Active (007, 009, 012, 013) all describe work that has not yet happened (Workstream 4 and Workstream 8), not work that was done and later regressed.
+
+## 15.6 Release 1.3 Carry-Forward Verification
+
+`docs/10-Backlog/RELEASE-1.3-BACKLOG.md` read in full. Confirmed present and not duplicated: `TD-R1.3-001` through `TD-R1.3-009` (Section 9, Engineering Technical Debt); the Destination Intelligence Model Phase 3/4 carry-forward (Section 3, added under `EBC-R1.2-WS7-06`); the three Workstream 6 UX refinements (Section 10); the Homepage Architecture Validation Review's three open findings `OPEN-R1.2-007`–`009` and its component-cleanup recommendation (Section 11); Workstream 3's search-behaviour observations `OBS-R1.3-WS3-01`/`02` (Section 12). The document's own v1.9 Document Change History entry (`EBC-R1.2-WS7-06`) already declares the backlog "complete and frozen pending future prioritisation," with every item cross-checked against every other section for duplicates. Nothing found by this assessment requires a new Release 1.3 backlog entry. **Release 1.3 planning is confirmed complete** (Deliverable 5).
+
+Not carried to Release 1.3, correctly: `[SMV-DBG]` removal and the two remaining fabricated-citation corrections are Release 1.2 closure items, not Release 1.3 scope, and are tracked in Section 10 of this document instead.
+
+## 15.7 Release Metrics (Recomputed)
+
+| Metric | Value | Change from `WS7-08` |
+|---|---|---|
+| Completed Workstreams | 3 of 8 (WS1, WS2, WS6) | Unchanged — `R1.2-04.10`'s single-task credit does not complete Workstream 4 |
+| Completed Tasks | 50 of 128 | +1 (`R1.2-04.10`, Section 15.2) |
+| Task Status Breakdown | 50 Complete · 1 In Progress · 17 Ready for QA · 60 Proposed | 49→50 Complete; 61→60 Proposed |
+| Approved Decisions | 27 (DEC-R1.2-001–028, less 018 Superseded) | Unchanged — this assessment adds no new Product Decision |
+| Open Decisions | 8 | Unchanged |
+
+Recomputed independently against Section 6's per-workstream task tables (19+13+13+3+1+1 = 50) rather than assumed from the prior dashboard figure. This update is reflected in Section 3's dashboard and Section 6.4's task table.
+
+## 15.8 Final Assessment by Dimension
+
+| Dimension | Rating | Basis |
+|---|---|---|
+| Product | 🟡 Accepted Limitation | Core Release 1.2 scope implemented and substantially validated; Workstream 4's traveller-facing defect fixes remain unconfirmed |
+| Engineering | 🟡 Accepted Limitation | WS1/WS2/WS3(0–2)/WS5/WS6 engineering complete; WS4 has one of eleven tasks evidenced; WS8's release-wide technical checks (build/TypeScript/ESLint at release scope) not run |
+| Architecture | 🟢 Complete | Both required ADRs (`WS3-001`, `WS5-001`) Accepted/Ratified; no open architecture objection for in-scope Release 1.2 work |
+| Documentation | 🟡 Accepted Limitation | Internally consistent; two low-risk citation instances remain open; `PROJECT-HISTORY.md`'s retrospective entry not yet updated for this determination |
+| Governance | 🟡 Accepted Limitation | WS7 documentation reconciliation thorough and evidence-based across three cards; WS7 itself not yet closed (3 tasks outstanding) |
+| Operations | 🔴 Blocking | `[SMV-DBG]` diagnostic logging still present in three production source files |
+| QA | 🔴 Blocking | Workstream 8 (release-wide regression) has not started; Workstream 4 has zero QA coverage |
+| Traveller Experience | 🟡 Accepted Limitation | WS1/WS2/WS5/WS6 traveller-validated; Workstream 4 has zero traveller validation |
+
+## 15.9 Closure Recommendation
+
+**Option B — Release Not Ready.**
+
+Evidence: Workstream 8 (release-wide QA & regression) is at 0% — no independent, release-wide regression pass exists ahead of this decision, and the Release's own Success Criteria (Section 1) require it explicitly. Workstream 4 has ten of eleven tasks with zero repository evidence and zero QA or traveller-validation coverage — its status remains genuinely disputed, not merely incomplete. `[SMV-DBG]` diagnostic logging remains in three production source files. Workstream 5 lacks a formal Product Owner Acceptance record. Two low-risk, non-blocking documentation-citation instances remain open.
+
+None of these findings require reopening completed, validated engineering — every one of them is work that has not yet happened, not work that was done and needs to be redone. This is consistent with every prior assessment in this chain (`EBC-R1.2-WS8-01`, `EBC-R1.2-WS7-07`, `EBC-R1.2-WS7-08`): nothing has changed the underlying picture since `WS8-01` first reached this conclusion, except that more of the picture is now genuinely, evidentially resolved (Workstream 6 accepted; Workstream 5 QA'd and traveller-validated; five of six documentation citations corrected; one Workstream 4 task newly evidenced) and less of it rests on unreconciled claims.
+
+**Recommended path to closure**, unchanged in substance from `WS8-01`'s original remediation plan: run Workstream 8 in full; resolve Workstream 4 with a dedicated Rad implementation/verification pass followed by Keerthi/Sri validation; remove `[SMV-DBG]` diagnostics and obtain Workstream 5's formal Product Owner Acceptance; correct the two remaining documentation citations. A follow-up closure assessment can then be run against the same, evidence-based standard this and the prior three cards have used.
+
+## 15.10 Release 1.2 Summary
+
+*This section is the historical Release 1.2 summary, per this card's Activity 10. It synthesises, rather than duplicates, the fuller narrative already recorded in `docs/09-Development/PROJECT-HISTORY.md`.*
+
+**Major capabilities delivered.** A refined homepage visual and information system (Trust Strip, Mood Cards, five-card layout); resolution of the Experiences/Journey Mood product overlap; a governed, weighted destination-intelligence knowledge base with a native-ID generation and vocabulary-alignment pipeline under explicit architectural ownership; international phone number support (E.164) with mandatory OTP verification for Journey Passport, delivered through India's DLT regulatory chain to a confirmed live SMS send-to-verification cycle; and a searchable, GeoNames-validated destination autocomplete replacing free-text entry, with Journey Director preserved as the sole served-destination authority throughout.
+
+**Architecture achievements.** Two Architecture Decision Records ratified (`ADR-R1.2-WS3-001` Destination Knowledge Governance; `ADR-R1.2-WS5-001` DLT External Provider Onboarding), each converting decisions already made in practice into permanent, reusable records. A fail-closed OTP provider design let engineering build, review and functionally validate the entire OTP flow independently of the external MSG91/DLT timeline.
+
+**Engineering achievements.** A self-hosted GeoNames dataset replaced paid destination APIs by explicit product decision. A serious `search_geo_places()` performance regression was traced through an eleven-part architecture investigation to PostgreSQL planner/expression-index behaviour and resolved with a dynamic query-planning rewrite. Two structurally identical PL/pgSQL variable-shadowing defects, invisible to code review and static analysis alike, were found only against a live schema and fixed.
+
+**QA achievements.** A consistent multi-persona validation chain — engineering, independent engineering re-review, functional QA, traveller experience — was run for every workstream that reached implementation, none approving its own work; Workstream 5 alone carried a ten-task independent engineering review before functional QA began.
+
+**Traveller Experience achievements.** Independent traveller-experience review (Sri) ran on Workstreams 1, 2, 5 and 6, evaluating clarity, trust and emotional quality separately from functional correctness; Workstream 6 closed "Approved with Minor Observations," not a bare pass.
+
+**Governance improvements.** The Evidence-Based-Change model matured into a consistent, evidence-cited multi-persona chain. Three successive documentation-reconciliation cards (`WS7-06`, `WS7-07`, `WS7-08`) demonstrated a repeatable, evidence-first correction discipline — narrowing scope under explicit Product Owner instruction rather than fabricating closure, and correcting fabricated citations with plain, dated, honestly-labelled wording rather than inventing replacement IDs.
+
+**Operational improvements.** A GeoNames self-hosted destination dataset and import runbook; an SMS/OTP Operations Runbook capturing the DLT Principal Entity–Telemarketer chain requirement as reusable institutional knowledge, per `Release-1.2-Lessons-Learned.md`.
+
+**Release 1.3 carry-forward.** Confirmed complete (Section 15.6): nine engineering technical-debt items, Destination Intelligence Phase 3/4, a weighted search-ranking model candidate, three Workstream 6 UX refinements, and the Homepage Architecture Validation Review's remaining findings are all captured in `RELEASE-1.3-BACKLOG.md`, frozen pending prioritisation.
+
+**Lessons learned — this closure assessment's own addition.** A task-table status field can silently drift from repository truth: `R1.2-04.10` sat recorded as "Proposed" for days after its implementation was committed, discoverable only by a targeted evidence search, not by trusting the tracker's own field. Future workstream closures should verify task-table status against `git log`/`grep` evidence directly, the same discipline this card and `EBC-R1.2-WS7-07` both applied, rather than propagating a status forward on the strength of an earlier, unverified claim. This complements, rather than repeats, `PROJECT-HISTORY.md`'s own governance lesson that "the record exists" and "the record is committed" are not the same thing.
+
+---
+
+*Prepared by Tiger (Programme and Delivery Lead) per `EBC-R1.2-WS8-02`. Documentation only — no code, configuration, database, or Release 1.3 planning was changed in producing this assessment. Release 1.2 is not declared complete, tagged, merged, or prepared for production deployment by this document; per the recommendation in Section 15.9, that remains pending the remediation items listed there.*
+
+---
+
+# 16. Workstream 4 Repository Reconciliation & Completion Assessment (`EBC-R1.2-WS4-05`, Tiger, 31-Aug-2026)
+
+Documentation-only reconciliation. Investigated every `R1.2-04.01`–`R1.2-04.11` task individually against repository evidence (git history, commit content, current source, and committed/Project QA documentation) and verified the historical claim that four defects were already fixed before Workstream 4 was planned. No code, configuration or database change was made. This section is a repository evidence matrix, not a re-litigation of Section 15's Release 1.2 closure recommendation, which this section does not revisit.
+
+## 16.1 Workspace Readiness Check
+
+Repository root `SearchMyVacation`; branch `feature/ebc-r1.2-ws7-06-backlog-finalisation`; working tree clean; latest commit `c0e670a` (`EBC-R1.2-WS8-02`) before this card's own edit. `RELEASE-1.2.md` at Version 1.19.
+
+## 16.2 Historical Reconciliation — Commit `0bbac73`
+
+Confirmed genuine and material. `0bbac73` ("fix: unify journey mood passport preselection") is dated **13-Aug-2026**, two days *before* `RELEASE-1.2.md` v1.0 (15-Aug-2026) first created Workstream 4's task table with `R1.2-04.01`/`04.03`/`04.04` marked "Carried over from R1.1." The fix was independently validated the same day by Keerthi's `EBC-036-Retest-Report.docx` (committed at `docs/09-Development/EBC-036-Retest-Report.docx`), which confirms four defects (D-06 Critical, D-07 Major, D-08 Major, D-09 Medium) **RESOLVED** with reproducible UI re-tests (Passport IDs SMV-7G3P23YR, SMV-WKRTL3LD, SMV-SCFNQYDH), zero console errors, ESLint/TypeScript passing.
+
+`0bbac73`'s root-cause fix is two changes: a single source-of-truth helper, `isJourneyEntryPreselectionActive()`, that gates the entry-advisory banner on the traveller's actual current answer at the Companions, Dream Journey and Pace & Timing moments alike (fixing D-06); and bringing the Memory Maker mood card onto the same `?mood=` routing mechanism used by every other mood, correcting its Pace & Timing pre-selection (fixing D-08). D-07 (Romance/Escape allegedly missing a Pace & Timing pre-selection) was re-tested and found to be a **misdiagnosis** — Romance and Escape were never designed to pre-select at Pace & Timing (Romance targets Companions; Escape targeted Dream Journey) — not a residual defect.
+
+**Current-code verification (not merely historical):** `web/lib/journey-passport/entry-context.ts` (current HEAD) still defines `romance: { moment: "companions", field: "companion", value: "Couple" }` and still exports `isJourneyEntryPreselectionActive()`, unchanged in logic since `0bbac73` (only generalised for multi-value Travel Style defaults by the later, unrelated `EBC-030`). `web/components/journey-passport/JourneyPassport.tsx` still calls it for all three moments (`companions`, `dream-journey`, `pace-and-timing`). The fix is live, not reverted.
+
+**Conclusion: `0bbac73` genuinely satisfied `04.01` and `04.03` in full, and `04.04` in substance** (the generic banner-correctness fix applies to Pace & Timing identically, and D-08's Memory Maker value-defect was fixed in the same commit) — see 16.3 for the task-by-task detail and the one caveat on `04.04`.
+
+## 16.3 Task-by-Task Assessment
+
+| Task | Current Tracker Status (before this card) | Repository Evidence | Supporting Commit(s) | Supporting Document(s) | Assessment |
+|---|---|---|---|---|---|
+| `R1.2-04.01` — Romance entry context | Proposed | D-06 ("Romance: Companions step false pre-selection blocks Continue," Critical) root-caused and fixed by `isJourneyEntryPreselectionActive()`; re-tested RESOLVED; fix verified still present, unreverted, in current HEAD | `0bbac73` | `EBC-036-Retest-Report.docx` (Keerthi, PASS) | ✅ **Complete** |
+| `R1.2-04.02` — Validate homepage mood card mappings | Proposed | `EBC-036` validated the *then-current* six-mood mapping set end-to-end (all enumerations consistent, no duplicate/hardcoded lists) — but Workstream 1 subsequently changed the mapping set itself (Escape removed, `DEC-R1.2-007`; Memory Maker remapped Culture & Heritage → Photography, `DEC-R1.2-008`, both ratified from 15-Aug-2026 onward). The *current* five-mood set has design/traveller-experience validation (Sri, Workstream 1 "Business Acceptance received") and a structural safety net (`travelStyleDefaults()` fails fast at module load on any value not in the real Travel Style catalogue), but no dedicated independent QA/functional validation of the routing-to-preselection mechanism for the current values, of the kind `EBC-036` performed for the prior set | `0bbac73` (superseded values), `a8e2190` (WS1 remap) | `EBC-036-Retest-Report.docx` (prior set only) | 🟡 **Partial** — mechanism validated historically; current values not independently re-validated |
+| `R1.2-04.03` — Companion entry context | Proposed | Same underlying defect as `04.01` — D-06 is specifically a Companions-moment defect (the false-persisting advisory banner), and the fix (`isJourneyEntryPreselectionActive()`) is the single, generic source of truth for the Companions moment's banner correctness regardless of which mood/experience/inspiration routes there. Verified live and wired in current code | `0bbac73` | `EBC-036-Retest-Report.docx` (Keerthi, PASS, D-06) | ✅ **Complete** — see interpretive note below |
+| `R1.2-04.04` — Pace & Timing entry context | Proposed | Two components: (a) the same generic banner-correctness fix applies identically to the Pace & Timing moment, regression-sanity-tested for Relax/Explore/Celebrate ("genuinely pre-selected... no regression"); (b) D-08 (Memory Maker) was a genuine, distinct Pace & Timing pre-selection *value* defect, root-caused and fixed in the same commit, re-tested RESOLVED. D-07 (Romance/Escape) was re-tested and found not to be a genuine defect at this moment (architecture is one-preselection-per-mood by design) | `0bbac73` | `EBC-036-Retest-Report.docx` (Keerthi, PASS, D-07/D-08) | ✅ **Complete** — see interpretive note below |
+| `R1.2-04.05` — Regression test all Journey Passport entry paths (Keerthi) | Proposed | `EBC-036` is R1.1-cycle QA, explicitly scoped to "Journey Mood → Journey Passport" only (its own Section 1: "not a full site regression"), predates the current post-WS1/EBC-030/WS6 implementation, and does not cover Experience- or Inspiration-based entry paths | — | — | ❌ **No Repository Evidence** |
+| `R1.2-04.06` — Acceptance: advisory banner correctness (Keerthi) | Proposed | `EBC-036` substantively covers banner correctness (D-06) but is R1.1-cycle QA on a different branch, not an R1.2 WS4-scoped Keerthi acceptance record against the current codebase | — | — | ❌ **No Repository Evidence** |
+| `R1.2-04.07` — Acceptance: state consistency across entry contexts (Keerthi) | Proposed | No dedicated record found | — | — | ❌ **No Repository Evidence** |
+| `R1.2-04.08` — Acceptance: override behaviour (Keerthi) | Proposed | `EBC-036` touches override tangentially (single-click Continue after selection) but was not framed as this acceptance criterion and is R1.1-cycle | — | — | ❌ **No Repository Evidence** |
+| `R1.2-04.09` — Acceptance: resume behaviour (Keerthi) | Proposed | No dedicated record found | — | — | ❌ **No Repository Evidence** |
+| `R1.2-04.10` — Traveller name numeric-character rejection | Complete (`EBC-R1.2-WS8-02`) | Unchanged by this card — carried forward as previously evidenced | `4f2f2ef` | — | ✅ **Complete** (unchanged) |
+| `R1.2-04.11` — Regression test Journey Passport validation (Keerthi) | Proposed | No Keerthi QA record found validating `04.10` or Journey Passport validation broadly | — | — | ❌ **No Repository Evidence** |
+
+**Interpretive note on `04.03`/`04.04`.** No document explicitly states "`04.03` = D-06" or "`04.04` = D-07/D-08" — the tracker's three-line task breakdown (Romance / Companion / Pace & Timing) and `EBC-036`'s four-defect breakdown (D-06/D-07/D-08/D-09) use different labels. This assessment correlates them by the moment/field each demonstrably affects, which is the only basis the evidence supports; no other defect anywhere in the record touches the Companions or Pace & Timing moments. This correlation is disclosed, not asserted as an established fact — Tiger/Vivek should confirm or dispute it before treating `04.03`/`04.04` as final.
+
+## 16.4 Validation Chain (for the three newly-completed defect-fix tasks)
+
+Implementation ✅ (`0bbac73`) → Engineering — Keerthi's `EBC-036` report performed a code-review-based root-cause verification in addition to UI re-testing (its own Section 3) → QA ✅ (Keerthi, `EBC-036`, PASS with reproducible evidence) → Traveller Validation — **not performed** as a dedicated Sri pass for these specific defects → Product Owner — **no acceptance record** for Workstream 4 as a whole. Per this card's Section 7 instruction, `04.01`/`04.03`/`04.04` are marked Complete on the strength of implementation + independent QA evidence matching each task's own acceptance criterion (fix the defect) — the same standard `EBC-R1.2-WS8-02` applied to `04.10`. This does **not** complete Workstream 4 as a whole: the five Keerthi acceptance/regression tasks (`04.05`–`04.09`, `04.11`) and Workstream 4's own Product Owner acceptance remain outstanding, so the Workstream 4 Status field remains **Proposed**.
+
+## 16.5 Workstream 5 — Product Owner Acceptance (Section 9)
+
+Investigated per this card's explicit instruction to update WS5 to "Product Owner Acceptance Complete" unless repository evidence contradicts this. **It does.** `EBC-R1.2-WS5-GOV-07-TIGER` (27-Aug-2026) states explicitly: "That Product Acceptance (Vivek, in the release-decision sense of Project Instructions §11 Stage 11) has occurred[:] a successful personal test is evidence toward acceptance, not the acceptance decision itself" — i.e. not yet accepted as of 27-Aug. No later document (committed or Claude Project) records a formal Vivek acceptance decision for Workstream 5, unlike Workstream 6's `EBC-R1.2-WS6-14-VIVEK`. A project-wide search for a WS5 counterpart to `WS6-14-VIVEK` found none.
+
+The other six items this card asks to confirm **are** independently evidenced and already accurately stated in Workstream 5's tracker entry: Engineering Complete (`77d3a91`, `IMP-02`/`IMP-03` deployed), Architecture Complete (`EBC-R1.2-WS5-01`, Approved), Functional QA Complete (`EBC-R1.2-WS5-QA-01`, Passed with Observations, 30-Aug-2026), Traveller Validation Complete (`EBC-R1.2-WS5-SRI-01`, 30-Aug-2026), OTP expiry aligned to 10 minutes (`3280b93`, `JOURNEY_PASSPORT_OTP_EXPIRY_SECONDS` raised to 600), Smoke Validation Complete (`EBC-R1.2-WS5-QA-03`). Only Product Owner Acceptance and `[SMV-DBG]` removal remain open. **Workstream 5's Status field continues to read "Pending Product Acceptance"** — not because the other six items are unmet, but because that one item genuinely is, per repository evidence. Fabricating a Vivek acceptance record would violate this card's own "no fabricated evidence" acceptance criterion.
+
+## 16.6 Observation — A Second, Unreconciled Workstream 4 Delivery Chain (Out of Scope)
+
+While investigating `04.01`–`04.11`, this reconciliation discovered a substantially larger, entirely separate Workstream 4 governance and delivery chain that has never been cross-referenced against `RELEASE-1.2.md`'s Section 5/6.4 Workstream 4 entries: `EBC-R1.2-WS4-01` through `-06` (Sri/Sophie/Rad/Archie discovery, Arjun product assessment PR-001–008, Sophie UX analysis UX-001–005), `DR-R1.2-WS4-001` (a ratified Product Review Gate decision record, DR-WS4-001–005), `IPP-R1.2-WS4-001` (an implementation planning package with candidates IMP-005–019), and two **committed, merged** implementation reports — `EWP-R1.2-WS4-001` (`be0056e`, "eliminate Journey Passport image-loading flash") and `EWP-R1.2-WS4-002` (`dded509`, Journey Passport accessibility verification and remediation) — both confirmed ancestors of current HEAD. This chain uses "Journey Passport Experience Refinement" as Workstream 4's title (image loading, accessibility, CTA copy, seven-moment structure ratification, component cleanup) — a different scope than the tracker's own "Journey Passport Entry Context Improvements" (`R1.2-04.01`–`04.11`, Romance/Companion/Pace & Timing defects and traveller-name validation). Neither chain references the other anywhere in the evidence reviewed. This is a material governance gap — real, committed engineering work (`be0056e`, `dded509`) with its own product/UX/architecture discovery and decision-record chain sits entirely outside this tracker's Workstream 4 accounting. Reconciling it is a substantial undertaking (mapping thirteen recommendations and two implementation reports against, or alongside, the eleven-task table) and is explicitly **out of this card's scope** (Deliverables: `RELEASE-1.2.md` only, per the eleven named tasks) — recorded here as a finding, not resolved, and recommended as its own dedicated Tiger reconciliation card.
+
+## 16.7 Outcome
+
+**B. Workstream 4 Partially Complete.** Three tasks (`04.01`, `04.03`, `04.04`) are supported by genuine, independently-validated repository evidence and are updated to Complete; `04.10` was already Complete. `04.02` is updated to reflect a partial, historical-only validation. The five Keerthi acceptance/regression tasks (`04.05`–`04.09`, `04.11`) remain open — no repository evidence exists for any of them at R1.2 scope — and Workstream 4's overall Status field remains **Proposed**, unchanged, consistent with `EBC-R1.2-WS8-02`'s prior determination and this card's own Section 7 instruction not to mark completion without evidence.
+
+---
+
+*Prepared by Tiger (Programme and Delivery Lead) per `EBC-R1.2-WS4-05`. Documentation only — no code, configuration, database, WS8 execution, or Release 1.3 change was made. This section does not reopen or revise Section 15's Release 1.2 closure recommendation.*
+
+
+---
+
+# 17. Workstream 4 Repository Evidence Synchronisation (`EBC-R1.2-WS4-06`, Tiger, 01-Sep-2026)
+
+Documentation-only reconciliation. This card's own Objective assumed the committed `EBC-R1.2-WS4-01`–`06`/`DR-R1.2-WS4-001`/`IPP-R1.2-WS4-001`/`EWP-R1.2-WS4-001`/`002` chain (flagged out of scope by `EBC-R1.2-WS4-05`, Section 16.6) was the artefact set that might satisfy the remaining WS4 tracker items. Investigation found this assumption does not hold -- that chain addresses a different scope entirely (see 17.2) -- but a second, previously-unexamined chain does satisfy them, discovered during this same investigation. No code, configuration or database change was made.
+
+## 17.1 Workspace Readiness Check
+
+Repository root `SearchMyVacation`; branch `feature/ebc-r1.2-ws7-06-backlog-finalisation`; working tree clean; HEAD `dbaacb5` (`EBC-R1.2-WS4-05`) confirmed present in history before this card's own edits. `RELEASE-1.2.md` at Version 1.20.
+
+## 17.2 Objective Correction -- Disclosure
+
+The `EBC-R1.2-WS4-01`–`06` / `DR-R1.2-WS4-001` / `IPP-R1.2-WS4-001` / `EWP-R1.2-WS4-001`/`002` chain (dated 20-Aug-2026, titled "Journey Passport **Experience Refinement**") does **not** satisfy `R1.2-04.02` or `04.05`–`04.09`/`04.11`. It addresses a materially different scope -- final CTA copy, the Passport-issuance ceremony, the seven-moment structure, contact-capture timing, image-loading flash, and accessibility contracts for photographic cards -- none of which are the tracker's own "Journey Passport **Entry Context Improvements**" acceptance criteria (defect-fix verification, entry-path regression, advisory-banner correctness, state consistency, override behaviour, resume behaviour, traveller-name validation regression). `EBC-R1.2-WS4-04` (Archie) itself flagged this exact title mismatch as GOV-002, and `IPP-R1.2-WS4-001`'s own IMP-007 ("Verify Romance/Companion tracker defects... a Keerthi task") is the only point of contact between the two chains -- it does not resolve the mapping/regression/acceptance tasks itself, it only recommends the verification that a **third**, separate chain later performed.
+
+That third chain -- `EBC-R1.2-WS4-AUD-01` (Rad, engineering audit), `EBC-R1.2-WS4-IMP-01` (Rad, implementation), `EBC-R1.2-WS4-QA-01` (Keerthi, functional QA) and `EBC-R1.2-WS4-SRI-01` (Sri, traveller validation), all dated 30-Aug-2026 -- is titled "Workstream 4 -- Journey Passport **Entry Context Improvements**," matches the tracker's own workstream name exactly, and explicitly assesses each task by its literal `R1.2-04.xx` ID. This is the chain that satisfies the remaining tasks (17.3–17.4). It was not surfaced by `EBC-R1.2-WS4-05`'s own repository grep (scoped to committed `git` history and `WS4-IMP`/`WS4-AUD`/`R1.2-04\.` patterns in `web/`) because these four documents are Claude Project records, not committed to `docs/09-Development/` -- the same category as the WS5 evidence `EBC-R1.2-WS4-05` itself flagged as "recorded in the Claude Project, not yet committed." This card found them via a direct Project search this card's own instructions required (`project_search` for "Keerthi WS4 Journey Passport regression advisory banner override resume") that `EBC-R1.2-WS4-05` did not perform.
+
+**Underlying code is genuinely committed, not merely claimed.** `EBC-R1.2-WS4-AUD-01` and `-QA-01`/`-SRI-01` tested the live, uncommitted working tree on branch `feature/ebc-r1.2-ws5-03-otp-verification` (tip `77d3a91`) on 30-Aug-2026. Commit `4f2f2ef` ("feat(r1.2): consolidate WS3-WS6 engineering implementation," 31-Aug-2026) is confirmed, by direct `git log`, to be the commit that landed exactly that working-tree state -- it is the last commit to touch `web/lib/journey-passport/entry-context.ts`, `web/hooks/useJourneyPassport.ts` and `web/lib/journey-passport/traveller-name.ts` alike, and is a confirmed ancestor of current HEAD. Direct inspection of current HEAD confirms `sanitizeTravellerName` is wired into all three name-entry call sites (`JourneyPassportMoments.tsx`, `JourneyPassport.tsx`, `useJourneyPassport.ts`'s `sanitiseDraft`) and `hasValidName` requires `!hasNumericCharacter(name)`, exactly as `EBC-R1.2-WS4-IMP-01` describes -- the code these four reports evaluated is what current HEAD actually runs, not a stale or divergent snapshot.
+
+## 17.3 Evidence Mapping Matrix
+
+| Repository Evidence | Tracker Task(s) | Assessment |
+|---|---|---|
+| `EBC-R1.2-WS4-01` (Sri, discovery) | None | Different scope (Experience Refinement) -- see 17.2 |
+| `EBC-R1.2-WS4-02` (Sophie, UI inventory) | None | Different scope |
+| `EBC-R1.2-WS4-03` (Rad, technical discovery) | None directly | Different scope; its dead-code inventory is independently reconfirmed by `WS4-AUD-01` Section 4 |
+| `EBC-R1.2-WS4-04` (Archie, governance) | `04.01`, `04.02`, `04.03` (GOV-007 cross-reference) | Corroborating only -- confirms `entry-context.ts` "Aligned" against the current mood-card set as of 20-Aug-2026 |
+| `EBC-R1.2-WS4-05` (Arjun, product assessment -- **note:** distinct document from Tiger's own `EBC-R1.2-WS4-05` tracker-reconciliation card; see 17.6) | `04.01`/`04.03` (PR-006, recommends verification) | Recommends the task later executed as `WS4-AUD-01`/`QA-01` |
+| `EBC-R1.2-WS4-06` (Sophie, UX analysis -- **note:** naming collision with this card's own ID; see 17.6) | None | Different scope |
+| `DR-R1.2-WS4-001` | None | Ratifies CTA/ceremony/moment-structure/contact-timing decisions, unrelated to `R1.2-04.xx` |
+| `IPP-R1.2-WS4-001` | IMP-007 (recommendation only) | Precedes and recommends `WS4-AUD-01`; does not itself resolve any task |
+| `EWP-R1.2-WS4-001` (`be0056e`, image-loading fix) | None | Different scope (IMP-006) |
+| `EWP-R1.2-WS4-002` (`dded509`, accessibility) | None | Different scope (IMP-013) |
+| **`EBC-R1.2-WS4-AUD-01`** (Rad, engineering audit, 30-Aug-2026) | **`04.01`–`04.11`, all eleven, individually** | ✅ Direct, authoritative -- Rad's own audit against the tracker's actual task list, not the Experience Refinement chain |
+| **`EBC-R1.2-WS4-IMP-01`** (Rad, implementation, 30-Aug-2026, commit `4f2f2ef`) | **`04.10`** | ✅ Implements the one gap `WS4-AUD-01` found; unchanged since `EBC-R1.2-WS8-02` |
+| **`EBC-R1.2-WS4-QA-01`** (Keerthi, functional QA, 30-Aug-2026) | **`04.05`–`04.09`, `04.11`** (Test Groups 1–6) | ✅ Direct acceptance/regression evidence, all PASSED (one Low-severity, non-blocking defect -- 17.9) |
+| **`EBC-R1.2-WS4-SRI-01`** (Sri, traveller validation, 30-Aug-2026) | Traveller-facing acceptance across WS4 broadly | ✅ "Good Experience with Minor Improvements" -- recommends Tiger Closure; no blocker found |
+
+## 17.4 Task-by-Task Assessment -- Remaining Items
+
+| Task | Prior Status | Repository Evidence | Assessment |
+|---|---|---|---|
+| `R1.2-04.02` -- Validate homepage mood card mappings | 🟡 Partial (`EBC-R1.2-WS4-05`) | `EBC-R1.2-WS4-AUD-01` (30-Aug-2026) directly cross-checks all five live homepage mood cards (Relax/Explore/Celebrate/Romance/Memory Makers) against `entry-context.ts`'s `moodPreselections`, confirming each resolves correctly and matches DEC-R1.2-007/008/009 -- this is exactly the "dedicated independent re-validation of the current values" `EBC-R1.2-WS4-05` found missing. Code independently reconfirmed live in current HEAD by this card | ✅ **Complete** |
+| `R1.2-04.05` -- Regression test all entry paths | ❌ No Repository Evidence | `EBC-R1.2-WS4-QA-01` Test Group 1: all 5 moods, all 6 experiences, 5 of 8 inspirations (remaining 3 accepted by code-equivalence) directly browser-verified, correct pre-selection and banner behaviour, no unrelated field affected, no console errors | ✅ **Complete** |
+| `R1.2-04.06` -- Acceptance: advisory banner correctness | ❌ No Repository Evidence | `EBC-R1.2-WS4-QA-01` Test Group 2: banner shown/cleared/re-shown correctly on Companions and independently reconfirmed on Pace & Timing, matching `isJourneyEntryPreselectionActive`'s live-state-comparison design | ✅ **Complete** |
+| `R1.2-04.07` -- Acceptance: state consistency | ❌ No Repository Evidence | `EBC-R1.2-WS4-QA-01` Test Group 4: browser back/forward across two moment transitions preserved all selections exactly; full-page refresh correctly routes to the resume panel rather than silently losing state | ✅ **Complete** |
+| `R1.2-04.08` -- Acceptance: override behaviour | ❌ No Repository Evidence | `EBC-R1.2-WS4-QA-01` Test Group 3: single-select and multi-select (cap-of-3, refusal at cap, free reselection) both verified with no lock-out | ✅ **Complete** |
+| `R1.2-04.09` -- Acceptance: resume behaviour | ❌ No Repository Evidence | `EBC-R1.2-WS4-QA-01` Test Group 5: "Start again" and "Continue where I left off" (from two different saved points, one after a hard refresh) both verified correct | ✅ **Complete** |
+| `R1.2-04.11` -- Regression test Journey Passport validation | ❌ No Repository Evidence | `EBC-R1.2-WS4-QA-01` Test Group 6: all 6 valid and 6 invalid `DEC-R1.2-011` examples verified via typing, paste-equivalent input and corrupted-draft restoration, both name-entry wiring points; one Low-severity, non-blocking discrepancy found (17.9). `04.11`'s own tracker dependency is `04.10`, which this directly regresses | ✅ **Complete** |
+
+## 17.5 Validation Chain
+
+Implementation (`0bbac73`/`e628187`/`a8e2190` for `04.01`–`04.04`; `4f2f2ef`/`EBC-R1.2-WS4-IMP-01` for `04.10`) → Engineering (`EBC-R1.2-WS4-AUD-01`, Rad, static + code-evidence audit against all eleven tasks) → Functional QA (`EBC-R1.2-WS4-QA-01`, Keerthi, live-browser acceptance/regression, seven test groups, all PASSED) → Traveller Validation (`EBC-R1.2-WS4-SRI-01`, Sri, three independent entry paths, "Good Experience with Minor Improvements," recommends Tiger Closure) → **Product Owner -- no acceptance record found.** A project-wide search for a WS4 counterpart to `EBC-R1.2-WS6-14-VIVEK` returned none. Sri's own recommendation is "Proceed to Tiger Closure," not "Proceed to Release" -- Tiger closure (this card) is the next lifecycle stage per Project Instructions Section 12 Stage 10; Product Owner acceptance (Stage 11) remains a distinct, outstanding step.
+
+## 17.6 Governance Observations -- Disclosed, Not Resolved
+
+**Naming collisions.** Two are on record. (1) `EBC-R1.2-WS4-05` (Arjun's Phase-1 product assessment, 20-Aug-2026, Experience Refinement chain) and `EBC-R1.2-WS4-05` (this Tiger tracker-reconciliation card, 31-Aug-2026) share an identical EBC ID for two unrelated documents -- already implicitly disclosed in the prior card, restated here for completeness. (2) This card's own ID, `EBC-R1.2-WS4-06`, collides with the pre-existing `EBC-R1.2-WS4-06-SOPHIE-UX-Analysis-Experience-Optimisation.md` (20-Aug-2026, Experience Refinement chain). Both collisions are recorded per Archie's GOV-002 precedent; resolving the numbering scheme is a future Tiger/Archie governance action, out of this card's scope.
+
+**The second, unreconciled Experience Refinement chain remains genuinely unreconciled.** Nothing in this card resolves `EBC-R1.2-WS4-05`'s Section 16.6 finding -- that chain's thirteen recommendations and two committed implementation reports (`be0056e`, `dded509`) still have no cross-reference to `RELEASE-1.2.md`. This card only establishes that chain is *not* the evidence source for the remaining tracker tasks; the dedicated future reconciliation `EBC-R1.2-WS4-05` recommended for that chain is still outstanding.
+
+## 17.7 Risk Register Updates
+
+Two risks are directly resolved by the evidence above and are updated in Section 10 and Section 15.7 accordingly:
+
+- **RISK-R1.2-007** (entry-context fixes regress adjacent paths) -- its own tracked mitigation was "Full entry-path regression required (`R1.2-04.05`)." `EBC-R1.2-WS4-QA-01` Test Group 1 performed exactly that regression (~20 entry combinations) with no regression found. **Closed.**
+- **RISK-R1.2-013** (WS4 completion status disputed) -- its own tracked mitigation named the exact chain this card investigated ("`WS4-IMP-01`/`AUD-01`/`QA-01`/`SRI-01`") and recommended "a dedicated Rad verification pass against commit `0bbac73`, followed by independent QA/traveller re-confirmation if warranted." `EBC-R1.2-WS4-05` performed the `0bbac73` verification; this card performed the independent re-confirmation of the four-document chain and confirmed its underlying code is genuinely committed (`4f2f2ef`). **Closed.**
+
+## 17.8 Workstream Assessment
+
+All eleven WS4 tasks now carry genuine, independently-validated repository evidence and are updated to Complete in Section 6.4. This is a materially different position from `EBC-R1.2-WS4-05`'s four-of-eleven finding one day earlier -- not because new engineering occurred, but because a second, previously-unexamined governance chain (17.2) was located and its underlying code confirmed still live in current HEAD.
+
+This does **not** meet Outcome A's own bar ("the workstream is formally closed") as stated in this card's Section 6, because no Product Owner acceptance record exists for Workstream 4 (17.5) -- the same distinction this project drew for Workstream 6, which was not counted toward "Completed Workstreams" until `EBC-R1.2-WS6-14-VIVEK` was recorded, and for Workstream 5, which remains "Pending Product Acceptance" despite complete engineering/QA/traveller evidence. Workstream 4's Status field is therefore updated to **"All Eleven Tasks Complete -- Ready for Product Owner Acceptance"** (the same phrasing Workstream 6 itself used immediately before its own Vivek acceptance), not to bare "Complete," and the dashboard's "Number of Completed Workstreams" is **left unchanged at 3** (WS1, WS2, WS6). The dashboard's "Number of Completed Tasks" and "Task Status Breakdown," which count tasks rather than workstreams, are updated to credit all eleven WS4 tasks (17.9 / Section 6.4).
+
+**Outcome: B. Workstream 4 -- all tasks evidence-backed; workstream not yet formally closed**, materially advanced from `EBC-R1.2-WS4-05`'s four-of-eleven position. This is not Outcome A (that requires formal closure, which requires Product Owner acceptance, which does not yet exist) and not Outcome C (no evidence found here contradicts tracker intent -- to the contrary, every task's evidence directly matches its own stated acceptance criterion).
+
+## 17.9 Non-Blocking Items -- Recorded, Not Implemented
+
+Per this project's Section 20 (record improvements outside scope as observations; do not silently implement them):
+
+- **QA-01 (Low severity, `EBC-R1.2-WS4-QA-01`):** `sanitizeTravellerName` strips a digit but does not trim the whitespace left behind (e.g. `"John 7"` → `"John "` rather than `"John"`). Recommended by Keerthi as a small follow-up implementation task for Rad; explicitly "Not release-blocking."
+- **Sri's MF-01/MF-02/MF-03, NH-01/NH-02 (`EBC-R1.2-WS4-SRI-01`):** the traveller-facing name-field digit-stripping has no visible acknowledgement (MF-01); an all-numeric/empty name gives no inline explanation, only a disabled Continue (MF-02, echoes Keerthi's own Observation 1); a full-page refresh has a brief moment of apparent state loss before the resume panel appears (MF-03); a one-line empty-name message would close MF-02 (NH-01); the Destination chapter's place-search could not be fully evaluated while its service was unavailable during this pass (NH-02). None of these are classified as defects and none block this card's own findings. Recommended for a future Sophie/Arjun backlog entry, not implemented here.
+
+Neither item changes the Task-by-Task Assessment (17.4) or the Workstream Assessment (17.8) above.
+
+---
+
+*Prepared by Tiger (Programme and Delivery Lead) per `EBC-R1.2-WS4-06`. Documentation only -- no code, configuration, database, QA execution, architecture review, WS8 execution, or Release 1.3 change was made. This section does not reopen or revise Section 15's Release 1.2 closure recommendation or Section 16's historical reconciliation record.*
+
+
+---
+
+# 18. Release 1.2 Final Closure & Product Owner Sign-off (`EBC-R1.2-WS8-04`, Tiger, 02-Sep-2026)
+
+This is the final Release 1.2 governance card. It performs the closure review Section 15 could not — every item Section 15.9 named as blocking has since moved: Workstream 8 has run, Workstream 4 and Workstream 5 have each received a Product Owner acceptance record, and `[SMV-DBG]` diagnostic logging is confirmed removed. This card also discloses and resolves a working-tree discrepancy found at its own start (18.1), reconciles the dashboard and risk register against current evidence (18.2–18.4), confirms Release 1.3 carry-forward is complete (18.5), records the Product Owner's formal acceptance decision (18.6), executes the closure state transition (18.7), and issues the release summary and final recommendation (18.8–18.11). Documentation only — no code, configuration, database, or Release 1.3 planning file is changed by this card; `RELEASE-1.3-BACKLOG.md` is reviewed only, never edited.
+
+## 18.1 Workspace Readiness Check
+
+Repository root confirmed: `SearchMyVacation` (device-mounted at `/Users/viveksophu/Documents/Projects/SearchMyVacation`). Branch: `feature/ebc-r1.2-ws5-06-remove-otp-debug-logging`. Latest commit: `45637d6` ("chore(r1.2): remove temporary OTP debug logging before release") — confirming the `[SMV-DBG]` removal Section 15.2 and the Closure Readiness note both named as the last open engineering blocker; a fresh `grep -rn "SMV-DBG"` across `web/` returns zero matches.
+
+**Working-tree discrepancy found and resolved.** At the start of this card, the working tree already carried two uncommitted, unauthored edits to `docs/10-Backlog/RELEASE-1.2.md`: the Document Information table's Version field had been set to `1.3` — a number already used earlier in this same Change History, on 15-Aug-2026, for an unrelated update — and its Status field to `Release Validation`, neither with a corresponding Change History row; and Section 5's Workstream 4 and Workstream 5 entries already read "Complete — Product Owner Accepted (Vivek, 01-Sep-2026)" with no backing governance document anywhere in this Claude Project (unlike Workstream 6's `EBC-R1.2-WS6-14-VIVEK`). Per this project's Section 14 (stop and report unexpected uncommitted changes) and its own established pattern of not silently building on unverifiable claims (`RISK-R1.2-014`/`015`), this was raised directly with the Product Owner before proceeding rather than assumed. The Product Owner confirmed, in this session: (1) the WS4/WS5 acceptance is real and should be kept — "I did accept WS4 and WS5" — and (2) Release 1.2 should be formally accepted and closed now. Both decisions are the basis for Section 18.6 below and are recorded in Change History row 1.23. The version-numbering defect is corrected (Version 1.23 continues this tracker's own sequential convention; see 18.9).
+
+`docs/10-Backlog/RELEASE-1.3-BACKLOG.md` carried its own separate, unrelated uncommitted edit (its Release field changed from "1.3" to "2.0"). This is outside this card's Deliverables (`RELEASE-1.2.md` only) and has been left untouched throughout — it is not part of this card's git commit (see 18.9).
+
+A stale `.git/index.lock` (created by an interrupted command during this session) was found and removed before any git operation; it held no uncommitted git-level state and its removal is a housekeeping action, not a content change.
+
+## 18.2 Final Release Review (Activity 1)
+
+Every workstream reviewed against current repository and Section 5/6/15–17 evidence:
+
+- **Workstream 1 (Homepage Premium Visual Refinement) — Complete.** Unchanged since `R1.2-013`; re-confirmed by `R1.2-014`.
+- **Workstream 2 (Experiences vs Journey Mood Rationalisation) — Complete.** Unchanged since `R1.2-013`.
+- **Workstream 3 (Destination Intelligence) — Complete for Phase 0–2 native-ID chain only** (`R1.2-024`); Phases 3–5 and the Section 6.3 task table remain Release 1.3 scope, per Section 18.5.
+- **Workstream 4 (Journey Passport Entry Context Improvements) — All eleven tasks Complete** (Section 6.4; Sections 16–17's evidence chain); **Product Owner Accepted** (Vivek, 01-Sep-2026; verified directly with the Product Owner this session per 18.1).
+- **Workstream 5 (International Phone Number & OTP Verification) — Engineering, functional QA (`EBC-R1.2-WS5-QA-01`), traveller validation (`EBC-R1.2-WS5-SRI-01`) and `[SMV-DBG]` removal all complete; Product Owner Accepted** (Vivek, 01-Sep-2026; verified directly with the Product Owner this session per 18.1). Section 6.5's own task table is not fully reconciled to this status — disclosed as a residual documentation gap in 18.10.
+- **Workstream 6 (Journey Passport Destination Autocomplete & Validation) — Complete.** Product Owner Accepted (`EBC-R1.2-WS6-14-VIVEK`, 31-Aug-2026).
+- **Workstream 7 (Release Documentation & Governance) — Substantially Complete.** This card consolidates the release summary (18.8) `07.03` was tracking toward. `07.01` (`PROJECT-HISTORY.md` Release 1.2 entry), `07.02`/`07.03` (a dedicated retrospective/Lessons-Learned document distinct from this section), `07.04` (`RELEASE-1.2-BACKLOG.md` reconciliation) and `07.06` (standalone release notes) remain open as small, non-blocking follow-ups — see 18.9.
+- **Workstream 8 (Release-wide QA & Regression) — Substantially Validated, Pass with Observations.** Functional regression (`EBC-R1.2-WS8-QA-01`), traveller experience validation (`EBC-R1.2-WS8-SRI-01`) and operational cleanup (`EBC-R1.2-WS8-03`) are all complete. Section 6.8's task table is reconciled by this card (Activity 2): 4 of 16 tasks Complete, 3 Partial, 8 Not Tested (accepted, non-blocking residual items — full cross-browser sweep, a dedicated build/TypeScript/ESLint pass at release scope, and the post-deployment production smoke test), 1 Not Tested because it is explicitly a post-deployment activity not yet applicable.
+
+No workstream review above reopens a completed, validated engineering decision. Every status change made by this card is either a reconciliation of an already-existing evidence chain (Workstream 8's Section 6.8 table, Section 10's risk register) or a direct record of the Product Owner's own decision (Workstream 4/5 acceptance, Release 1.2 closure).
+
+## 18.3 Dashboard Validation (Activity 2)
+
+Recalculated by hand against Section 6's per-workstream task tables and Section 5's workstream statuses:
+
+- **Number of Completed Workstreams: 5** (Workstreams 1, 2, 4, 5, 6) — unchanged by this card. Workstream 8 is deliberately not added to this count: its Section 6.8 task table still carries 12 of 16 tasks short of Complete (Partial or Not Tested), the same evidence-plus-acceptance bar applied to Workstreams 4/5/6 before they were counted. This is a genuine, not a cosmetic, distinction from **Release Closed** (18.7) — the Product Owner's closure decision (18.6) accepts Release 1.2 with these items as named, non-blocking residuals, which is a different and lower bar than "workstream fully Complete." Section 12's Release Checklist reflects this same distinction (see 18.9).
+- **Number of Completed Tasks: 60 of 128** — unchanged. This card performs no engineering and flips no task-table row from any status to Complete except where Section 6.8's rows already had (`EBC-R1.2-WS8-QA-01`/`-SRI-01`) evidence to cite (Activity 2's Section 6.8 reconciliation, 4 rows now Complete, 3 Partial); the dashboard's task count is a count of `R1.2-0X.YY` rows across Sections 6.1–6.8, and Workstream 8's newly-Complete rows were already excluded from the prior 60 — re-verified: recounting Section 6.1–6.8 confirms 60 Complete tasks stands (Workstream 8's task table was 0 Complete before this card and is 4 Complete after; the dashboard's stated 60 already excluded Workstream 8 entirely, so this card's 4 new Section 6.8 Complete flips are additive and the dashboard total requires updating to 64 — **corrected below**).
+
+**Correction applied by this card:** Number of Completed Tasks is updated from 60 to 64 of 128, and the Task Status Breakdown from "60 Complete · 1 In Progress · 17 Ready for QA · 50 Proposed" to reflect Section 6.8's reconciliation (4 rows Proposed → Complete; 3 rows Proposed → Partial, tracked separately from the Proposed count; 9 rows Proposed → Not Tested, likewise tracked separately). See 18.9 for where this correction is applied in Section 3.
+
+- **Number of Decisions:** 8 Open (Section 8), 27 Approved (Section 7) — re-verified, no change; this card records no new `DEC-R1.2-0XX` entry, as the Product Owner's acceptance decision (18.6) is a release-closure decision, not a product/business decision requiring its own Section 7 row.
+- **Number of Risks:** 15 total (Section 10) — re-verified, no change in count; every risk's status is reclassified per 18.4.
+
+## 18.4 Risk Register Review (Activity 3)
+
+Every Section 10 risk classified as Closed, Accepted, or Carried Forward — no historical evidence removed, only status and a dated closure note added to each:
+
+| Risk | Prior Status | Closure Classification | Basis |
+|---|---|---|---|
+| `RISK-R1.2-001`–`006`, `008`, `010`–`011` | Already Closed/Mitigated in prior updates | Unchanged | No new evidence changes these; re-verified present and correctly stated |
+| `RISK-R1.2-007` | Closed (`EBC-R1.2-WS4-06`) | Unchanged | Workstream 4 evidence chain resolved this |
+| `RISK-R1.2-009` | Open | **Accepted** | QA compressed into one late pass, as feared — but it ran (Keerthi and Sri both Pass with Observations) and found zero release-blocking defects; accepted rather than further mitigated |
+| `RISK-R1.2-012` | Open | **Closed** | Workstream 8 has run in substance (functional regression, traveller validation, operational cleanup all complete); its original "has not started at all" condition no longer holds |
+| `RISK-R1.2-013` | Closed (`EBC-R1.2-WS4-06`) | Unchanged | Workstream 4 evidence chain resolved this |
+| `RISK-R1.2-014` | Open — Partially Resolved | **Carried Forward (Non-Blocking)** | `RELEASE-1.3-BACKLOG.md`'s own fabricated-citation instance remains uncorrected — deliberately, as it sits outside this card's `RELEASE-1.2.md`-only Deliverables; citation-only, no behavioural impact; a small dedicated follow-up Tiger card remains the right vehicle |
+| `RISK-R1.2-015` | Open | **Carried Forward (Non-Blocking)** | Same follow-up as `RISK-R1.2-014`; citation-only, no behavioural impact |
+
+Section 15.7's risk-classification summary table (part of the 31-Aug-2026 `EBC-R1.2-WS8-02` historical assessment) still shows `RISK-R1.2-009`/`012` as "Active" — that table is preserved unchanged as the historical record of that earlier assessment, consistent with how Section 3's Closure Readiness note preserves its own superseded text; this section (18.4) and the Section 10 Risk Register itself are the current, authoritative classification.
+
+## 18.5 Deferred Items Review (Activity 4)
+
+Every item this card's Objective named as a Release 1.2 deferral was checked directly against `RELEASE-1.3-BACKLOG.md` (reviewed only, not edited):
+
+- **Destination regionalisation / region-level destination intelligence** — present (`RELEASE-1.3-BACKLOG.md` Section 4).
+- **Journey Reflection free-text interpretation** and **unknown-destination messaging** — present (Section 10), though thinly specified; a citation-quality observation is recorded, not corrected, as it is outside this card's Deliverables.
+- **Passport Stamp Ceremony / Journey Passport Completion Experience** — present (Section 10).
+- **Traveller Stories quality gate / quality improvements** — present (Section 3).
+- **Homepage custom background music** — present (Sections 3 and 5).
+- **Destination Intelligence Phase 3–5** — present (Section 3; Phase 3/4 explicitly named, Phase 5 covered by the broader Destination Intelligence expansion item).
+- **Workstream 6 UX refinements** (pending-chip, auto-grow textarea, character counter) — present (Section 10).
+
+Every previously-deferred Release 1.2 item named in this card's Objective is confirmed present in `RELEASE-1.3-BACKLOG.md`. Nothing is lost to closure.
+
+## 18.6 Product Owner Acceptance (Activity 5)
+
+**Formal decision, recorded 02-Sep-2026:** the Product Owner (Vivek) accepts Release 1.2 as complete and ready for closure, covering:
+
+- **Engineering** — Workstreams 1, 2, 3 (Phase 0–2), 4, 5 and 6 all implementation-complete and evidence-backed (Sections 6, 15–17); Workstream 8's engineering-adjacent items (build/TypeScript/ESLint at release scope, full cross-browser sweep) accepted as non-blocking residuals (18.3).
+- **UX** — Sophie's design guidance preserved throughout; no unresolved UX blocker recorded against any workstream.
+- **QA** — Keerthi's functional QA complete for every workstream that reached implementation, most recently Workstream 8's release-wide regression (`EBC-R1.2-WS8-QA-01`, Pass with Observations).
+- **Traveller Validation** — Sri's traveller-experience review complete for Workstreams 1, 2, 5, 6 and, release-wide, Workstream 8 (`EBC-R1.2-WS8-SRI-01`, Pass with Observations).
+- **Governance** — the Evidence-Based-Change discipline held throughout, including this card's own disclosure of the working-tree discrepancy (18.1) rather than silently accepting or discarding it; two low-risk documentation citations (`RISK-R1.2-014`/`015`) remain open, accepted as non-blocking.
+- **Operational Readiness** — production-database cleanup complete and verified (`EBC-R1.2-WS8-03`); `[SMV-DBG]` diagnostics removed and committed (`45637d6`).
+
+This acceptance rests on the same basis as Workstream 4 and Workstream 5's own acceptance record (18.1): confirmed directly with the Product Owner in this session. No separate `WS8-04`-VIVEK acceptance document exists in the Claude Project — this section, in the tracker itself, is that record.
+
+## 18.7 Release Closure (Activity 6)
+
+**Overall Release State changed: Release Validation → Release Closed.** Applied to the Document Information table (Status field), Section 3's dashboard (Overall Release State row), and this Change History's row 1.23. Release 1.3 is now the active implementation release; `RELEASE-1.3-BACKLOG.md` governs its scope, unedited by this card.
+
+## 18.8 Release 1.2 Summary
+
+Release 1.2 delivered a refined homepage visual and information system (Trust Strip, Mood Cards, five-card layout); resolved the Experiences/Journey Mood product overlap; established a governed, weighted destination-intelligence knowledge base with a native-ID generation and vocabulary-alignment pipeline under explicit architectural ownership; shipped international phone number support (E.164) with mandatory OTP verification for Journey Passport, through India's DLT regulatory chain to a confirmed live SMS send-to-verification cycle; fixed four Journey Passport entry-context defects (Romance, Companion, Pace & Timing, and traveller-name numeric-character rejection) across every entry path; and replaced free-text destination entry with a searchable, GeoNames-validated autocomplete, with Journey Director preserved as the sole served-destination authority throughout.
+
+**Architecture.** Two Architecture Decision Records ratified (`ADR-R1.2-WS3-001` Destination Knowledge Governance; `ADR-R1.2-WS5-001` DLT External Provider Onboarding). A fail-closed OTP provider design let engineering validate the full OTP flow independently of the external MSG91/DLT timeline.
+
+**Engineering.** A self-hosted GeoNames dataset replaced paid destination APIs. A serious `search_geo_places()` performance regression was traced through an eleven-part investigation to PostgreSQL planner/expression-index behaviour and resolved with a dynamic query-planning rewrite. Two structurally identical PL/pgSQL variable-shadowing defects, invisible to static analysis, were found only against a live schema and fixed.
+
+**Quality assurance.** A consistent multi-persona validation chain — engineering, independent re-review, functional QA, traveller experience — ran for every workstream that reached implementation, none approving its own work. Release-wide, Workstream 8 closed with Pass with Observations from both Keerthi (`EBC-R1.2-WS8-QA-01`) and Sri (`EBC-R1.2-WS8-SRI-01`); named residual items (cross-browser coverage, a release-scope build/lint pass, the post-deployment smoke test) are accepted, not silently dropped.
+
+**Governance.** The Evidence-Based-Change model matured into a consistent, evidence-cited, multi-persona chain across the release. Six successive documentation-reconciliation cards (`WS7-06` through this card, `WS8-04`) demonstrated a repeatable, evidence-first correction discipline: narrowing scope under explicit Product Owner instruction rather than fabricating closure; correcting fabricated citations with plain, dated, honestly-labelled wording rather than inventing replacement IDs; and, this card, surfacing an unverifiable working-tree claim to the Product Owner directly rather than assuming it was either legitimate or fraudulent.
+
+**Operational readiness.** Production-database cleanup of Release 1.2 validation data (leads, callbacks, events, OTP challenges) completed and verified, zero orphaned records (`EBC-R1.2-WS8-03`); a GeoNames import runbook and an SMS/OTP Operations Runbook are now reusable institutional knowledge.
+
+**Release 1.3 carry-forward.** Confirmed complete (18.5): destination regionalisation, Journey Reflection free-text interpretation, the Passport Stamp Ceremony, Traveller Stories quality improvements, homepage background music, Destination Intelligence Phase 3–5, and Workstream 6's UX refinements are all captured in `RELEASE-1.3-BACKLOG.md`, frozen pending prioritisation.
+
+**Lessons carried into Release 1.3.** Section 15.10 already named one instance of task-table status drifting silently from repository truth (`R1.2-04.10`). This card found a second, larger instance: Workstream 5's Section 6.5 task table (35 rows) still shows only 3 tasks flipped to Complete despite Workstream 5's own Section 5 header reading "Complete — Product Owner Accepted" since 01-Sep-2026 — the header status and the task-level table were never reconciled to each other, unlike Workstream 4's equivalent reconciliation (Sections 16–17). This card does not blanket-flip those 32 rows without row-level evidence — doing so risks exactly the fabrication this tracker's own history warns against (`RISK-R1.2-014`/`015`) — and instead discloses it as a named residual gap (18.10). The recurring lesson: a workstream-level acceptance decision does not automatically propagate to its own task table, and every future closure card should check both levels independently rather than assuming one implies the other.
+
+## 18.9 Change History & Documentation Follow-ups (Activity 8)
+
+Change History row 1.23 (already present at the top of this document) records this card's full scope. The Section 3 dashboard correction (18.3 — Completed Tasks 60→64, Task Status Breakdown updated for Section 6.8's four newly-Complete and three newly-Partial rows) and the residual-item notes on Workstream 7's status field (18.2) are applied alongside it. `PROJECT-HISTORY.md`'s Release 1.2 entry (`07.01`), a dedicated Workstream 7 retrospective/Lessons-Learned document (`07.02`/`07.03`, distinct from 18.8's summary), `RELEASE-1.2-BACKLOG.md` reconciliation (`07.04`) and standalone release notes (`07.06`) remain open, non-blocking follow-ups outside this card's `RELEASE-1.2.md`-only Deliverables — recommended as a small follow-up Tiger card, alongside the `RISK-R1.2-014`/`015` citation corrections (18.4).
+
+## 18.10 Integrity Review (Activity 9)
+
+- **Section numbering:** Sections 1–18 sequential, no gaps or duplicates; this section continues Sections 15–17's numbered-subsection convention (18.1–18.11).
+- **Version numbers:** Document Information Version field, Section 12's checklist self-reference, and this Change History's row 1.23 all read 1.23 consistently.
+- **Dashboard totals:** cross-checked against Section 6's task tables and Section 10's risk register; the one genuine discrepancy found (Completed Tasks 60→64) is corrected in 18.3/18.9, not silently left inconsistent.
+- **Cross-references:** Section 18 subsection references from Sections 3, 5, and 10 (added by this card's edits) all resolve to real subsections within this section.
+- **Markdown tables:** the risk-classification table (18.4) and this review's own structure checked for well-formed pipe syntax.
+- **Known, disclosed residual gaps** (not fixed by this card, per its Deliverables and Out-of-Scope boundaries):
+  1. **Workstream 5's Section 6.5 task table** (35 rows, only 3 Complete) is not reconciled with Workstream 5's Section 5 "Complete — Product Owner Accepted" header status — see 18.8's Lessons Carried into Release 1.3. Recommended as a dedicated future Tiger reconciliation card, mirroring the Workstream 4 precedent (Sections 16–17).
+  2. **The working-tree discrepancy disclosed in 18.1** — the pre-existing, unauthored WS4/WS5 "Product Owner Accepted" claim and the Version/Status field regression — is corrected in this update but has no separate governance document recording the original claim's source; this card's own text (18.1, Change History row 1.23) is the record.
+  3. **`RELEASE-1.3-BACKLOG.md`'s own uncommitted "Release 1.3" → "2.0" edit** (found at this card's start, unrelated to Release 1.2 closure) was deliberately left untouched and is not part of this card's git commit — outside this card's `RELEASE-1.2.md`-only Deliverables.
+  4. **`RISK-R1.2-014`/`015`'s two remaining fabricated-citation instances** (`RELEASE-1.3-BACKLOG.md` and `docs/09-Development/EBC-R1.2-GOV-001-STATUS-RECONCILIATION.md`) remain open, per 18.4.
+
+None of these four items is assessed as release-blocking; each is disclosed rather than fixed here because fixing it would exceed this card's Deliverables (`RELEASE-1.2.md` only) or would risk fabricating evidence that does not yet exist. This is the same disclosure discipline Section 15.10's own lessons-learned entry established.
+
+## 18.11 Final Recommendation (Activity 10)
+
+**Option A — ✅ Release Closed.**
+
+Every condition this card's Objective set for Option A is satisfied: all engineering complete (18.2); governance complete, including this card's own disclosure and resolution of a working-tree discrepancy (18.1); traveller validation complete, release-wide (`EBC-R1.2-WS8-SRI-01`) and per-workstream (18.2, 18.6); operational cleanup complete and verified (`EBC-R1.2-WS8-03`); Product Owner acceptance formally recorded (18.6); and Release 1.3 backlog carry-forward verified complete (18.5). The residual items named throughout this section (Workstream 8's partial task-table coverage, two non-blocking documentation citations, Workstream 5's task-table reconciliation gap) are disclosed, not hidden, and are explicitly accepted by the Product Owner's closure decision rather than silently waived.
+
+**Release 1.2 is hereby declared closed.** Release 1.3 is now the active implementation release, scoped by `RELEASE-1.3-BACKLOG.md`.
+
+---
+
+*Prepared by Tiger (Programme and Delivery Lead) per `EBC-R1.2-WS8-04`. Documentation only — no code, configuration, database, or Release 1.3 planning file was changed. `RELEASE-1.3-BACKLOG.md` was reviewed only, not edited, remaining outside this card's Deliverables. Release 1.2 is closed by the Product Owner's decision recorded in Section 18.6; this document itself is the closure record.*

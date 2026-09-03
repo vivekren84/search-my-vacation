@@ -32,15 +32,15 @@ The Development Documentation serves to:
 ├── Homepage/
 │   └── Hero-Canvas.md
 │
-├── Authentication/
+├── Release-1.2/
+│   └── WS3/
+│       └── (Workstream 3 implementation evidence)
 │
-├── Booking/
-│
-├── Search/
-│
-├── Shared/
-│
-└── Archive/
+└── (individual EBC/DEC/GATE-numbered documents, organised by ID rather than
+    a fixed feature subfolder — see "Relationship with Other Documentation"
+    below for how this folder relates to release-scoped governance folders
+    introduced during Release 1.2, e.g. 20-Architecture, 30-Governance,
+    40-Retrospectives, 50-Operations)
 ```
 
 The structure may evolve as the project grows, but documentation should always remain organised by feature rather than by sprint.
@@ -164,17 +164,21 @@ Development documentation should:
 | 00-Project-Compass | Vision, standards and governance |
 | 01-Vision-Business | Business strategy |
 | 02-Product | Product requirements |
-| 03-ADR | Architectural Decision Records |
+| 03-ADR | Architectural Decision Record register (pre-Release 1.2 baseline — see its own note on the current approach) |
 | 04-UX | User experience documentation |
-| 05-Architecture | System architecture |
-| 06-Database | Database design |
 | 07-Design | Visual design and prototypes |
-| 08-API | API documentation |
 | **09-Development** | Technical implementation documentation |
-| 10-Backlog | Future enhancements |
+| 10-Backlog | Release trackers, backlogs and future enhancements |
 | 11-Sprints | Sprint planning and execution history |
-| 12-Release-Notes | Product release history |
-| 13-Research | Experiments and technical research |
+| 14-Legal | Privacy policy, terms and conditions |
+| 15-AI-Operating-Model | Team Satvi persona and delivery-model documentation |
+| 16-Brand-Assets | Brand imagery and social-cover assets |
+| 20-Architecture | Release-scoped Architecture Decision Records (currently Release 1.2's) |
+| 30-Governance | Standing governance and operational definitions (provider register, integration definition of done) |
+| 40-Retrospectives | Release retrospectives and lessons learned |
+| 50-Operations | Operational runbooks |
+
+This table lists folders that currently exist under `docs/`. Some folder numbers were reserved in an earlier version of this taxonomy (05, 06, 08, 12, 13) but no corresponding folder has been created; they are omitted above rather than left as broken references, and may be introduced later if the corresponding documentation category becomes needed.
 
 ---
 

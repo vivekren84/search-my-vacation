@@ -16,7 +16,7 @@
 
 **Created:** 09 Jul 2026
 
-**Last Updated:** 22 Jul 2026
+**Last Updated:** 31 Aug 2026
 
 ---
 
@@ -33,6 +33,20 @@ Every significant decision should include:
 - Alternatives Considered
 
 The objective is to ensure future team members understand *why* decisions were made, not just *what* was built.
+
+---
+
+# Release 1.2 Decisions — Governance Note
+
+Decisions `Decision-001` through `Decision-005` below predate Release 1.2 and remain the canonical record for that period, unchanged.
+
+Release 1.2 product, UX, architecture and release-management decisions (`DEC-R1.2-001` through `DEC-R1.2-026` as of this note) are intentionally **not** duplicated into this log. They are recorded live, with full context and rationale, in the Release Tracker's own decision register: `docs/10-Backlog/RELEASE-1.2.md`, Section 7 ("Product Decision Log"). That register is authoritative for Release 1.2 — it is updated in the same session as each decision, includes explicit supersession handling, and is the version the team actually consults during delivery. Maintaining two decision logs in parallel for the same release would risk one silently drifting out of date; this document intentionally does not attempt that.
+
+This document resumes as the canonical decision register once Release 1.2 formally closes. At that point, Release 1.2's decision record in the tracker should be treated as the historical record for that release (referenced from here, not re-copied), and any new decisions from Release 1.3 onward are logged here going forward, under this document's existing numbering and format.
+
+See `docs/00-Project-Compass/GOVERNANCE-MAP.md` for the full picture of where Release 1.2 governance information lives (tracker, decision log, governance backlog, architecture records) and how the pieces relate.
+
+Recorded as part of Release 1.2 Workstream 7's documentation-reconciliation work. *Correction, `EBC-R1.2-WS7-08`, 31-Aug-2026: this line previously cited `EBC-R1.2-WS7-IMP-02`, `EBC-R1.2-WS7-AUD-01` and `EBC-R1.2-WS7-GOV-01`; independently reconfirmed that none of the three exist as repository documents or commits (see `docs/10-Backlog/RELEASE-1.2.md`, `RISK-R1.2-014`). This document's own governance note above is unaffected by the correction.*
 
 ---
 

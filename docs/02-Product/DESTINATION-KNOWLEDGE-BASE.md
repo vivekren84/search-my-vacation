@@ -1502,6 +1502,8 @@ Use language that is:
 | Technical representation and tests | Engineering |
 | Guest-facing narrative quality | Content & Experience |
 
+**Downstream governance:** this section covers Business Layer ownership only. Ownership and change authority for everything downstream — the operational workbook, the generator, generated runtime artefacts, and the runtime candidate catalogue — is governed by `docs/20-Architecture/ADR-R1.2-WS3-001-Destination-Knowledge-Governance.md` (Status: Accepted). That ADR also names the current ownership gap for the operational workbook (the "Destination Operational Steward" role, not yet assigned to any Team Satvi persona — ADR Section 15, Outstanding Decision 1); this document does not resolve that gap.
+
 ## 15.2 Review cadence
 
 | Review | Minimum cadence | Trigger examples |

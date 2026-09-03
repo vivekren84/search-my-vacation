@@ -400,6 +400,30 @@ export interface RecordCounts {
   journeyTemplateRecords: number;
 }
 
+export interface LabelMappingComparisonFinding {
+  code: "LABEL_WITHOUT_MAPPING" | "MAPPING_WITHOUT_OPERATIONAL_LABEL";
+  vocabulary: "Emotion" | "Theme" | "TravellerType";
+  label: string;
+  message: string;
+}
+
+export interface VocabularyReachability {
+  vocabulary: "Emotion" | "Theme" | "TravellerType";
+  runtimeVocabularySize: number;
+  reachableCount: number;
+  reachablePercentage: number;
+  unreachable: readonly string[];
+  kbApprovedSize?: number;
+}
+
+export interface LabelMappingReport {
+  emotionByLabel: Readonly<Record<string, string>>;
+  themesByLabel: Readonly<Record<string, readonly string[]>>;
+  travellerByLabel: Readonly<Record<string, string>>;
+  comparison: LabelMappingComparisonFinding[];
+  reachability: VocabularyReachability[];
+}
+
 export interface MetadataArtifact extends ArtifactHeader {
   generatedFrom: string;
   generatedAt: string;
@@ -409,6 +433,7 @@ export interface MetadataArtifact extends ArtifactHeader {
     warnings: number;
     reviewRequiredRecords: number;
   };
+  labelMappings: LabelMappingReport;
 }
 
 export interface ArtifactChecksum {

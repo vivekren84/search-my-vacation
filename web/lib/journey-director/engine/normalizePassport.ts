@@ -62,6 +62,22 @@ function resolveExplicitCoreIntent(
   );
 }
 
+// EBC-R1.2-WS6-09 (Rad, Phase 4). Shared, faithful mapping from the new
+// Passport destination fields to the single raw-text string every existing
+// engine consumer (this file, generateRecommendations.ts's
+// unresolvedDestination) already expects. Preferred-destination canonical
+// names first, then the free-text getaway description if present, comma-
+// joined. For every existing fixture/scenario (a single known destination,
+// no free text), this returns byte-identical text to the old
+// snapshot.destination.trim() — a behaviour-preserving refactor of where
+// the text comes from, not of how it is matched downstream.
+export function deriveDestinationRawText(snapshot: JourneyPassportSnapshot): string {
+  const preferredDestinationNames = snapshot.preferredDestinations.map((destination) => destination.canonicalName);
+  const trimmedGetawayDescription = snapshot.getawayDescription.trim();
+  const parts = trimmedGetawayDescription ? [...preferredDestinationNames, trimmedGetawayDescription] : preferredDestinationNames;
+  return parts.join(", ");
+}
+
 function detectCoreIntent(snapshot: JourneyPassportSnapshot): CoreIntentDetection {
   const dreamIntent = DREAM_CORE_INTENT_MAP[snapshot.dreamJourney];
   if (dreamIntent) {
@@ -263,19 +279,16 @@ function validatePassport(snapshot: JourneyPassportSnapshot, evaluationDate: str
     });
   }
 
-  if (snapshot.destinationMode !== "known" && snapshot.destinationMode !== "discovery") {
-    issues.push({
-      code: "INVALID_DESTINATION_MODE",
-      field: "destinationMode",
-      explanation: "Destination intent must be known or discovery.",
-    });
-  } else if (snapshot.destinationMode === "known" && snapshot.destination.trim().length < 2) {
-    issues.push({
-      code: "MISSING_KNOWN_DESTINATION",
-      field: "destination",
-      explanation: "Known-destination mode requires the traveller's destination wording.",
-    });
-  }
+  // EBC-R1.2-WS6-09 (Rad, Phase 4). No destination-related validation issue
+  // remains possible: per EBC-R1.2-WS6-08 Addendum 01 A2.1-A2.3 (Product
+  // Owner), preferredDestinations and getawayDescription are both
+  // independently optional, and both are structurally always valid (an
+  // empty array / empty string is a legitimate "no preference yet" state,
+  // not an error) — there is no longer a known/discovery mode to be
+  // invalid, and no minimum-length requirement on a known destination.
+  // The retired INVALID_DESTINATION_MODE / MISSING_KNOWN_DESTINATION issue
+  // codes are removed from PassportValidationIssueCode (engine.types.ts)
+  // accordingly — nothing else in the engine referenced them.
 
   return issues;
 }
@@ -284,7 +297,6 @@ function classifyIssues(issues: readonly PassportValidationIssue[]) {
   const insufficientCodes = new Set([
     "MISSING_NAME",
     "INVALID_TRAVEL_STYLES",
-    "MISSING_KNOWN_DESTINATION",
   ]);
 
   return issues.every((issue) => insufficientCodes.has(issue.code)) ? "insufficient-input" as const : "invalid-input" as const;
@@ -361,19 +373,26 @@ export function normalizeJourneyPassport(
   };
   sourceEvidence.push(timingEvidence);
 
+  // EBC-R1.2-WS6-09 (Rad, Phase 4). destinationIntent's own contract
+  // ({mode, rawText}) is unchanged — every downstream consumer
+  // (generateRecommendations.ts, selectPossibilities.ts,
+  // evaluateContradictions.ts) keeps working exactly as before. Only what
+  // feeds it changes — see deriveDestinationRawText below.
+  const destinationRawText = deriveDestinationRawText(snapshot);
+  const destinationHasContent = destinationRawText.length > 0;
   const destinationIntent: DestinationIntent = {
-    mode: snapshot.destinationMode,
-    rawText: snapshot.destination.trim(),
+    mode: destinationHasContent ? "known" : "discovery",
+    rawText: destinationRawText,
   };
   const travelScope = normalizeTravelScope(
     (snapshot as { travelScope?: unknown }).travelScope,
   );
   const coreIntent = detectCoreIntent(snapshot);
 
-  if (snapshot.destinationMode === "known") {
+  if (destinationHasContent) {
     sourceEvidence.push({
       sourceField: "destination",
-      sourceValue: snapshot.destination.trim(),
+      sourceValue: destinationIntent.rawText,
       strengthKind: "explicit",
     });
   }

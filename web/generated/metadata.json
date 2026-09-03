@@ -1,7 +1,131 @@
 {
-  "generatedAt": "2026-07-30T13:55:15.295Z",
+  "generatedAt": "2026-08-19T16:32:54.158Z",
   "generatedFrom": "Journey Director Intelligence Enriched.xlsx",
   "generatorVersion": "1.0.0",
+  "labelMappings": {
+    "comparison": [],
+    "emotionByLabel": {
+      "Adventure": "adventure",
+      "Celebration": "celebration",
+      "Discovery": "discovery",
+      "Escape": "escape",
+      "Explore": "curiosity",
+      "Freedom": "freedom",
+      "Healing": "serenity",
+      "Reconnection": "reconnection",
+      "Relax": "relaxation",
+      "Romance": "romance",
+      "Slow Living": "serenity"
+    },
+    "reachability": [
+      {
+        "reachableCount": 10,
+        "reachablePercentage": 58.8,
+        "runtimeVocabularySize": 17,
+        "unreachable": [
+          "awe",
+          "gratitude",
+          "indulgence",
+          "joy",
+          "majesty",
+          "spirituality",
+          "wonder"
+        ],
+        "vocabulary": "Emotion"
+      },
+      {
+        "reachableCount": 16,
+        "reachablePercentage": 44.4,
+        "runtimeVocabularySize": 36,
+        "unreachable": [
+          "architecture",
+          "backwaters",
+          "city-break",
+          "coffee-estates",
+          "cruises",
+          "desert",
+          "family-attractions",
+          "forests",
+          "hills",
+          "lakes",
+          "local-communities",
+          "nightlife",
+          "rivers",
+          "road-trips",
+          "scenic-drives",
+          "slow-travel",
+          "snow-experiences",
+          "tea-estates",
+          "villages",
+          "water-sports"
+        ],
+        "vocabulary": "Theme"
+      },
+      {
+        "kbApprovedSize": 9,
+        "reachableCount": 5,
+        "reachablePercentage": 100,
+        "runtimeVocabularySize": 5,
+        "unreachable": [],
+        "vocabulary": "TravellerType"
+      }
+    ],
+    "themesByLabel": {
+      "Adventure": [
+        "adventure"
+      ],
+      "Beach": [
+        "beaches"
+      ],
+      "Celebrations": [
+        "festivals"
+      ],
+      "Culture": [
+        "culture"
+      ],
+      "Food": [
+        "food"
+      ],
+      "Heritage": [
+        "heritage"
+      ],
+      "Island Hopping": [
+        "islands"
+      ],
+      "Luxury": [
+        "luxury"
+      ],
+      "Mountains": [
+        "mountains"
+      ],
+      "Nature": [
+        "nature"
+      ],
+      "Photography": [
+        "photography"
+      ],
+      "Shopping": [
+        "shopping"
+      ],
+      "Spiritual": [
+        "spiritual"
+      ],
+      "Wellness": [
+        "wellness"
+      ],
+      "Wildlife": [
+        "wildlife",
+        "safari"
+      ]
+    },
+    "travellerByLabel": {
+      "Business": "corporate-group",
+      "Couple": "couple",
+      "Family": "family",
+      "Friends": "friends",
+      "Solo": "solo-traveller"
+    }
+  },
   "recordCounts": {
     "attractions": 4,
     "compatibilityRecords": 3382,
@@ -22,7 +146,7 @@
   "validation": {
     "reviewRequiredRecords": 15,
     "status": "PASS",
-    "warnings": 16
+    "warnings": 17
   },
-  "workbookChecksum": "b90a6af3d661197dcdebe75b941eb060788fbe2cb209b67ae4167560d5a1f8a8"
+  "workbookChecksum": "868271e5d094d0c0915f8963da57cce6b57a37d432b0c14869867791c0bc1047"
 }

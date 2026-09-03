@@ -60,6 +60,7 @@ export function createSupabaseJourneyLeadRepository(
           guest_name: lead.guestName,
           mobile_number: lead.mobileNumber,
           mobile_normalized: lead.mobileNormalized,
+          mobile_e164: lead.mobileE164,
           traveller_type: lead.passportSummary.entryContext?.feeling ?? null,
           companions: { selection: lead.passportSummary.companion },
           primary_dream: lead.passportSummary.dreamJourney,
@@ -68,8 +69,17 @@ export function createSupabaseJourneyLeadRepository(
           exact_dates: lead.passportSummary.startDate && lead.passportSummary.endDate
             ? { startDate: lead.passportSummary.startDate, endDate: lead.passportSummary.endDate }
             : null,
-          destination_mode: lead.passportSummary.destinationMode,
-          destination_free_text: lead.passportSummary.destination || null,
+          // EBC-R1.2-WS6-09 (Rad, Phase 4). destination_mode/destination_free_text
+          // are pre-existing Supabase columns (supabase/migrations/20260802130000_
+          // journey_passport_leads.sql) with a check constraint permitting NULL —
+          // no migration is needed or performed. destinationMode/destination were
+          // retired as an app-level data-model field everywhere else in this
+          // phase; these two legacy denormalized columns still exist and are
+          // populated here with the same faithful derivation used throughout
+          // this phase (preferred-destination names, then the free-text getaway
+          // description), not with a duplicated destinationMode field.
+          destination_mode: lead.passportSummary.preferredDestinations.length > 0 || lead.passportSummary.getawayDescription.trim() ? "known" : "discovery",
+          destination_free_text: [...lead.passportSummary.preferredDestinations.map((item) => item.canonicalName), ...(lead.passportSummary.getawayDescription.trim() ? [lead.passportSummary.getawayDescription.trim()] : [])].join(", ") || null,
           entry_context: lead.passportSummary.entryContext ?? {},
           passport_summary: lead.passportSummary,
           source: lead.source,

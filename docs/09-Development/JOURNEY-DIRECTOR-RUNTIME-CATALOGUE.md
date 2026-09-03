@@ -11,6 +11,7 @@
 | **Module** | Journey Director |
 | **Last updated** | 30 July 2026 |
 | **Purpose** | Define the generated runtime-intelligence boundary, catalogue adapter, validation rules, and known limitations used by the deterministic Journey Director engine. |
+| **Governing architecture** | `docs/20-Architecture/ADR-R1.2-WS3-001-Destination-Knowledge-Governance.md` (Status: Accepted) — the layered-architecture and ownership authority for the Operational, Generation, Runtime, and Consumption layers referenced in Section 13 below. |
 
 ---
 
@@ -364,11 +365,14 @@ These limitations are intentional. Unknown information remains unknown, weak res
 | Responsibility | Owner |
 | --- | --- |
 | Destination and region product status | Product & Experience with Operations approval |
+| Operational layer (seed/enriched workbook) row set and taxonomy sheets | **Destination Operational Steward** — role not yet assigned to any Team Satvi persona (see governance note below) |
 | `CONFIDENT` approval provenance | Operations |
 | Source taxonomy and emotional identity | Product & Experience |
 | Runtime representation and automated validation | Engineering |
 | Live date, safety, access, supplier, and service validation | Human Journey Director and Operations |
 | Presentation assets and editorial readiness | Content & Experience |
+
+**Governance note:** the Operational Layer row added above names an artefact this document previously left implicit — the seed/enriched workbook that the generator reads. Its ownership gap (the unassigned Destination Operational Steward role) is tracked as Outstanding Decision 1 in `docs/20-Architecture/ADR-R1.2-WS3-001-Destination-Knowledge-Governance.md` Section 15; it is named here for visibility and is not resolved by this update.
 
 To update the catalogue:
 

@@ -4,6 +4,7 @@ import type {
   JourneyDNAArtifact,
   JourneySeedArtifact,
   JourneyTemplateArtifact,
+  LabelMappingReport,
   MetadataArtifact,
   ReasonArtifact,
   RecordCounts,
@@ -52,6 +53,7 @@ export function generateMetadata(
   counts: RecordCounts,
   validation: ValidationReport,
   generatedAt: string,
+  labelMappings: LabelMappingReport,
 ): MetadataArtifact {
   return {
     ...artifactHeader(model.workbookChecksum),
@@ -63,5 +65,6 @@ export function generateMetadata(
       warnings: validation.warnings.length,
       reviewRequiredRecords: validation.reviewRequiredRecords,
     },
+    labelMappings,
   };
 }

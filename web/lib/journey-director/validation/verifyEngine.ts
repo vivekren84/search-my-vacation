@@ -65,8 +65,8 @@ function completedPassportState(
     timing: "I’m Flexible",
     startDate: "",
     endDate: "",
-    destinationMode: "discovery",
-    destination: "",
+    preferredDestinations: [],
+    getawayDescription: "",
     mobile: "+91 98765 43210",
     journeyReference: "SMV-ABCD2345",
     entryContext: {
@@ -232,7 +232,10 @@ function verifyJourneyEntryContext() {
     assert(Boolean(context?.destinationTheme), `${card.title} resolves an editable Journey Theme`);
     const state = createInitialJourneyPassportState(context);
     assert(state.currentMoment === "welcome" && state.visitedMoments.join("|") === "welcome", `${card.title} starts at Welcome without skipping a Passport page`);
-    assert(state.destinationMode === "known" && state.destination === card.title, `${card.title} defaults to a known editable destination`);
+    // EBC-R1.2-WS6-09 (Rad, Phase 4). Carried-forward destinations now land
+    // in getawayDescription, not a resolved Preferred Destinations chip or
+    // a known/discovery mode — see lib/journey-passport/entry-context.ts.
+    assert(state.getawayDescription === card.title, `${card.title} defaults to an editable getaway description`);
     assert(state.dreamJourney === context?.destinationTheme, `${card.title} pre-selects its governed Journey Theme`);
   });
 
@@ -242,7 +245,7 @@ function verifyJourneyEntryContext() {
 
   const directState = createInitialJourneyPassportState({ source: "direct" });
   assert(resolveJourneyEntryPreselection({ source: "direct" }) === undefined, "standard Plan My Experience entry remains unselected");
-  assert(directState.currentMoment === "welcome" && directState.companion === "" && directState.dreamJourney === "" && directState.travelStyles.length === 0 && directState.destinationMode === "", "standard Passport starts at Welcome with no inferred answers");
+  assert(directState.currentMoment === "welcome" && directState.companion === "" && directState.dreamJourney === "" && directState.travelStyles.length === 0 && directState.preferredDestinations.length === 0 && directState.getawayDescription === "", "standard Passport starts at Welcome with no inferred answers");
   assert(JOURNEY_ENTRY_ADVISORY === "We've pre-selected this based on how you started your journey. Feel free to change it anytime.", "entry advisory matches approved copy exactly");
 }
 

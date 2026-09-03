@@ -122,6 +122,16 @@
       "travelScope": "Domestic"
     },
     {
+      "destinationId": "india-assam",
+      "name": "Assam",
+      "nodeId": "destination:india-assam",
+      "nodeType": "Region",
+      "parentId": "country-india",
+      "recommendationEligible": false,
+      "sourceRow": null,
+      "travelScope": "Domestic"
+    },
+    {
       "destinationId": "india-goa",
       "name": "Goa",
       "nodeId": "destination:india-goa",
@@ -419,6 +429,26 @@
       "parentId": "destination:india-andhra-pradesh",
       "recommendationEligible": true,
       "sourceRow": 76,
+      "travelScope": "Domestic"
+    },
+    {
+      "destinationId": "india-assam",
+      "name": "Assam",
+      "nodeId": "india-assam-assam",
+      "nodeType": "Region",
+      "parentId": "destination:india-assam",
+      "recommendationEligible": false,
+      "sourceRow": 53,
+      "travelScope": "Domestic"
+    },
+    {
+      "destinationId": "india-assam",
+      "name": "Kaziranga",
+      "nodeId": "india-assam-kaziranga",
+      "nodeType": "Region",
+      "parentId": "destination:india-assam",
+      "recommendationEligible": false,
+      "sourceRow": 80,
       "travelScope": "Domestic"
     },
     {
@@ -833,16 +863,6 @@
     },
     {
       "destinationId": "india-northeast",
-      "name": "Assam",
-      "nodeId": "india-northeast-assam",
-      "nodeType": "Region",
-      "parentId": "destination:india-northeast",
-      "recommendationEligible": false,
-      "sourceRow": 53,
-      "travelScope": "Domestic"
-    },
-    {
-      "destinationId": "india-northeast",
       "name": "Meghalaya",
       "nodeId": "india-northeast-meghalaya",
       "nodeType": "Region",
@@ -1059,16 +1079,6 @@
       "parentId": "destination:india-telangana",
       "recommendationEligible": true,
       "sourceRow": 75,
-      "travelScope": "Domestic"
-    },
-    {
-      "destinationId": "india-wildlife-tours",
-      "name": "Assam",
-      "nodeId": "india-wildlife-tours-assam",
-      "nodeType": "Region",
-      "parentId": "destination:india-wildlife-tours",
-      "recommendationEligible": false,
-      "sourceRow": 80,
       "travelScope": "Domestic"
     },
     {
@@ -5771,5 +5781,5 @@
     }
   ],
   "schemaVersion": "1.0",
-  "workbookChecksum": "b90a6af3d661197dcdebe75b941eb060788fbe2cb209b67ae4167560d5a1f8a8"
+  "workbookChecksum": "868271e5d094d0c0915f8963da57cce6b57a37d432b0c14869867791c0bc1047"
 }

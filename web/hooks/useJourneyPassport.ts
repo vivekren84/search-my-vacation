@@ -5,18 +5,20 @@
 import { useEffect, useMemo, useReducer, useRef, useState } from "react";
 
 import { companionOptions, dreamJourneyOptions, journeyMomentIndex, journeyMoments, timingOptions, travelStyleOptions } from "@/config/journey-passport.config";
+import { isSelectedDestination, MAX_PREFERRED_DESTINATIONS, type SelectedDestination } from "@/lib/geo-validation";
+import { sanitizeGetawayDescription } from "@/lib/journey-passport/getaway-description";
 import { createInitialJourneyPassportState } from "@/lib/journey-passport/entry-context";
-import { isJourneyEntryDestinationTheme, isJourneyEntryExperience, isJourneyEntryInspiration, isJourneyFeeling, JOURNEY_PASSPORT_SCHEMA_VERSION, type DestinationMode, type JourneyMomentId, type JourneyPassportDraft, type JourneyPassportEntryContext, type JourneyPassportState } from "@/types/journey-passport.types";
+import { sanitizeTravellerName } from "@/lib/journey-passport/traveller-name";
+import { isJourneyEntryDestinationTheme, isJourneyEntryExperience, isJourneyEntryInspiration, isJourneyFeeling, JOURNEY_PASSPORT_SCHEMA_VERSION, type JourneyMomentId, type JourneyPassportDraft, type JourneyPassportEntryContext, type JourneyPassportState } from "@/types/journey-passport.types";
 
 export const JOURNEY_PASSPORT_SESSION_KEY = "smv:journey-passport:v1";
 export const JOURNEY_PASSPORT_ENTRY_KEY = "smv:journey-passport:entry:v1";
 const MAX_DRAFT_AGE = 24 * 60 * 60 * 1000;
 
-type UpdateValue = Partial<Pick<JourneyPassportState, "name" | "companion" | "dreamJourney" | "timing" | "startDate" | "endDate" | "destination" | "mobile" | "journeyReference">>;
+type UpdateValue = Partial<Pick<JourneyPassportState, "name" | "companion" | "dreamJourney" | "timing" | "startDate" | "endDate" | "preferredDestinations" | "getawayDescription" | "mobile" | "journeyReference">>;
 type Action =
   | { type: "update"; value: UpdateValue }
   | { type: "toggle-style"; value: string }
-  | { type: "set-destination-mode"; value: DestinationMode }
   | { type: "go-to"; value: JourneyMomentId; direction: "forward" | "backward" }
   | { type: "set-completion"; value: JourneyPassportState["completion"] }
   | { type: "restore"; value: JourneyPassportState }
@@ -27,7 +29,6 @@ function reducer(state: JourneyPassportState, action: Action): JourneyPassportSt
   switch (action.type) {
     case "update": return touched({ ...state, ...action.value });
     case "toggle-style": { const selected = state.travelStyles.includes(action.value); if (!selected && state.travelStyles.length >= 3) return state; return touched({ ...state, travelStyles: selected ? state.travelStyles.filter((value) => value !== action.value) : [...state.travelStyles, action.value] }); }
-    case "set-destination-mode": return touched({ ...state, destinationMode: action.value });
     case "go-to": return touched({ ...state, currentMoment: action.value, navigationDirection: action.direction, visitedMoments: state.visitedMoments.includes(action.value) ? state.visitedMoments : [...state.visitedMoments, action.value] });
     case "set-completion": return touched({ ...state, completion: action.value });
     case "restore": return action.value;
@@ -68,14 +69,14 @@ function sanitiseDraft(value: unknown): JourneyPassportDraft | null {
   const entryContext = sanitiseEntryContext(raw.entryContext);
   const state: JourneyPassportState = {
     ...createInitialJourneyPassportState(entryContext), currentMoment,
-    name: typeof raw.name === "string" ? raw.name.slice(0, 80) : "",
+    name: typeof raw.name === "string" ? sanitizeTravellerName(raw.name).slice(0, 80) : "",
     companion: companionValues.has(raw.companion ?? "") ? raw.companion! : "",
     dreamJourney: dreamValues.has(raw.dreamJourney ?? "") ? raw.dreamJourney! : "",
     travelStyles: Array.isArray(raw.travelStyles) ? [...new Set(raw.travelStyles.filter((item): item is string => typeof item === "string" && styleValues.has(item)))].slice(0, 3) : [],
     timing: timingValues.has(raw.timing ?? "") ? raw.timing! : "",
     startDate: typeof raw.startDate === "string" ? raw.startDate : "", endDate: typeof raw.endDate === "string" ? raw.endDate : "",
-    destinationMode: raw.destinationMode === "known" || raw.destinationMode === "discovery" ? raw.destinationMode : "",
-    destination: typeof raw.destination === "string" ? raw.destination.slice(0, 100) : "",
+    preferredDestinations: Array.isArray(raw.preferredDestinations) ? raw.preferredDestinations.filter((item): item is SelectedDestination => isSelectedDestination(item)).slice(0, MAX_PREFERRED_DESTINATIONS) : [],
+    getawayDescription: typeof raw.getawayDescription === "string" ? sanitizeGetawayDescription(raw.getawayDescription) : "",
     mobile: typeof raw.mobile === "string" ? raw.mobile.replace(/\D/g, "").slice(0, 10) : "",
     journeyReference: typeof raw.journeyReference === "string" ? raw.journeyReference.slice(0, 12) : "",
     visitedMoments: Array.isArray(raw.visitedMoments) ? raw.visitedMoments.filter((id): id is JourneyMomentId => momentValues.has(id as JourneyMomentId)) : ["welcome"],

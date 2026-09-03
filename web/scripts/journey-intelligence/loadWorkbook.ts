@@ -1,3 +1,18 @@
+/**
+ * GOVERNANCE BOUNDARY — Operational Layer reader.
+ *
+ * This module reads the seed/enriched workbook — the Operational Layer per
+ * `docs/20-Architecture/ADR-R1.2-WS3-001-Destination-Knowledge-Governance.md`,
+ * Section 6. The workbook's row set and taxonomy sheets are expected to be
+ * KB-derived, not independently authored (ADR Section 7, Source of Truth
+ * Model). As of this ADR, ownership of the workbook itself sits with the
+ * "Destination Operational Steward" role, which is not yet assigned to any
+ * Team Satvi persona (ADR Section 15, Outstanding Decision 1) — this module
+ * does not resolve that gap, only documents where the boundary sits.
+ *
+ * Documentation-only addition (EBC R1.2-03.07) — no loader behaviour changed.
+ */
+
 import { execFileSync } from "node:child_process";
 import { access } from "node:fs/promises";
 import { basename } from "node:path";

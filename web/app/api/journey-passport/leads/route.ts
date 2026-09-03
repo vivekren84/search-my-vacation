@@ -1,8 +1,10 @@
+import { journeyPassportOtpConfig } from "@/config/journey-passport-otp.config";
 import { createJourneyLeadNotifier } from "@/lib/journey-leads/email";
 import { consumeJourneyLeadRateLimit, journeyLeadRateLimitKey } from "@/lib/journey-leads/rate-limit";
 import { createSupabaseJourneyLeadRepository, maskPassportReference } from "@/lib/journey-leads/repository";
 import { processJourneyLead } from "@/lib/journey-leads/service";
 import { parseJourneyLeadSubmission } from "@/lib/journey-leads/validation";
+import { createSupabaseJourneyPassportOtpRepository } from "@/lib/journey-passport-otp/repository";
 
 export const runtime = "nodejs";
 
@@ -31,6 +33,29 @@ export async function POST(request: Request) {
   if (!parsed.ok) return json({ ok: false, message: FAILURE_MESSAGE }, 400);
 
   try {
+    const otpRepository = createSupabaseJourneyPassportOtpRepository(
+      { NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SECRET_KEY: process.env.SUPABASE_SECRET_KEY },
+      journeyPassportOtpConfig,
+    );
+    // DEC-R1.2-006 / EBC-R1.2-WS5-01 §6: a Journey Passport submission is
+    // accepted only after successful, single-use OTP verification. This
+    // atomically consumes the token so a captured token cannot be replayed
+    // against a second submission.
+    // EBC-R1.2-WS5-IMP-01 / OBS-4-01: the OTP challenge lifecycle (send,
+    // verify, and the journey_passport_otp_challenges.mobile_number CHECK
+    // constraint) is keyed exclusively on the E.164 representation — see
+    // parseJourneyPassportOtpSendRequest/VerifyRequest and that table's
+    // migration. mobileE164, not the bare dual-field mobileNumber used for
+    // lead storage (DEC-R1.2-019), is the only value that can ever match
+    // the verified challenge row here.
+    const verified = await otpRepository.consumeVerificationToken(parsed.value.mobileE164, parsed.value.verificationToken);
+    if (!verified) {
+      console.error("Journey Passport lead rejected — missing or invalid OTP verification.", {
+        passportReference: maskPassportReference(parsed.value.passportReference),
+      });
+      return json({ ok: false, message: FAILURE_MESSAGE }, 403);
+    }
+
     const repository = createSupabaseJourneyLeadRepository({
       NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
       SUPABASE_SECRET_KEY: process.env.SUPABASE_SECRET_KEY,

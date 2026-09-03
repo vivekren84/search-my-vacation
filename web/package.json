@@ -16,6 +16,9 @@
     "verify:journey-runtime": "tsc -p tsconfig.engine-verification.json && node node_modules/.cache/smv-engine-verification/lib/journey-director/validation/verifyRuntimeJourneyDirector.js",
     "verify:journey-scenarios": "tsc -p tsconfig.engine-verification.json && node node_modules/.cache/smv-engine-verification/lib/journey-director/validation/verifyJourneyScenarios.js",
     "verify:journey-leads": "tsc -p tsconfig.lead-verification.json && node node_modules/.cache/smv-lead-verification/lib/journey-leads/validation/verifyJourneyLeads.js",
+    "verify:geo-validation-coupling": "tsc -p tsconfig.engine-verification.json && node node_modules/.cache/smv-engine-verification/lib/journey-director/validation/verifyNoGeoValidationCoupling.js",
+    "verify:geo-validation-selection": "tsc -p tsconfig.geo-validation-verification.json && node node_modules/.cache/smv-geo-validation-verification/lib/geo-validation/validation/verifySelectionLogic.js",
+    "verify:getaway-description": "tsc -p tsconfig.journey-passport-verification.json && node node_modules/.cache/smv-journey-passport-verification/lib/journey-passport/validation/verifyGetawayDescription.js",
     "build:journey-intelligence-generator": "tsc -p scripts/journey-intelligence/tsconfig.json",
     "generate:journey-intelligence": "npm run build:journey-intelligence-generator && node node_modules/.cache/smv-journey-intelligence/index.js",
     "verify:journey-intelligence": "npm run build:journey-intelligence-generator && node node_modules/.cache/smv-journey-intelligence/verifyArtifacts.js",
@@ -25,9 +28,12 @@
     "build:journey-itinerary-generator": "tsc -p scripts/journey-itineraries/tsconfig.json",
     "generate:journey-itineraries": "npm run build:journey-itinerary-generator && node node_modules/.cache/smv-journey-itineraries/scripts/journey-itineraries/generate.js",
     "verify:journey-itineraries": "npm run build:journey-itinerary-generator && node node_modules/.cache/smv-journey-itineraries/scripts/journey-itineraries/verify.js && tsc -p tsconfig.itinerary-verification.json && node node_modules/.cache/smv-itinerary-verification/lib/journey-itineraries/validation/verifyItineraryRuntime.js",
-    "verify:destination-itineraries": "tsc -p tsconfig.itinerary-verification.json && node node_modules/.cache/smv-itinerary-verification/lib/journey-itineraries/validation/verifyDestinationItineraries.js"
+    "verify:destination-itineraries": "tsc -p tsconfig.itinerary-verification.json && node node_modules/.cache/smv-itinerary-verification/lib/journey-itineraries/validation/verifyDestinationItineraries.js",
+    "build:geo-validation-importer": "tsc -p scripts/geo-validation/tsconfig.json",
+    "import:geo-places": "npm run build:geo-validation-importer && node node_modules/.cache/smv-geo-validation-importer/importGeoNames.js"
   },
   "dependencies": {
+    "libphonenumber-js": "^1.13.11",
     "next": "16.2.10",
     "react": "19.2.4",
     "react-dom": "19.2.4"
