@@ -9,7 +9,7 @@
 | Item | Value |
 |------|------|
 | Document | Project History |
-| Version | 1.1 |
+| Version | 1.2 |
 | Status | Living Document |
 | Product Owner | Vivek |
 | Project Lead | Tiger |
@@ -522,3 +522,11 @@ Release 1.2 introduced or matured several governance practices worth carrying fo
 **Technical debt.** Nine items were logged to the Release 1.3 backlog (`TD-R1.3-001` through `TD-R1.3-009`), spanning destination-search indexing/testability hardening and OTP abuse-protection and observability improvements — none blocking Release 1.2, all explicitly deferred by Product Owner decision rather than left unrecorded.
 
 **Release 1.3 direction.** Planned or proposed follow-on work includes the deferred Destination Intelligence Phase 3 (Runtime Alignment) and Phase 4 (Recommendation Behaviour), a weighted search-ranking model, generalising the external-integration onboarding playbook established for MSG91/DLT to the platform's other providers, and completing the documentation-repository reconciliation Workstream 7 began.
+
+---
+
+# Release 1.2 — Shipped (Production Deployment & Closure)
+
+*Short append, per `EBC-R1.2-WS8-05` Activity 5 — the fuller retrospective is the "Release 1.2 — Completed" section above, written before Workstream 8 finished; this entry closes the gap that section itself named ("Workstream 8 ... had not yet started as of this entry").*
+
+Release 1.2 was deployed to production on **03-Sep-2026** (merge commit `e1196db` into `main`) and tagged **`v1.2.0`**. A live, real-OTP production smoke test the same day (`EBC-R1.2-WS8-05-KEERTHI-Production-Smoke-Validation`) exercised the full traveller journey end-to-end — Homepage, Journey Passport, OTP verification, Journey Director, Recommendations, Itinerary, Completion, and WhatsApp handoff — and **passed**, with no Severity 1 or Severity 2 defects. Release 1.2 was formally closed by the Product Owner the same release cycle (`docs/10-Backlog/RELEASE-1.2.md` §18, `EBC-R1.2-WS8-04`). Standalone release notes were produced at `docs/09-Development/RELEASE-1.2-RELEASE-NOTES.md` (`EBC-R1.2-WS8-05`). Release 1.3 is now the active implementation release.
