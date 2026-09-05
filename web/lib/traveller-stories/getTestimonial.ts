@@ -61,8 +61,12 @@ import { travellerStories, type TravellerStory } from "@/config/travellerStories
  * - "kl-langkawi-ishwarya" → JRN-013 (Ishwarya Raja, "A first girls-only
  *   international adventure") — exact name and destination match (Kuala
  *   Lumpur & Langkawi).
- * - "andaman-sathya-karthik" → JRN-025 (Sathya Karthik, "The Andaman break
- *   the family needed most") — exact name and destination match.
+ * - "andaman-sathya-krithivasan" → JRN-025 (Sathya Krithivasan, "The Andaman
+ *   break the family needed most") — exact name and destination match. The
+ *   traveller was renamed from "Sathya Karthik" to "Sathya Krithivasan" (a
+ *   Product-approved correction, R1.3-WS2-T2); the curated testimonial `id`
+ *   in travellerStories.data.ts was updated to match, and this mapping key
+ *   is updated to the new id so the lookup does not throw.
  *
  * JRN-042 (Hari Haran Ravichandran's other journey, Mangalore & Murudeshwar)
  * deliberately has no entry here — no authentic testimonial text for it has
@@ -93,7 +97,7 @@ export const testimonialByJourneyId: Readonly<Record<string, TravellerStory>> = 
   "JRN-011": testimonialById("shimla-manali-bharat"),
   "JRN-012": testimonialById("sri-lanka-madhangi"),
   "JRN-013": testimonialById("kl-langkawi-ishwarya"),
-  "JRN-025": testimonialById("andaman-sathya-karthik"),
+  "JRN-025": testimonialById("andaman-sathya-krithivasan"),
 };
 
 export function getTestimonialForJourney(journeyId: string): TravellerStory | null {

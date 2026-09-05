@@ -15,6 +15,17 @@
       "travellerType": "Family",
       "featured": false,
       "heroImage": "family.jpg"
+    },
+    {
+      "journeyId": "JRN-053",
+      "title": "A Beautiful Sri Lankan Journey We'll Cherish Forever",
+      "destination": "Sri Lanka",
+      "travelMonth": "October",
+      "travelYear": 2024,
+      "duration": "6 Days / 5 Nights",
+      "experienceType": "Memory Makers",
+      "travellerType": "Family",
+      "featured": false
     }
   ],
   "media": {
@@ -53,7 +64,8 @@
     "Peaceful Pace",
     "Elephants",
     "International",
-    "International Vacation"
+    "International Vacation",
+    "Memory Makers"
   ],
-  "lastUpdated": "2026-08-11"
+  "lastUpdated": "2026-09-05"
 }
