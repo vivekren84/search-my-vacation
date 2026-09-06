@@ -24,6 +24,8 @@
 | Version | Date | Author | Summary |
 |---|---|---|---|
 | 1.0 | 04-Sep-2026 | Tiger | Initial creation, per `EBC-R1.3-001`. Reviews the complete Release 1.3 backlog (`RELEASE-1.3-BACKLOG.md` v1.10, `RELEASE-1.3-GOVERNANCE-BACKLOG.md`, and `RELEASE-1.2.md`'s closure record §18), confirms the ten-workstream proposal from `EBC-R1.3-001` with two structural questions flagged for Product Owner decision, decomposes every workstream into product/UX/engineering/QA/traveller-validation tasks, cross-references every task to its backlog source, and recommends a three-tier scope classification (Commitment / Candidate / Future) for every task. Recommends this document as a permanent companion to `RELEASE-1.3-BACKLOG.md`, per `EBC-R1.3-001`'s own stated recommendation. |
+| 1.1 | 06-Sep-2026 | Tiger | Records Workstream 2 (Traveller Stories) delivery closure per `R1.3-WS2-CLOSE-01` — adds a Delivery Status column to the Activity 2 workstream table and a new Workstream Delivery Status Log section. This document was not previously used to track live delivery status (its own Document Information row states "Draft" and Explicit Out of Scope disclaims any commitment); this version begins that use for Workstream 2 only, pending Product Owner confirmation of whether this document or a new `RELEASE-1.3.md` (mirroring `RELEASE-1.2.md`'s tracker role) should be the permanent home for it — see the new Decision Point D2 in the closure log below. No other content in this document was changed. |
+| 1.2 | 06-Sep-2026 | Tiger | Decision Point D2 resolved by the Product Owner: **Approved with modification.** `docs/10-Backlog/RELEASE-1.3.md` has been created as the dedicated live release execution tracker, mirroring `RELEASE-1.2.md`'s structure. This document's v1.1 interim Delivery Status column and Workstream Delivery Status Log (below) are retained exactly as written, per the Product Owner's explicit instruction — no requirement to remove or rewrite them. Going forward, this document returns to its originally-scoped planning/sequencing/implementation-strategy role; live workstream, implementation, QA and delivery status is now tracked in `RELEASE-1.3.md`. See the pointer note added at the top of the Workstream Delivery Status Log section. No Product, Architecture or Engineering work performed — documentation/governance only. |
 
 ---
 
@@ -75,22 +77,67 @@ Reviewed against three tiers — see the markers defined above. Headline finding
 
 The ten workstreams proposed in `EBC-R1.3-001` are confirmed against the evidence above, with two structural questions flagged for Product Owner decision rather than resolved unilaterally (Tiger may recommend sequencing and grouping; only the Product Owner approves workstream structure, per Project Instructions §10/§14).
 
-| # | Workstream | Confirmed? | Note |
-|---|---|---|---|
-| WS1 | Destination Intelligence Evolution | Confirmed | Largest and most strategic workstream; genuinely multi-phase, see Activity 3. |
-| WS2 | Traveller Stories | Confirmed, but thin | Currently exactly one backlog item (Traveller Stories Quality Gate). See Decision Point D1 below. |
-| WS3 | Premium Homepage Experience | Confirmed | Absorbs the four Homepage Improvements items plus Custom Background Music and Traveller Inspiration. |
-| WS4 | Journey Passport Evolution | Confirmed | Largest single cluster of ready UX/engineering items (9 UX items + Passport-specific technical debt). |
-| WS5 | Journey Director Evolution | Confirmed | Absorbs the Journey Director CTA/WhatsApp integration, Itinerary Builder, Journey Director recovery messaging, and the recommendation-side half of AI Vision. |
-| WS6 | Authentication & User Accounts | Confirmed, needs discovery | No task below this workstream is engineering-ready; first task is product discovery, per backlog Recommendation 4. |
-| WS7 | Marketing & Analytics | Confirmed, but thin | Currently exactly one backlog item (Google Ads Conversion Tag), which also touches WS4/WS5 at its integration point. See Decision Point D1 below. |
-| WS8 | Search Behaviour | Confirmed | Smallest and most execution-ready workstream — one item already has a complete architecture review pending sign-off. |
-| WS9 | Engineering Technical Debt | Confirmed | Absorbs `TD-R1.3-001`–`009`, Legacy Passport Reference Cleanup, the orphaned `Experiences.tsx` cleanup, and Release-1.2-closure documentation housekeeping now unblocked by Release 1.2's closure. |
-| WS10 | Platform & Design System | Confirmed | Absorbs Design Token Reconciliation and the six Governance Playbooks (operational/platform readiness, not product features). |
+| # | Workstream | Confirmed? | Note | Delivery Status |
+|---|---|---|---|---|
+| WS1 | Destination Intelligence Evolution | Confirmed | Largest and most strategic workstream; genuinely multi-phase, see Activity 3. | Not Started |
+| WS2 | Traveller Stories | Confirmed, but thin | Currently exactly one backlog item (Traveller Stories Quality Gate). See Decision Point D1 below. | ✅ **COMPLETE** — closed 06-Sep-2026 per `R1.3-WS2-CLOSE-01`; see Workstream Delivery Status Log below |
+| WS3 | Premium Homepage Experience | Confirmed | Absorbs the four Homepage Improvements items plus Custom Background Music and Traveller Inspiration. | Not Started |
+| WS4 | Journey Passport Evolution | Confirmed | Largest single cluster of ready UX/engineering items (9 UX items + Passport-specific technical debt). | Not Started |
+| WS5 | Journey Director Evolution | Confirmed | Absorbs the Journey Director CTA/WhatsApp integration, Itinerary Builder, Journey Director recovery messaging, and the recommendation-side half of AI Vision. | Not Started |
+| WS6 | Authentication & User Accounts | Confirmed, needs discovery | No task below this workstream is engineering-ready; first task is product discovery, per backlog Recommendation 4. | Not Started |
+| WS7 | Marketing & Analytics | Confirmed, but thin | Currently exactly one backlog item (Google Ads Conversion Tag), which also touches WS4/WS5 at its integration point. See Decision Point D1 below. | Not Started |
+| WS8 | Search Behaviour | Confirmed | Smallest and most execution-ready workstream — one item already has a complete architecture review pending sign-off. | Not Started |
+| WS9 | Engineering Technical Debt | Confirmed | Absorbs `TD-R1.3-001`–`009`, Legacy Passport Reference Cleanup, the orphaned `Experiences.tsx` cleanup, and Release-1.2-closure documentation housekeeping now unblocked by Release 1.2's closure. | Not Started |
+| WS10 | Platform & Design System | Confirmed | Absorbs Design Token Reconciliation and the six Governance Playbooks (operational/platform readiness, not product features). | Not Started |
 
 ## Decision Point D1 — Workstream 2 and Workstream 7 are currently thin
 
 Workstream 2 (Traveller Stories) and Workstream 7 (Marketing & Analytics) each currently contain exactly one Release 1.3 backlog item. Both are real, named workstreams in the Product Owner's own initial proposal and may simply be early — Arjun-led product discovery during Release 1.3 could grow either one. Tiger's recommendation, offered for Product Owner decision rather than assumed: **keep both as named workstreams for now** (a thin workstream is not a defect, and folding them into WS3/WS5 respectively would bury a Marketing-specific and a Traveller-Stories-specific concern inside larger, differently-scoped workstreams), but flag both explicitly for the Product Owner as candidates for a short Arjun discovery pass early in Release 1.3, specifically to confirm whether more belongs in either before delivery sequencing is finalised.
+
+---
+
+# Workstream Delivery Status Log
+
+> **Superseded as the live tracker, 06-Sep-2026 (Decision Point D2, resolved).** Live Release 1.3 workstream, implementation, QA and delivery status is now tracked in `docs/10-Backlog/RELEASE-1.3.md`, per the Product Owner's decision. The log below is retained unchanged as the historical record of WS2's closure and of D2 itself — nothing here was removed or rewritten — but it will not be extended for future workstreams; updates from this point forward go to `RELEASE-1.3.md`. This document returns to its originally-scoped planning/sequencing/implementation-strategy role (Activity 1–6 above remain the canonical planning content).
+
+This section was added in v1.1 (06-Sep-2026) to record actual delivery closure against the workstreams defined above. It is new: v1.0 of this document tracked only planning/readiness (Activity 2's "Confirmed?" column), not live delivery status. Release 1.2 held this tracking role in a dedicated document, `RELEASE-1.2.md`; no equivalent `RELEASE-1.3.md` yet exists for Release 1.3 (only this planning companion and `RELEASE-1.3-BACKLOG.md`, the vision/decision catalogue). See Decision Point D2 below — this gap is flagged for the Product Owner, not resolved unilaterally.
+
+## WS2 — Traveller Stories — ✅ COMPLETE (closed 06-Sep-2026, `R1.3-WS2-CLOSE-01`)
+
+**Evidence chain reviewed and independently verified against the live repository and production** (not merely transcribed from the closure request): `EBC-R1.3-001`; `PRW-R1.3-001-Traveller-Stories.xlsx`; `R1.3-WS2-T2` (repository/workbook reconciliation, 52/52 match); `EBC-R1.3-WS2-IMP-02`/`IMP-02A`/`IMP-02B` (Google Review CTA alignment, including the disclosed blocker and its resolution); `EBC-R1.3-WS2-04` (Arjun, content migration analysis); `EBC-R1.3-WS2-05`/`05-ADDENDUM-01`/`06` (Arjun/Archie, experience taxonomy); `R1.3-WS2-IMP-03` (Rad, testimonial migration, 15→52 curated); `R1.3-WS2-QA-01` (Keerthi, Final QA — Pass with observations, closed by Tiger's addendum after Vivek independently verified the two Blocked items).
+
+**Repository verification performed this session (`git`/`grep` against the connected local repository):**
+
+| Check | Result |
+|---|---|
+| Branch / sync | `main`, up to date with `origin/main`, 0 ahead / 0 behind, working tree clean |
+| Relevant commits present | `f561882` (T2 reconciliation), `1a74f57` (IMP-03 testimonial migration + experience mappings), both on `main` and pushed |
+| Traveller folders | 49 (`web/public/traveller-stories/*/metadata.json`) |
+| `googleReviewUrl` present | 27 — matches the reported 27 CTA / 25 no-CTA split exactly |
+| Curated testimonial entries (`travellerStories.data.ts`) | Consistent with the reported 52/52 migration (up from 15/52 pre-`IMP-03`) |
+
+No discrepancy found between the documented evidence trail and actual repository/production state.
+
+**Outcome:** Product, Business Analysis, Architecture, Engineering and QA all confirm complete, per the Inputs listed in `R1.3-WS2-CLOSE-01`. QA's Final Status is **PASS** — no defects, no open observations, no release blockers, per `R1.3-WS2-QA-01` §7 (Tiger's closure addendum, itself now independently corroborated by this session's own repository check rather than taken on trust alone).
+
+**Governance outcomes validated during WS2** (recorded per `R1.3-WS2-CLOSE-01`): Repository Reality discipline; mandatory Workspace Readiness Check; the Product Review Workbook as canonical Product authority; Product-before-Engineering sequencing; proportional (not over-produced) EBC/IMP governance; the full Product → Business Analysis → Architecture → Engineering → QA → Delivery chain.
+
+**Lessons learned, carried to Release 1.4+ consideration (not affecting Release 1.3):** runtime taxonomy simplification; experience-taxonomy evolution; consolidation of traveller-story data sources (the still-open gap between `travellerStories.data.ts`'s stated "Client Testimonials.xlsx" origin and the now-canonical `PRW-R1.3-001` workbook); additional automation for Product Review Workbook validation.
+
+**Full closure record:** filed in the Claude Project as `EBC-R1.3-WS2-CLOSE-01-TIGER-Traveller-Stories-Workstream-Closure-Release-Tracker-Update.md`, per this project's established convention (repository holds the tracker update; the Claude Project holds the governance record of how it was produced).
+
+## Decision Point D2 — Where should live Release 1.3 delivery status be tracked?
+
+Raised per Project Instructions §35 rather than resolved unilaterally. This document (`RELEASE-1.3-WORKSTREAM-PLAN.md`) is, by its own Document Information row, a **Draft planning companion** — its Explicit Out of Scope statement disclaims committing status or scope. Release 1.2 tracked live delivery status in a separate, dedicated document (`RELEASE-1.2.md`), distinct from its own backlog/planning documents. Two options for the Product Owner:
+
+1. **Continue using this document's new Delivery Status column and log** (as done above for WS2) as Release 1.3's live tracker, formally upgrading its role beyond "Draft planning companion."
+2. **Create a dedicated `RELEASE-1.3.md`**, mirroring `RELEASE-1.2.md`'s structure (Release Status Dashboard, per-workstream sections, Decision Log, Dependency Tracker), and keep this document planning-only as originally scoped.
+
+Tiger's recommendation, offered for decision: Option 2, for consistency with the established Release 1.2 pattern and to avoid overloading a document whose own header still reads "Draft." Not actioned here — this document's Activity 2 table and this log were still updated for WS2 in the interim, per the Product Owner's explicit `R1.3-WS2-CLOSE-01` instruction, so the closure is not left unrecorded pending this decision.
+
+## Release Readiness — Next Workstream
+
+With WS2 formally closed, Release 1.3 is authorised to proceed to the next planned workstream. No dependency in Activity 2/3 above names WS2 as a blocker for any other workstream, so this closure does not itself unblock or reorder anything else in the Sequencing Recommendation.
 
 ---
 
