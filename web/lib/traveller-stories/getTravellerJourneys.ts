@@ -67,6 +67,16 @@ interface TravellerMetadata {
      * `media.travellerPhoto`.
      */
     heroImage?: string;
+    /**
+     * Approved Google Review URL for this specific journey (Google Review
+     * CTA Alignment, R1.3-WS2-IMP-02), sourced verbatim from the frozen
+     * `PRW-R1.3-001-Traveller-Stories.xlsx` for journeys where the
+     * workbook's own business rule — testimonial complete AND Google
+     * Review present AND a URL is on file — evaluates true. Absent
+     * (undefined) for every journey that doesn't qualify; never a
+     * generated, guessed, or company-wide fallback link.
+     */
+    googleReviewUrl?: string;
   }>;
   media: {
     travellerPhoto: {
@@ -112,6 +122,13 @@ export interface TravellerJourneyCard {
    * for this journey, or when `permissions.destinationPhotos` is false.
    */
   galleryImages: { src: string; alt: string }[];
+  /**
+   * This journey's approved Google Review URL, or null when it doesn't have
+   * one. The only signal the detail page uses to decide whether to render a
+   * Google Review CTA for this journey (R1.3-WS2-IMP-02) — never a generic,
+   * sitewide review link.
+   */
+  googleReviewUrl: string | null;
 }
 
 const MONTH_NAMES = [
@@ -381,6 +398,7 @@ export async function getApprovedTravellerJourneys(): Promise<TravellerJourneyCa
         heroImage: heroImage ? { src: heroImage.src, alt: heroImage.alt, width: heroImage.width, height: heroImage.height } : null,
         heroImageIsCurated: heroImage?.isCurated ?? false,
         galleryImages,
+        googleReviewUrl: journey.googleReviewUrl ?? null,
       });
     }
   }

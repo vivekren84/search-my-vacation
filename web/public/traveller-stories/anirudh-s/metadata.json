@@ -13,7 +13,8 @@
       "duration": "5 Days / 4 Nights",
       "experienceType": "Vacation",
       "travellerType": "Couple",
-      "featured": false
+      "featured": true,
+      "googleReviewUrl": "https://maps.app.goo.gl/hfw6RTAFNw32kN5j9"
     }
   ],
   "media": {
@@ -37,5 +38,5 @@
   "tags": [
     "Couple"
   ],
-  "lastUpdated": "2026-08-10"
+  "lastUpdated": "2026-09-06"
 }

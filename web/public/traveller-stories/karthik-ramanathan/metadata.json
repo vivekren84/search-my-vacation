@@ -13,7 +13,7 @@
       "duration": "7 Days / 6 Nights",
       "experienceType": "Heritage & Luxury",
       "travellerType": "Family",
-      "featured": false,
+      "featured": true,
       "heroImage": "family.jpg"
     },
     {
@@ -25,7 +25,8 @@
       "duration": "9 Days / 8 Nights",
       "experienceType": "International Family Vacation",
       "travellerType": "Family",
-      "featured": false
+      "featured": false,
+      "googleReviewUrl": "https://maps.app.goo.gl/BaDQRzZU7DZFyZ7SA"
     }
   ],
   "media": {
@@ -66,5 +67,5 @@
     "History",
     "International Family Vacation"
   ],
-  "lastUpdated": "2026-08-11"
+  "lastUpdated": "2026-09-06"
 }

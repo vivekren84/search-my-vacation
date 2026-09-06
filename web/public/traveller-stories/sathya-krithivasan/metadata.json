@@ -13,7 +13,8 @@
       "duration": "7 Days / 6 Nights",
       "experienceType": "Last-minute Family Vacation",
       "travellerType": "Family",
-      "featured": true
+      "featured": true,
+      "googleReviewUrl": "https://maps.app.goo.gl/SdhTjSRCFzg31ae8A"
     }
   ],
   "media": {
@@ -54,5 +55,5 @@
     "Single Point of Contact",
     "Budget"
   ],
-  "lastUpdated": "2026-08-11"
+  "lastUpdated": "2026-09-06"
 }

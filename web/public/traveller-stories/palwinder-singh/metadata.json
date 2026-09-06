@@ -13,7 +13,8 @@
       "duration": "6 Days / 5 Nights",
       "experienceType": "Honeymoon",
       "travellerType": "Couple",
-      "featured": false
+      "featured": false,
+      "googleReviewUrl": "https://maps.app.goo.gl/Nm59rFpTxCYTEKQ5A"
     }
   ],
   "media": {
@@ -38,5 +39,5 @@
     "Couple",
     "Honeymoon"
   ],
-  "lastUpdated": "2026-08-11"
+  "lastUpdated": "2026-09-06"
 }

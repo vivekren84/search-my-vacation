@@ -25,20 +25,26 @@
       "duration": "6 Days / 5 Nights",
       "experienceType": "Memory Makers",
       "travellerType": "Family",
-      "featured": false
+      "featured": false,
+      "googleReviewUrl": "https://maps.app.goo.gl/WHr1uNZwqeQ917bK8"
     }
   ],
   "media": {
     "travellerPhoto": {
       "file": "family.jpg",
       "available": true,
-      "approvedForWebsite": true
+      "approvedForWebsite": false
     },
     "destinationPhotos": [
       {
         "file": "guruvayoor-01.jpg",
         "journeyId": "JRN-006",
         "caption": "Guruvayur, Kerala travel photo"
+      },
+      {
+        "file": "srilanka.jpg",
+        "journeyId": "JRN-053",
+        "caption": "Sri Lanka travel photo"
       }
     ]
   },

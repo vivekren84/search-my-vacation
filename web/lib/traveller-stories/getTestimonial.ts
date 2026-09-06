@@ -73,6 +73,21 @@ import { travellerStories, type TravellerStory } from "@/config/travellerStories
  * ever been supplied. It correctly uses the metadata-only ("Journey
  * Snapshot") fallback. Adding another journey's testimonial must never
  * overwrite or affect a different journey belonging to the same traveller.
+ *
+ * Traveller Testimonial Migration (R1.3-WS2-IMP-03): the 37 mappings below
+ * this comment (JRN-014 through JRN-053, excluding ids already listed
+ * above) were added in one migration, per Product's approval that this
+ * formally supersedes the original Authentic Story Rule's treatment of
+ * Journey Snapshot as permanent for these journeys (EBC-R1.3-WS2-04
+ * Decision 1). Each entry's traveller name and destination were
+ * cross-verified programmatically against
+ * `PRW-R1.3-001-Traveller-Stories.xlsx` before migration — 37/37 matched
+ * with zero discrepancies; none needed the kind of manual disambiguation
+ * the entries above required. Quote text is verbatim from the workbook;
+ * the only transformation applied was normalising the workbook's
+ * single-newline paragraph breaks to this file's existing `\n\n`
+ * convention (see `travellerStories.data.ts`) — no words were changed,
+ * added, or removed.
  */
 const testimonialById = (id: string): TravellerStory => {
   const found = travellerStories.find((story) => story.id === id);
@@ -98,6 +113,43 @@ export const testimonialByJourneyId: Readonly<Record<string, TravellerStory>> = 
   "JRN-012": testimonialById("sri-lanka-madhangi"),
   "JRN-013": testimonialById("kl-langkawi-ishwarya"),
   "JRN-025": testimonialById("andaman-sathya-krithivasan"),
+  "JRN-014": testimonialById("cb-siva"),
+  "JRN-015": testimonialById("lavi-rajan"),
+  "JRN-016": testimonialById("anirudh-s"),
+  "JRN-017": testimonialById("karthik-ramanathan"),
+  "JRN-018": testimonialById("sonia-negi"),
+  "JRN-019": testimonialById("balaji-hariharan"),
+  "JRN-020": testimonialById("palwinder-singh"),
+  "JRN-021": testimonialById("rami-reddy"),
+  "JRN-022": testimonialById("padma-priya-govindaraju"),
+  "JRN-023": testimonialById("dinesh-chandrasekaran"),
+  "JRN-024": testimonialById("aru-k"),
+  "JRN-026": testimonialById("srividhya-subramanian"),
+  "JRN-027": testimonialById("sunoj-s-m"),
+  "JRN-028": testimonialById("chitra-chandrasekaran"),
+  "JRN-029": testimonialById("vaidyanath-balasubramanian"),
+  "JRN-030": testimonialById("lina-mahurkar"),
+  "JRN-031": testimonialById("sukumar-k"),
+  "JRN-032": testimonialById("sridevi-vadhirajan"),
+  "JRN-033": testimonialById("sridevi-mohanty"),
+  "JRN-034": testimonialById("rajkumar-yadavalli"),
+  "JRN-035": testimonialById("swathi-ramesh"),
+  "JRN-036": testimonialById("ashika-hema"),
+  "JRN-037": testimonialById("abhinaya-murali"),
+  "JRN-039": testimonialById("manikantan-narasimhan"),
+  "JRN-040": testimonialById("prabhu-h"),
+  "JRN-041": testimonialById("charuvasine"),
+  "JRN-042": testimonialById("hari-haran-ravichandran"),
+  "JRN-043": testimonialById("harishankar-kuppusamy"),
+  "JRN-044": testimonialById("kohila-dev-arun-kumar"),
+  "JRN-045": testimonialById("malleswari"),
+  "JRN-046": testimonialById("matilda-dsouza"),
+  "JRN-047": testimonialById("praveen-kumar"),
+  "JRN-048": testimonialById("shankar-subramanian"),
+  "JRN-049": testimonialById("thiagarajan-s"),
+  "JRN-050": testimonialById("vidhya"),
+  "JRN-051": testimonialById("vidhya-lakshmi"),
+  "JRN-053": testimonialById("ahilandeswari-v"),
 };
 
 export function getTestimonialForJourney(journeyId: string): TravellerStory | null {
