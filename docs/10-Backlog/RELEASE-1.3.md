@@ -9,16 +9,16 @@
 | Item | Value |
 |---|---|
 | Document | Release 1.3 Release Tracker |
-| Version | 1.0 |
+| Version | 1.1 |
 | Status | **Active** — live execution and delivery-status tracker for Release 1.3 |
 | Origin | Created per the Product Owner's decision on Decision Point D2, raised in `RELEASE-1.3-WORKSTREAM-PLAN.md` v1.1's Workstream Delivery Status Log, following `R1.3-WS2-CLOSE-01` |
 | Product Owner | Vivek |
 | Release Manager | Tiger |
 | Purpose | Live release execution tracker and delivery status for Release 1.3 — workstream status, implementation status, QA status, delivery status, release readiness, release history and overall progress. Mirrors the role `RELEASE-1.2.md` held for Release 1.2. |
 | Baseline | Release 1.2 — closed 02-Sep-2026 (`RELEASE-1.2.md` §18) |
-| Related | `docs/10-Backlog/RELEASE-1.3-BACKLOG.md` — scope and backlog catalogue; canonical source for what has been decided or carried forward. `docs/10-Backlog/RELEASE-1.3-WORKSTREAM-PLAN.md` — planning, sequencing and implementation strategy; canonical source for task-level decomposition (Activity 3) and scope-classification recommendations (Activity 5). `docs/10-Backlog/RELEASE-1.2.md` — Release 1.2 precedent; the structural template this document mirrors. |
+| Related | `docs/10-Backlog/RELEASE-1.3-BACKLOG.md` — scope and backlog catalogue; canonical source for what has been decided or carried forward. `docs/10-Backlog/RELEASE-1.3-WORKSTREAM-PLAN.md` — planning, sequencing and implementation strategy; canonical source for task-level decomposition (Activity 3) and scope-classification recommendations (Activity 5). `docs/10-Backlog/RELEASE-1.2.md` — Release 1.2 precedent; the structural template this document mirrors. `docs/10-Backlog/FUTURE-CONSIDERATIONS.md` — Future Considerations Register; canonical source for items explicitly deferred during completed workstream governance reviews (see Section 9). |
 | Document Responsibility Split | Per the Product Owner's decision: `RELEASE-1.3-BACKLOG.md` = scope/backlog catalogue · `RELEASE-1.3-WORKSTREAM-PLAN.md` = planning, sequencing and implementation strategy · `RELEASE-1.3.md` (this document) = live release execution tracker and delivery status. This document does not duplicate the other two — see Sections 5 and 6 for how task-level detail is cross-referenced rather than repeated. |
-| Last Updated | 06 September 2026 |
+| Last Updated | 08 September 2026 |
 
 ---
 
@@ -27,6 +27,7 @@
 | Version | Date | Author | EBC | Summary |
 |---|---|---|---|---|
 | 1.0 | 06-Sep-2026 | Tiger | R1.3-TRK-001 | Initial creation, per the Product Owner's decision on Decision Point D2 (raised in `RELEASE-1.3-WORKSTREAM-PLAN.md` v1.1's Workstream Delivery Status Log, itself part of `R1.3-WS2-CLOSE-01`). Establishes `RELEASE-1.3.md` as the dedicated live execution/delivery tracker for Release 1.3, initialised using `RELEASE-1.2.md`'s proven structure. Populated with the ten-workstream baseline from `RELEASE-1.3-WORKSTREAM-PLAN.md` v1.1 (Activity 2/3); records Workstream 2 — Traveller Stories as ✅ **Complete**, per `R1.3-WS2-CLOSE-01` (independently repository-verified); all other workstreams recorded Not Started. `RELEASE-1.3-WORKSTREAM-PLAN.md`'s own Activity 2 Delivery Status column and Workstream Delivery Status Log (added in its v1.1, interim) are left unchanged, per the Product Owner's explicit instruction — that document now returns to a planning-only role for future updates, this document becomes the live tracker going forward. Documentation only — no application code, configuration, schema, or Product/Architecture/Engineering work was performed, per the Product Owner's explicit scope for this activity. |
+| 1.1 | 08-Sep-2026 | Tiger | EBC-R1.3-WS0-001 | Cross-referenced the newly-committed `docs/10-Backlog/FUTURE-CONSIDERATIONS.md` (Future Considerations Register) in Section 9 and the Document Information "Related" field, distinguishing it from the existing Activity-5-sourced Future Release Candidates reference already in Section 9. No other content changed. Documentation only. |
 
 ---
 
@@ -199,6 +200,8 @@ These remain unresolved and must stay visible until the Product Owner formally r
 # 9. Future Release Candidates
 
 Carried by reference from `RELEASE-1.3-WORKSTREAM-PLAN.md` Activity 5, "Future / Release 2.0" classification — not duplicated here. See that document for the full list (Workstream 1 Tasks 1.1–1.4/1.8; Workstream 3 Tasks 3.5–3.6; Workstream 5 Tasks 5.3–5.4; Workstream 6 Task 6.1's build phase; Workstream 10's contingent governance playbooks).
+
+**Distinct, complementary register:** `docs/10-Backlog/FUTURE-CONSIDERATIONS.md` (established `EBC-R1.3-WS0-001`) carries a different class of item — enhancements, governance recommendations, architectural-evolution ideas and implementation opportunities explicitly named and intentionally deferred *during* completed Release 1.3 workstream governance reviews (Workstream 1 — Destination Intelligence Evolution; Workstream 2 — Traveller Stories), rather than pre-execution backlog/vision items. Not duplicated here — see that document for the full, traceable list.
 
 ---
 
