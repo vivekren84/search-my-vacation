@@ -24,6 +24,7 @@ Distinct from : RELEASE-1.3-BACKLOG.md (the product/UX/engineering-technical-deb
 |---|---|---|---|
 | 1.0 | 08-Sep-2026 | Tiger | Initial establishment, produced in the Claude Project per `EBC-R1.3-WS0-001`. 17 deferred items captured, drawn from all five completed Workstream 1 (Destination Intelligence Evolution) governance cards and the relevant completed Workstream 2 (Traveller Stories) cards, each traced to its originating document. |
 | 1.1 | 08-Sep-2026 | Tiger | Committed to the repository (this document), per the Product Owner's repository-synchronisation instruction. Content carried over verbatim from the Claude-Project-ratified v1.0 — identifiers, traceability, entry text, governance guidance and status definitions unchanged. Workspace Readiness Check (§0) re-run against the now-connected local repository; repository placement rationale added (§0.1). |
+| 1.2 | 08-Sep-2026 | Tiger | Formalised the workstream-closure review as a mandatory, explicitly-recorded step (§5, trigger 1) and added §5.1 Workstream Closure Review Log, per the Product Owner's Future Governance closure instruction. Seeded the log retrospectively for Workstream 2 and Workstream 1, both already reflected in this register's existing §3 population. No entries in §3 changed; no scope, priority or estimate introduced. |
 
 ---
 
@@ -263,7 +264,7 @@ Every FCR entry above traces to at least one specific, completed governance docu
 **Who may add entries.** Any Team Satvi persona may propose an FCR entry, sourced from their own completed work (Archie from an architecture review, Arjun from a product review, Rad from an engineering report, Keerthi/Sri from validation findings). Tiger is responsible for reviewing each proposed entry against this register's field definitions (§2) before it is recorded, and for the periodic consolidation pass described below — mirroring the same role Tiger already plays consolidating multi-persona findings elsewhere in this project (Project Instructions §31).
 
 **When the register is reviewed.** Two triggers:
-1. **At every workstream closure** (the same moment a `*-CLOSE-*` or equivalent closure card is produced) — the closing persona checks whether their own workstream's completed cards named any deferred item not yet captured, and adds it.
+1. **At every workstream closure** (the same moment a `*-CLOSE-*` or equivalent closure card is produced) — the closing persona explicitly assesses whether their own workstream's completed cards named any deferred item not yet captured. This assessment is mandatory and must be recorded either way: if a new item is found, it is added to §3 and logged in §5.1 below; if none is found, that is also explicitly recorded in §5.1 — a workstream closure must never pass without an FCR assessment being logged, and "no items were reviewed" is not an acceptable substitute for "no items were found." This is a required step of the standard workstream closure lifecycle (Project Instructions §12), alongside Tiger's, Keerthi's and Sri's other closure-stage responsibilities.
 2. **At the start of every future release's delivery planning** (the Release 1.4+ equivalent of `EBC-R1.3-001`/`RELEASE-1.3-WORKSTREAM-PLAN.md`) — Tiger reviews the full FCR as a required input, alongside the existing Release Backlog and Governance Backlog documents, per Project Instructions §13/§17.
 
 **How items transition into future release planning.** An FCR entry never moves directly into a release plan. The transition is always: FCR entry → raised for evaluation during a future release's delivery-planning workstream (the Release 1.4+ equivalent of `EBC-R1.3-001`) → if the Product Owner elects to pursue it, it is promoted into that release's Backlog/Workstream Plan with a Commitment/Candidate classification and, only then, a release-inclusion decision. An FCR entry gaining a target release without going through that planning workstream should not happen — this register carries no authority to commit anything on its own, consistent with this card's own Explicitly Out of Scope instruction (§6 below) and Project Instructions §10 (release-inclusion is the Product Owner's authority alone).
@@ -276,6 +277,17 @@ Every FCR entry above traces to at least one specific, completed governance docu
 - **Superseded** — a later decision makes the item moot (e.g. an architecture change that removes the need for a workaround); record what superseded it.
 
 No entry should ever simply disappear from this register. A future reader should always be able to see not just what is currently open, but what was once considered and what happened to it.
+
+### 5.1 Workstream Closure Review Log
+
+Per the closure-trigger rule above, every workstream closure logs an explicit outcome here — whether it added FCR entries or found none. This log is append-only; entries are never removed or overwritten, only added to.
+
+| Workstream / Closure Event | Closure Card | Reviewed By | Date | Outcome |
+|---|---|---|---|---|
+| Workstream 2 — Traveller Stories | `EBC-R1.3-WS2-CLOSE-01-TIGER-Traveller-Stories-Workstream-Closure-Release-Tracker-Update.md` | Tiger | 06-Sep-2026 | Additions made (retrospective) — FCR-003, FCR-004, FCR-007, FCR-008, FCR-009, FCR-010, FCR-013, FCR-014, FCR-016 all originate from Workstream 2 closure-stage documents, captured in this register's initial population (§3). No separate contemporaneous log entry was made at the time, as this closure-log requirement did not yet exist; recorded here for completeness when the requirement was formalised. |
+| Workstream 1 — Destination Intelligence Evolution (Governance Phase) | This register's own establishment, `EBC-R1.3-WS0-001`, and its repository-synchronisation follow-on | Tiger | 08-Sep-2026 | Additions made — FCR-001, FCR-002, FCR-005, FCR-006, FCR-011, FCR-012, FCR-015, FCR-017 all originate from Workstream 1 governance-phase documents, captured in this register's initial population (§3). This is also the first closure-log entry made under the formalised requirement itself, recorded at the point Workstream 1's Governance Phase is confirmed complete and the workstream transitions to Engineering Execution (see `RELEASE-1.3.md` §5). |
+
+Future rows follow the same pattern, including an explicit "None identified" outcome where applicable (e.g. `| Workstream N — <name> | <closure card> | <persona> | <date> | None identified — reviewed, no new deferred items named. |`).
 
 ---
 
