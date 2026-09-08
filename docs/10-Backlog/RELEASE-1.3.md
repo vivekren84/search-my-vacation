@@ -9,7 +9,7 @@
 | Item | Value |
 |---|---|
 | Document | Release 1.3 Release Tracker |
-| Version | 1.1 |
+| Version | 1.2 |
 | Status | **Active** — live execution and delivery-status tracker for Release 1.3 |
 | Origin | Created per the Product Owner's decision on Decision Point D2, raised in `RELEASE-1.3-WORKSTREAM-PLAN.md` v1.1's Workstream Delivery Status Log, following `R1.3-WS2-CLOSE-01` |
 | Product Owner | Vivek |
@@ -28,6 +28,7 @@
 |---|---|---|---|---|
 | 1.0 | 06-Sep-2026 | Tiger | R1.3-TRK-001 | Initial creation, per the Product Owner's decision on Decision Point D2 (raised in `RELEASE-1.3-WORKSTREAM-PLAN.md` v1.1's Workstream Delivery Status Log, itself part of `R1.3-WS2-CLOSE-01`). Establishes `RELEASE-1.3.md` as the dedicated live execution/delivery tracker for Release 1.3, initialised using `RELEASE-1.2.md`'s proven structure. Populated with the ten-workstream baseline from `RELEASE-1.3-WORKSTREAM-PLAN.md` v1.1 (Activity 2/3); records Workstream 2 — Traveller Stories as ✅ **Complete**, per `R1.3-WS2-CLOSE-01` (independently repository-verified); all other workstreams recorded Not Started. `RELEASE-1.3-WORKSTREAM-PLAN.md`'s own Activity 2 Delivery Status column and Workstream Delivery Status Log (added in its v1.1, interim) are left unchanged, per the Product Owner's explicit instruction — that document now returns to a planning-only role for future updates, this document becomes the live tracker going forward. Documentation only — no application code, configuration, schema, or Product/Architecture/Engineering work was performed, per the Product Owner's explicit scope for this activity. |
 | 1.1 | 08-Sep-2026 | Tiger | EBC-R1.3-WS0-001 | Cross-referenced the newly-committed `docs/10-Backlog/FUTURE-CONSIDERATIONS.md` (Future Considerations Register) in Section 9 and the Document Information "Related" field, distinguishing it from the existing Activity-5-sourced Future Release Candidates reference already in Section 9. No other content changed. Documentation only. |
+| 1.2 | 08-Sep-2026 | Tiger | EBC-R1.3-WS0-001 | WS1 Governance Closure: updated Section 5 (Master Workstream Tracker) and the Section 3 dashboard note to record that Workstream 1's Governance Phase is formally complete, Engineering Readiness is GREEN, and the workstream transitions from Governance to Engineering Execution (implementation not yet started). No other workstream status changed; completed-workstream count unchanged (still 1 of 10 — WS2). Documentation only. |
 
 ---
 
@@ -101,7 +102,7 @@ Release-1.3-specific guiding principles (scope discipline, brand preservation, a
 
 | Metric | Current Value | Notes |
 |---|---|---|
-| Overall Progress | Execution underway | 1 of 10 workstreams is ✅ Complete (Workstream 2 — Traveller Stories, closed 06-Sep-2026 per `R1.3-WS2-CLOSE-01`). The remaining 9 workstreams are Not Started. |
+| Overall Progress | Execution underway | 1 of 10 workstreams is ✅ Complete (Workstream 2 — Traveller Stories, closed 06-Sep-2026 per `R1.3-WS2-CLOSE-01`). Workstream 1's Governance Phase closed 08-Sep-2026 with Engineering Readiness GREEN, transitioning to Engineering Execution (implementation not yet started). The remaining 8 workstreams are Not Started. |
 | Number of Workstreams | 10 | Per `RELEASE-1.3-WORKSTREAM-PLAN.md` v1.0 Activity 2, confirmed against the evidence reviewed there; individual lifecycle statuses recorded in Section 5. |
 | Number of Completed Workstreams | 1 | Workstream 2 — Traveller Stories. |
 | Number of Open Decisions | See `RELEASE-1.3-WORKSTREAM-PLAN.md`'s "Decisions Required from the Product Owner" (5 items, including Decision Point D1 — thin workstreams WS2/WS7 — and Decision Point D2, resolved this update) | This tracker's own Product Decision Log (Section 7) records execution-phase decisions made once implementation begins; it is currently empty. |
@@ -140,7 +141,7 @@ Status values used below follow Section 14 (Status Definitions). Workstream obje
 
 | # | Workstream | Status | Owner | Notes |
 |---|---|---|---|---|
-| WS1 | Destination Intelligence Evolution | Not Started | Arjun / Rad / Archie | Largest and most strategic workstream; genuinely multi-phase. See `RELEASE-1.3-WORKSTREAM-PLAN.md` Activity 3, Tasks 1.1–1.8. |
+| WS1 | Destination Intelligence Evolution | 🟡 **Governance Complete — Engineering Readiness GREEN** | Arjun / Rad / Archie | Largest and most strategic workstream; genuinely multi-phase. Governance Phase formally closed 08-Sep-2026: architecture decisions (`EBC-R1.3-WS1-002`, `WS1-005`), product/destination-governance review (`WS1-003`), engineering-readiness consolidation (`WS1-004`, `WS1-006`) and the Future Considerations Register (`EBC-R1.3-WS0-001`, `docs/10-Backlog/FUTURE-CONSIDERATIONS.md`) all complete, with all deferred items traced and captured. Workstream transitions from Governance to Engineering Execution; implementation not yet started. See `RELEASE-1.3-WORKSTREAM-PLAN.md` Activity 3, Tasks 1.1–1.8. |
 | WS2 | Traveller Stories | ✅ **Complete** | Rad (implementation) / Keerthi (QA) / Tiger (closure) | Closed 06-Sep-2026, `R1.3-WS2-CLOSE-01`. QA Final Status: PASS — no defects, no open observations, no release blockers. Independently repository-verified this update: `main` up to date with `origin/main`, commits `f561882`/`1a74f57` present and pushed, 49 traveller folders, 27 `googleReviewUrl` entries matching the reported 27-CTA/25-no-CTA split. Full evidence chain: `RELEASE-1.3-WORKSTREAM-PLAN.md`'s Workstream Delivery Status Log; full governance record: Claude Project `EBC-R1.3-WS2-CLOSE-01-TIGER-...`. |
 | WS3 | Premium Homepage Experience | Not Started | Sophie / Rad | See `RELEASE-1.3-WORKSTREAM-PLAN.md` Activity 3, Tasks 3.1–3.6. |
 | WS4 | Journey Passport Evolution | Not Started | Sophie / Rad / Archie | Largest single cluster of ready UX/engineering items. See Activity 3, Tasks 4.1–4.9. |
