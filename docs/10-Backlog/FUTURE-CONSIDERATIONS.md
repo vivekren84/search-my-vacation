@@ -25,6 +25,7 @@ Distinct from : RELEASE-1.3-BACKLOG.md (the product/UX/engineering-technical-deb
 | 1.0 | 08-Sep-2026 | Tiger | Initial establishment, produced in the Claude Project per `EBC-R1.3-WS0-001`. 17 deferred items captured, drawn from all five completed Workstream 1 (Destination Intelligence Evolution) governance cards and the relevant completed Workstream 2 (Traveller Stories) cards, each traced to its originating document. |
 | 1.1 | 08-Sep-2026 | Tiger | Committed to the repository (this document), per the Product Owner's repository-synchronisation instruction. Content carried over verbatim from the Claude-Project-ratified v1.0 — identifiers, traceability, entry text, governance guidance and status definitions unchanged. Workspace Readiness Check (§0) re-run against the now-connected local repository; repository placement rationale added (§0.1). |
 | 1.2 | 08-Sep-2026 | Tiger | Formalised the workstream-closure review as a mandatory, explicitly-recorded step (§5, trigger 1) and added §5.1 Workstream Closure Review Log, per the Product Owner's Future Governance closure instruction. Seeded the log retrospectively for Workstream 2 and Workstream 1, both already reflected in this register's existing §3 population. No entries in §3 changed; no scope, priority or estimate introduced. |
+| 1.3 | 08-Sep-2026 | Tiger | WS1 full closure review, per `EBC-R1.3-WS1-011`. Added FCR-018, FCR-019, FCR-020 (§3.4 Engineering), sourced from `EBC-R1.3-WS1-009`/`WS1-010` (Engineering Implementation, QA Remediation and Final Sign-off — completed since this register's v1.0–1.2). Updated the Traceability Matrix (§4) and the Workstream Closure Review Log (§5.1) accordingly. No existing entry changed; no scope, priority or estimate introduced. |
 
 ---
 
@@ -207,6 +208,30 @@ No entry below is assigned a target release. Per this register's own establishin
 *Suggested Review Timing:* Release 1.4+ tooling/process review.
 *Status:* Deferred.
 
+**FCR-018 — Bootstrap Workbook `aliases` field — repository-layer read function needed**
+*Description:* Sheet 2's `aliases` column (`geo_aliases` rows for a matched `geo_place_id`, rolled up, semicolon-separated) is architecturally pre-approved but has no implementation — `bootstrapRepository.ts` has no existing query against `geo_aliases` to roll up. Implementing it correctly means adding a new read function against the repository access layer, which the `WS1-009` remediation card's own scope explicitly excluded ("Repository access layer" and "Supabase integration" both named Out of Scope there).
+*Originating EBC/ADR:* `EBC-R1.3-WS1-009-RAD-Workbook-Protection-Product-Editability-Remediation.md` §3, §7 Item 1; architectural pre-approval already given in `EBC-R1.3-WS1-005-ARCHIE-Geo-Places-Access-Pattern-Architecture-Decision.md` §4.
+*Reason for Deferral:* Explicitly out of `WS1-009`'s own stated scope boundary; Rad recommended a small, explicitly-scoped follow-on card rather than building a repository-layer change inside a workbook-generation-layer fix.
+*Dependencies:* None architecturally (the access-layer extension is already pre-approved) — needs its own scoped Rad implementation card.
+*Suggested Review Timing:* Next Bootstrap Workbook / Destination Intelligence engineering card, or at Release 1.4 planning if not picked up sooner.
+*Status:* Deferred.
+
+**FCR-019 — `kbSectionRef` on Bootstrap Workbook Sheet 2 — ratify or remove**
+*Description:* Sheet 2 carries an undocumented `kbSectionRef` column, added unilaterally by Rad during `WS1-007` as a traceability aid mirroring Sheet 1's own `kbSectionRef`, never put to Arjun/Tiger against the literal `EBC-R1.3-WS3-001` §4.2 column table. The implementation does not contradict the approved specification — it adds one field beyond it. Needs an explicit decision: ratify it as a formal Sheet 2 specification addition, or direct its removal.
+*Originating EBC/ADR:* `EBC-R1.3-WS1-009-RAD-Workbook-Protection-Product-Editability-Remediation.md` §3, §7 Item 2; reaffirmed as still-open in `EBC-R1.3-WS1-010-KEERTHI-Engineering-Remediation-Verification-Final-QA-Sign-off.md` §4, Item 2.
+*Reason for Deferral:* Non-blocking either way — Rad documented the decision needed directly in code (`types.ts`) rather than unilaterally removing a working field.
+*Dependencies:* None — a Product/Arjun/Tiger decision only.
+*Suggested Review Timing:* Before the next Bootstrap Workbook Sheet 2 engineering card.
+*Status:* Deferred.
+
+**FCR-020 — Live Supabase (`geo_places`/`geo_aliases`) reachability gap in the current engineering/QA environment**
+*Description:* Every live query against `geo_places` fails in the current engineering/QA working environment (no egress to `*.supabase.co`), observed identically and independently across four separate sessions (`WS1-007`, `WS1-008`, `WS1-009`, `WS1-010`). This is disclosed and explicitly excluded from scoring against each of those cards individually, but the underlying network/egress-allowlist condition itself has never been assigned as its own action item.
+*Originating EBC/ADR:* `EBC-R1.3-WS1-010-KEERTHI-Engineering-Remediation-Verification-Final-QA-Sign-off.md` §1, §4 Item 3; independently reconfirmed in `EBC-R1.3-WS1-009-RAD-Workbook-Protection-Product-Editability-Remediation.md` §7 Item 3.
+*Reason for Deferral:* Not a defect against any Bootstrap Generator card — a standing environment condition every one of those cards correctly declined to score against itself. Recommended by both Rad and Keerthi as its own separate action item, not resolvable by a further Bootstrap Generator card.
+*Dependencies:* Confirmation of the correct egress-allowlist entry for the project's live Supabase host from whichever environment will run the generator in practice — an infrastructure/access action, not an engineering-implementation one.
+*Suggested Review Timing:* Before the Bootstrap Generator is next required to validate against live geo-identity data (e.g. the legacy-89 Places reconciliation, FCR-012).
+*Status:* Deferred.
+
 ### 3.5 Documentation
 
 **FCR-015 — ADR addendum recording the new Destination Intelligence ↔ geo-truth dependency edge**
@@ -248,6 +273,8 @@ No entry below is assigned a target release. Per this register's own establishin
 | `EBC-R1.3-WS1-004-TIGER-Delivery-Governance-Consolidation-Engineering-Readiness.md` | FCR-001, FCR-005, FCR-011, FCR-012, FCR-017 |
 | `EBC-R1.3-WS1-005-ARCHIE-Geo-Places-Access-Pattern-Architecture-Decision.md` | FCR-002, FCR-015 |
 | `EBC-R1.3-WS1-006-TIGER-RAD-KB-Region-Matching-Strategy-Engineering-Readiness.md` | FCR-012 |
+| `EBC-R1.3-WS1-009-RAD-Workbook-Protection-Product-Editability-Remediation.md` | FCR-018, FCR-019, FCR-020 |
+| `EBC-R1.3-WS1-010-KEERTHI-Engineering-Remediation-Verification-Final-QA-Sign-off.md` | FCR-019, FCR-020 |
 | `EBC-R1.3-WS2-04-ARJUN-Traveller-Story-Content-Migration-Analysis.md` | FCR-003, FCR-004, FCR-008, FCR-016 |
 | `EBC-R1.3-WS2-05-ADDENDUM-01-ARJUN-Ambiguous-Experience-Values-Product-Review.md` | FCR-009, FCR-010 |
 | `EBC-R1.3-WS2-06-ARCHIE-Experience-Taxonomy-Architecture-Review.md` | FCR-003, FCR-004, FCR-007, FCR-008, FCR-013 |
@@ -286,6 +313,7 @@ Per the closure-trigger rule above, every workstream closure logs an explicit ou
 |---|---|---|---|---|
 | Workstream 2 — Traveller Stories | `EBC-R1.3-WS2-CLOSE-01-TIGER-Traveller-Stories-Workstream-Closure-Release-Tracker-Update.md` | Tiger | 06-Sep-2026 | Additions made (retrospective) — FCR-003, FCR-004, FCR-007, FCR-008, FCR-009, FCR-010, FCR-013, FCR-014, FCR-016 all originate from Workstream 2 closure-stage documents, captured in this register's initial population (§3). No separate contemporaneous log entry was made at the time, as this closure-log requirement did not yet exist; recorded here for completeness when the requirement was formalised. |
 | Workstream 1 — Destination Intelligence Evolution (Governance Phase) | This register's own establishment, `EBC-R1.3-WS0-001`, and its repository-synchronisation follow-on | Tiger | 08-Sep-2026 | Additions made — FCR-001, FCR-002, FCR-005, FCR-006, FCR-011, FCR-012, FCR-015, FCR-017 all originate from Workstream 1 governance-phase documents, captured in this register's initial population (§3). This is also the first closure-log entry made under the formalised requirement itself, recorded at the point Workstream 1's Governance Phase is confirmed complete and the workstream transitions to Engineering Execution (see `RELEASE-1.3.md` §5). |
+| Workstream 1 — Destination Intelligence Evolution (full closure — Governance + Engineering + QA) | `EBC-R1.3-WS1-011-TIGER-Repository-Documentation-Closure-Release-Tracker-Synchronisation` | Tiger | 08-Sep-2026 | Additions made — FCR-018 (`aliases` repository-layer gap), FCR-019 (`kbSectionRef` ratify-or-remove decision), FCR-020 (live Supabase reachability gap in the engineering/QA environment), sourced from `EBC-R1.3-WS1-009` and `EBC-R1.3-WS1-010`. Both items named in this closure's own EBC (`aliases`, `kbSectionRef`) confirmed not already present before adding; a third item (live-Supabase-reachability) also found explicitly named as deferred across four sessions and added on the same review, consistent with this register's completeness intent. |
 
 Future rows follow the same pattern, including an explicit "None identified" outcome where applicable (e.g. `| Workstream N — <name> | <closure card> | <persona> | <date> | None identified — reviewed, no new deferred items named. |`).
 
