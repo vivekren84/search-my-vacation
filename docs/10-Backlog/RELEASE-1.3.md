@@ -9,7 +9,7 @@
 | Item | Value |
 |---|---|
 | Document | Release 1.3 Release Tracker |
-| Version | 1.3 |
+| Version | 1.4 |
 | Status | **Active** — live execution and delivery-status tracker for Release 1.3 |
 | Origin | Created per the Product Owner's decision on Decision Point D2, raised in `RELEASE-1.3-WORKSTREAM-PLAN.md` v1.1's Workstream Delivery Status Log, following `R1.3-WS2-CLOSE-01` |
 | Product Owner | Vivek |
@@ -18,7 +18,7 @@
 | Baseline | Release 1.2 — closed 02-Sep-2026 (`RELEASE-1.2.md` §18) |
 | Related | `docs/10-Backlog/RELEASE-1.3-BACKLOG.md` — scope and backlog catalogue; canonical source for what has been decided or carried forward. `docs/10-Backlog/RELEASE-1.3-WORKSTREAM-PLAN.md` — planning, sequencing and implementation strategy; canonical source for task-level decomposition (Activity 3) and scope-classification recommendations (Activity 5). `docs/10-Backlog/RELEASE-1.2.md` — Release 1.2 precedent; the structural template this document mirrors. `docs/10-Backlog/FUTURE-CONSIDERATIONS.md` — Future Considerations Register; canonical source for items explicitly deferred during completed workstream governance reviews (see Section 9). |
 | Document Responsibility Split | Per the Product Owner's decision: `RELEASE-1.3-BACKLOG.md` = scope/backlog catalogue · `RELEASE-1.3-WORKSTREAM-PLAN.md` = planning, sequencing and implementation strategy · `RELEASE-1.3.md` (this document) = live release execution tracker and delivery status. This document does not duplicate the other two — see Sections 5 and 6 for how task-level detail is cross-referenced rather than repeated. |
-| Last Updated | 08 September 2026 |
+| Last Updated | 09 September 2026 |
 
 ---
 
@@ -30,6 +30,7 @@
 | 1.1 | 08-Sep-2026 | Tiger | EBC-R1.3-WS0-001 | Cross-referenced the newly-committed `docs/10-Backlog/FUTURE-CONSIDERATIONS.md` (Future Considerations Register) in Section 9 and the Document Information "Related" field, distinguishing it from the existing Activity-5-sourced Future Release Candidates reference already in Section 9. No other content changed. Documentation only. |
 | 1.2 | 08-Sep-2026 | Tiger | EBC-R1.3-WS0-001 | WS1 Governance Closure: updated Section 5 (Master Workstream Tracker) and the Section 3 dashboard note to record that Workstream 1's Governance Phase is formally complete, Engineering Readiness is GREEN, and the workstream transitions from Governance to Engineering Execution (implementation not yet started). No other workstream status changed; completed-workstream count unchanged (still 1 of 10 — WS2). Documentation only. |
 | 1.3 | 08-Sep-2026 | Tiger | EBC-R1.3-WS1-011 | WS1 full closure (Governance + Engineering Implementation + QA, per `EBC-R1.3-WS1-007` through `WS1-010`, Final QA Recommendation PASS). Workstream 1 marked ✅ Complete throughout (Section 1 Current Status, Section 3 dashboard, Section 5 tracker); completed-workstream count updated 1→2 of 10. Section 6 Task Tracker extended with a Workstream 1 task-level entry. Engineering Readiness recorded GREEN, QA recorded PASS. Section 5's WS1 Notes column discloses that engineering implementation exists in the working tree on `feature/ebc-r1.3-ws1-007-bootstrap-generator` but has not yet been committed or pushed (explicitly confirmed across `WS1-007`–`WS1-010`) — flagged as a residual action for Rad, not implied as done by this documentation-only closure. Documentation only; no implementation code touched, per this EBC's own Out of Scope (§11). |
+| 1.4 | 09-Sep-2026 | Tiger | EBC-R1.3-WS1-013 | Documentation Reconciliation Implementation, per `EBC-R1.3-WS1-012`'s Repository Artefact Reconciliation & Documentation Lineage Review. Added two retroactive entries to Section 7 (Product Decision Log): `DEC-R1.3-002` (approval to migrate the 37 outstanding testimonials, superseding the original Authentic Story Rule design) and `DEC-R1.3-003` (approval of the experience-category mapping approach). Both decisions were already implemented and shipped (`R1.3-WS2-IMP-03`, commit `1a74f57`) but had never been logged, per the gap identified in `EBC-R1.3-WS1-012` §4 (Gap 1). No other section changed. Documentation only; no implementation code touched, per this EBC's own Repository Areas scope (§4). |
 
 ---
 
@@ -196,6 +197,10 @@ Only decisions that materially influence product behaviour, architecture, UX or 
 | Decision ID | Date | Decision | Reason | Outcome | Status |
 |---|---|---|---|---|---|
 | DEC-R1.3-001 | 06-Sep-2026 | **Establish `RELEASE-1.3.md` as the live release execution tracker, distinct from `RELEASE-1.3-WORKSTREAM-PLAN.md` (planning) and `RELEASE-1.3-BACKLOG.md` (scope catalogue).** | Resolves Decision Point D2, raised when Workstream 2 closure required updating a "tracker" that did not yet formally exist for Release 1.3, mirroring the Release 1.2 precedent (`RELEASE-1.2.md`). | This document created; `RELEASE-1.3-WORKSTREAM-PLAN.md`'s interim WS2 Delivery Status update (v1.1) retained unchanged as historical record, per the Product Owner's explicit instruction; that document returns to a planning-only role going forward. | Approved |
+| DEC-R1.3-002 | 06-Sep-2026 | **Approve migrating all 37 outstanding Product-approved testimonials into the site's canonical testimonial data (`travellerStories.data.ts`/`getTestimonial.ts`), superseding the original "Authentic Story Rule" EBC design that treated Journey Snapshot as the correct, permanent state for these 37.** | Resolves `EBC-R1.3-WS2-04` §11 Decision 1 (Arjun) — all 37 testimonials were already Product-approved in the frozen workbook (`PRW-R1.3-001-Traveller-Stories.xlsx`); the shortfall was a migration gap, not a content or approval gap. Rad had raised this exact question as open in `IMP-02B`. | Migration executed by Rad (`R1.3-WS2-IMP-03`), committed `1a74f57` — curated testimonial coverage moved from 15/52 to 52/52 journeys; the Journey Snapshot fallback no longer occurs for any journey. | Approved |
+| DEC-R1.3-003 | 06-Sep-2026 | **Approve the experience-category mapping approach for the Traveller Stories migration: adopt Arjun's Exact/Precedent/Compatible batch mappings (21 values / 26 journeys, `EBC-R1.3-WS2-05`), ratified by Archie's architecture review (`EBC-R1.3-WS2-06` — Q1/Q2 approved; Q3/Q4 retain the 8-value `ExperienceType` union unchanged and render Ambiguous/Missing values with no category badge rather than force-mapping), plus two additional Product-reviewed mappings from the Ambiguous tier (Kerala Getaway → Weekend Getaway; Relaxing Getaway → Family Holiday, `EBC-R1.3-WS2-05-ADDENDUM-01` §6).** | Closes the 34-value metadata taxonomy against the 8-value runtime enum without widening the enum (an architecture-material change under Project Instructions §21) or force-mapping ambiguous labels, consistent with the project's principle of accurate rather than generic personalisation (§22). `Memory Makers` (3 journeys) and `International Private Tour` (1 journey) were deliberately left unmapped — a missing badge assessed as preferable to a wrong one. | Applied by Rad (`R1.3-WS2-IMP-03`), committed `1a74f57` — 20 of the 37 migrated journeys received an `experience` value; 17 (Memory Makers ×3, International Private Tour ×1, and the 5 Missing-tier values across 13 journeys) received none, by design. The `ExperienceType` union itself remains unchanged at 8 values. | Approved |
+
+**Approval context for `DEC-R1.3-002`/`DEC-R1.3-003` (retroactively logged via `EBC-R1.3-WS1-013`):** the artefact trail (`EBC-R1.3-WS2-04`, `WS2-05`, `WS2-06`, `WS2-05-ADDENDUM-01`) documents each decision's analysis, options and recommendation in full, and `R1.3-WS2-IMP-03` explicitly states its implementation followed "the frozen decisions from WS2-04 (Arjun), WS2-05/06 (Arjun/Archie), and the Addendum-01 mapping approvals, applied mechanically" — confirming both decisions were approved before implementation began. No separately dated Product Owner approval record (e.g. a specific sign-off message or meeting note) exists in the repository or Claude Project artefact trail distinct from the implementation report itself; consistent with this EBC's instruction not to speculate where evidence is incomplete, no such record is asserted here. Both decisions are logged now, retroactively, on the strength of the implemented-and-shipped outcome (commit `1a74f57`) as the evidence of approval — this is the gap `EBC-R1.3-WS1-012` §4 (Gap 1) identified as the review's most material finding.
 
 ---
 
@@ -263,7 +268,7 @@ This is a release-readiness checklist for Release 1.3 at the master-tracker leve
 - [x] `RELEASE-1.3-WORKSTREAM-PLAN.md` reflects the current ten-workstream baseline (v1.1)
 - [ ] `PROJECT-HISTORY.md` updated with the Release 1.3 entry
 - [ ] Standalone release notes prepared
-- [x] Decision log (Section 7) reflects all approved execution-phase decisions through `DEC-R1.3-001`
+- [x] Decision log (Section 7) reflects all approved execution-phase decisions through `DEC-R1.3-003` (updated `EBC-R1.3-WS1-013`)
 - [ ] Open decisions (Section 8) resolved or explicitly carried to a future release — 5 of 6 still open (see Section 8)
 
 ## Quality

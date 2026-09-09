@@ -26,6 +26,7 @@ Distinct from : RELEASE-1.3-BACKLOG.md (the product/UX/engineering-technical-deb
 | 1.1 | 08-Sep-2026 | Tiger | Committed to the repository (this document), per the Product Owner's repository-synchronisation instruction. Content carried over verbatim from the Claude-Project-ratified v1.0 — identifiers, traceability, entry text, governance guidance and status definitions unchanged. Workspace Readiness Check (§0) re-run against the now-connected local repository; repository placement rationale added (§0.1). |
 | 1.2 | 08-Sep-2026 | Tiger | Formalised the workstream-closure review as a mandatory, explicitly-recorded step (§5, trigger 1) and added §5.1 Workstream Closure Review Log, per the Product Owner's Future Governance closure instruction. Seeded the log retrospectively for Workstream 2 and Workstream 1, both already reflected in this register's existing §3 population. No entries in §3 changed; no scope, priority or estimate introduced. |
 | 1.3 | 08-Sep-2026 | Tiger | WS1 full closure review, per `EBC-R1.3-WS1-011`. Added FCR-018, FCR-019, FCR-020 (§3.4 Engineering), sourced from `EBC-R1.3-WS1-009`/`WS1-010` (Engineering Implementation, QA Remediation and Final Sign-off — completed since this register's v1.0–1.2). Updated the Traceability Matrix (§4) and the Workstream Closure Review Log (§5.1) accordingly. No existing entry changed; no scope, priority or estimate introduced. |
+| 1.4 | 09-Sep-2026 | Tiger | Documentation Reconciliation, per `EBC-R1.3-WS1-013` (implementing `EBC-R1.3-WS1-012`'s Repository Artefact Reconciliation review). Added FCR-021 (§3.5 Documentation) — the dormant `TravellerStory.experience` field has no reader anywhere in the application — the one new candidate `WS1-012` identified. Updated the Traceability Matrix (§4) and the Workstream Closure Review Log (§5.1) accordingly. No existing entry changed; no scope, priority or estimate introduced. |
 
 ---
 
@@ -250,6 +251,14 @@ No entry below is assigned a target release. Per this register's own establishin
 *Suggested Review Timing:* Immediately once the outstanding testimonial migration completes.
 *Status:* Deferred.
 
+**FCR-021 — Document that `TravellerStory.experience` currently has no reader anywhere in the application**
+*Description:* The curated `ExperienceType` union field (`TravellerStory.experience`, populated for 35 of 52 journeys after the Release 1.3 testimonial migration) is written into the data but has no reader anywhere in `web/app` or `web/components` — confirmed by direct repository search. What travellers actually see is a different, unrelated field: `metadata.json`'s raw, unvalidated `experienceType` string, rendered verbatim in four places (story-card kicker, detail-page headline, Journey Summary facts panel, Journey Snapshot fallback sentence). The field's own doc comment in `travellerStories.data.ts` explains why it is optional but does not state that it is currently inert, risking a future engineer assuming it has a visible effect.
+*Originating EBC/ADR:* `EBC-R1.3-WS2-05-ADDENDUM-01-ARJUN-Ambiguous-Experience-Values-Product-Review.md`, opening finding; independently confirmed via repository review in `EBC-R1.3-WS1-012-TIGER-Repository-Artefact-Reconciliation-Documentation-Lineage-Review.md` §4 (Gap 2).
+*Reason for Deferral:* A documentation-clarity action only, not gating any decision already made — the field's dormancy does not affect the Release 1.3 experience-category mapping decisions (see `RELEASE-1.3.md` §7, `DEC-R1.3-003`). `EBC-R1.3-WS1-013` assessed this candidate against this register's inclusion criteria (deferred, non-blocking, future engineering/Product value, traceable) and confirmed it qualifies, but could not action the code-comment fix itself: the target file (`web/config/travellerStories.data.ts`) is implementation code, and this EBC's own Repository Areas scope excludes modifying implementation code. That conflict is recorded rather than silently resolved — see `EBC-R1.3-WS1-013`'s Documentation Reconciliation Report §6.
+*Dependencies:* None — a small, self-contained doc-comment edit; alternatively resolved incidentally if/when a future badge feature is built against this field (see FCR-004/FCR-009), whichever comes first.
+*Suggested Review Timing:* Next engineering card touching `web/config/travellerStories.data.ts`, or actioned immediately as a standalone one-line documentation fix by Rad.
+*Status:* Deferred.
+
 ### 3.6 Governance
 
 **FCR-017 — Adopt a distinct, collision-free ID family for the WS1 Destination Intelligence card group**
@@ -276,9 +285,10 @@ No entry below is assigned a target release. Per this register's own establishin
 | `EBC-R1.3-WS1-009-RAD-Workbook-Protection-Product-Editability-Remediation.md` | FCR-018, FCR-019, FCR-020 |
 | `EBC-R1.3-WS1-010-KEERTHI-Engineering-Remediation-Verification-Final-QA-Sign-off.md` | FCR-019, FCR-020 |
 | `EBC-R1.3-WS2-04-ARJUN-Traveller-Story-Content-Migration-Analysis.md` | FCR-003, FCR-004, FCR-008, FCR-016 |
-| `EBC-R1.3-WS2-05-ADDENDUM-01-ARJUN-Ambiguous-Experience-Values-Product-Review.md` | FCR-009, FCR-010 |
+| `EBC-R1.3-WS2-05-ADDENDUM-01-ARJUN-Ambiguous-Experience-Values-Product-Review.md` | FCR-009, FCR-010, FCR-021 |
 | `EBC-R1.3-WS2-06-ARCHIE-Experience-Taxonomy-Architecture-Review.md` | FCR-003, FCR-004, FCR-007, FCR-008, FCR-013 |
 | `EBC-R1.3-WS2-CLOSE-01-TIGER-Traveller-Stories-Workstream-Closure-Release-Tracker-Update.md` | FCR-014, FCR-016 |
+| `EBC-R1.3-WS1-012-TIGER-Repository-Artefact-Reconciliation-Documentation-Lineage-Review.md` | FCR-021 (independent confirmation) |
 
 Every FCR entry above traces to at least one specific, completed governance document — no entry in Section 3 was originated by this register itself.
 
@@ -315,6 +325,8 @@ Per the closure-trigger rule above, every workstream closure logs an explicit ou
 | Workstream 1 — Destination Intelligence Evolution (Governance Phase) | This register's own establishment, `EBC-R1.3-WS0-001`, and its repository-synchronisation follow-on | Tiger | 08-Sep-2026 | Additions made — FCR-001, FCR-002, FCR-005, FCR-006, FCR-011, FCR-012, FCR-015, FCR-017 all originate from Workstream 1 governance-phase documents, captured in this register's initial population (§3). This is also the first closure-log entry made under the formalised requirement itself, recorded at the point Workstream 1's Governance Phase is confirmed complete and the workstream transitions to Engineering Execution (see `RELEASE-1.3.md` §5). |
 | Workstream 1 — Destination Intelligence Evolution (full closure — Governance + Engineering + QA) | `EBC-R1.3-WS1-011-TIGER-Repository-Documentation-Closure-Release-Tracker-Synchronisation` | Tiger | 08-Sep-2026 | Additions made — FCR-018 (`aliases` repository-layer gap), FCR-019 (`kbSectionRef` ratify-or-remove decision), FCR-020 (live Supabase reachability gap in the engineering/QA environment), sourced from `EBC-R1.3-WS1-009` and `EBC-R1.3-WS1-010`. Both items named in this closure's own EBC (`aliases`, `kbSectionRef`) confirmed not already present before adding; a third item (live-Supabase-reachability) also found explicitly named as deferred across four sessions and added on the same review, consistent with this register's completeness intent. |
 
+| Documentation Reconciliation (not a new workstream closure — a reconciliation pass following the WS1-012 review) | `EBC-R1.3-WS1-012-TIGER-Repository-Artefact-Reconciliation-Documentation-Lineage-Review.md` (review); `EBC-R1.3-WS1-013` (implementation) | Tiger | 09-Sep-2026 | Addition made — FCR-021 (document that `TravellerStory.experience` has no reader anywhere in the application), the one new candidate `EBC-R1.3-WS1-012` identified beyond the register's existing 20 entries. Logged here for completeness even though this is a reconciliation activity rather than a workstream-closure trigger, consistent with this register's intent that no FCR-relevant review go unrecorded. |
+
 Future rows follow the same pattern, including an explicit "None identified" outcome where applicable (e.g. `| Workstream N — <name> | <closure card> | <persona> | <date> | None identified — reviewed, no new deferred items named. |`).
 
 ---
@@ -330,7 +342,7 @@ This register also does not duplicate, re-open, or re-litigate any decision alre
 ## 7. Acceptance Criteria Mapping
 
 - [x] The Future Considerations Register has been established.
-- [x] All known deferred items from completed Release 1.3 governance reviews have been captured — 17 entries (§3), drawn from all five completed Workstream 1 governance cards and all seven relevant completed Workstream 2 cards.
+- [x] All known deferred items from completed Release 1.3 governance reviews have been captured — 21 entries (§3) as of v1.4 (17 at initial v1.0 population; FCR-018–FCR-020 added at `EBC-R1.3-WS1-011` closure; FCR-021 added at this `EBC-R1.3-WS1-013` reconciliation), drawn from all completed Workstream 1 and Workstream 2 governance cards to date. Corrected as a cross-reference fix during `EBC-R1.3-WS1-013` — this line had not been updated when FCR-018–020 were added at v1.3.
 - [x] Every entry includes traceability back to its originating EBC or ADR — §3 (per-entry) and §4 (consolidated matrix).
 - [x] Governance rules for maintaining the register have been documented — §5.
 - [x] No future release commitments have been made — confirmed, §6.
