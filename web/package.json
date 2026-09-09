@@ -20,6 +20,8 @@
     "verify:geo-validation-selection": "tsc -p tsconfig.geo-validation-verification.json && node node_modules/.cache/smv-geo-validation-verification/lib/geo-validation/validation/verifySelectionLogic.js",
     "verify:getaway-description": "tsc -p tsconfig.journey-passport-verification.json && node node_modules/.cache/smv-journey-passport-verification/lib/journey-passport/validation/verifyGetawayDescription.js",
     "build:journey-intelligence-generator": "tsc -p scripts/journey-intelligence/tsconfig.json",
+    "build:bootstrap-workbook-generator": "tsc -p tsconfig.bootstrap-workbook.json",
+    "generate:bootstrap-workbook": "npm run build:bootstrap-workbook-generator && node node_modules/.cache/smv-bootstrap-workbook/scripts/bootstrap-workbook/generateBootstrapWorkbook.js",
     "generate:journey-intelligence": "npm run build:journey-intelligence-generator && node node_modules/.cache/smv-journey-intelligence/index.js",
     "verify:journey-intelligence": "npm run build:journey-intelligence-generator && node node_modules/.cache/smv-journey-intelligence/verifyArtifacts.js",
     "verify:journey-intelligence:determinism": "npm run build:journey-intelligence-generator && node node_modules/.cache/smv-journey-intelligence/verifyDeterminism.js",

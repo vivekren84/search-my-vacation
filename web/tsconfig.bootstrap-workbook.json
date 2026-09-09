@@ -1,0 +1,26 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "allowJs": false,
+    "incremental": false,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "noEmit": false,
+    "outDir": "./node_modules/.cache/smv-bootstrap-workbook",
+    "plugins": [],
+    "rootDir": ".",
+    "target": "ES2022",
+    "types": ["node"]
+  },
+  "include": [
+    "scripts/bootstrap-workbook/**/*.ts",
+    "lib/geo-validation/bootstrapRepository.ts",
+    "lib/geo-validation/types.ts",
+    "scripts/journey-intelligence/kbApprovedPortfolio.ts",
+    "scripts/journey-intelligence/kbApprovedRegions.ts",
+    "scripts/journey-intelligence/kbRegionGeoScope.ts",
+    "scripts/journey-intelligence/utils.ts",
+    "scripts/journey-intelligence/types.ts"
+  ],
+  "exclude": ["node_modules"]
+}
