@@ -28,6 +28,7 @@ Distinct from : RELEASE-1.3-BACKLOG.md (the product/UX/engineering-technical-deb
 | 1.3 | 08-Sep-2026 | Tiger | WS1 full closure review, per `EBC-R1.3-WS1-011`. Added FCR-018, FCR-019, FCR-020 (§3.4 Engineering), sourced from `EBC-R1.3-WS1-009`/`WS1-010` (Engineering Implementation, QA Remediation and Final Sign-off — completed since this register's v1.0–1.2). Updated the Traceability Matrix (§4) and the Workstream Closure Review Log (§5.1) accordingly. No existing entry changed; no scope, priority or estimate introduced. |
 | 1.4 | 09-Sep-2026 | Tiger | Documentation Reconciliation, per `EBC-R1.3-WS1-013` (implementing `EBC-R1.3-WS1-012`'s Repository Artefact Reconciliation review). Added FCR-021 (§3.5 Documentation) — the dormant `TravellerStory.experience` field has no reader anywhere in the application — the one new candidate `WS1-012` identified. Updated the Traceability Matrix (§4) and the Workstream Closure Review Log (§5.1) accordingly. No existing entry changed; no scope, priority or estimate introduced. |
 | 1.5 | 13-Sep-2026 | Tiger | Workstream Closure Review Log entry for Workstream 11 (SMV Workspace), per `EBC-R1.3-WS3-006` Delivery Readiness Review. Outcome: None identified — no new FCR entry added. This is the first closure-log entry logged contemporaneously with its own workstream closure review, rather than retroactively. No existing entry changed; no scope, priority or estimate introduced. |
+| 1.6 | 14-Sep-2026 | Tiger | Workstream Closure Review Log entry for Workstream 11 (SMV Workspace — UX Architecture Phase Closure), per `EBC-R1.3-WS4-002` UX Baseline & Tracker Synchronisation. Outcome: Addition made — FCR-022 (§3.3 UX): Low-Fidelity Wireframes, UX Standards and a standalone UX Review Document, explicitly deferred by `WORKSPACE-SCREEN-INVENTORY.md`'s own text to a future wireframing stage, not produced within `EBC-R1.3-WS4-001`'s scope. Updated the Traceability Matrix (§4) and the Workstream Closure Review Log (§5.1) accordingly. No existing entry changed; no scope, priority or estimate introduced. |
 
 ---
 
@@ -176,6 +177,14 @@ No entry below is assigned a target release. Per this register's own establishin
 *Suggested Review Timing:* Not scheduled; raised for awareness.
 *Status:* Deferred.
 
+**FCR-022 — Low-Fidelity Wireframes, UX Standards and a standalone UX Review Document not yet produced for Journey Workspace**
+*Description:* The Journey Workspace UX Design Brief (`docs/02-Product/workspace/JOURNEY-WORKSPACE-UX-DESIGN-BRIEF.md` §8) names eight Expected Deliverables for the UX phase. The completed UX Architecture package (`EBC-R1.3-WS4-001`, `docs/04-UX/workspace/`) produced five of them directly — Information Architecture, Navigation Model, User Journey Maps, Screen Inventory, Interaction Flow Diagrams — plus a UX Discovery document not originally named in the Brief. The remaining three — Low-Fidelity Wireframes, UX Standards, and a standalone UX Review Document — were not produced within this EBC's actual scope. `WORKSPACE-SCREEN-INVENTORY.md` explicitly names this: "No wireframe, layout or visual design is included, per this EBC's Out of Scope instruction; this inventory is the structural handoff to that future stage," and describes itself as "the final input Sophie's future low-fidelity wireframing stage will consume."
+*Originating EBC/ADR:* `docs/04-UX/workspace/WORKSPACE-SCREEN-INVENTORY.md` §1, §12 (explicit deferral language); cross-checked against `docs/02-Product/workspace/JOURNEY-WORKSPACE-UX-DESIGN-BRIEF.md` §8 (Expected Deliverables) during `EBC-R1.3-WS4-002` (Tiger, UX Baseline & Tracker Synchronisation).
+*Reason for Deferral:* The UX Architecture EBC scoped its own deliverables to the six structural documents and explicitly treated wireframing, UX standards and a formal review document as a distinct, later stage — not an oversight, but a disclosed scope decision made within that EBC's own text.
+*Dependencies:* Solution Architecture (`EBC-R1.3-WS4-002`'s recommended next step for WS11) proceeding far enough that wireframing has concrete component/technical constraints to work within.
+*Suggested Review Timing:* Before Journey Workspace Engineering implementation begins — wireframes and UX Standards are natural prerequisites for Rad's estimation and build.
+*Status:* Deferred.
+
 ### 3.4 Engineering
 
 **FCR-011 — One-time narrative-content migration (Bootstrap Workbook adoption)**
@@ -290,6 +299,7 @@ No entry below is assigned a target release. Per this register's own establishin
 | `EBC-R1.3-WS2-06-ARCHIE-Experience-Taxonomy-Architecture-Review.md` | FCR-003, FCR-004, FCR-007, FCR-008, FCR-013 |
 | `EBC-R1.3-WS2-CLOSE-01-TIGER-Traveller-Stories-Workstream-Closure-Release-Tracker-Update.md` | FCR-014, FCR-016 |
 | `EBC-R1.3-WS1-012-TIGER-Repository-Artefact-Reconciliation-Documentation-Lineage-Review.md` | FCR-021 (independent confirmation) |
+| `docs/04-UX/workspace/WORKSPACE-SCREEN-INVENTORY.md` (via `EBC-R1.3-WS4-002`) | FCR-022 |
 
 Every FCR entry above traces to at least one specific, completed governance document — no entry in Section 3 was originated by this register itself.
 
@@ -328,6 +338,8 @@ Per the closure-trigger rule above, every workstream closure logs an explicit ou
 
 | Documentation Reconciliation (not a new workstream closure — a reconciliation pass following the WS1-012 review) | `EBC-R1.3-WS1-012-TIGER-Repository-Artefact-Reconciliation-Documentation-Lineage-Review.md` (review); `EBC-R1.3-WS1-013` (implementation) | Tiger | 09-Sep-2026 | Addition made — FCR-021 (document that `TravellerStory.experience` has no reader anywhere in the application), the one new candidate `EBC-R1.3-WS1-012` identified beyond the register's existing 20 entries. Logged here for completeness even though this is a reconciliation activity rather than a workstream-closure trigger, consistent with this register's intent that no FCR-relevant review go unrecorded. |
 | Workstream 11 — SMV Workspace (Product Baseline Closure — Product/Business-Analysis phase) | `EBC-R1.3-WS3-006-TIGER-Delivery-Readiness-Review.md` (this review; closes out the `EBC-R1.3-WS3-002`–`WS3-CLOSURE` card sequence, including Arjun's own `WS3-CLOSURE` housekeeping, which had not itself logged this mandatory assessment) | Tiger | 13-Sep-2026 | **None identified** — reviewed, no new deferred Architecture/Engineering/Governance/QA/UX/Operations/Documentation item found beyond what is already correctly tracked as Product Open Questions (OQ-018–022) in the Specification/RTM's own register, which is the correct home for those per this register's own §1 scope statement. The one governance item this review did find (no workstream number assigned to `FEAT-R1.3-013`) was resolved directly within the same review — WS11 assigned in `RELEASE-1.3.md` §5 — rather than deferred, so no new FCR entry was needed. |
+
+| Workstream 11 — SMV Workspace (UX Architecture Phase Closure) | `EBC-R1.3-WS4-002-TIGER-UX-Baseline-Tracker-Synchronisation.md` (this review; closes out `EBC-R1.3-WS4-001`, the Journey Workspace UX Architecture & Experience Discovery phase) | Tiger | 14-Sep-2026 | **Addition made** — FCR-022 (§3.3 UX): Low-Fidelity Wireframes, UX Standards and a standalone UX Review Document, named as Expected Deliverables in the Journey Workspace UX Design Brief §8 but explicitly deferred by `WORKSPACE-SCREEN-INVENTORY.md`'s own text to a future wireframing stage, not produced within this EBC's scope. No other deferred item found beyond what is already correctly tracked as Product Open Questions (OQ-018–022, the last surfaced during this UX phase) in the Specification/RTM's own register. |
 
 Future rows follow the same pattern, including an explicit "None identified" outcome where applicable (e.g. `| Workstream N — <name> | <closure card> | <persona> | <date> | None identified — reviewed, no new deferred items named. |`).
 
