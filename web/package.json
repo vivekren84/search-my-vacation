@@ -35,6 +35,8 @@
     "import:geo-places": "npm run build:geo-validation-importer && node node_modules/.cache/smv-geo-validation-importer/importGeoNames.js"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.116.0",
     "libphonenumber-js": "^1.13.11",
     "next": "16.2.10",
     "react": "19.2.4",
