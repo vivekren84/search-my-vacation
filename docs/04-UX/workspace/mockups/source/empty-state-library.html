@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SMV Workspace — Empty State Library (EBC-R1.3-WS11-011A)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600&display=swap');
+  :root{
+    --color-primary:#280336; --color-amber:#F5951C; --color-orange:#F36523; --color-espresso:#2A211C; --color-cream:#FFFDFC;
+    --radius-lg:12px; --radius-xl:20px; --shadow-sm:0 1px 3px rgba(0,0,0,.08);
+    --border-warm: rgb(154 100 46 / 20%); --text-secondary: rgb(42 33 28 / 62%); --text-muted: rgb(42 33 28 / 42%);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:'Poppins',system-ui,sans-serif;background:var(--color-cream);color:var(--color-espresso);padding:2.5rem;}
+  h1{font-family:'Playfair Display',serif;font-weight:500;font-size:1.6rem;margin:0 0 .3rem;}
+  p.sub{color:var(--text-secondary);font-size:.88rem;margin:0 0 2rem;}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.25rem;max-width:60rem;}
+  .card{background:#fff;border:1px solid var(--border-warm);border-radius:var(--radius-xl);padding:1.5rem;box-shadow:var(--shadow-sm);}
+  .kicker{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--color-amber);margin-bottom:.6rem;}
+  .empty{border:1px dashed var(--border-warm);border-radius:var(--radius-lg);background:linear-gradient(160deg, rgba(245,149,28,.045), rgba(255,253,252,.5));padding:1.6rem 1.4rem;}
+  .eicon{width:2.4rem;height:2.4rem;border-radius:999px;background:rgba(245,149,28,.14);display:grid;place-items:center;color:var(--color-amber);margin-bottom:.7rem;font-size:1.1rem;}
+  .etitle{font-size:.92rem;font-weight:600;color:var(--color-espresso);}
+  .edesc{margin-top:.3rem;font-size:.82rem;color:var(--text-secondary);line-height:1.55;}
+  .ecta{margin-top:.9rem;display:inline-block;border:none;background:var(--color-amber);color:var(--color-espresso);font-weight:700;font-size:.78rem;letter-spacing:.03em;border-radius:999px;padding:.5rem 1.05rem;}
+</style>
+</head>
+<body>
+  <h1>Workspace Empty State Library</h1>
+  <p class="sub">One visual pattern, four contexts — reused wherever the Workspace has nothing to show yet.</p>
+  <div class="grid">
+    <div class="card">
+      <div class="kicker">Dashboard · Recent Activity</div>
+      <div class="empty">
+        <div class="eicon">◔</div>
+        <div class="etitle">Nothing has happened here yet.</div>
+        <div class="edesc">As your team claims Inquiries, builds proposals and confirms Journeys, their activity will appear here.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="kicker">Dashboard · Upcoming Tasks</div>
+      <div class="empty">
+        <div class="eicon">☾</div>
+        <div class="etitle">You're all caught up.</div>
+        <div class="edesc">Follow-ups tied to your Inquiries and Journeys will surface here as soon as they're scheduled.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="kicker">Journey Planning · Unclaimed Pool (future)</div>
+      <div class="empty">
+        <div class="eicon">✉</div>
+        <div class="etitle">No new Inquiries waiting.</div>
+        <div class="edesc">New Leads from Journey Passport, WhatsApp, phone or email will appear here the moment they arrive.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="kicker">Coming Soon · Unbuilt Module</div>
+      <div class="empty">
+        <div class="eicon">✦</div>
+        <div class="etitle">Coming Soon.</div>
+        <div class="edesc">Journey Planning isn't built yet. We'll let you know the moment it's ready.</div>
+        <button class="ecta">Back to Dashboard</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

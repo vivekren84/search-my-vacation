@@ -10,6 +10,15 @@ export interface WorkspaceUser {
   id: string;
   email: string | null;
   role: WorkspaceRole;
+  // EBC-R1.3-WS11-011: Workspace Dashboard Foundation. The Dashboard's
+  // Welcome Section (Scope item 6) needs a display name, and
+  // deriveWorkspaceDisplayName() (auth/displayName.ts) already computes
+  // exactly this from Supabase Auth's user_metadata for the public
+  // header's client-side hook (useWorkspaceAuthUser). Adding it here lets
+  // getWorkspaceAuthState() (the Server Component-side source of truth)
+  // reuse that same function rather than a Server Component inventing its
+  // own copy (Project Instructions §18 — no duplicate logic).
+  displayName: string;
 }
 
 export interface WorkspaceSession {

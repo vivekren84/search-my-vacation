@@ -1,0 +1,318 @@
+/* EBC-R1.3-WS11-009: Unified Authentication Entry Experience — established
+   the dialog sizing/backdrop, mirroring
+   components/destinations/DestinationItineraryModal.module.css so the two
+   <dialog> surfaces on the public site read as one design language.
+
+   EBC-R1.3-WS11-010: Workspace Authentication UX Refinement, Section 4 —
+   full visual refresh so the modal reflects the SMV brand system (warm
+   ivory/cream, a subtle golden tint, premium rounded corners, elegant
+   spacing, editorial typography) instead of a flat generic dialog, plus
+   subtle open/close transitions and a small loading spinner. Colour and
+   radius values are the same custom-property tokens already defined in
+   app/globals.css (--color-espresso, --color-amber, --radius-xl, --shadow-lg,
+   etc.) and the same warm border/shadow numbers
+   DestinationItineraryModal.module.css already uses — no new palette was
+   introduced. */
+
+.dialog {
+  width: min(27rem, calc(100vw - 32px));
+  max-width: none;
+  max-height: calc(100svh - 48px);
+  margin: auto;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgb(154 100 46 / 24%);
+  border-radius: var(--radius-xl, 1.5rem);
+  background: var(--color-cream, #fffdfc);
+  color: var(--color-espresso, #2a211c);
+  box-shadow: 0 32px 110px rgb(42 33 28 / 38%);
+
+  /* Opening transition: a brief, subtle fade + rise. Native <dialog>
+     matches this selector for the first time the moment showModal() adds
+     the `open` attribute, which is what triggers the animation to play
+     from its start — no JS timing needed for the open side. */
+  animation: workspace-modal-in 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dialog::backdrop {
+  background: rgb(42 33 28 / 58%);
+  backdrop-filter: blur(4px);
+  animation: workspace-modal-backdrop-in 220ms ease-out;
+}
+
+/* Closing transition: SignInModal.tsx sets data-state="closing" and delays
+   the actual unmount/close() for the same duration as this animation, so
+   the dialog visibly settles out instead of disappearing instantly. */
+.dialog[data-state="closing"] {
+  animation: workspace-modal-out 160ms ease-in forwards;
+}
+
+.dialog[data-state="closing"]::backdrop {
+  animation: workspace-modal-backdrop-out 160ms ease-in forwards;
+}
+
+@keyframes workspace-modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes workspace-modal-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+}
+
+@keyframes workspace-modal-backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes workspace-modal-backdrop-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.surface {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 14% 0%, rgba(245, 149, 28, 0.16), transparent 20rem),
+    radial-gradient(circle at 100% 100%, rgba(42, 33, 28, 0.05), transparent 18rem),
+    linear-gradient(160deg, #fffdfc 0%, #fff7f0 55%, #fff3e6 100%);
+}
+
+.header {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding: 1.75rem 1.75rem 0.5rem;
+}
+
+.eyebrow {
+  margin: 0;
+  color: rgb(42 33 28 / 60%);
+  font-size: 0.63rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0.3rem 0 0;
+  font-family: var(--font-editorial);
+  font-size: clamp(1.5rem, 4vw, 1.85rem);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--color-espresso, #2a211c);
+}
+
+.closeButton {
+  display: grid;
+  flex: 0 0 auto;
+  width: 2.5rem;
+  height: 2.5rem;
+  place-items: center;
+  border: 1px solid rgb(42 33 28 / 18%);
+  border-radius: 999px;
+  background: #fff7f0;
+  color: #2a211c;
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+
+.closeButton:hover {
+  background: #ead7be;
+}
+
+.closeButton:focus-visible {
+  outline: 2px solid var(--color-amber, #f5951c);
+  outline-offset: 2px;
+}
+
+.body {
+  position: relative;
+  z-index: 1;
+  padding: 1.25rem 1.75rem 2rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.875rem;
+  color: var(--color-espresso, #2a211c);
+}
+
+.input {
+  border: 1px solid rgb(154 100 46 / 30%);
+  border-radius: var(--radius-md, 0.5rem);
+  background: #fffdfc;
+  padding: 0.625rem 0.85rem;
+  font-size: 0.95rem;
+  color: var(--color-espresso, #2a211c);
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.input:focus-visible {
+  border-color: var(--color-amber, #f5951c);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(245, 149, 28, 0.22);
+}
+
+.forgotLink {
+  align-self: flex-start;
+  border: none;
+  background: none;
+  padding: 0;
+  color: rgb(42 33 28 / 70%);
+  font-size: 0.85rem;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.forgotLink:hover {
+  color: var(--color-espresso, #2a211c);
+}
+
+.helperText {
+  margin: 0;
+  color: rgb(42 33 28 / 70%);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.errorBanner {
+  margin: 0;
+  border-radius: var(--radius-md, 0.5rem);
+  background: rgba(183, 32, 39, 0.08);
+  border: 1px solid rgba(183, 32, 39, 0.22);
+  padding: 0.6rem 0.85rem;
+  color: var(--color-crimson, #b72027);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.successBanner {
+  margin: 0;
+  border-radius: var(--radius-md, 0.5rem);
+  background: rgba(22, 163, 74, 0.08);
+  border: 1px solid rgba(22, 163, 74, 0.22);
+  padding: 0.6rem 0.85rem;
+  color: var(--color-success, #16a34a);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+/* EBC-R1.3-WS11-011F: Workspace Foundation Final Remediation — a page-only
+   informational banner (redirectTo/reason=unauthorized|expired), rendered
+   above the sign-in form by WorkspaceSignInPanel's optional `topBanner`
+   prop. The Homepage SignInModal never passes topBanner (a person opening
+   it from the header hasn't been redirected from anywhere), so this class
+   is only ever seen on /workspace/sign-in — kept in this shared module
+   because it belongs to the same shared panel and palette as
+   .errorBanner/.successBanner, not a separate page-only stylesheet. Amber
+   (not crimson/green) because "unauthorized"/"expired" here are routine,
+   expected states, not a submission error or a success confirmation. */
+.noticeBanner {
+  margin: 0 0 1.25rem;
+  border-radius: var(--radius-md, 0.5rem);
+  background: rgba(245, 149, 28, 0.1);
+  border: 1px solid rgba(245, 149, 28, 0.3);
+  padding: 0.6rem 0.85rem;
+  color: var(--color-espresso, #2a211c);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.submitButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-top: 0.35rem;
+  border: none;
+  border-radius: var(--radius-pill, 9999px);
+  background: var(--color-amber, #f5951c);
+  padding: 0.7rem 1.25rem;
+  color: var(--color-espresso, #2a211c);
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 150ms ease, opacity 150ms ease;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: #e88a16;
+}
+
+.submitButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.spinner {
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 auto;
+  border: 2px solid rgb(42 33 28 / 25%);
+  border-top-color: var(--color-espresso, #2a211c);
+  border-radius: 999px;
+  animation: workspace-modal-spin 700ms linear infinite;
+}
+
+@keyframes workspace-modal-spin {
+  to { transform: rotate(360deg); }
+}
+
+.secondaryLink {
+  color: var(--color-espresso, #2a211c);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  .dialog {
+    width: calc(100vw - 24px);
+  }
+
+  .header {
+    padding: 1.5rem 1.5rem 0.4rem;
+  }
+
+  .body {
+    padding: 1.1rem 1.5rem 1.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dialog,
+  .dialog::backdrop,
+  .dialog[data-state="closing"],
+  .dialog[data-state="closing"]::backdrop {
+    animation: none;
+  }
+
+  .spinner {
+    animation: none;
+  }
+}
