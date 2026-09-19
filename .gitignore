@@ -64,3 +64,12 @@ supabase/supabase/.temp/
 # contain large tarballs, stale build caches and other non-source cruft
 # that must never be committed to repository history.
 _to_delete/
+
+# ============================================================================
+# Local AI Working Files
+#
+# Temporary AI-generated screenshots, previews and intermediate outputs.
+# Canonical project artefacts must be copied into the repository before commit.
+# ============================================================================
+
+Claude outputs/
