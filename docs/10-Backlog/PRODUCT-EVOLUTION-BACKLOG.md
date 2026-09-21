@@ -24,6 +24,7 @@ Distinct from : RELEASE-1.3-BACKLOG.md (decisions/vision items already accepted 
 | Version | Date | Author | Summary |
 |---|---|---|---|
 | 1.0 | 19-Sep-2026 | Tiger | Initial establishment, per `EBC-R1.3-GOV-004`. Defines the Product Evolution Backlog (PEB) governance framework (purpose, definition, inclusion/exclusion criteria, lifecycle, relationship to existing registers, governance rules) and records an Initial Candidate List of eight items named in the originating EBC, reviewed against the current repository record. Seven are recorded as genuine candidates (none ratified); one (Traveller Timeline) is disclosed as already-approved Workspace Business Module scope and explicitly not added — see Section 8.2. `PEB-001` (Journey Amendment) additionally records a Product Owner decision issued directly within the originating EBC's own text. |
+| 1.1 | 21-Sep-2026 | Tiger | Cross-reference update only, per `EBC-R1.3-WS12-008`. The "Distinct from" table's "Technical debt" row (intro block and Section 2.1) now also names the newly-established `docs/10-Backlog/TECH-DEBT.md` register, alongside its existing `RELEASE-1.3-BACKLOG.md` §9 pointer. No inclusion/exclusion criterion, candidate item, or governance rule changed; the underlying principle (Product Evolution Items are module-scale business capabilities, never engineering-internal debt) is unchanged. Documentation only. |
 
 ---
 
@@ -65,7 +66,7 @@ The PEB sits between Product Vision and the Release Backlog (Section 6). It is n
 | **Architecture evolution** — a technical-design idea not tied to a specific new business capability | `FUTURE-CONSIDERATIONS.md` (Architecture category) or an ADR |
 | **UX improvements** — interaction, layout or visual-hierarchy refinements to an existing, already-scoped feature | `FUTURE-CONSIDERATIONS.md` (UX category) or `RELEASE-1.3-BACKLOG.md` (Section 10, UX Improvements) |
 | **Governance recommendations** — playbooks, process, or operating-model improvements | `RELEASE-1.3-GOVERNANCE-BACKLOG.md` |
-| **Technical debt** | `RELEASE-1.3-BACKLOG.md` §9 |
+| **Technical debt** | `docs/10-Backlog/TECH-DEBT.md` (new, engineering-owned register, established `EBC-R1.3-WS12-008`) — `RELEASE-1.3-BACKLOG.md` §9 holds historical WS5-sourced entries (`TD-R1.3-001`–`009`), unchanged and not migrated |
 | **Future Considerations** — tactical items a completed workstream's own review explicitly named as deferred, tied to a specific already-completed EBC/ADR | `FUTURE-CONSIDERATIONS.md` |
 
 The distinguishing test is grain and origin, not subject matter: a Product Evolution Item is (a) module/workstream-scale, not feature-scale, and (b) a **Product Owner decision or ratified business capability**, not a deferred technical, architectural, UX, governance, or engineering finding surfaced during already-completed execution work.
