@@ -55,12 +55,29 @@ export async function POST(request: Request) {
       newCorporateContact: body.newCorporateContact,
       title: body.title as string,
       destinationRegion: body.destinationRegion,
+      originChannel: body.originChannel as CreateJourneyPlanningRecordInput["originChannel"],
       createdByUserId: auth.user.id,
+      // EBC-R1.3-WS12-013 Planning Parameters ("Trip Basics"). Adults is
+      // required by validateCreateJourneyPlanningRecordInput; the other
+      // five are optional at creation (Progressive Enrichment, BR-020).
+      adults: body.adults,
+      children: body.children,
+      infants: body.infants,
+      intendedTravelMonth: body.intendedTravelMonth,
+      nights: body.nights,
+      preferredDepartureCity: body.preferredDepartureCity,
     });
     return jsonResponse({ ok: true, record }, 201);
   } catch (error) {
     if (error instanceof JourneyPlanningValidationError) {
-      return jsonResponse({ ok: false, code: error.code, message: "Invalid Journey Planning record." }, 400);
+      // EBC-R1.3-WS12-016 / PRA-01: field-specific validation feedback —
+      // the message is built from every failing field's own message
+      // (validation.ts always populates `issues` for this call site), not
+      // a generic "Invalid Journey Planning record." banner.
+      const message = error.issues.length > 0
+        ? error.issues.map((issue) => issue.message).join(" ")
+        : "Invalid Journey Planning record.";
+      return jsonResponse({ ok: false, code: error.code, issues: error.issues, message }, 400);
     }
     console.error("Journey Planning record creation failed.", { operation: "journey_planning_create" });
     return jsonResponse({ ok: false, message: "Could not create the Journey Planning record." }, 500);

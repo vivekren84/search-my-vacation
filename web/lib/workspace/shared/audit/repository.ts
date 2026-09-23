@@ -7,13 +7,25 @@
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-import type { RecordWorkspaceAuditEventInput } from "./types";
+import type { RecordWorkspaceAuditEventInput, WorkspaceAuditLogEntry } from "./types";
 
 export class WorkspaceAuditRepositoryError extends Error {
   constructor(readonly code: string) {
     super("Workspace audit repository operation failed");
     this.name = "WorkspaceAuditRepositoryError";
   }
+}
+
+function mapAuditLogRow(row: Record<string, unknown>): WorkspaceAuditLogEntry {
+  return {
+    id: row.id as string,
+    entityType: row.entity_type as string,
+    entityId: row.entity_id as string,
+    eventType: row.event_type as WorkspaceAuditLogEntry["eventType"],
+    actorId: row.actor_id as string,
+    eventData: (row.event_data as Record<string, unknown>) ?? {},
+    createdAt: row.created_at as string,
+  };
 }
 
 export async function insertWorkspaceAuditLogEntry(
@@ -31,4 +43,26 @@ export async function insertWorkspaceAuditLogEntry(
   if (error) {
     throw new WorkspaceAuditRepositoryError("workspace_audit_log_insert_failed");
   }
+}
+
+// EBC-R1.3-WS12-010 Defect D1a: History/Audit UI. Lists every audit event
+// for one entity in reverse-chronological order -- the read path this
+// module's Phase 1 audit trail never had a consumer for until now.
+export async function listWorkspaceAuditLogEntries(
+  supabase: SupabaseClient,
+  entityType: string,
+  entityId: string,
+): Promise<WorkspaceAuditLogEntry[]> {
+  const { data, error } = await supabase
+    .from("workspace_audit_log")
+    .select("*")
+    .eq("entity_type", entityType)
+    .eq("entity_id", entityId)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    throw new WorkspaceAuditRepositoryError("workspace_audit_log_list_failed");
+  }
+
+  return (data ?? []).map(mapAuditLogRow);
 }

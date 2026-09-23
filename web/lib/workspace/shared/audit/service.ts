@@ -13,12 +13,21 @@
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-import { insertWorkspaceAuditLogEntry } from "./repository";
-import type { RecordWorkspaceAuditEventInput } from "./types";
+import { insertWorkspaceAuditLogEntry, listWorkspaceAuditLogEntries } from "./repository";
+import type { RecordWorkspaceAuditEventInput, WorkspaceAuditLogEntry } from "./types";
 
 export async function recordWorkspaceAuditEvent(
   supabase: SupabaseClient,
   input: RecordWorkspaceAuditEventInput,
 ): Promise<void> {
   await insertWorkspaceAuditLogEntry(supabase, input);
+}
+
+// EBC-R1.3-WS12-010 Defect D1a: History/Audit UI.
+export async function getWorkspaceAuditHistory(
+  supabase: SupabaseClient,
+  entityType: string,
+  entityId: string,
+): Promise<WorkspaceAuditLogEntry[]> {
+  return listWorkspaceAuditLogEntries(supabase, entityType, entityId);
 }

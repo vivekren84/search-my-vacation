@@ -4,6 +4,15 @@
 // (shared/ownership/service.ts) and the shared audit trail
 // (shared/audit/service.ts). API routes (Phase 4) call only this file, not
 // repository.ts directly, per this module's five-file convention.
+//
+// EBC-R1.3-WS12-013: adds updateJourneyPlanningTripBasics (Discovery
+// in-place editing of Planning Parameters) and wires the
+// Discovery→Planning gate (FR-JP-34/BR-021) into advanceJourneyPlanningStage.
+// getJourneyPlanningRecordDetail now also returns a server-computed Trip
+// Basics completion summary, so the UI's "X of 5 needed before Planning"
+// indicator and the gate's enforcement share one source of truth
+// (validation.ts's getMissingPlanningParameters), not two independently
+// maintained copies of the same rule.
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 
@@ -16,9 +25,16 @@ import {
   canRecordDecision,
   type OwnedWorkspaceRecord,
 } from "../shared/rbac/permissions";
-import { recordWorkspaceAuditEvent } from "../shared/audit/service";
+import { getWorkspaceAuditHistory, recordWorkspaceAuditEvent } from "../shared/audit/service";
+import type { WorkspaceAuditLogEntry } from "../shared/audit/types";
 import { claimOwnedWorkspaceRecord, reassignOwnedWorkspaceRecord } from "../shared/ownership/service";
 import { notifyWorkspaceUser } from "../shared/notifications/service";
+import {
+  createWorkspaceTask,
+  getWorkspaceTasksForEntity,
+  setWorkspaceTaskStatus,
+} from "../shared/tasks-follow-ups/service";
+import type { WorkspaceTask, WorkspaceTaskStatus } from "../shared/tasks-follow-ups/types";
 
 import type { WorkspaceRole } from "../shared/types";
 
@@ -38,18 +54,22 @@ import {
   listProposalVersions,
   listVendorQuotations,
   updateJourneyPlanningRecordStage,
+  updateJourneyPlanningTripBasics as updateJourneyPlanningTripBasicsRecord,
   updateVendorQuotationStatus,
 } from "./repository";
 import {
+  getMissingPlanningParameters,
   validateCreateJourneyPlanningRecordInput,
   validateDecisionOutcome,
   validateItinerarySnapshot,
   validateStageTransition,
+  validateUpdateJourneyPlanningTripBasicsInput,
   validateVendorQuotationAmount,
 } from "./validation";
 import type {
   CreateJourneyPlanningRecordInput,
   ItinerarySnapshot,
+  JourneyPlanningGatedParameterField,
   JourneyPlanningQueueFilters,
   JourneyPlanningRecord,
   JourneyPlanningStage,
@@ -57,6 +77,7 @@ import type {
   PlanningActivityType,
   Proposal,
   ProposalVersion,
+  UpdateJourneyPlanningTripBasicsInput,
   VendorQuotation,
   VendorQuotationStatus,
 } from "./types";
@@ -77,6 +98,24 @@ export class JourneyPlanningAuthorizationError extends Error {
 
 function toOwnedRecord(record: JourneyPlanningRecord): OwnedWorkspaceRecord {
   return { ownerId: record.ownerId };
+}
+
+// EBC-R1.3-WS12-013: server-computed Trip Basics completion summary
+// (FR-JP-34/BR-021), shared by getJourneyPlanningRecordDetail's response
+// (Detail screen's completion indicator and disabled-button logic) and,
+// indirectly, the same gate check advanceJourneyPlanningStage enforces —
+// both call getMissingPlanningParameters (validation.ts), not two
+// separately maintained rules.
+export interface JourneyPlanningTripBasicsStatus {
+  completed: number;
+  total: number;
+  missing: JourneyPlanningGatedParameterField[];
+}
+
+function computeTripBasicsStatus(record: JourneyPlanningRecord): JourneyPlanningTripBasicsStatus {
+  const missing = getMissingPlanningParameters(record);
+  const total = 5;
+  return { completed: total - missing.length, total, missing };
 }
 
 export async function createJourneyPlanningRecord(
@@ -126,6 +165,7 @@ export interface JourneyPlanningRecordDetail {
   proposalVersions: ProposalVersion[];
   activities: PlanningActivity[];
   vendorQuotations: VendorQuotation[];
+  tripBasics: JourneyPlanningTripBasicsStatus;
 }
 
 export async function getJourneyPlanningRecordDetail(
@@ -144,7 +184,101 @@ export async function getJourneyPlanningRecordDetail(
     listVendorQuotations(supabase, recordId),
   ]);
 
-  return { record, proposal, proposalVersions, activities, vendorQuotations };
+  return {
+    record,
+    proposal,
+    proposalVersions,
+    activities,
+    vendorQuotations,
+    tripBasics: computeTripBasicsStatus(record),
+  };
+}
+
+// EBC-R1.3-WS12-010 Defect D1a: History/Audit UI (FR-JP-24/FR-JP-25). Reads
+// are not RBAC-gated beyond authentication, matching the existing pattern
+// for activities/vendor-quotations lists (and workspace_audit_log's own
+// broad-authenticated SELECT policy) -- every Workspace User can see a
+// record's full history, only the record's own edit actions are
+// ownership-gated.
+export async function getJourneyPlanningHistory(
+  supabase: SupabaseClient,
+  recordId: string,
+): Promise<WorkspaceAuditLogEntry[]> {
+  return getWorkspaceAuditHistory(supabase, AUDIT_ENTITY_TYPE, recordId);
+}
+
+// EBC-R1.3-WS12-010 Defect D1b: Tasks & Follow-ups UI (FR-JP-24/FR-JP-25).
+// Reuses the shared/tasks-follow-ups module built in WS12-007 Phase 1,
+// which had no consumer until now -- no duplicate task-tracking logic is
+// introduced here, per Reuse Before Build.
+export async function getJourneyPlanningTasks(
+  supabase: SupabaseClient,
+  recordId: string,
+): Promise<WorkspaceTask[]> {
+  return getWorkspaceTasksForEntity(supabase, AUDIT_ENTITY_TYPE, recordId);
+}
+
+export async function addJourneyPlanningTask(
+  supabase: SupabaseClient,
+  actor: JourneyPlanningActor,
+  recordId: string,
+  input: { title: string; description?: string; dueAt?: string; assignedToUserId?: string },
+): Promise<WorkspaceTask> {
+  const record = await fetchJourneyPlanningRecordById(supabase, recordId);
+  if (!record) {
+    throw new JourneyPlanningRepositoryNotFoundError();
+  }
+
+  if (!canEditRecord(actor, toOwnedRecord(record))) {
+    throw new JourneyPlanningAuthorizationError("cannot_edit_record");
+  }
+
+  const task = await createWorkspaceTask(supabase, {
+    entityType: AUDIT_ENTITY_TYPE,
+    entityId: recordId,
+    title: input.title,
+    description: input.description,
+    dueAt: input.dueAt,
+    assignedToUserId: input.assignedToUserId,
+    createdByUserId: actor.id,
+  });
+
+  await recordWorkspaceAuditEvent(supabase, {
+    entityType: AUDIT_ENTITY_TYPE,
+    entityId: recordId,
+    eventType: "task_created",
+    actorId: actor.id,
+    eventData: { taskId: task.id, title: task.title },
+  });
+
+  return task;
+}
+
+export async function setJourneyPlanningTaskStatus(
+  supabase: SupabaseClient,
+  actor: JourneyPlanningActor,
+  recordId: string,
+  taskId: string,
+  status: WorkspaceTaskStatus,
+): Promise<void> {
+  const record = await fetchJourneyPlanningRecordById(supabase, recordId);
+  if (!record) {
+    throw new JourneyPlanningRepositoryNotFoundError();
+  }
+
+  if (!canEditRecord(actor, toOwnedRecord(record))) {
+    throw new JourneyPlanningAuthorizationError("cannot_edit_record");
+  }
+
+  await setWorkspaceTaskStatus(supabase, taskId, status);
+
+  await recordWorkspaceAuditEvent(supabase, {
+    entityType: AUDIT_ENTITY_TYPE,
+    entityId: recordId,
+    eventType: "task_updated",
+    actorId: actor.id,
+    eventData: { taskId, status },
+  });
 }
 
 export async function claimJourneyPlanningRecord(
@@ -233,7 +367,11 @@ export async function advanceJourneyPlanningStage(
     throw new JourneyPlanningAuthorizationError("cannot_advance_stage");
   }
 
-  validateStageTransition(record.stage, toStage);
+  // EBC-R1.3-WS12-013 / FR-JP-34 / BR-021: the record's own Planning
+  // Parameter values are threaded through so validateStageTransition can
+  // enforce the Discovery→Planning gate; every other transition ignores
+  // this argument entirely (see validation.ts).
+  validateStageTransition(record.stage, toStage, record);
 
   const updated = await updateJourneyPlanningRecordStage(supabase, recordId, toStage);
 
@@ -253,6 +391,45 @@ export async function advanceJourneyPlanningStage(
       actorId: actor.id,
     });
   }
+
+  return updated;
+}
+
+// EBC-R1.3-WS12-013 / BR-020 (Progressive Enrichment): edits Trip Basics
+// on an existing record, most commonly during Discovery. Reuses
+// canEditRecord (shared/rbac/permissions.ts) — the same ownership rule
+// every other in-place edit on this record already follows (activities,
+// proposal versions, vendor quotations) — rather than introducing a new
+// permission. Only the fields the caller actually supplies are changed
+// (repository.ts's own partial-update behaviour); the audit event records
+// which field names changed, not a full before/after diff, matching the
+// existing "stage_transition"/"reassigned" events' level of detail.
+export async function updateJourneyPlanningTripBasics(
+  supabase: SupabaseClient,
+  actor: JourneyPlanningActor,
+  recordId: string,
+  patch: UpdateJourneyPlanningTripBasicsInput,
+): Promise<JourneyPlanningRecord> {
+  const record = await fetchJourneyPlanningRecordById(supabase, recordId);
+  if (!record) {
+    throw new JourneyPlanningRepositoryNotFoundError();
+  }
+
+  if (!canEditRecord(actor, toOwnedRecord(record))) {
+    throw new JourneyPlanningAuthorizationError("cannot_edit_record");
+  }
+
+  validateUpdateJourneyPlanningTripBasicsInput(patch);
+
+  const updated = await updateJourneyPlanningTripBasicsRecord(supabase, recordId, patch);
+
+  await recordWorkspaceAuditEvent(supabase, {
+    entityType: AUDIT_ENTITY_TYPE,
+    entityId: recordId,
+    eventType: "trip_basics_updated",
+    actorId: actor.id,
+    eventData: { fields: Object.keys(patch) },
+  });
 
   return updated;
 }

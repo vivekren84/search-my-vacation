@@ -111,6 +111,30 @@ No Product Owner decision was reinterpreted, narrowed, or exceeded.
 - **The production build (`npm run build`) could not be completed in this environment** — see Section 8 (Engineering Validation) for the specific, disclosed reason. This is an environment network-egress limitation affecting `app/layout.tsx`'s existing Google Fonts usage, present regardless of this implementation, not a defect in any Journey Planning file.
 - **No migration was applied against a live database.** There is no local Supabase instance running in this workspace; migrations were reviewed for syntax, ordering and RLS-policy correctness by inspection and by following the established `workspace_users_and_roles.sql` template exactly, but were not executed. Recommending this be verified against a real (dev/staging) Supabase project before or during Keerthi's QA pass.
 
+### 7.1 Addendum — EBC-R1.3-WS12-010 (22-Sep-2026)
+
+**Additive disclosure, not a rewrite — the seven bullets above are unchanged.** Keerthi's WS12-009 functional QA pass (following this report) found two gaps that this Section 7 should have disclosed at the time but did not: a missing History/Audit UI and a missing Tasks & Follow-ups UI, both backed by fully-implemented Phase 1 infrastructure with no UI consumer. Keerthi also found the Origin Channel field absent from the Create form, and browser-native `alert()` calls used for error handling on the Detail screen. This is recorded here as Defect D5 of EBC-R1.3-WS12-010, whose own remediation work is documented in full in `EBC-R1.3-WS12-010-RADHA-QA-Defect-Resolution-and-Regression-Support.md`.
+
+Resolved by WS12-010 (no longer limitations as of that EBC):
+
+- **History/Audit UI** — a reverse-chronological event timeline (Record Created, Ownership Claimed, Stage Changed, Proposal Version Created, Decision Selected, Converted to Journey, Closed, Lost, Archived, plus the two new Task events below) is now rendered on the Detail screen, reading the existing `workspace_audit_log` table via a new `GET .../history` route.
+- **Tasks & Follow-ups UI** — create task, due date, assignee, complete/reopen, and task history are now available on the Detail screen, reusing the shared `workspace_tasks` module (WS12-007 Phase 1) via two new API routes; no parallel task-tracking implementation was introduced.
+- **Origin Channel** — the Create form (both Individual and Corporate) now captures one of the eight FR-JP-06 channels; enforced by a new NOT NULL + CHECK-constrained `origin_channel` column, application validation, and displayed on the Detail screen.
+- **Browser-native error alerts** — `window.alert()` calls on the Detail screen were replaced with a shared, Workspace-styled toast component.
+
+Still open (unchanged by WS12-010 — out of its scope by its own Non-Goals):
+
+- No traveller/vendor/corporate-contact search-and-select UI (bullet 1, above).
+- Vendor Quotations UI remains inert without a vendor directory (bullet 2, above).
+- Single-destination itinerary authoring UI (bullet 3, above).
+- JP-10/JP-11 dedicated Search and Archive screens not built as separate screens (bullet 4, above) — `archiveJourneyPlanningRecordOutsideNormalClosure` still has no UI entry point.
+- JP-08 dedicated Corporate Point-of-Contact panel not built (bullet 5, above).
+- No automated tests (bullet 6, above).
+- **Production build remains blocked** in this environment by the same pre-existing, unrelated Google Fonts network-egress restriction in `app/layout.tsx` (bullet 7, above) — re-confirmed during WS12-010's own validation pass (22-Sep-2026), same root cause, same disclosure.
+- **No migration has been applied against a live database** (bullet 8, above) — now twelve migrations pending, not ten, since WS12-010 added two more (`origin_channel`, and extending the audit `event_type` CHECK constraint for task events). Both reviewed by inspection only, following the same nullable-then-backfill-then-NOT-NULL pattern already used throughout this module.
+
+**Lesson recorded, not just the fix:** Defect D5 exists specifically because these two UI gaps (History, Tasks) were implemented-but-undisclosed rather than disclosed-but-deferred like the eight bullets above. Going forward, a Known Limitations section should name every backend capability that shipped without a UI consumer, not only capabilities that were not built at all.
+
 ## 8. Engineering Validation
 
 | Check | Command | Result |

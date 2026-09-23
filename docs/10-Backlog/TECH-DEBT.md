@@ -26,6 +26,7 @@ Distinct from : RELEASE-1.3-BACKLOG.md (product decisions, candidate features an
 | Version | Date | Author | Summary |
 |---|---|---|---|
 | 1.0 | 21-Sep-2026 | Tiger | Initial establishment, per `EBC-R1.3-WS12-008`. Defines the Technical Debt Register's purpose, ownership, prioritisation model, lifecycle, and its relationship to the Product Backlog and Release Planning. Defines nine debt categories and the standard entry format. Seeds three initial entries (`TD-WS12-001`–`003`) identified during WS12 engineering smoke validation. Cross-referenced from `RELEASE-1.3-BACKLOG.md` §9 and `PRODUCT-EVOLUTION-BACKLOG.md`'s "Distinct from" table (one line each, disclosed in Section 11 below) — no product backlog item content changed. |
+| 1.1 | 22-Sep-2026 | Rad | Lifecycle review per `EBC-R1.3-WS12-010` (QA Defect Resolution). `TD-WS12-001`, `TD-WS12-002`, `TD-WS12-003` reviewed: none marked Resolved. `TD-WS12-001` annotated (not resolved) — WS12-010 incidentally added `id`/`name` attributes to the Journey Planning module's own form controls while fixing an unrelated defect; the register's own cross-Workspace scope is unaddressed, so Status remains Open. `TD-WS12-002`/`TD-WS12-003` untouched by WS12-010 (no images or preload changes made); Status remains Open on both. No entry deleted or renumbered. |
 
 ---
 
@@ -217,6 +218,7 @@ Every entry records:
 | Suggested Release / Sprint | Not yet scheduled |
 | Status | Open |
 | Date Logged | 21-Sep-2026 |
+| Note (22-Sep-2026, Rad, `EBC-R1.3-WS12-010`) | While resolving an unrelated QA defect, the Journey Planning module's own Create and Detail screen controls (`NewJourneyPlanningRecordForm.tsx`, `JourneyPlanningRecordDetailView.tsx`) incidentally gained `id`/`name` attributes on previously-bare inputs. This is disclosed for accuracy only — it does not resolve this item, since this entry's scope is Workspace-wide (all modules), not Journey Planning alone, and no project-wide form audit was authorised or performed. Status remains **Open**. |
 
 ### TD-WS12-002 — Explicit dimensions for Workspace lazy-loaded images
 

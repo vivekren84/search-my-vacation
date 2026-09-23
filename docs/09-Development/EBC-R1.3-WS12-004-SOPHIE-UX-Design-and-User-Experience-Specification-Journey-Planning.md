@@ -6,8 +6,17 @@
 **Release:** 1.3
 **Workstream:** WS12 — Journey Planning (first Workspace Business Module)
 **Phase:** UX Design & User Experience Specification
-**Status:** UX Design Complete — ready for Archie (WS12-005, Solution Architecture) and Rad (WS12-006, Engineering Planning)
-**Date:** 19 September 2026
+**Status:** UX Design Complete — ready for Archie (WS12-005, Solution Architecture) and Rad (WS12-006, Engineering Planning). **Revision 2 baseline in effect (22 September 2026, `EBC-R1.3-WS12-012`) — see Document Revision History below.**
+**Date:** 19 September 2026 (original); amended 22 September 2026
+
+---
+
+**Document Revision History**
+
+| Revision | Date | Trigger | Change |
+|---|---|---|---|
+| 1 | 19 September 2026 | Original UX Design Specification (this card) | Initial baseline — Sections 1-21 as approved, translating `EBC-R1.3-WS12-003` Revision 1 into UX. |
+| 2 | 22 September 2026 | `EBC-R1.3-WS12-012` — Journey Planning UX Refinement: Planning Parameters & Progressive Enrichment, following Product Owner Ratification (`EBC-R1.3-WS12-011B`) of the Minimum Planning Information gap (`EBC-R1.3-WS12-011A`) | Amends Section 7 (Screen Inventory - JP-03, JP-04 rows), Section 8.1 (Create interaction flow) and adds new Section 8.1a, Section 11 (Component Catalogue - two new rows), Section 14 (Validation Feedback - new Completion type), Section 18 (two new UX Design Decisions), Section 19 (one new UX Risk). No other section is changed by Revision 2. Superseded text is struck through and retained, never deleted, per this project's supersede-not-delete convention. Full rationale and field-level detail in `EBC-R1.3-WS12-012`, the companion decision record for this amendment. |
 
 ---
 
@@ -229,8 +238,8 @@ All screen codes continue the `JP-xx` numbering the Workspace Screen Inventory (
 | **JP-01** | Journey Planning Queue | Landing screen for the module; grouped-by-stage queue view, claim action, search/filter entry point | `FR-JP-01`–`05` | Workspace User, Administrator |
 | **JP-02** | Journey Planning Record Detail (Overview) | Identity fields, current stage, owner, association (Traveller or Corporate POC), origin channel, quick actions | `FR-JP-07`, `FR-JP-10`, `FR-JP-22`–`23` | Workspace User (own/unclaimed), Administrator (any) |
 | **JP-02a** | Traveller Details (in-place panel) | Traveller identity and requirement fields relevant to planning; references Traveller Hub, does not duplicate it | `FR-JP-12`–`13` | Both |
-| **JP-03** | Create Journey Planning Record | Origin selection, association capture, duplicate-prevention check, destination/region | `FR-JP-06`–`11` | Both |
-| **JP-04** | Discovery | Requirement capture form (destination, dates, flexibility, duration, budget, companions, special requests, flight preferences), Discovery Notes, Activities log | `FR-JP-12`–`13` | Owner, Administrator |
+| **JP-03** | Create Journey Planning Record | Origin selection, association capture, duplicate-prevention check, destination/region. **Revision 2:** adds the “Trip Basics” panel (Number of Adults, required; Children, Infants, Intended Travel Month, Number of Nights, Preferred Departure City, present-not-required) — see `EBC-R1.3-WS12-012` §4 | `FR-JP-06`–`11`, `31`, `33` | Both |
+| **JP-04** | Discovery | Requirement capture form (destination, dates, flexibility, duration, budget, companions, special requests, flight preferences), Discovery Notes, Activities log. **Revision 2:** adds the persistent, editable Trip Basics panel with a completion indicator, and refines the “Move to Planning” action to surface the `BR-021` gate contextually — see `EBC-R1.3-WS12-012` §5 | `FR-JP-12`–`13`, `34` | Owner, Administrator |
 | **JP-05** | Proposal Workspace | Compose/revise the single active Proposal; reference a Traveller Itinerary; attach Vendor Quotations as commercial input; send action | `FR-JP-14`–`18` | Owner, Administrator |
 | **JP-06** | Vendor Quotation View | Record and review Vendor Quotations against a record; internal-only, never vendor-facing | `FR-JP-19`–`21` | Owner, Administrator |
 | **JP-07** | Proposal History | Read-only list of Proposal Versions for the record's one Proposal, with send/created timestamps | `FR-JP-15`–`16` | Both (read); Owner/Administrator (revise from here) |
@@ -254,8 +263,15 @@ All screen codes continue the `JP-xx` numbering the Workspace Screen Inventory (
 3. **Association step:** a single, mutually-exclusive choice — "For a Traveller" or "For a Corporate contact" (`FR-JP-10`) — not two separately optional fields. Selecting one reveals only the relevant lookup/creation fields for that path.
 4. **Duplicate-prevention check runs as the Traveller/Corporate POC and destination are entered, not after submission** (`FR-JP-08`) — an inline, non-blocking result area shows any existing Traveller match and any active Journey Planning Record for that Traveller/destination combination, with a direct link to open the existing record instead of proceeding. This surfaces the check at the moment it's useful, before the user has invested effort in the rest of the form.
 5. Destination/Region selected (reference to a Destination Profile).
-6. **Submit is disabled until the association is present and unambiguous** (`FR-JP-09`) — the UX makes an artificial/placeholder record structurally unreachable rather than merely discouraged.
+5a. **(Revision 2, `EBC-R1.3-WS12-012` §4)** The Owner is shown the “Trip Basics” panel: Number of Adults (required, blank-started numeric stepper); Number of Children, Number of Infants, Intended Travel Month, Number of Nights and Preferred Departure City (each present, tagged “Needed before Planning,” none required at this point). Only Adults affects Submit; the other five may be left blank and completed later in Discovery (`FR-JP-33`, Progressive Enrichment). Budget and Exact Travel Date are never presented on this screen (`FR-JP-32`, `BR-024`).
+6. **Submit is disabled until the association is present and unambiguous** (`FR-JP-09`) — the UX makes an artificial/placeholder record structurally unreachable rather than merely discouraged. **(Revision 2)** Submit is never additionally gated by Trip Basics completeness; only Number of Adults is required to create the record (`FR-JP-31`).
 7. On submit, the record is created at Lead Created, unclaimed, and the user is offered an immediate **Claim and open** action, collapsing what would otherwise be two separate steps for the common case of a user creating a record for themselves to work.
+
+### 8.1a Discovery → Planning Gate (Revision 2, `EBC-R1.3-WS12-012` §5)
+
+A narrow, named exception to the otherwise judgement-based stage progression (Section 5, `EBC-R1.3-WS12-003`): the Discovery → Planning transition additionally requires Children, Infants, Intended Travel Month, Number of Nights and Preferred Departure City to each hold an explicit value (`BR-021`; an explicit zero is valid for Children/Infants/Nights, `BR-023`). The Trip Basics panel (Section 8.1) persists on the Detail screen with a completion indicator (“Trip Basics — *n* of 5 needed before Planning”); the existing “Move to `<Stage>`” control (Section 9) is disabled specifically for the Planning target while incomplete, with an inline note directly beneath it rather than a rejection on click. This is the same Blocking-validation mechanism already used for the Association step at creation (Section 14), applied a second time, not a new mechanism. Full design rationale in `EBC-R1.3-WS12-012` §5.
+
+---
 
 ### 8.2 Edit
 
@@ -350,6 +366,8 @@ Reused from the Workspace Foundation, unmodified unless noted:
 | Origin-channel icon set (**new**) | New | Eight small inline-SVG glyphs (Website, WhatsApp, Phone, Walk-in, Referral, Existing Traveller, Corporate, Manual), following the existing "generic outline shapes, no new icon-library dependency" convention (`EBC-R1.3-WS11-011` §4, judgment call 6) |
 | Association selector (**new**) | New | The mutually-exclusive Traveller/Corporate POC choice control at creation (Section 8.1) |
 | Duplicate-check inline result panel (**new**) | New | Non-blocking, dismissible result area shown during creation (Section 8.1) and destination changes (Section 8.6) |
+| Trip Basics panel (**new, Revision 2**) | New | The Number of Adults/Children/Infants/Travel Month/Nights/Departure City field group at creation (JP-03) and, editable in place with a completion indicator, on the Detail screen (JP-02/JP-04) — see `EBC-R1.3-WS12-012` §4–5 |
+| Numeric stepper — unset-state variant (**extended, Revision 2**) | Extended | Adds a distinct blank/unset state (not defaulted to 0) to the existing numeric stepper pattern, used for Children, Infants and Number of Nights, so an unanswered field is never indistinguishable from an explicit zero (`BR-023`) — see `EBC-R1.3-WS12-012` §4.4 |
 | Proposal composer (**new**) | New | JP-05's main content area; a structured editor referencing a Traveller Itinerary and Vendor Quotations, not a generic rich-text field |
 | Timeline list item (**new, but modeled on existing card list patterns**) | Extended | JP-09's read-only entries |
 | `ComingSoon` | Not applicable | Journey Planning is the module being built; `ComingSoon` was the placeholder this module now replaces in the nav (an Engineering concern, not a UX one) |
@@ -393,7 +411,8 @@ All built on the existing `EmptyState` component (`icon`, `title`/description, o
 | **Success** | Inline, transient confirmation near the action taken (not a full-page banner), consistent with the calm, non-intrusive tone | "Proposal sent to [Traveller name]." |
 | **Warning** | Non-blocking inline panel, dismissible, offering a path forward rather than simply stating a problem | The duplicate-prevention result panel (Section 8.1) — names the existing match and links to it, rather than only saying "a match was found" |
 | **Information** | Small, quiet inline note, no icon urgency | "This record's current Proposal Version was last revised 3 days ago." |
-| **Blocking** | Reserved for the small number of cases where the business rules genuinely require it: the Association step at creation (`FR-JP-09`, submit disabled until resolved) and the Confirmed-outcome final confirmation (Section 8.9) — used sparingly, since over-use of blocking validation is itself a source of the friction the Calm Workspace principle asks Journey Planning to avoid |
+| **Completion** (**new, Revision 2**) | A persistent, non-corrective progress indicator, shown ahead of any attempt to act, not only on failure | The Trip Basics “*n* of 5 needed before Planning” indicator (`EBC-R1.3-WS12-012` §5.2) |
+| **Blocking** | Reserved for the small number of cases where the business rules genuinely require it: the Association step at creation (`FR-JP-09`, submit disabled until resolved) and the Confirmed-outcome final confirmation (Section 8.9) — used sparingly, since over-use of blocking validation is itself a source of the friction the Calm Workspace principle asks Journey Planning to avoid | **Revision 2** adds a second application: the Discovery → Planning gate (`BR-021`), using the identical disabled-control pattern — see `EBC-R1.3-WS12-012` §5.2. |
 
 ---
 
@@ -447,6 +466,8 @@ Recorded with rationale, per this EBC's own instruction:
 5. **Duplicate-prevention feedback is surfaced inline during data entry, not as a post-submission rejection.** This is a deliberate UX improvement beyond the bare business rule (`FR-JP-08` only requires that the check exists) — chosen because rejecting a fully-completed form is a worse experience than warning the user two fields in.
 6. **Vendor Quotations are never given equal visual weight to the Proposal**, even though both are legitimate business objects — this reflects the ratified internal-only, supplier-owned framing (`EBC-R1.3-WS12-002` Decision 1) in the visual hierarchy itself, not only in the permissions model.
 7. **Corporate Point of Contact renders through the same in-place panel pattern as Traveller Details**, rather than a visually distinct "corporate mode" for the whole record, so a Workspace User's mental model of the Detail screen doesn't change based on origin channel — consistent with UX Consistency and Progressive Disclosure (Section 2).
+8. **(Revision 2)** “Move to Planning” stays visible but disabled while Trip Basics is incomplete, paired with an always-visible completion indicator, rather than being hidden or only failing on click. This extends the existing Blocking-validation precedent (Decision 4/Section 14) rather than inventing a new one, while surfacing the reason ahead of the attempt rather than only after it. Full rationale: `EBC-R1.3-WS12-012` §5.2, Decision Log #4.
+9. **(Revision 2)** Exact Travel Date is not surfaced anywhere in Journey Planning's UI, including as an “optional” field on the Trip Basics panel. Protects the `BR-024`/Forward-Allocation boundary to Journey Workspace (WS13); adding it as a sixth optional field was the easier but boundary-blurring option, and is explicitly rejected. Full rationale: `EBC-R1.3-WS12-012` §7, Decision Log #5.
 
 ---
 
@@ -459,6 +480,7 @@ Recorded with rationale, per this EBC's own instruction:
 | R-UX-3 | `OQ-B` (Corporate Point of Contact's data ownership) being unresolved means JP-08's exact field set and its relationship to Traveller Hub's own UI patterns cannot be fully locked yet | Low–Medium | This specification's field list (Section 6, `EBC-R1.3-WS12-003` §6.6) is a reasonable starting shape, not a final one; Archie's decision may require a follow-up UX addendum |
 | R-UX-4 | The eight-icon origin-channel set (Section 11) is a new visual element with no existing precedent in the shipped Workspace UI; risk of icon ambiguity (e.g., distinguishing "Referral" from "Existing Traveller" at a glance) | Low | Recommend user testing of the icon set specifically, or falling back to a text label alongside the icon rather than icon-only, before implementation |
 | R-UX-5 | Autosave on the Proposal composer (Section 8.3) needs a clear "last saved" indicator or a Workspace User may distrust that their work is preserved, especially given how consequential the Proposal is | Low | A small, unobtrusive "Saved" timestamp near the composer, matching patterns already familiar from other autosaving tools, is recommended at implementation |
+| R-UX-6 | **(Revision 2)** The “Needed before Planning” tag is a new terminology pattern with no precedent elsewhere in the Workspace; risk that Workspace Users read it as equivalent to “Required” and feel blocked prematurely, or equivalent to “Optional” and ignore it until the gate stops them | Low–Medium | Recommend Sri review the tag's exact copy and visual weight once built, before treating this pattern as reusable elsewhere in the Workspace |
 
 ---
 

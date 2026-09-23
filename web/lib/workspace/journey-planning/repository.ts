@@ -18,6 +18,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type {
   CreateJourneyPlanningRecordInput,
   ItinerarySnapshot,
+  JourneyPlanningOriginChannel,
   JourneyPlanningQueueFilters,
   JourneyPlanningRecord,
   JourneyPlanningStage,
@@ -27,6 +28,7 @@ import type {
   PlanningActivityType,
   Proposal,
   ProposalVersion,
+  UpdateJourneyPlanningTripBasicsInput,
   VendorQuotation,
   VendorQuotationStatus,
 } from "./types";
@@ -46,12 +48,20 @@ function mapRecordRow(row: Record<string, unknown>): JourneyPlanningRecord {
     corporateContactId: (row.corporate_contact_id as string | null) ?? null,
     title: row.title as string,
     destinationRegion: (row.destination_region as string | null) ?? null,
+    originChannel: row.origin_channel as JourneyPlanningOriginChannel,
     stage: row.stage as JourneyPlanningStage,
     outcome: (row.outcome as JourneyPlanningRecord["outcome"]) ?? null,
     ownerId: (row.owner_id as string | null) ?? null,
     createdByUserId: row.created_by_user_id as string,
     createdAt: row.created_at as string,
     updatedAt: row.updated_at as string,
+    // EBC-R1.3-WS12-013 Planning Parameters ("Trip Basics").
+    adults: (row.adults as number | null) ?? null,
+    children: (row.children as number | null) ?? null,
+    infants: (row.infants as number | null) ?? null,
+    intendedTravelMonth: (row.intended_travel_month as string | null) ?? null,
+    nights: (row.nights as number | null) ?? null,
+    preferredDepartureCity: (row.preferred_departure_city as string | null) ?? null,
   };
 }
 
@@ -122,7 +132,19 @@ export async function insertJourneyPlanningRecord(
       corporate_contact_id: input.corporateContactId ?? null,
       title: input.title,
       destination_region: input.destinationRegion ?? null,
+      origin_channel: input.originChannel,
       created_by_user_id: input.createdByUserId,
+      // EBC-R1.3-WS12-013 Planning Parameters ("Trip Basics"). Adults is
+      // required by validation.ts before this is ever called; the other
+      // five are Progressive-Enrichment-optional (BR-020) and stored as
+      // NULL ("unanswered") when not supplied — never defaulted to 0,
+      // per BR-023.
+      adults: input.adults ?? null,
+      children: input.children ?? null,
+      infants: input.infants ?? null,
+      intended_travel_month: input.intendedTravelMonth ?? null,
+      nights: input.nights ?? null,
+      preferred_departure_city: input.preferredDepartureCity ?? null,
     })
     .select("*")
     .single();
@@ -193,6 +215,39 @@ export async function updateJourneyPlanningRecordStage(
 
   if (error || !data) {
     throw new JourneyPlanningRepositoryError("journey_planning_record_stage_update_failed");
+  }
+
+  return mapRecordRow(data);
+}
+
+// EBC-R1.3-WS12-013: partial update of Trip Basics on an existing record
+// (Discovery in-place editing, Progressive Enrichment/BR-020). Builds the
+// update payload from only the fields actually supplied, so an omitted
+// field is left untouched at the database layer rather than being
+// overwritten with NULL — this is what makes "edit just one field" safe
+// to call repeatedly as an Owner fills the panel in over time.
+export async function updateJourneyPlanningTripBasics(
+  supabase: SupabaseClient,
+  recordId: string,
+  patch: UpdateJourneyPlanningTripBasicsInput,
+): Promise<JourneyPlanningRecord> {
+  const update: Record<string, number | string> = {};
+  if (patch.adults !== undefined) update.adults = patch.adults;
+  if (patch.children !== undefined) update.children = patch.children;
+  if (patch.infants !== undefined) update.infants = patch.infants;
+  if (patch.intendedTravelMonth !== undefined) update.intended_travel_month = patch.intendedTravelMonth;
+  if (patch.nights !== undefined) update.nights = patch.nights;
+  if (patch.preferredDepartureCity !== undefined) update.preferred_departure_city = patch.preferredDepartureCity;
+
+  const { data, error } = await supabase
+    .from("workspace_journey_planning_records")
+    .update(update)
+    .eq("id", recordId)
+    .select("*")
+    .single();
+
+  if (error || !data) {
+    throw new JourneyPlanningRepositoryError("journey_planning_record_trip_basics_update_failed");
   }
 
   return mapRecordRow(data);

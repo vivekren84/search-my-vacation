@@ -13,7 +13,13 @@ export type WorkspaceAuditEventType =
   | "vendor_quotation_recorded"
   | "record_converted"
   | "record_closed"
-  | "archived";
+  | "archived"
+  // EBC-R1.3-WS12-010 Defect D1b: task events, added when the shared
+  // Tasks module (WS12-007 Phase 1) got its first real consumer.
+  | "task_created"
+  | "task_updated"
+  // EBC-R1.3-WS12-013: Planning Parameters ("Trip Basics") in-place edit.
+  | "trip_basics_updated";
 
 export interface WorkspaceAuditLogEntry {
   id: string;

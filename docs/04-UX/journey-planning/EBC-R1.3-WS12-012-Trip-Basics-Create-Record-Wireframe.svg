@@ -1,0 +1,194 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1180" font-family="Helvetica, Arial, sans-serif">
+  <!-- Low-fidelity annotated wireframe — illustrative only. Grayscale, no brand tokens. -->
+  <rect x="0" y="0" width="1200" height="1180" fill="#ffffff"/>
+
+  <!-- Title block -->
+  <text x="30" y="34" font-size="20" font-weight="bold" fill="#111111">EBC-R1.3-WS12-012 — Illustrative Wireframe (Addendum)</text>
+  <text x="30" y="56" font-size="14" fill="#555555">Refined Journey Planning Create Record experience — Trip Basics, Progressive Enrichment, Discovery → Planning gate</text>
+  <text x="30" y="76" font-size="12" font-style="italic" fill="#888888">Low-fidelity / grayscale by design. Layout, spacing and exact visual styling are Engineering's implementation choice. Fixes no new UX decision beyond WS12-012 §4–5.</text>
+  <line x1="30" y1="90" x2="1170" y2="90" stroke="#cccccc" stroke-width="1"/>
+
+  <!-- ============ PANEL A: CREATE SCREEN ============ -->
+  <text x="30" y="122" font-size="16" font-weight="bold" fill="#111111">Panel A — Create Journey Planning Record (JP-03), Trip Basics excerpt</text>
+
+  <!-- Outer screen frame -->
+  <rect x="30" y="140" width="1140" height="330" fill="#fafafa" stroke="#999999" stroke-width="1.5" stroke-dasharray="0"/>
+  <text x="50" y="165" font-size="13" fill="#666666">... Origin Channel · Association step · Destination/Region (unchanged, not shown) ...</text>
+
+  <!-- Trip Basics panel container -->
+  <rect x="50" y="180" width="1100" height="270" fill="#ffffff" stroke="#333333" stroke-width="2"/>
+  <text x="66" y="204" font-size="15" font-weight="bold" fill="#111111">Trip Basics</text>
+
+  <!-- Sub-group: Who's travelling -->
+  <text x="66" y="230" font-size="12" font-weight="bold" fill="#444444">WHO'S TRAVELLING</text>
+
+  <!-- Adults field (required, solid) -->
+  <rect x="66" y="240" width="320" height="64" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+  <text x="80" y="258" font-size="12" fill="#111111">Number of Adults</text>
+  <rect x="290" y="248" width="80" height="18" fill="#111111"/>
+  <text x="300" y="261" font-size="10" fill="#ffffff">REQUIRED</text>
+  <rect x="80" y="266" width="60" height="24" fill="#f0f0f0" stroke="#333333" stroke-width="1"/>
+  <text x="98" y="282" font-size="13" fill="#333333">2</text>
+  <text x="80" y="300" font-size="10" fill="#777777">"At least one traveller is always needed."</text>
+
+  <!-- Children field (needed before planning, dashed, unset em-dash) -->
+  <rect x="410" y="240" width="320" height="64" fill="#ffffff" stroke="#666666" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="424" y="258" font-size="12" fill="#111111">Number of Children</text>
+  <rect x="590" y="248" width="130" height="18" fill="none" stroke="#666666" stroke-width="1" stroke-dasharray="2,2"/>
+  <text x="596" y="260.5" font-size="8" fill="#555555">NEEDED BEFORE PLANNING</text>
+  <rect x="424" y="266" width="60" height="24" fill="#f0f0f0" stroke="#666666" stroke-width="1" stroke-dasharray="3,2"/>
+  <text x="448" y="283" font-size="14" fill="#999999">—</text>
+  <text x="424" y="300" font-size="10" fill="#777777">unset — distinct from "0"</text>
+
+  <!-- Infants field (needed before planning, dashed, unset em-dash) -->
+  <rect x="754" y="240" width="320" height="64" fill="#ffffff" stroke="#666666" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="768" y="258" font-size="12" fill="#111111">Number of Infants</text>
+  <rect x="934" y="248" width="130" height="18" fill="none" stroke="#666666" stroke-width="1" stroke-dasharray="2,2"/>
+  <text x="940" y="260.5" font-size="8" fill="#555555">NEEDED BEFORE PLANNING</text>
+  <rect x="768" y="266" width="60" height="24" fill="#f0f0f0" stroke="#666666" stroke-width="1" stroke-dasharray="3,2"/>
+  <text x="792" y="283" font-size="14" fill="#999999">—</text>
+  <text x="768" y="300" font-size="10" fill="#777777">unset — distinct from "0"</text>
+
+  <line x1="66" y1="320" x2="1150" y2="320" stroke="#e0e0e0" stroke-width="1"/>
+
+  <!-- Sub-group: When & where from -->
+  <text x="66" y="342" font-size="12" font-weight="bold" fill="#444444">WHEN &amp; WHERE FROM</text>
+
+  <!-- Travel Month -->
+  <rect x="66" y="352" width="320" height="64" fill="#ffffff" stroke="#666666" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="80" y="370" font-size="12" fill="#111111">Intended Travel Month</text>
+  <rect x="246" y="360" width="130" height="18" fill="none" stroke="#666666" stroke-width="1" stroke-dasharray="2,2"/>
+  <text x="252" y="372.5" font-size="8" fill="#555555">NEEDED BEFORE PLANNING</text>
+  <rect x="80" y="378" width="90" height="24" fill="#f0f0f0" stroke="#666666" stroke-width="1" stroke-dasharray="3,2"/>
+  <text x="90" y="395" font-size="13" fill="#999999">— month —</text>
+  <text x="80" y="412" font-size="10" fill="#777777">"An approximate month is fine."</text>
+
+  <!-- Number of Nights -->
+  <rect x="410" y="352" width="320" height="64" fill="#ffffff" stroke="#666666" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="424" y="370" font-size="12" fill="#111111">Number of Nights</text>
+  <rect x="590" y="360" width="130" height="18" fill="none" stroke="#666666" stroke-width="1" stroke-dasharray="2,2"/>
+  <text x="596" y="372.5" font-size="8" fill="#555555">NEEDED BEFORE PLANNING</text>
+  <rect x="424" y="378" width="60" height="24" fill="#f0f0f0" stroke="#666666" stroke-width="1" stroke-dasharray="3,2"/>
+  <text x="448" y="395" font-size="14" fill="#999999">—</text>
+  <text x="424" y="412" font-size="10" fill="#777777">unset — distinct from "0"</text>
+
+  <!-- Departure City -->
+  <rect x="754" y="352" width="320" height="64" fill="#ffffff" stroke="#666666" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="768" y="370" font-size="12" fill="#111111">Preferred Departure City</text>
+  <rect x="934" y="360" width="130" height="18" fill="none" stroke="#666666" stroke-width="1" stroke-dasharray="2,2"/>
+  <text x="940" y="372.5" font-size="8" fill="#555555">NEEDED BEFORE PLANNING</text>
+  <rect x="768" y="378" width="140" height="24" fill="#f0f0f0" stroke="#666666" stroke-width="1" stroke-dasharray="3,2"/>
+  <text x="778" y="395" font-size="12" fill="#999999">type to search…</text>
+  <text x="768" y="412" font-size="10" fill="#777777">"Where the group flies from."</text>
+
+  <!-- Callout numbers Panel A -->
+  <circle cx="30" cy="226" r="12" fill="#111111"/>
+  <text x="30" y="230" font-size="12" fill="#ffffff" text-anchor="middle">1</text>
+  <line x1="42" y1="226" x2="66" y2="252" stroke="#111111" stroke-width="1"/>
+
+  <!-- Callout 2 points at the Children tag only; legend notes it applies to all five -->
+  <circle cx="655" cy="224" r="12" fill="#111111"/>
+  <text x="655" y="228" font-size="12" fill="#ffffff" text-anchor="middle">2</text>
+  <line x1="655" y1="236" x2="655" y2="248" stroke="#111111" stroke-width="1"/>
+
+  <!-- Callout 3 points at the Children unset em-dash, routed clear of the Adults box -->
+  <circle cx="394" cy="292" r="12" fill="#111111"/>
+  <text x="394" y="296" font-size="12" fill="#ffffff" text-anchor="middle">3</text>
+  <line x1="406" y1="288" x2="446" y2="285" stroke="#111111" stroke-width="1"/>
+
+  <!-- Not-shown note -->
+  <text x="66" y="440" font-size="10" font-style="italic" fill="#999999">Budget and Exact Travel Date are never presented on this screen (deliberately absent — WS12-012 §4.2, §7).</text>
+
+  <!-- ============ PANEL B: DISCOVERY / DETAIL SCREEN ============ -->
+  <text x="30" y="500" font-size="16" font-weight="bold" fill="#111111">Panel B — Discovery / Detail (JP-02, JP-04), Trip Basics + gate excerpt</text>
+
+  <rect x="30" y="518" width="1140" height="380" fill="#fafafa" stroke="#999999" stroke-width="1.5"/>
+  <text x="50" y="543" font-size="13" fill="#666666">... Record identity strip · Discovery Notes · Activities (unchanged, not shown) ...</text>
+
+  <!-- Trip Basics panel, partially completed -->
+  <rect x="50" y="558" width="1100" height="150" fill="#ffffff" stroke="#333333" stroke-width="2"/>
+  <text x="66" y="582" font-size="15" font-weight="bold" fill="#111111">Trip Basics</text>
+
+  <!-- Completion indicator -->
+  <rect x="850" y="566" width="280" height="26" fill="#eeeeee" stroke="#333333" stroke-width="1"/>
+  <text x="866" y="584" font-size="12" fill="#111111">Trip Basics — 2 of 5 needed before Planning</text>
+
+  <!-- Five compact field chips: 2 complete (check), 3 unset (dash) -->
+  <rect x="66" y="606" width="200" height="40" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+  <text x="76" y="622" font-size="10" fill="#111111">Children</text>
+  <text x="76" y="638" font-size="13" fill="#0a7a0a">✓ 2</text>
+
+  <rect x="278" y="606" width="200" height="40" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+  <text x="288" y="622" font-size="10" fill="#111111">Infants</text>
+  <text x="288" y="638" font-size="13" fill="#0a7a0a">✓ 0 (explicit)</text>
+
+  <rect x="490" y="606" width="200" height="40" fill="#ffffff" stroke="#666666" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="500" y="622" font-size="10" fill="#111111">Travel Month</text>
+  <text x="500" y="638" font-size="13" fill="#999999">— not yet set</text>
+
+  <rect x="702" y="606" width="200" height="40" fill="#ffffff" stroke="#666666" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="712" y="622" font-size="10" fill="#111111">Nights</text>
+  <text x="712" y="638" font-size="13" fill="#999999">— not yet set</text>
+
+  <rect x="914" y="606" width="200" height="40" fill="#ffffff" stroke="#666666" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="924" y="622" font-size="10" fill="#111111">Departure City</text>
+  <text x="924" y="638" font-size="13" fill="#999999">— not yet set</text>
+
+  <text x="66" y="672" font-size="10" font-style="italic" fill="#888888">Editable in place, any order, any time during Discovery — alongside Notes, Activities, Tasks (not blocked, not shamed).</text>
+  <text x="66" y="690" font-size="10" fill="#888888">Panel persists from the moment the record is claimed; counts up as fields are answered.</text>
+
+  <!-- Stage action row -->
+  <text x="66" y="740" font-size="12" font-weight="bold" fill="#444444">STAGE ACTION</text>
+
+  <!-- Disabled "Move to Planning" button -->
+  <rect x="66" y="752" width="220" height="42" fill="#e0e0e0" stroke="#999999" stroke-width="1.5"/>
+  <text x="90" y="778" font-size="13" fill="#999999">Move to Planning</text>
+
+  <text x="66" y="812" font-size="11" fill="#555555">"Add the remaining Trip Basics to move</text>
+  <text x="66" y="826" font-size="11" fill="#555555">this record into Planning."</text>
+
+  <!-- Contrast: an ordinary available action, unaffected -->
+  <rect x="330" y="752" width="220" height="42" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+  <text x="354" y="778" font-size="13" fill="#111111">Claim Record</text>
+  <text x="330" y="812" font-size="10" font-style="italic" fill="#999999">(ordinary control, unaffected by</text>
+  <text x="330" y="826" font-size="10" font-style="italic" fill="#999999">the gate — shown for contrast)</text>
+
+  <!-- Callout numbers Panel B -->
+  <circle cx="1160" cy="579" r="12" fill="#111111"/>
+  <text x="1160" y="583" font-size="12" fill="#ffffff" text-anchor="middle">4</text>
+  <line x1="1148" y1="579" x2="1132" y2="579" stroke="#111111" stroke-width="1"/>
+
+  <circle cx="30" cy="626" r="12" fill="#111111"/>
+  <text x="30" y="630" font-size="12" fill="#ffffff" text-anchor="middle">5</text>
+  <line x1="42" y1="626" x2="66" y2="626" stroke="#111111" stroke-width="1"/>
+
+  <circle cx="30" cy="773" r="12" fill="#111111"/>
+  <text x="30" y="777" font-size="12" fill="#ffffff" text-anchor="middle">6</text>
+  <line x1="42" y1="773" x2="66" y2="773" stroke="#111111" stroke-width="1"/>
+
+  <!-- ============ LEGEND / ANNOTATION KEY ============ -->
+  <text x="30" y="932" font-size="15" font-weight="bold" fill="#111111">Annotation Key</text>
+
+  <text x="30" y="958" font-size="12" fill="#111111">①</text>
+  <text x="55" y="958" font-size="12" fill="#333333">Adults: solid border + "REQUIRED" tag — cannot create the record without this (§4.3, Decision Log #2).</text>
+
+  <text x="30" y="980" font-size="12" fill="#111111">②</text>
+  <text x="55" y="980" font-size="12" fill="#333333">Children/Infants/Month/Nights/Departure City: dashed border + "NEEDED BEFORE PLANNING" tag — a third tag, distinct from Required/Optional (§4.3, Decision Log #2).</text>
+
+  <text x="30" y="1002" font-size="12" fill="#111111">③</text>
+  <text x="55" y="1002" font-size="12" fill="#333333">Em-dash "—" is the unset state, never a silent "0" — zero is a deliberate, distinguishable answer (§4.4, Decision Log #3, BR-023).</text>
+
+  <text x="30" y="1024" font-size="12" fill="#111111">④</text>
+  <text x="55" y="1024" font-size="12" fill="#333333">Persistent completion indicator ("2 of 5") — always visible ahead of any attempt to advance, never only on failure (§5.2, §8 Completion type).</text>
+
+  <text x="30" y="1046" font-size="12" fill="#111111">⑤</text>
+  <text x="55" y="1046" font-size="12" fill="#333333">Per-field check-mark once an explicit value (including an explicit zero) is held — progress framing, not an error count (§6).</text>
+
+  <text x="30" y="1068" font-size="12" fill="#111111">⑥</text>
+  <text x="55" y="1068" font-size="12" fill="#333333">"Move to Planning" stays visible but disabled (grey fill) while incomplete, paired with an inline note — never hidden, never a silent rejection (§5.2, Decision Log #4).</text>
+
+  <line x1="30" y1="1084" x2="1170" y2="1084" stroke="#cccccc" stroke-width="1"/>
+  <text x="30" y="1106" font-size="11" font-style="italic" fill="#999999">Not shown on either panel, by deliberate exclusion: Budget, Exact Travel Date (§7, §9 Booking Parameters boundary) — no field, tag or slot for either exists anywhere in this sketch.</text>
+  <text x="30" y="1126" font-size="11" font-style="italic" fill="#999999">Grayscale/line-only rendering is intentional: this sketch fixes layout intent and label/tag semantics only, not colour, type, spacing or component styling, which remain Rad's/Engineering's implementation choice.</text>
+  <text x="30" y="1146" font-size="11" fill="#999999">Prepared by Sophie, Team Satvi — addendum to EBC-R1.3-WS12-012, at the Product Owner's request, 22 September 2026.</text>
+</svg>

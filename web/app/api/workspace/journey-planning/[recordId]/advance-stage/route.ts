@@ -44,7 +44,16 @@ export async function POST(request: Request, { params }: RouteParams) {
       return jsonResponse({ ok: false, code: error.code, message: "You cannot advance this record's stage." }, 403);
     }
     if (error instanceof JourneyPlanningValidationError) {
-      return jsonResponse({ ok: false, code: error.code, message: "That stage transition is not allowed." }, 400);
+      // EBC-R1.3-WS12-016 / PRA-01 / PRA-02: the Discovery→Planning and
+      // Lead Created→Discovery gates both populate `issues` with
+      // field-specific messages; every other JourneyPlanningValidationError
+      // thrown for this route (e.g. an out-of-sequence stage jump) leaves
+      // `issues` empty, so this falls back to the prior generic message
+      // unchanged for those cases.
+      const message = error.issues.length > 0
+        ? error.issues.map((issue) => issue.message).join(" ")
+        : "That stage transition is not allowed.";
+      return jsonResponse({ ok: false, code: error.code, issues: error.issues, message }, 400);
     }
     console.error("Journey Planning stage advance failed.", { operation: "journey_planning_advance_stage" });
     return jsonResponse({ ok: false, message: "Could not advance the Journey Planning record's stage." }, 500);
