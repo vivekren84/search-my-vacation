@@ -179,3 +179,32 @@ With these persistence principles established, the remaining Integration Archite
 
 *Prepared by Archie (Technical Architect) on behalf of Team Satvi, per `EBC-R1.3-WS11-003`.*
 *The authentication/RLS approach in §4 is the single most material proposal in this document and is carried into the Architectural Decisions document (AD-WS11-002) for explicit Product Owner sign-off before implementation begins.*
+
+---
+
+## 10. WS13 Revision Note (`EBC-R1.3-WS13-003`, 26 September 2026)
+
+*Additive note. §3's table list is retained as written for traceability.*
+
+| Module | Tables (as validated for WS13, Proposed) | Replaces WS11 name |
+|---|---|---|
+| `journey-workspace` | `workspace_journeys` (extended), `workspace_journey_operational_contacts`, `workspace_journey_vendor_bookings`, `workspace_journey_readiness_items`, `workspace_journey_document_requirements`, `workspace_journey_change_records`, `workspace_journey_activities`; view `workspace_journey_operational_summary` | `workspace_vendor_confirmations`, `workspace_operational_readiness_items`; `workspace_documents` (never migrated) |
+| `settings` | `workspace_configuration`, `workspace_readiness_templates`, `workspace_readiness_template_items` | — |
+| `shared` (extensions) | `workspace_notifications` (+`condition_key`, `resolved_at`, `resolution`); `workspace_tasks` (+`category`, `kind`); `workspace_audit_log` (event types extended; nullable actor for system events only); `workspace_users` (+`display_name`, `deactivated_at`) | `workspace_follow_ups` is **not** created: follow-ups are `workspace_tasks.kind = 'follow_up'` |
+| `vendor-management` (bootstrap) | `workspace_vendors` (+`lifecycle_state`) | — |
+| `journey-planning` (CM-02) | `workspace_journey_planning_records` (+`replaces_journey_id`) | — |
+
+All changes are additive migrations. The one exception is dropping the superseded 2-argument conversion function overload, flagged for explicit approval. Reasoning: AD-WS13-001–007.
+
+### 10.1 Alignment note (`EBC-R1.3-WS13-004A`, 27 September 2026)
+
+*Additive; no new table.*
+- `workspace_journey_planning_records.service_category` (nullable).
+- `workspace_journeys.service_category` (required unless `adoption_status = 'legacy_pending'`).
+- `workspace_journey_documents` (Document Type code) is the name of the Journey document table.
+- `workspace_journey_change_records.change_category` is required.
+- `workspace_journey_vendor_bookings.service_type`.
+- `workspace_vendors` baseline attributes and immutable `vendor_code` `VEN-XXXXX`.
+- **No unarchive path** in Release 1.3.
+
+Replacement data carry uses only existing tables (WS13-004A §4).

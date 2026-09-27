@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>EBC-R1.3-WS13-002 Journey Workspace wireframes (low fidelity)</title>
+<!--
+  EBC-R1.3-WS13-002 (Sophie): low-fidelity structural wireframes for Journey Workspace.
+  Reference only. NOT production markup. Colours only hint at the Workspace Design Language
+  (cream / espresso / amber / primary); spacing and sizing follow the Design Language, not this file.
+  All names, destinations and references are illustrative sample data.
+-->
+<style>
+  :root{--cream:#FFFDFC;--esp:#2A211C;--esp2:rgb(42 33 28/62%);--esp3:rgb(42 33 28/42%);--amber:#F5951C;--prim:#280336;--ok:#16A34A;--bd:rgb(154 100 46/24%);--bd2:rgb(154 100 46/12%);--fill:#F4EFEA;--fill2:#EDE6DF}
+  *{box-sizing:border-box}
+  body{margin:0;background:#ddd;font:13px/1.4 system-ui,-apple-system,Segoe UI,sans-serif;color:var(--esp)}
+  .wf{width:1440px;background:var(--cream);margin:0 0 40px;position:relative;padding-bottom:36px}
+  .cap{position:absolute;bottom:8px;left:24px;font-size:11px;color:var(--esp3)}
+  .title{background:var(--esp);color:#fff;padding:8px 24px;font-weight:600;letter-spacing:.02em}
+  .shell{display:grid;grid-template-columns:220px 1fr}
+  .hdr{grid-column:1/3;height:56px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:16px;padding:0 20px}
+  .logo{width:120px;height:22px;background:var(--fill2);border-radius:4px}
+  .search{flex:1;max-width:420px;height:32px;border:1px solid var(--bd);border-radius:16px;background:rgb(245 149 28/6%)}
+  .bell{width:32px;height:32px;border-radius:50%;border:1px solid var(--bd);margin-left:auto;position:relative}
+  .bell b{position:absolute;top:-4px;right:-6px;background:var(--amber);font-size:10px;border-radius:8px;padding:0 5px}
+  .av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--amber),#F36523);display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--esp);flex:none}
+  .nav{border-right:1px solid var(--bd);padding:16px 12px;min-height:900px}
+  .nav div{padding:8px 10px;border-radius:10px;margin-bottom:4px;color:var(--esp2)}
+  .nav .g{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--esp3);margin-top:14px}
+  .nav .on{background:linear-gradient(90deg,rgb(40 3 54/10%),rgb(245 149 28/12%));border-left:3px solid var(--amber);color:var(--esp);font-weight:600}
+  .main{padding:20px 28px}
+  h1{font-family:Georgia,serif;font-weight:500;font-size:26px;margin:0}
+  h2{font-family:Georgia,serif;font-weight:500;font-size:16px;margin:0 0 8px}
+  .muted{color:var(--esp3)} .sec{color:var(--esp2)}
+  .card{border:1px solid var(--bd);border-radius:16px;background:#fff;padding:14px 16px}
+  .row{display:flex;gap:12px;align-items:center}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:14px 0}
+  .kpi .v{font-family:Georgia,serif;font-size:28px}
+  .kpi .l{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--esp2)}
+  .pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:11px;border:1px solid var(--bd);white-space:nowrap}
+  .p-pre{background:rgb(245 149 28/14%);border-color:transparent}
+  .p-trv{background:rgb(40 3 54/10%);color:var(--prim);border-color:transparent}
+  .p-post{background:var(--fill2);border-color:transparent}
+  .p-ok{background:rgb(22 163 74/12%);color:#116b33;border-color:transparent}
+  .p-out{background:#fff}
+  .p-conf{background:#fff;border:1.5px solid var(--prim);color:var(--prim);font-weight:600}
+  .p-book{background:var(--ok);border-color:var(--ok);color:#fff;font-weight:700}
+  .mini i.cf{border-color:var(--prim);background:#fff;box-shadow:inset 0 0 0 2px #fff,inset 0 0 0 4px var(--prim)}
+  .mini i.bk{background:var(--ok);border-color:var(--ok);box-shadow:0 0 0 2px rgb(22 163 74/25%)}
+  .p-dash{border-style:dashed}
+  .p-amb{border-color:var(--amber);color:#9a5a08}
+  .btn{display:inline-block;padding:7px 14px;border-radius:999px;border:1px solid var(--bd);background:#fff;font-weight:500;white-space:nowrap}
+  .btn.pri{background:var(--amber);border-color:var(--amber);font-weight:700}
+  .btn.dis{opacity:.45}
+  .li{display:flex;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--bd2)}
+  .li:first-of-type{border-top:0}
+  .warn{color:#9a5a08;font-weight:700}
+  .bar{height:6px;border-radius:3px;background:var(--fill2);position:relative;overflow:hidden}
+  .bar i{position:absolute;inset:0 auto 0 0;background:var(--amber)}
+  .note{font-size:11px;color:var(--esp3);margin-top:4px}
+  .anno{position:absolute;background:#fff3c4;border:1px solid #e3c35b;border-radius:6px;padding:4px 8px;font-size:11px;max-width:260px;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+  .strip{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+  .strip .pill{padding:5px 12px;font-size:12px;background:#fff}
+  .strip .sel{background:linear-gradient(90deg,rgb(40 3 54/10%),rgb(245 149 28/14%));border-color:var(--amber)}
+  .filters{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+  .inp{height:32px;border:1px solid var(--bd);border-radius:10px;background:#fff;padding:0 10px;display:flex;align-items:center;color:var(--esp3)}
+  table{width:100%;border-collapse:collapse}
+  .jr{display:grid;grid-template-columns:34px 1.6fr 1.1fr 1fr .9fr .8fr 1.1fr;gap:10px;align-items:center;padding:12px 10px;border-top:1px solid var(--bd2)}
+  .jr.h{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--esp3);border-top:0}
+  .ai{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:rgb(245 149 28/16%);color:#9a5a08;font-weight:700;font-size:11px}
+  .steps{display:flex;align-items:flex-start;gap:0;margin:10px 0}
+  .st{flex:1;text-align:center;position:relative;font-size:11px}
+  .st:before{content:"";position:absolute;top:10px;left:-50%;width:100%;height:2px;background:var(--amber);z-index:0}
+  .st:first-child:before{display:none}
+  .st.f:before{background:repeating-linear-gradient(90deg,var(--bd) 0 4px,transparent 4px 8px)}
+  .dot{width:22px;height:22px;border-radius:50%;margin:0 auto 4px;position:relative;z-index:1;display:flex;align-items:center;justify-content:center;font-size:11px;background:#fff;border:2px solid var(--bd)}
+  .st.d .dot{background:var(--amber);border-color:var(--amber);color:#fff}
+  .st.c .dot{border:3px solid var(--prim);background:#fff}
+  .st.c .dot:after{content:"";width:8px;height:8px;border-radius:50%;background:var(--amber)}
+  .st.c b{color:var(--prim)}
+  .st.h .dot{border:3px dashed var(--amber);background:#fff}
+  .st.x .dot{border:2px solid var(--esp2);background:#fff}
+  .st.ok .dot{background:var(--ok);border-color:var(--ok);color:#fff}
+  .people{display:grid;grid-template-columns:1fr 1.3fr 1.1fr;gap:12px;margin:12px 0}
+  .pc{border:1px solid var(--bd);border-radius:12px;padding:10px 12px;background:#fff}
+  .pc .k{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--esp3);margin-bottom:6px}
+  .alertb{border:1px solid var(--amber);background:rgb(245 149 28/7%);border-radius:12px;padding:8px 14px;margin:10px 0}
+  .alertb .li{border-top-color:rgb(245 149 28/20%)}
+  .tabs{display:flex;gap:4px;border-bottom:1px solid var(--bd);margin-top:12px}
+  .tabs div{padding:9px 14px;color:var(--esp2)}
+  .tabs .on{color:var(--esp);font-weight:700;border-bottom:3px solid var(--amber)}
+  .banner{border-radius:12px;padding:10px 14px;margin:8px 0}
+  .b-hold{border:1px dashed var(--amber);background:rgb(245 149 28/6%)}
+  .b-sup{border:1px solid rgb(40 3 54/30%);background:rgb(40 3 54/6%)}
+  .b-can{border:1px solid var(--bd);background:var(--fill)}
+  .b-ok{border:1px solid rgb(22 163 74/30%);background:rgb(22 163 74/7%)}
+  .b-arc{border:1px dashed var(--esp3);background:#fff}
+  .mini{display:flex;gap:3px;align-items:center}
+  .mini i{width:10px;height:10px;border-radius:50%;border:2px solid var(--bd);display:inline-block;background:#fff}
+  .mini i.d{background:var(--amber);border-color:var(--amber)}
+  .mini i.c{border-color:var(--prim);background:var(--prim)}
+  .mini i.s{border-style:dotted}
+  .drawer{position:absolute;right:0;top:0;bottom:0;width:430px;background:#fff;border-left:1px solid var(--bd);box-shadow:-8px 0 24px rgba(42,33,28,.08);padding:18px}
+  .dialog{border:1px solid var(--bd);border-radius:18px;background:#fff;box-shadow:0 12px 32px rgba(42,33,28,.14);padding:18px 20px}
+  .seg{display:inline-flex;border:1px solid var(--bd);border-radius:999px;overflow:hidden;font-size:11px}
+  .seg span{padding:3px 8px;border-left:1px solid var(--bd)} .seg span:first-child{border-left:0}
+  .seg .on{background:rgb(245 149 28/18%);font-weight:700}
+  .cat{font-size:10px;padding:1px 7px;border-radius:999px;border:1px solid var(--bd)}
+  .cat.pay{border-color:var(--amber);color:#9a5a08}
+  .cat.tf{background:rgb(40 3 54/8%);border-color:transparent;color:var(--prim)}
+  .ck{width:14px;height:14px;border:1.5px solid var(--esp3);border-radius:4px;display:inline-block;flex:none}
+  .ck.on{background:var(--amber);border-color:var(--amber)}
+  .col3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+</style>
+</head>
+<body>
+
+<!-- ============ WF-01 DASHBOARD ============ -->
+<section class="wf" id="wf1">
+  <div class="title">WF-01 · DASH-01 Journey Workspace Dashboard (My Work) · desktop 1440</div>
+  <div class="shell">
+    <div class="hdr"><div class="logo"></div><span class="muted">Workspace</span><div class="search"></div><div class="bell"><b>7</b></div><span class="av">AR</span></div>
+    <div class="nav"><div class="on">Dashboard</div><div class="g">Operational</div><div>Journey Planning</div><div>Journey Workspace</div><div class="g">Knowledge</div><div>Traveller Hub</div><div>Itinerary Studio</div><div>Vendor Management</div><div>Destination Intelligence</div></div>
+    <div class="main">
+      <div class="row" style="justify-content:space-between">
+        <div><div style="color:var(--amber);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700">Thursday 24 September</div><h1>Good evening, Anita</h1></div>
+        <div class="seg" style="font-size:12px"><span class="on" style="padding:6px 14px">My Work</span><span style="padding:6px 14px">Team</span></div>
+      </div>
+      <div class="kpis">
+        <div class="card kpi"><div class="l">Active Journeys</div><div class="v">12</div><div class="note">Across your Journeys →</div></div>
+        <div class="card kpi"><div class="l">New Leads</div><div class="v">5</div><div class="note">From Journey Planning →</div></div>
+        <div class="card kpi"><div class="l">Upcoming Departures</div><div class="v">4</div><div class="note">Next 14 days →</div></div>
+        <div class="card kpi"><div class="l">Pending Vendor Confirmations</div><div class="v">6</div><div class="note">Requested / Pending Information →</div></div>
+        <div class="card kpi"><div class="l">Tasks Due Today</div><div class="v">3</div><div class="note">Incl. 1 overdue →</div></div>
+      </div>
+      <div class="grid2" style="grid-template-columns:1.25fr 1fr">
+        <div class="card"><h2>Needs attention <span class="muted" style="font-family:system-ui;font-size:12px">5</span></h2>
+          <div class="muted" style="font-size:10px;text-transform:uppercase;letter-spacing:.06em;margin-top:4px">Journey milestones</div>
+          <div class="li"><span class="ai">!</span><div style="flex:1"><b>Mehta family · Kerala</b> — departure in 12 days and readiness isn't complete</div><span class="btn">View readiness</span></div>
+          <div class="li"><span class="ai">!</span><div style="flex:1"><b>Rao couple · Goa</b> — departure day has arrived</div><span class="btn">Mark travelling</span></div>
+          <div class="muted" style="font-size:10px;text-transform:uppercase;letter-spacing:.06em;margin-top:8px">Vendor bookings</div>
+          <div class="li"><span class="ai">!</span><div style="flex:1"><b>Houseboat · Mehta family</b> — Requested 4 days <span class="muted">· reminder after 3 days</span></div><span class="btn">Open booking</span></div>
+          <div class="muted" style="font-size:10px;text-transform:uppercase;letter-spacing:.06em;margin-top:8px">Documents</div>
+          <div class="li"><span class="ai">!</span><div style="flex:1"><b>Visa · Rahul Mehta</b> — still outstanding · departure in 18 days</div><span class="btn">Open documents</span></div>
+          <div class="note">View all (5) →</div>
+        </div>
+        <div class="card"><h2>Today</h2>
+          <div class="li"><span class="ck"></span><div style="flex:1"><span class="cat pay"><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" style="vertical-align:-2px;margin-right:3px" aria-hidden="true"><circle cx="8" cy="8" r="5.5"/><circle cx="8" cy="8" r="2.5"/></svg>Payment</span> Collect balance from Priya <div class="note warn">Overdue 1 day · Mehta family</div></div><span class="av" style="width:22px;height:22px">AR</span></div>
+          <div class="li"><span class="ck"></span><div style="flex:1"><span class="cat tf"><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" style="vertical-align:-2px;margin-right:3px" aria-hidden="true"><circle cx="6" cy="6" r="2.2"/><path d="M2.5 13c0-2.2 1.6-3.6 3.5-3.6S9.5 10.8 9.5 13"/><path d="M10.5 2.5h4v3h-2l-1.2 1.2V5.5h-.8z"/></svg>Traveller follow-up</span> Call Sameer after return <div class="note">Due today · Iyer family</div></div><span class="av" style="width:22px;height:22px">AR</span></div>
+          <div class="li"><span class="ck"></span><div style="flex:1"><span class="cat"><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" style="vertical-align:-2px;margin-right:3px" aria-hidden="true"><rect x="3.5" y="2.5" width="9" height="11" rx="1.5"/><path d="M6 2.5h4v2H6zM6 9l1.5 1.5L10.5 7"/></svg>Operational</span> Share final itinerary <div class="note">Due today · Rao couple</div></div><span class="av" style="width:22px;height:22px">AR</span></div>
+          <div class="note">+ Add · View all (3) →</div>
+        </div>
+      </div>
+      <div class="grid2" style="margin-top:16px;grid-template-columns:1.25fr 1fr">
+        <div class="card"><h2>Upcoming departures <span class="muted" style="font-family:system-ui;font-size:12px">next 14 days · workspace setting</span></h2>
+          <div class="li"><div style="width:70px"><b>28 Sep</b><div class="note">in 4 days</div></div><div style="flex:1"><b>Rao couple · Goa</b><div class="note">3 of 3 Booked · Owner AR · Next: Mark travelling on 28 Sep</div></div><span class="pill p-ok">Ready</span></div>
+          <div class="li"><div style="width:70px"><b>6 Oct</b><div class="note">in 12 days</div></div><div style="flex:1"><b>Mehta family · Kerala</b><div class="note">3 of 5 Booked · Owner AR · Next: Resolve 3 readiness items</div></div><span class="pill p-pre p-amb">At Risk</span></div>
+          <div class="li"><div style="width:70px"><b>7 Oct</b><div class="note">in 13 days</div></div><div style="flex:1"><b>Acme Corp offsite · Coorg</b><div class="note">5 of 6 Booked · Owner AR · Next: Confirm transport</div></div><span class="pill">Not Ready</span></div>
+        </div>
+        <div class="card"><h2>Pending vendor bookings</h2>
+          <div class="li"><div style="flex:1"><b>Houseboat</b> · Lagoon Cruises<div class="note">Mehta family</div></div><span class="pill">Requested</span><span class="warn" style="font-size:11px">4 d</span></div>
+          <div class="li"><div style="flex:1"><b>Resort</b> · Coconut Grove<div class="note">Mehta family · waiting for guest ID copies</div></div><span class="pill">Pending Information</span><span class="muted" style="font-size:11px">2 d</span></div>
+          <div class="li"><div style="flex:1"><b>Coach</b> · Hill Transport<div class="note">Acme Corp offsite</div></div><span class="pill">Requested</span><span class="muted" style="font-size:11px">1 d</span></div>
+          <div class="note">View all (6) →</div>
+        </div>
+      </div>
+      <div class="grid2" style="margin-top:16px;grid-template-columns:1.25fr 1fr">
+        <div class="card"><h2>Payments due</h2>
+          <div class="li"><span class="ck"></span><div style="flex:1">Collect balance from Priya<div class="note warn">Overdue 1 day · Mehta family</div></div></div>
+          <div class="li"><span class="ck"></span><div style="flex:1">Confirm advance received from Acme Corp<div class="note">Due 30 Sep · Acme Corp offsite</div></div></div>
+          <div class="note">Payment follow-ups only — no amounts are tracked in the Workspace (I-01)</div>
+        </div>
+        <div class="card"><h2>Journey Planning</h2>
+          <div class="row" style="flex-wrap:wrap;gap:6px"><span class="pill">Lead Created 5</span><span class="pill">Discovery 4</span><span class="pill">Planning 3</span><span class="pill">Proposal Shared 2</span><span class="pill">Revision 1</span><span class="pill">Decision 2</span></div>
+          <div class="note" style="margin-top:8px">Unclaimed leads: 2 → · Content owned by Journey Planning</div>
+        </div>
+      </div>
+      <div class="grid2" style="margin-top:16px;grid-template-columns:1.25fr 1fr">
+        <div class="card"><h2>Active Journeys by stage</h2>
+          <div class="row" style="flex-wrap:wrap;gap:6px"><span class="pill p-pre">Confirmed 2</span><span class="pill p-pre">In Preparation 6</span><span class="pill p-pre">Ready to Travel 1</span><span class="pill p-trv">Travelling 1</span><span class="pill p-post">Travel Complete 0</span><span class="pill p-post">Post Travel 1</span><span class="pill p-dash">‖ On Hold 1</span></div>
+        </div>
+        <div class="card"><h2>Recent activity</h2>
+          <div class="li"><div style="flex:1">Rao couple · Goa marked <b>Ready to Travel</b><div class="note">Anita Rao · 2 h ago</div></div></div>
+          <div class="li"><div style="flex:1">Transport for Mehta family <b>Booked</b><div class="note">Anita Rao · 5 h ago</div></div></div>
+          <div class="li"><div style="flex:1">Iyer family · Andaman <b>Journey confirmed</b><div class="note">from Journey Planning · yesterday</div></div></div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:16px"><h2>Quick Actions</h2><div class="row"><span class="btn pri">New Lead</span><span class="btn">Add Traveller</span><span class="btn">New Vendor</span></div></div>
+    </div>
+  </div>
+  <div class="anno" style="top:112px;left:880px">5 ratified KPI labels unchanged; values live; each tile links to a pre-filtered list</div>
+  <div class="anno" style="bottom:70px;left:880px">"Create Journey" (CM-03) and "My Work" (UX-01) removed</div>
+  <div class="anno" style="top:585px;left:1150px">Task-based alerts live in Today / Payments, never duplicated in Needs attention (UXD-JW-07)</div>
+  <div class="cap">Low-fidelity wireframe · EBC-R1.3-WS13-002 · illustrative sample data · not production markup</div>
+</section>
+
+<!-- ============ WF-02 ACTIVE JOURNEYS ============ -->
+<section class="wf" id="wf2">
+  <div class="title">WF-02 · JW-01 Active Journeys · desktop 1440</div>
+  <div class="shell">
+    <div class="hdr"><div class="logo"></div><span class="muted">Workspace</span><div class="search"></div><div class="bell"><b>7</b></div><span class="av">AR</span></div>
+    <div class="nav"><div>Dashboard</div><div class="g">Operational</div><div>Journey Planning</div><div class="on">Journey Workspace</div><div class="g">Knowledge</div><div>Traveller Hub</div><div>Itinerary Studio</div><div>Vendor Management</div><div>Destination Intelligence</div></div>
+    <div class="main">
+      <div class="row" style="justify-content:space-between"><h1>Active Journeys</h1><span class="sec">Closed &amp; Archived →</span></div>
+      <div class="strip"><span class="pill">Confirmed 2</span><span class="pill sel">In Preparation 6</span><span class="pill">Ready to Travel 1</span><span class="pill">Travelling 1</span><span class="pill">Travel Complete 0</span><span class="pill">Post Travel 1</span><span class="pill" style="border-color:var(--amber)">⚠ At Risk 2</span><span class="pill">Departing ≤ 14 days 4</span><span class="pill p-dash">‖ On Hold 1</span></div>
+      <div class="filters"><div class="inp" style="width:380px">Search by reference, traveller, mobile, contact or destination</div><div class="inp">Owner: Mine ▾</div><div class="inp">Stage ▾</div><div class="inp">Readiness ▾</div><div class="inp">Departure ▾</div><div class="inp">Alerts ▾</div><div style="margin-left:auto" class="row"><span class="ck"></span> Group by stage</div></div>
+      <div class="row" style="gap:6px;margin-bottom:6px"><span class="pill">Stage: In Preparation ✕</span><span class="note" style="margin:0">Clear all</span><span class="note" style="margin:0 0 0 auto">Sorted by departure date ▾</span></div>
+      <div class="card" style="padding:4px 8px">
+        <div class="jr h"><span></span><span>Journey</span><span>Dates</span><span>Stage</span><span>Readiness · Bookings</span><span>Owner</span><span>Next action</span></div>
+        <div class="jr"><span class="ai">2</span><div><b>Mehta family · Kerala</b><div class="note">JRN-···· · POC: Priya Mehta</div></div><div>6–12 Oct<div class="note">in 12 days</div></div><div><span class="pill p-pre">In Preparation</span></div><div><span class="pill p-pre p-amb">At Risk</span><div class="note">3 of 5 Booked</div></div><div class="row" style="gap:6px"><span class="av">AR</span>Anita</div><div class="sec">Resolve 3 readiness items</div></div>
+        <div class="jr"><span></span><div><b>Acme Corp offsite · Coorg</b><div class="note">JRN-···· · POC: Acme Corp (Corporate organisation)</div></div><div>7–9 Oct<div class="note">in 13 days</div></div><div><span class="pill p-pre">In Preparation</span></div><div><span class="pill">Not Ready</span><div class="note">5 of 6 Booked</div></div><div class="row" style="gap:6px"><span class="av">AR</span>Anita</div><div class="sec">Confirm transport</div></div>
+        <div class="jr"><span></span><div><b>Kapoor family · Rajasthan</b><div class="note">JRN-···· · POC: Wanderlust Partners (B2B)</div></div><div>20–27 Oct<div class="note">in 26 days</div></div><div><span class="pill p-pre">In Preparation</span> <span class="pill p-dash">‖ On Hold</span></div><div><span class="pill">Not Ready</span><div class="note">1 of 4 Booked</div></div><div class="row" style="gap:6px"><span class="av">AR</span>Anita</div><div class="sec">Awaiting replacement planning</div></div>
+        <div class="jr"><span class="ai">1</span><div><b>Iyer family · Andaman</b><div class="note">JRN-···· · POC: Sameer Iyer</div></div><div>2–8 Nov<div class="note">in 39 days</div></div><div><span class="pill p-pre">In Preparation</span></div><div><span class="pill">Not Ready</span><div class="note">0 of 3 Booked</div></div><div class="row" style="gap:6px"><span class="av">AR</span>Anita</div><div class="sec">Request ferry booking</div></div>
+      </div>
+      <div class="note">No "Create Journey" action: Journeys arrive automatically from confirmed Journey Planning records (FR-JW-05). Lifecycle actions only inside a Journey (UXD-JW-15).</div>
+    </div>
+  </div>
+  <div class="anno" style="top:120px;left:900px">Summary strip = one-click filters; counts equal list size (FR-JW-34)</div>
+  <div class="anno" style="top:660px;left:1000px">Owner always shown — no "Unassigned" (D-03)</div>
+  <div class="cap">Low-fidelity wireframe · EBC-R1.3-WS13-002 · illustrative sample data · not production markup</div>
+</section>
+
+<!-- ============ WF-03 JOURNEY OVERVIEW ============ -->
+<section class="wf" id="wf3">
+  <div class="title">WF-03 · JW-02 Journey Workspace — Header + Overview (In Preparation) · desktop 1440</div>
+  <div class="shell">
+    <div class="hdr"><div class="logo"></div><span class="muted">Workspace</span><div class="search"></div><div class="bell"><b>7</b></div><span class="av">AR</span></div>
+    <div class="nav"><div>Dashboard</div><div class="g">Operational</div><div>Journey Planning</div><div class="on">Journey Workspace</div><div class="g">Knowledge</div><div>Traveller Hub</div><div>Itinerary Studio</div><div>Vendor Management</div><div>Destination Intelligence</div></div>
+    <div class="main">
+      <div class="note" style="margin:0 0 6px">Journey Workspace / JRN-····</div>
+      <div class="row" style="justify-content:space-between;align-items:flex-start">
+        <div><h1>Mehta family · Kerala</h1><div class="sec" style="margin-top:4px"><span class="pill" style="border-color:var(--prim);color:var(--prim)">Family ✎</span> · 6 Oct – 12 Oct 2026 · 6 nights · departs in 12 days · Domestic template <span class="muted" title="Dates are fixed at confirmation">ⓘ</span></div></div>
+        <div class="row"><span class="btn pri dis">Mark ready to travel</span><span class="btn">⋯ More</span></div>
+      </div>
+      <div class="note" style="text-align:right">3 readiness items outstanding</div>
+      <div class="people">
+        <div class="pc"><div class="k">Journey Owner</div><div class="row"><span class="av">AR</span><div><b>Anita Rao</b> <span class="pill" style="font-size:10px">SMV</span><div class="note">Assign…</div></div></div></div>
+        <div class="pc"><div class="k">Primary Operational Contact</div><div class="row"><span style="width:28px;height:28px;border:1.5px solid var(--esp2);border-radius:6px;flex:none"></span><div style="flex:1"><b>Priya Mehta</b> <span class="pill" style="font-size:10px">Individual traveller</span> <span class="note">Also travelling</span><div class="note">+91 ····· ·····  ·  priya@example.com</div></div><span class="sec">Edit</span></div></div>
+        <div class="pc"><div class="k">Travellers</div><div><b>Traveller: Rahul Mehta ↗</b><div class="note">2 adults · 1 child · 0 infants · from Kochi</div></div></div>
+      </div>
+      <div class="steps">
+        <div class="st d"><div class="dot">✓</div>Confirmed<div class="note">24 Sep</div></div>
+        <div class="st c"><div class="dot"></div><b>In Preparation</b><div class="note">Now · since 25 Sep</div></div>
+        <div class="st f"><div class="dot">🔒</div>Ready to Travel</div>
+        <div class="st f"><div class="dot"></div>Travelling</div>
+        <div class="st f"><div class="dot"></div>Travel Complete</div>
+        <div class="st f"><div class="dot"></div>Post Travel</div>
+        <div class="st f"><div class="dot"></div>Completed</div>
+      </div>
+      <div class="alertb"><b>Needs attention (2)</b>
+        <div class="li"><span class="ai">!</span><div style="flex:1">Departure in 12 days and readiness isn't complete</div><span class="sec">View readiness →</span></div>
+        <div class="li"><span class="ai">!</span><div style="flex:1">Houseboat booking has been Requested for 4 days <span class="muted">· reminder after 3 days (workspace setting)</span></div><span class="sec">Open booking →</span></div>
+      </div>
+      <div class="tabs"><div class="on">Overview</div><div>Itinerary</div><div>Vendor Bookings 2/5</div><div>Readiness</div><div>Documents 2</div><div>Tasks &amp; Follow-ups 3</div><div>Activity &amp; Changes</div><div>History</div></div>
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-top:14px">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div class="card" style="border-color:var(--amber)"><div class="muted" style="font-size:10px;text-transform:uppercase;letter-spacing:.08em">Next step</div><div class="row" style="justify-content:space-between"><div style="font-size:15px">3 readiness items are still outstanding.</div><span class="note" style="margin:0">Action in the alert above</span></div></div>
+          <div class="card"><div class="row" style="justify-content:space-between"><h2>Readiness</h2><span class="pill p-pre p-amb">At Risk</span></div>
+            <div class="li"><div style="width:180px">Booking confirmations</div><div class="bar" style="flex:1"><i style="width:66%"></i></div><span class="note" style="margin:0">2 of 3</span></div>
+            <div class="li"><div style="width:180px">Documentation</div><div class="bar" style="flex:1"><i style="width:50%"></i></div><span class="note" style="margin:0">1 of 2</span></div>
+            <div class="li"><div style="width:180px">Traveller readiness</div><div class="bar" style="flex:1"><i style="width:50%"></i></div><span class="note" style="margin:0">1 of 2</span></div>
+            <div class="li"><div style="width:180px">Supplier readiness</div><div class="bar" style="flex:1"><i style="width:60%"></i></div><span class="note" style="margin:0">3 of 5</span></div>
+          </div>
+          <div class="grid2"><div class="card"><h2>Vendor bookings</h2><div style="font-size:20px;font-family:Georgia,serif">2 of 5 Booked</div><div class="row" style="gap:4px;margin-top:6px;flex-wrap:wrap"><span class="pill">Requested 1</span><span class="pill">Pending Information 1</span><span class="pill p-conf">◯✓ Confirmed 1</span><span class="pill p-book">●✓ Booked 2</span></div></div>
+          <div class="card"><h2>Documents</h2><div class="row" style="gap:4px;flex-wrap:wrap"><span class="pill">Outstanding 2</span><span class="pill">Received 1</span><span class="pill">Verified 3</span></div></div></div>
+          <div class="card"><h2>Recent activity</h2><div class="li">Hotel <b>Booked</b> · Ref HV-889<span class="note" style="margin-left:auto">5 h ago</span></div><div class="li">Call with Priya (POC) — confirmed pickup at Kochi airport<span class="note" style="margin-left:auto">yesterday</span></div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div class="card"><h2>Tasks &amp; follow-ups</h2>
+            <div class="li"><span class="ck"></span><div><span class="cat pay"><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" style="vertical-align:-2px;margin-right:3px" aria-hidden="true"><circle cx="8" cy="8" r="5.5"/><circle cx="8" cy="8" r="2.5"/></svg>Payment</span> Collect balance from Priya<div class="note warn">Overdue 1 day</div></div></div>
+            <div class="li"><span class="ck"></span><div><span class="cat"><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" style="vertical-align:-2px;margin-right:3px" aria-hidden="true"><rect x="3.5" y="2.5" width="9" height="11" rx="1.5"/><path d="M6 2.5h4v2H6zM6 9l1.5 1.5L10.5 7"/></svg>Operational</span> Share final itinerary<div class="note">Due 3 Oct</div></div></div>
+            <div class="note">+ Add</div></div>
+          <div class="card"><h2>Journey facts</h2>
+            <div class="note">Reference</div><div>JRN-···· <span class="muted">(format per OQ-024)</span></div>
+            <div class="note">Journey Planning record</div><div>JP-···· ↗</div>
+            <div class="note">Intended Travel Month (planning, reference only)</div><div>October 2026</div>
+            <div class="note">Accepted proposal</div><div>Version 3 ↗</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="anno" style="top:172px;left:760px">One forward action; disabled with its reason as plain text. "View readiness" appears once only — in the alert (UX-03)</div>
+  <div class="anno" style="top:1010px;left:1060px">↑ Three separate people cards — never merged (D-12, UXD-JW-13)</div>
+  <div class="anno" style="top:418px;left:720px;display:none">Alerts can't be dismissed; they clear when the condition clears</div>
+  <div class="cap">Low-fidelity wireframe · EBC-R1.3-WS13-002 · illustrative sample data · not production markup</div>
+</section>
+
+<!-- ============ WF-04 LIFECYCLE STATES ============ -->
+<section class="wf" id="wf4" style="padding:24px 28px 44px">
+  <div class="title" style="margin:-24px -28px 18px">WF-04 · Lifecycle stepper and status banners (D-01, D-08, D-13)</div>
+  <div class="col3" style="grid-template-columns:1fr 1fr">
+    <div class="card"><h2>A · Current stage with gate</h2>
+      <div class="steps"><div class="st d"><div class="dot">✓</div>Confirmed</div><div class="st d"><div class="dot">✓</div>In Preparation</div><div class="st c"><div class="dot"></div><b>Ready to Travel</b></div><div class="st f"><div class="dot">🔒</div>Travelling</div><div class="st f"><div class="dot"></div>Travel Complete</div><div class="st f"><div class="dot"></div>Post Travel</div><div class="st f"><div class="dot"></div>Completed</div></div>
+      <div class="row" style="justify-content:flex-end"><span class="btn pri dis">Mark travelling</span></div><div class="note" style="text-align:right">Available from 6 Oct (departure date)</div></div>
+    <div class="card"><h2>B · On Hold (overlay on held-from stage)</h2>
+      <div class="steps"><div class="st d"><div class="dot">✓</div>Confirmed</div><div class="st h"><div class="dot">‖</div><b>In Preparation</b><div class="note">on hold</div></div><div class="st f"><div class="dot"></div>Ready to Travel</div><div class="st f"><div class="dot"></div>Travelling</div><div class="st f"><div class="dot"></div>Travel Complete</div><div class="st f"><div class="dot"></div>Post Travel</div><div class="st f"><div class="dot"></div>Completed</div></div>
+      <div class="banner b-hold">‖ <b>On hold since 3 Oct</b> · Reason: traveller plans uncertain · 12 days <span class="muted">(reminder after 14 days)</span><div class="row" style="margin-top:8px"><span class="btn pri">Resume to In Preparation</span><span class="btn">Cancel Journey</span></div></div></div>
+    <div class="card"><h2>C · Cancelled (terminal)</h2>
+      <div class="steps"><div class="st d"><div class="dot">✓</div>Confirmed</div><div class="st d"><div class="dot">✓</div>In Preparation</div><div class="st x"><div class="dot">✕</div><b>Cancelled</b></div></div>
+      <div class="banner b-can">✕ <b>Cancelled on 20 Oct</b> by Anita Rao · Reason: family emergency · 2 vendor cancellation tasks created<div class="note">Cancelled Journeys can't be reopened. A new request starts in Journey Planning.</div></div></div>
+    <div class="card"><h2>D · Superseded (terminal, informational — not cancelled)</h2>
+      <div class="steps"><div class="st d"><div class="dot">✓</div>Confirmed</div><div class="st d"><div class="dot">✓</div>In Preparation</div><div class="st x"><div class="dot" style="border-color:var(--prim);color:var(--prim)">⇢</div><b style="color:var(--prim)">Superseded</b></div></div>
+      <div class="banner b-sup">⇢ <b>This Journey was replaced after a material change.</b><div>Superseded by JRN-···· on 22 Oct · Reason: Material Amendment</div><div class="row" style="margin-top:8px"><span class="btn">Open replacement Journey →</span></div><div class="note">History stays fully readable.</div></div></div>
+    <div class="card"><h2>E · Completed (terminal; state = Journey Closed, UX-04)</h2>
+      <div class="steps"><div class="st d"><div class="dot">✓</div>Confirmed</div><div class="st d"><div class="dot">✓</div>In Prep.</div><div class="st d"><div class="dot">✓</div>Ready</div><div class="st d"><div class="dot">✓</div>Travelling</div><div class="st d"><div class="dot">✓</div>Travel Complete</div><div class="st d"><div class="dot">✓</div>Post Travel</div><div class="st ok"><div class="dot">✓</div><b>Completed</b></div></div>
+      <div class="banner b-ok"><b>Completed on 2 Nov.</b> Everything here is kept as a permanent record.<div class="note">Archive eligible after 60 days (workspace setting)</div></div></div>
+    <div class="card"><h2>F · Archived (administrative overlay — never a step; read-only)</h2>
+      <div class="row" style="gap:6px"><span class="pill p-ok">✓ Completed</span><span class="pill p-dash">▣ Archived</span></div>
+      <div class="banner b-arc">▣ <b>Archived on 5 Jan</b> by Vivek (Administrator) · Reason: retention period reached<div class="note">Stage and outcome are unchanged. Nothing is deleted. Archived Journeys can't be restored in this release.</div><div class="note" style="margin-top:6px"><b>Read-only:</b> all actions hidden · no Unarchive in Release 1.3 (Rev 4, POD-08)</div></div></div>
+  </div>
+  <div class="card" style="margin-top:16px"><h2>Stage badge families</h2>
+    <div class="row" style="flex-wrap:wrap;gap:8px"><span class="pill p-pre">Confirmed</span><span class="pill p-pre">In Preparation</span><span class="pill p-pre">Ready to Travel</span><span class="pill p-trv">Travelling</span><span class="pill p-post">Travel Complete</span><span class="pill p-post">Post Travel</span><span class="pill p-ok">✓ Completed</span><span class="pill p-out">✕ Cancelled</span><span class="pill p-out" style="color:var(--prim)">⇢ Superseded</span><span class="pill p-dash">‖ On Hold</span><span class="pill p-dash">▣ Archived</span><span class="pill p-dash">Incomplete legacy record</span></div>
+    <div class="note">Text + glyph on every badge; colour is never the only signal.</div></div>
+  <div class="cap">Low-fidelity wireframe · EBC-R1.3-WS13-002 · illustrative sample data · not production markup</div>
+</section>
+
+<!-- ============ WF-05 VENDOR BOOKINGS ============ -->
+<section class="wf" id="wf5" style="min-height:760px">
+  <div class="title">WF-05 · JW-04 Vendor Bookings + JW-16 booking drawer (Rev 2: Confirmed vs Booked, UX-05)</div>
+  <div style="padding:20px 28px;width:990px">
+    <h1 style="font-size:22px">Mehta family · Kerala</h1>
+    <div class="tabs"><div>Overview</div><div>Itinerary</div><div class="on">Vendor Bookings 2/5</div><div>Readiness</div><div>Documents 2</div><div>Tasks &amp; Follow-ups 3</div><div>Activity &amp; Changes</div><div>History</div></div>
+    <div class="row" style="margin:14px 0;justify-content:space-between"><div class="row"><b style="font-family:Georgia,serif;font-size:18px">2 of 5 Booked</b><span class="pill">Draft 0</span><span class="pill">Requested 1</span><span class="pill">Pending Information 1</span><span class="pill p-conf">◯✓ Confirmed 1</span><span class="pill p-book">●✓ Booked 2</span></div><span class="btn">+ Add booking</span></div>
+    <div class="card" style="padding:4px 14px">
+      <div class="li" style="padding:12px 0"><div style="flex:1"><b>Houseboat</b> · Lagoon Cruises · 8–9 Oct<div class="note warn">Requested 4 days · reminder after 3 days</div></div><div class="mini"><i class="d"></i><i class="c"></i><i></i><i></i><i></i></div><span class="pill">Requested</span><span class="btn pri">Mark confirmed</span><span class="btn">Pending information</span><span class="sec">⋯</span></div>
+      <div class="li" style="padding:12px 0"><div style="flex:1"><b>Resort</b> · Coconut Grove · 6–8 Oct<div class="note">Waiting for: guest ID copies · 2 days</div></div><div class="mini"><i class="d"></i><i class="d"></i><i class="c"></i><i></i><i></i></div><span class="pill">Pending Information</span><span class="btn pri">Information supplied</span><span class="sec">⋯</span></div>
+      <div class="li" style="padding:12px 0"><div style="flex:1"><b>Transport</b> · Kerala Cabs · 6–12 Oct<div class="note">Vendor confirmed availability and terms · awaiting booking reference</div></div><div class="mini"><i class="d"></i><i class="d"></i><i class="s"></i><i class="cf"></i><i></i></div><span class="pill p-conf">◯✓ Confirmed</span><span class="btn pri">Mark booked</span><span class="sec">⋯</span></div>
+      <div class="li" style="padding:12px 0"><div style="flex:1"><b>Hotel</b> · Harbour View · 10–12 Oct</div><div class="mini"><i class="d"></i><i class="d"></i><i class="s"></i><i class="d"></i><i class="bk"></i></div><span class="pill p-book">●✓ Booked</span> <b style="font-size:12px">Ref HV-889</b><span class="btn">Request operational change</span><span class="sec">⋯</span></div>
+      <div class="li" style="padding:10px 0"><span class="sec">▸ Cancelled (1)</span></div>
+    </div>
+    <div class="note">Mini-stepper: Draft · Requested · Pending Information · Confirmed · Booked. Dotted dot = step skipped. <b>Confirmed = outline purple pill ◯✓; Booked = solid green pill ●✓ + reference (UX-05)</b>. No "Amended" status, no delete (D-07, BR-033).</div>
+  </div>
+  <div class="drawer" style="top:37px">
+    <div class="row" style="justify-content:space-between"><h2 style="margin:0">Houseboat · Lagoon Cruises</h2><span class="sec">✕</span></div>
+    <div class="note">Accommodation · 8–9 Oct · Vendor: Active</div>
+    <div class="mini" style="margin:12px 0"><i class="d"></i><i class="c"></i><i></i><i></i><i></i> <span class="note" style="margin:0 0 0 8px">Requested</span></div>
+    <div class="row" style="flex-wrap:wrap;gap:8px"><span class="btn pri">Mark confirmed</span><span class="btn">Pending information</span><span class="btn">Cancel booking</span></div>
+    <h2 style="margin-top:18px">Status history</h2>
+    <div class="li"><div>Draft → <b>Requested</b><div class="note">Anita Rao · 20 Sep 10:12</div></div></div>
+    <div class="li"><div>Created as <b>Draft</b><div class="note">Anita Rao · 19 Sep 17:40</div></div></div>
+    <h2 style="margin-top:14px">Vendor coordination</h2>
+    <div class="li"><div>Awaiting reply — called reservations desk<div class="note">Anita Rao · 23 Sep</div></div></div>
+    <div class="li"><div>Contacted — request emailed<div class="note">Anita Rao · 20 Sep</div></div></div>
+    <div class="note">+ Log vendor contact</div>
+    <div class="dialog" style="margin-top:18px"><b>Mark booked</b><div class="note">Booking reference</div><div class="inp" style="margin:4px 0 6px">e.g. LC-4471</div><div class="note warn">Booked needs a booking reference.</div><div class="row" style="justify-content:flex-end;margin-top:8px"><span class="btn">Cancel</span><span class="btn pri">Mark booked</span></div></div>
+  </div>
+  <div class="cap">Low-fidelity wireframe · EBC-R1.3-WS13-002 · illustrative sample data · not production markup</div>
+</section>
+
+<!-- ============ WF-06 READINESS / DOCUMENTS / TASKS ============ -->
+<section class="wf" id="wf6" style="padding:0 0 44px">
+  <div class="title">WF-06 · JW-05 Readiness · JW-07 Documents (no upload) · JW-06 Tasks &amp; Follow-ups</div>
+  <div class="col3" style="padding:20px 24px;align-items:start">
+    <div class="card"><div class="row" style="justify-content:space-between"><h2>Readiness</h2><span class="pill p-pre p-amb">At Risk</span></div>
+      <div class="note" style="margin:0 0 8px">Departure in 12 days · 3 items outstanding · Template: <b>Domestic</b> · <u>Change template</u></div>
+      <div class="muted" style="font-size:10px;text-transform:uppercase;letter-spacing:.06em">Supplier readiness · 3 of 5</div>
+      <div class="li"><span class="ck" style="opacity:.3"></span><div style="flex:1">All vendor bookings Booked<div class="note">System · updates automatically → Vendor Bookings</div></div></div>
+      <div class="muted" style="font-size:10px;text-transform:uppercase;letter-spacing:.06em;margin-top:8px">Documentation · 1 of 2</div>
+      <div class="li"><span class="ck" style="opacity:.3"></span><div style="flex:1">Required documents Received or Verified<div class="note">System · → Documents</div></div></div>
+      <div class="muted" style="font-size:10px;text-transform:uppercase;letter-spacing:.06em;margin-top:8px">Traveller readiness · 1 of 2</div>
+      <div class="li"><span class="ck on"></span><div style="flex:1">Final itinerary shared with traveller<div class="note">Manual · done 4 Oct by Anita</div></div></div>
+      <div class="li"><span style="width:14px;text-align:center">⊘</span><div style="flex:1">Travel insurance<div class="note">Not applicable · "Traveller has annual cover"</div></div></div>
+      <div class="note">+ Add item</div>
+    </div>
+    <div class="card"><div class="row" style="justify-content:space-between"><h2>Documents</h2><span class="btn">+ Add document</span></div>
+      <div class="row" style="gap:4px;margin-bottom:6px;flex-wrap:wrap"><span class="pill">Outstanding 2</span><span class="pill">Received 1</span><span class="pill">Verified 3</span><span class="seg" style="margin-left:auto"><span class="on">By traveller</span><span>By document</span></span></div>
+      <b>Rahul Mehta</b>
+      <div class="li"><div style="flex:1">Passport · <span class="muted">Ref ····4521 Show</span><div class="note">↗ Shared drive link · From template</div></div><span class="seg"><span>Out</span><span>Rec</span><span class="on">Ver</span><span>N/A</span></span></div>
+      <div class="li"><div style="flex:1">Visa · <span class="muted">Ref —</span><div class="note warn">Due before departure · within 21 days</div></div><span class="seg"><span class="on">Out</span><span>Rec</span><span>Ver</span><span>N/A</span></span></div>
+      <b style="display:block;margin-top:8px">Journey-level</b>
+      <div class="li"><div style="flex:1">Travel insurance certificate<div class="note">Added · note: "check with POC"</div></div><span class="seg"><span class="on">Out</span><span>Rec</span><span>Ver</span><span>N/A</span></span></div>
+      <div class="banner b-can" style="margin-top:10px;font-size:12px">Documents stay where they're stored — record what's needed and its reference or link here. <b>No upload.</b></div>
+    </div>
+    <div class="card"><h2>Tasks &amp; follow-ups</h2>
+      <div class="row" style="gap:6px;flex-wrap:wrap"><div class="inp" style="flex:1;min-width:160px">What needs doing?</div><div class="inp">Payment ▾</div><div class="inp">1 week before departure ▾</div><div class="inp">Me ▾</div><span class="btn pri">Add</span></div>
+      <div class="note">Payment and Traveller follow-ups need a due date.</div>
+      <div class="row" style="gap:4px;margin:10px 0"><span class="pill sel" style="background:rgb(245 149 28/14%)">All</span><span class="pill">Operational</span><span class="pill">Traveller follow-up</span><span class="pill">Payment</span><span class="pill">Assigned to me</span></div>
+      <div class="muted" style="font-size:10px;text-transform:uppercase;letter-spacing:.06em">Overdue</div>
+      <div class="li"><span class="ck"></span><div style="flex:1"><span class="cat pay"><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" style="vertical-align:-2px;margin-right:3px" aria-hidden="true"><circle cx="8" cy="8" r="5.5"/><circle cx="8" cy="8" r="2.5"/></svg>Payment</span> Collect balance from Priya<div class="note warn">Overdue 1 day · reminder active</div></div><span class="av" style="width:22px;height:22px">AR</span></div>
+      <div class="muted" style="font-size:10px;text-transform:uppercase;letter-spacing:.06em;margin-top:6px">Upcoming</div>
+      <div class="li"><span class="ck"></span><div style="flex:1"><span class="cat"><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" style="vertical-align:-2px;margin-right:3px" aria-hidden="true"><rect x="3.5" y="2.5" width="9" height="11" rx="1.5"/><path d="M6 2.5h4v2H6zM6 9l1.5 1.5L10.5 7"/></svg>Operational</span> Share final itinerary<div class="note">Due 3 Oct</div></div><span class="av" style="width:22px;height:22px">AR</span></div>
+      <div class="li"><span class="ck"></span><div style="flex:1"><span class="cat tf"><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" style="vertical-align:-2px;margin-right:3px" aria-hidden="true"><circle cx="6" cy="6" r="2.2"/><path d="M2.5 13c0-2.2 1.6-3.6 3.5-3.6S9.5 10.8 9.5 13"/><path d="M10.5 2.5h4v3h-2l-1.2 1.2V5.5h-.8z"/></svg>Traveller follow-up</span> Call Priya after return<div class="note">Due 13 Oct (day after return)</div></div><span class="av" style="width:22px;height:22px">AR</span></div>
+      <div class="li"><span class="sec">▸ Completed / Cancelled (4)</span></div>
+      <div class="note">No amount, invoice or payment status — "Done" completes the follow-up (I-01).</div>
+    </div>
+  </div>
+  <div class="cap">Low-fidelity wireframe · EBC-R1.3-WS13-002 · illustrative sample data · not production markup</div>
+</section>
+
+<!-- ============ WF-07 MATERIAL CHANGE / SUPERSEDED ============ -->
+<section class="wf" id="wf7" style="padding:0 0 44px">
+  <div class="title">WF-07 · JW-13 Material change → On Hold → replacement Journey → original Superseded (D-06, D-13)</div>
+  <div class="col3" style="padding:20px 24px;align-items:start">
+    <div><div class="note" style="font-weight:700;margin-bottom:6px">1 · From ⋯ More → Material change…</div>
+      <div class="dialog"><h2>Material change</h2>
+        <div class="sec">Material changes can't be made on a confirmed Journey. SMV replaces it instead:</div>
+        <ol style="padding-left:18px;margin:10px 0">
+          <li>This Journey is placed on hold.</li>
+          <li>A new Journey Planning record opens, pre-filled from this Journey, so you can re-plan and re-confirm with the traveller.</li>
+          <li>When it's confirmed, a replacement Journey is created and this one is marked <b>Superseded</b> — linked both ways.</li></ol>
+        <div class="note">What's changing? (required)</div><div class="inp" style="height:54px;align-items:flex-start;padding-top:8px">Traveller wants 8 nights instead of 6</div>
+        <div class="row" style="justify-content:flex-end;margin-top:12px"><span class="btn">Cancel</span><span class="btn pri">Create Replacement Journey</span></div></div>
+      <div class="card" style="margin-top:12px"><div class="note" style="margin:0 0 6px;font-weight:700">Guard inside "Record operational change"</div>
+        <div class="li"><span class="ck" style="border-radius:50%"></span>Pickup or transfer timing</div><div class="li"><span class="ck" style="border-radius:50%"></span>Same-category hotel, same room type, same price</div><div class="li"><span class="ck" style="border-radius:50%"></span>Contact or logistics details</div>
+        <div class="banner b-can" style="font-size:12px">Changing dates, nights, travellers, destination, room type, hotel category, meal plan, flight class or a major part of the itinerary? That's a material change. <u>Start material change →</u></div></div>
+    </div>
+    <div><div class="note" style="font-weight:700;margin-bottom:6px">2 · Original Journey while re-planning</div>
+      <div class="card"><h2 style="font-size:18px">Kapoor family · Rajasthan</h2>
+        <div class="row" style="gap:6px"><span class="pill p-pre">In Preparation</span><span class="pill p-dash">‖ On Hold</span></div>
+        <div class="banner b-hold" style="margin-top:10px">‖ <b>On hold for a material change since 3 Oct</b><div class="sec">"8 nights instead of 6"</div>
+          <div class="card" style="margin-top:8px;padding:10px"><div class="note" style="margin:0">Replacement planning</div><b>JP-····</b> · Stage: <span class="pill">Proposal Shared</span> · Owner: Anita Rao<div class="sec" style="margin-top:4px">Open planning record →</div></div>
+          <div class="note">When it's confirmed, this Journey will be marked Superseded automatically.</div>
+          <div class="row" style="margin-top:8px"><span class="btn">Resume this Journey instead</span><span class="btn">Cancel Journey</span></div></div>
+        <div class="banner b-can" style="font-size:12px"><b>If replacement planning closes as Lost:</b> "Replacement planning JP-···· closed as Lost. This Journey is still on hold — resume or cancel it." (E-10)</div>
+      </div></div>
+    <div><div class="note" style="font-weight:700;margin-bottom:6px">3 · After the planning record is confirmed</div>
+      <div class="card"><div class="note" style="margin:0">Original</div><h2 style="font-size:18px">Kapoor family · Rajasthan</h2><span class="pill p-out" style="color:var(--prim)">⇢ Superseded</span>
+        <div class="banner b-sup">⇢ <b>This Journey was replaced after a material change.</b><div>Superseded by JRN-···· on 22 Oct · Reason: Material Amendment</div><div class="sec" style="margin-top:6px">Open replacement Journey →</div></div>
+        <div class="note">Tabs stay readable; all actions removed. History pins: "Superseded by JRN-····".</div></div>
+      <div class="card" style="margin-top:12px"><div class="note" style="margin:0">Replacement</div><h2 style="font-size:18px">Kapoor family · Rajasthan</h2>
+        <div class="sec">20 Oct – 28 Oct 2026 · 8 nights · <span class="pill">Replaces JRN-···· ↗</span></div>
+        <div class="steps"><div class="st c"><div class="dot"></div><b>Confirmed</b></div><div class="st f"><div class="dot"></div>In Prep.</div><div class="st f"><div class="dot"></div>Ready</div><div class="st f"><div class="dot"></div>Travelling</div><div class="st f"><div class="dot"></div>Complete</div><div class="st f"><div class="dot"></div>Post</div><div class="st f"><div class="dot"></div>Completed</div></div>
+        <div class="row" style="justify-content:flex-end"><span class="btn pri">Start preparation</span></div></div>
+    </div>
+  </div>
+  <div class="cap">Low-fidelity wireframe · EBC-R1.3-WS13-002 · illustrative sample data · not production markup</div>
+</section>
+
+
+<!-- ============ WF-08 (Rev 4) REPLACEMENT PROVENANCE / SERVICE CATEGORY / ARCHIVE ============ -->
+<section class="wf" id="wf8" style="padding:0 0 44px">
+  <div class="title">WF-08 (Rev 4) · Decision dialog · Replacement provenance · Documents review · Irreversible archive (UXA-01 to UXA-05)</div>
+  <div class="grid2" style="padding:20px 24px;align-items:start">
+    <div><div class="note" style="font-weight:700;margin-bottom:6px">A · Journey Planning — Decision dialog, Confirmed (replacement record)</div>
+      <div class="dialog"><h2>Confirm this Journey</h2>
+        <div class="row" style="gap:16px"><div style="flex:1"><div class="note">Confirmed travel start</div><div class="inp">20 Oct 2026</div></div><div style="flex:1"><div class="note">Confirmed travel end</div><div class="inp" style="border-color:var(--amber)">27 Oct 2026</div></div></div>
+        <div class="note"><span class="pill" style="font-size:10px">Pre-filled from JRN-····</span> edit if the dates have changed</div>
+        <div class="li" style="margin-top:8px"><div style="width:150px" class="sec">Number of nights</div><b>8</b><span class="note" style="margin:0 0 0 8px">from Trip Basics · <u>Edit</u></span></div>
+        <div class="li"><div style="width:150px" class="sec">Service Category</div><b>Family</b><span class="note" style="margin:0 0 0 8px">from Trip Basics · <u>Edit</u></span></div>
+        <div class="li"><div style="width:150px" class="sec">Journey Owner</div><span class="av" style="width:22px;height:22px">AR</span> Anita Rao</div>
+        <div class="banner" style="border:1px solid var(--amber);background:rgb(245 149 28/7%);font-size:12px"><b>These dates cover 7 nights, but Trip Basics says 8.</b> Change the dates or the nights so they match.</div>
+        <div class="note">Creating the Journey can't be undone. Planning history stays on this record.</div>
+        <div class="row" style="justify-content:flex-end;margin-top:10px"><span class="btn">Cancel</span><span class="btn pri dis">Confirm &amp; create Journey</span></div></div>
+      <div class="note">Only the dates are edited here; nights and Service Category are edited in Trip Basics. Messages map one-to-one to the server's validation codes.</div>
+    </div>
+    <div><div class="note" style="font-weight:700;margin-bottom:6px">B · Replacement planning record — provenance and Version 1 guidance</div>
+      <div class="card">
+        <div class="banner b-hold" style="margin-top:0;font-size:12px"><b>Replacement planning for JRN-····</b> · The original Journey is on hold until this is confirmed. <u>Open JRN-····</u></div>
+        <div class="muted" style="font-size:10px;text-transform:uppercase;letter-spacing:.06em;margin-top:6px">Trip Basics</div>
+        <div class="li"><div style="width:120px" class="sec">Adults</div>2 <span class="pill" style="font-size:10px;margin-left:6px">Pre-filled from JRN-····</span></div>
+        <div class="li"><div style="width:120px" class="sec">Nights</div><b>8</b></div>
+        <div class="li"><div style="width:120px" class="sec">Service Category</div>Family <span class="pill" style="font-size:10px;margin-left:6px">Pre-filled from JRN-····</span> <span class="pill" style="font-size:10px;margin-left:4px;border-color:var(--amber);color:#9a5a08">Needed to confirm</span></div>
+        <div class="muted" style="font-size:10px;text-transform:uppercase;letter-spacing:.06em;margin-top:8px">Proposal</div>
+        <div class="banner" style="border:1px solid rgb(40 3 54/30%);background:rgb(40 3 54/5%);font-size:12px"><span class="pill" style="font-size:10px">Carried from JRN-···· (accepted version v3)</span><div style="margin-top:4px">This is the original trip's itinerary and price estimate. <b>Review and update it before sharing it with the traveller.</b></div></div>
+        <div class="row" style="justify-content:flex-end"><span class="note" style="margin:0 8px 0 0">You're about to share the carried proposal. Have you updated it for the new plan?</span><span class="btn">Share proposal</span></div>
+        <div class="muted" style="font-size:10px;text-transform:uppercase;letter-spacing:.06em;margin-top:8px">Internal comments</div>
+        <div class="li"><div><span class="pill" style="font-size:10px">Copied from JRN-····</span> note by Anita Rao, 2 Oct: guests prefer a quiet lagoon-side room</div></div>
+        <div class="muted" style="font-size:10px;text-transform:uppercase;letter-spacing:.06em;margin-top:8px">Vendor quotations</div>
+        <div class="li"><div style="flex:1">Harbour View · Accommodation<div class="note">Amount — </div></div><span class="pill" style="font-size:10px">Carried from JRN-···· · Re-quote needed</span></div>
+      </div>
+      <div class="note">Guidance only — sharing is never blocked (BR-047).</div>
+    </div>
+    <div><div class="note" style="font-weight:700;margin-bottom:6px">C · Replacement Journey — Documents to review</div>
+      <div class="card">
+        <div class="row" style="justify-content:space-between"><h2>Documents</h2><span class="pill" style="border-color:var(--amber);color:#9a5a08">3 to review</span></div>
+        <div class="alertb" style="margin-top:0;font-size:12px">⚠ 4 documents were carried from JRN-···· after a material change; 3 still need review. Review each one — a document that was valid for the original trip may not be valid now.</div>
+        <div class="li"><div style="flex:1">Passport · Rahul Mehta · <span class="muted">Ref ····4521</span><div class="note"><span class="pill" style="font-size:10px">Carried from JRN-····, re-verify</span> <span class="pill" style="font-size:10px;border-color:var(--amber);color:#9a5a08">Review required</span> was Verified</div></div><span class="seg"><span>Out</span><span class="on">Rec</span><span>Ver</span><span>N/A</span></span></div>
+        <div class="li"><div style="flex:1">Visa · Rahul Mehta<div class="note"><span class="pill" style="font-size:10px">Carried from JRN-····, re-verify</span> <span class="pill" style="font-size:10px;border-color:var(--amber);color:#9a5a08">Review required</span> was N/A: "no visa needed"</div></div><span class="seg"><span class="on">Out</span><span>Rec</span><span>Ver</span><span>N/A</span></span></div>
+        <div class="li"><div style="flex:1">Passport · Priya Mehta<div class="note"><span class="pill" style="font-size:10px">Carried from JRN-····, re-verify</span></div></div><span class="seg"><span>Out</span><span class="on">Rec</span><span>Ver</span><span>N/A</span></span></div>
+        <div class="li"><div style="flex:1">Travel insurance certificate<div class="note">Verified again by Anita · review done</div></div><span class="seg"><span>Out</span><span>Rec</span><span class="on">Ver</span><span>N/A</span></span></div>
+        <div class="note">Guidance only; readiness gate unchanged.</div>
+      </div>
+    </div>
+    <div><div class="note" style="font-weight:700;margin-bottom:6px">D · Archive dialog — irreversible in Release 1.3 (active Journey)</div>
+      <div class="dialog"><h2>Archive this Journey?</h2>
+        <div><b>Archiving can't be undone in this release.</b></div>
+        <div class="sec">The Journey leaves active views and becomes read-only. It stays searchable, and its history, documents and timeline remain available. Stage and outcome don't change, and nothing is deleted.</div>
+        <div class="note">Reason (required)</div><div class="inp">Duplicate created in error</div>
+        <div class="note">Archived by Vivek (Administrator) · today</div>
+        <div class="banner" style="border:1px solid var(--amber);background:rgb(245 149 28/7%);font-size:12px">⚠ This Journey is still active (In Preparation). Archiving stops all work on it.<div class="row" style="margin-top:6px"><span class="ck"></span> I understand this Journey can't be restored in this release.</div></div>
+        <div class="row" style="justify-content:flex-end;margin-top:10px"><span class="btn">Cancel</span><span class="btn pri dis">Archive Journey</span></div></div>
+      <div class="note">No Unarchive anywhere. The acknowledgement appears only for Journeys that aren't Completed, Cancelled or Superseded.</div>
+    </div>
+  </div>
+  <div class="cap">Low-fidelity wireframe · EBC-R1.3-WS13-002 Rev 4 · illustrative sample data · not production markup</div>
+</section>
+</body>
+</html>

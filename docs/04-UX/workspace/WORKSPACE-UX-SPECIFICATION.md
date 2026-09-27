@@ -49,6 +49,9 @@ Each area below states the **current, as-shipped behaviour** (verified by direct
 
 ## 4. Dashboard (`page.tsx`, `WelcomeSection`, `KpiGrid`/`KpiCard`, `RecentActivityCard`, `UpcomingTasksCard`, `QuickActions`)
 
+> **WS13 revision (EBC-R1.3-WS13-002, 24-Sep-2026):** Quick Actions become four ("Create Journey" removed, CM-03) and KPI values become live. See *WS13 Revision*.
+
+
 **Information architecture — unchanged.** Welcome section, five KPI cards (Active Journeys, New Leads, Upcoming Departures, Pending Vendor Confirmations, Tasks Due Today — every value a literal `0`, per Product Ratification), Recent Activity, Upcoming Tasks, Quick Actions (five items: New Lead, Create Journey, Add Traveller, New Vendor, My Work). No card added, removed or reordered; no real data is introduced.
 
 | Element | Current | Refined |
@@ -112,3 +115,15 @@ These are disclosed as illustrative static reproductions built outside the live 
 ---
 
 *Prepared by Sophie, UX, UI and Frontend Experience Specialist, on behalf of Team Satvi, per EBC-R1.3-WS11-011A.*
+
+---
+
+## WS13 Revision — EBC-R1.3-WS13-002 (24 September 2026)
+
+*Additive revision by Sophie (UX). The original text above is kept unchanged, following the project's supersede-not-delete convention. Where this section differs, it governs for Journey Workspace. Source: `docs/09-Development/EBC-R1.3-WS13-002-SOPHIE-Journey-Workspace-UX-Design-and-Experience-Specification.md`, built on the frozen product baseline `EBC-R1.3-WS13-001` Revision 2 (D-01 to D-13).*
+
+### §4 Dashboard (revised)
+
+- **Quick Actions:** New Lead (primary, amber) · Add Traveller · New Vendor. "Create Journey" is removed (D-09, CM-03) and "My Work" is removed (UX-01, Product Owner review 26-Sep-2026: the Dashboard itself is the user's work). Order and treatment of the remaining three are unchanged.
+- **KPIs:** the five ratified labels are unchanged; values become live per the WS13 baseline §17 definitions, and each tile links to its pre-filtered list.
+- **New panels** below the KPIs: Needs Attention, Today, Upcoming Departures, Pending Vendor Bookings, Payments Due, Journey Planning, Active Journeys by stage, Recent Activity. All use existing tokens, card radius, shadow and the editorial serif heading.

@@ -83,6 +83,9 @@ Each journey is described as a sequence of user goals and system responses — n
 
 ## 6. Journey 5 — Journey Creation
 
+> **WS13 revision (EBC-R1.3-WS13-002, 24-Sep-2026):** Journeys now arrive owned, with confirmed dates and an initial Primary Operational Contact (D-02, D-03, D-12). See *WS13 Revision*.
+
+
 **Trigger:** Traveller acceptance of a Proposal Version.
 
 **Lifecycle transition:** Journey Planning Record (Closed — Confirmed) → new Journey (BR-012/PD-JW-001).
@@ -103,6 +106,9 @@ Planning history remains permanently associated with the originating Inquiry and
 **Exit:** A Journey now exists in Phase 2 (Delivery); Journey Planning's role in this traveller relationship ends unless a second, separate destination is later planned (PD-JP-001 — a new destination requires a new Journey Planning Record).
 
 ## 7. Journey 6 — Managing an Active Journey
+
+> **WS13 revision (EBC-R1.3-WS13-002, 24-Sep-2026):** Stages are approved (D-01); steps 1, 2, 5, 6 and 7 are revised. See *WS13 Revision*.
+
 
 **Trigger:** A confirmed Journey in Journey Workspace.
 
@@ -127,6 +133,9 @@ Operational awareness should minimise unnecessary navigation and reinforce the f
 **Exit:** Journey concludes (Journey 7) or is placed On Hold pending a new planning cycle for a different destination.
 
 ## 8. Journey 7 — Completing a Journey
+
+> **WS13 revision (EBC-R1.3-WS13-002, 24-Sep-2026):** Outcomes are Journey Closed, Cancelled, Superseded; Archived is administrative. See *WS13 Revision*.
+
 
 **Trigger:** A Journey reaches one of its three approved completion outcomes.
 
@@ -161,3 +170,43 @@ The Workspace User Journeys are governed by the following principles.
 ---
 
 *Prepared by Sophie, UX, UI and Frontend Experience Specialist, on behalf of Team Satvi, per EBC-R1.3-WS4-001.*
+
+---
+
+## WS13 Revision — EBC-R1.3-WS13-002 (24 September 2026)
+
+*Additive revision by Sophie (UX). The original text above is kept unchanged, following the project's supersede-not-delete convention. Where this section differs, it governs for Journey Workspace. Source: `docs/09-Development/EBC-R1.3-WS13-002-SOPHIE-Journey-Workspace-UX-Design-and-Experience-Specification.md`, built on the frozen product baseline `EBC-R1.3-WS13-001` Revision 2 (D-01 to D-13).*
+
+### Journey 5 — Journey Creation (revised)
+
+Step 3: the new Journey appears in Active Journeys in **Confirmed**, owned by the Journey Planning owner, with confirmed dates and a Primary Operational Contact. There is no unclaimed state.
+
+### Journey 6 — Managing an Active Journey (revised)
+
+Lifecycle: Confirmed → In Preparation → Ready to Travel → Travelling → Travel Complete → Post Travel (D-01).
+
+| Step | Revised |
+|---|---|
+| 1 | Ownership is already set; reassign if needed (no claim) |
+| 2 | Coordinate **Vendor Bookings** through Draft → Requested → Pending Information → Confirmed → Booked |
+| 3 | Track Readiness from the Journey's Readiness Template and Document Readiness (no upload) |
+| 4 | Log communications with the Traveller(s) or the Primary Operational Contact |
+| 5 | Operational changes are Change Records on the same Journey; affected bookings return to Requested |
+| 6 | **Material changes** (dates, nights, travellers, destination, room type, hotel category, meal plan, flight class, major itinerary) → Journey On Hold → new Journey Planning record → replacement Journey; original becomes **Superseded** |
+| 7 | Configurable alerts cover milestones, vendor bookings, documents, payment and traveller follow-ups, operational tasks, on-hold duration and archive-due |
+
+### Journey 7 — Completing a Journey (revised)
+
+Travel Complete → Post Travel → Journey Closed; or Cancelled; or Superseded (replacement only). Archived is applied separately by an Administrator (at any time; reminded after the retention period, default 60 days).
+
+### Revision 2 update (26-Sep-2026, Product Owner review of WS13-002)
+
+- UX-04: the terminal state **Journey Closed** is presented to Workspace Users with the label **Completed**. Lifecycle, business rules and product terminology are unchanged; references above to Journey Closed name the state.
+
+### Revision 4 update (27-Sep-2026, WS13 UX synchronisation UXA-01 to UXA-06)
+
+*Alignment with WS13-001 Rev 3 (POD-01–08, PD-A–E, O-A2–O-A5) and WS13-004A. Detail: `EBC-R1.3-WS13-002` §36. No workflow redesign.*
+
+- **Journey 5:** the Workspace User confirms with dates and a Service Category; mismatched dates and nights must be fixed before the Journey is created.
+- **Journey 6:** after a material change, the replacement starts from the original's approved context, clearly labelled with its source, and carried documents are re-verified.
+- **Journey 7:** archiving is an Administrator action that can't be undone in Release 1.3.

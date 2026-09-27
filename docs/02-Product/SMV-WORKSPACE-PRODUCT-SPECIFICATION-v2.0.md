@@ -710,7 +710,33 @@ Prepared per Tiger's Stage 4 instruction to "produce a consolidated change log."
 | --- | --- | --- | --- | --- |
 | v1.0 | 10-Sep-2026 | Arjun | `EBC-R1.3-WS3-002` | Initial Product Specification, built from the approved Product Discovery capture. |
 | v2.0 | 13-Sep-2026 | Arjun | `EBC-R1.3-WS3-004`, Stage 4 | Consolidated Baseline Update incorporating the complete Release 1.3 Product Owner Review (all nine modules) and Tiger's Stage 3 decisions on Vendor terminology, Business Rule BR-007, Destination Intelligence architecture routing, and the Functional-Requirement-drafting deferral. Seven modules added in full; two promoted from Proposed to Approved; five Business Objects added or materially corrected; ten new Business Rules added; one Business Rule (BR-007) rewritten; a new Cross-Module Governance Principles section added; six Open Questions resolved or partially resolved; five new Open Questions raised. No detailed Functional Requirement wording invented for the ~195 items approved by count/topic-group only — tracked as a separate, not-yet-scoped Business Analysis activity (OQ-018). |
+| v2.0 + §19 note | 24-Sep-2026 | Arjun | `EBC-R1.3-WS13-001B` | Additive §19 WS13 synchronisation note recording Product Owner decisions D-01, D-02, D-08, D-13 that refine §6.4/§7.4/§10.2 (PD-JW-005, Phase 2 lifecycle). No existing text rewritten. |
+| v2.0 + §20 note | 26-Sep-2026 (Vendor Code policy added 27-Sep-2026, PD-D; format clarified, O-12) | Arjun | `EBC-R1.3-WS13-003A`; `EBC-R1.3-WS13-004A` decisions | Additive §20 Vendor baseline note recording Product Owner decision POD-05 (post-architecture), which refines the §7.7 Vendor object: migration default, Vendor Code, minimum attributes and Release 1.3 limits. No existing text rewritten. |
 
 ---
 
 *This document is prepared by Arjun, Product and Business Analyst, on behalf of Team Satvi, per `EBC-R1.3-WS3-004` Stage 4. It consolidates the Release 1.3 Product Owner Review into the Product Specification. Content still labelled Proposed or Open Question has not been touched by the Product Owner Review and requires the same confirmation it required in v1.0.*
+
+---
+
+## 19. WS13 Synchronisation Note (additive — 24 September 2026, `EBC-R1.3-WS13-001B`)
+
+The Journey Workspace product baseline is now `docs/09-Development/EBC-R1.3-WS13-001-ARJUN-Journey-Workspace-Product-Discovery-and-Business-Analysis.md`, **Revision 2**, synchronised with Product Owner Review decisions D-01 to D-13 (24-Sep-2026). Where it differs from §6.4, §7.4 or §10.2 above, the WS13 baseline governs:
+
+- **§10.2 Phase 2 lifecycle — closed (OQ-004):** Confirmed → In Preparation → Ready to Travel → Travelling → Travel Complete → Post Travel → Journey Closed; supporting states On Hold, Cancelled (terminal); Superseded (terminal, D-13); Archived is an administrative state outside the lifecycle (D-08).
+- **§7.4 PD-JW-005 refined:** "Successfully Completed" is realised as **Journey Closed**; Cancelled unchanged; Archived is administrative, not a completion outcome; **Superseded** added for material replacement.
+- **OQ-017 closed (D-02):** confirmed travel dates are mandatory before a Journey is created.
+- **§6.4 FR count:** 31 approved FRs fully worded (`FR-JW-01`–`31`) plus `FR-JW-32`–`34` approved by D-11; see RTM §16.
+
+## 20. Vendor Baseline Note (additive — 26 September 2026, `EBC-R1.3-WS13-003A`, POD-05)
+
+Product Owner decision **POD-05**, taken after Architecture Validation (`EBC-R1.3-WS13-003`), sets the Release 1.3 Vendor baseline. This section is the **canonical source** for it and refines the §7.7 Vendor object. Where it differs from §7.7, this section governs. PD-VM-001 to PD-VM-005 are unchanged.
+
+- **Lifecycle:** Prospective → Active → Inactive, unchanged from §7.7. **Migration rule:** existing imported Vendors default to **Active** unless explicitly overridden.
+- **Minimum attributes:** Vendor Code; Vendor Name; Service Type; Destination(s) Served; Address; Phone Number; Email; Contracted Rates Link (a Google Drive link). These realise the §7.7 key fields Vendor ID (as Vendor Code), Organisation Name (as Vendor Name), Vendor Type / Service Categories (as Service Type), Geographic Coverage (as Destination(s) Served) and Contact Information (as Address, Phone Number and Email). Preferred Partner (PD-VM-003) is unchanged.
+- **Vendor Code:** a business identifier that is **system-generated, immutable and business-friendly**. **Vendor Name is editable.** Internal relationships continue to use the system identifier, never the Vendor Code or the name.
+- **Vendor Code policy (PD-D, approved 27 September 2026 during `EBC-R1.3-WS13-004A`):** format **`VEN-XXXXX`**; system-generated; **immutable after creation**; a **unique** business identifier; **independent of the Vendor Service Type** (the code carries no service meaning, and Service Type remains a separate business attribute).
+  - **Format clarified by the Product Owner (O-12, 27 September 2026):** `VEN-` followed by **five numeric digits**, **sequential** and **zero-padded**, starting at **`VEN-00001`** (then `VEN-00002`, …). Codes are system-generated, immutable and unique.
+- **Service Type:** the Vendor's service classification. Journey Vendor Bookings take their *service type* from this list (WS13 `FR-JW-15`). It is distinct from the Journey **Service Category** (WS13 `BR-043`), which classifies the traveller experience. The list of Service Type values is Product Owner content, still to be supplied.
+- **Initial vendor source:** the Product Owner's vendor spreadsheet.
+- **Release 1.3 limits:** no Vendor Creation UI. Native document attachments (e.g., rate cards stored in the Workspace) remain future scope; the Contracted Rates Link points to the external document.

@@ -133,3 +133,25 @@ With the completion of this Integration Architecture, the Architecture baseline 
 *Prepared by Archie (Technical Architect) on behalf of Team Satvi, per `EBC-R1.3-WS11-003`.*
 
 *The integration model described in this document has been reviewed and ratified by the Product Owner as part of the WS11 Architecture baseline. In particular, the separation of `geo_places` and `workspace_destination_profiles` is now an approved architectural decision (AD-WS11-006).*
+
+---
+
+## 8. WS13 Revision Note (`EBC-R1.3-WS13-003`, 26 September 2026)
+
+*Additive note. Sections above are unchanged.*
+
+- **Journey Planning ↔ Journey Workspace contract:** the conversion RPC v2 is the only Journey INSERT path (BR-012). It carries confirmed dates (CM-01), owner, destination, trip parameters and the accepted Proposal Version, and performs supersession for replacement planning records (CM-02) in the same transaction (AD-WS13-003).
+- **Scheduled checks:** the first implementation of §5's Vercel Cron pattern is a daily `journey-alerts` sweep (`app/api/workspace/cron/journey-alerts`, `CRON_SECRET` bearer, server-side `SUPABASE_SECRET_KEY`) (AD-WS13-005).
+- **Bootstrap read modules:** `lib/workspace/vendor-management` (active vendors, read-only) and `lib/workspace/settings` (configuration, read-only) are introduced under the Bootstrap Ownership Principle (`DEC-R1.3-013`), so `journey-workspace` never reads another module's tables directly (AD-WS11-004).
+- No new external service is introduced. Supabase Storage remains out of scope (D-10).
+
+### 8.1 Replacement contract (`EBC-R1.3-WS13-004A`, 27 September 2026)
+
+*Additive.*
+- **At material-change start** (`workspace_journey_start_material_change`, one transaction), Journey Workspace → Journey Planning:
+  - planning record with POD-06 defaults, pre-filled trip parameters, destination and Service Category;
+  - proposal Version 1 = the original's accepted snapshot;
+  - Operational Notes copied as `internal_comment`;
+  - one `requested` vendor quotation per Booked booking (no amount).
+- **At conversion** (conversion v2, replacement branch), Journey Planning → Journey Workspace: new Journey; Primary Operational Contact copied from the original; Journey Documents copied (Verified→Received, N/A→Outstanding); original marked Superseded.
+- The Decision dialog pre-fills the original's dates through `replaces_journey_id`. No exact-date field is added to Journey Planning.

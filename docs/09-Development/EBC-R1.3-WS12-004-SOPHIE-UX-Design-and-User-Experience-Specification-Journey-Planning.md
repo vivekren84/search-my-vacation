@@ -18,6 +18,15 @@
 | 1 | 19 September 2026 | Original UX Design Specification (this card) | Initial baseline — Sections 1-21 as approved, translating `EBC-R1.3-WS12-003` Revision 1 into UX. |
 | 2 | 22 September 2026 | `EBC-R1.3-WS12-012` — Journey Planning UX Refinement: Planning Parameters & Progressive Enrichment, following Product Owner Ratification (`EBC-R1.3-WS12-011B`) of the Minimum Planning Information gap (`EBC-R1.3-WS12-011A`) | Amends Section 7 (Screen Inventory - JP-03, JP-04 rows), Section 8.1 (Create interaction flow) and adds new Section 8.1a, Section 11 (Component Catalogue - two new rows), Section 14 (Validation Feedback - new Completion type), Section 18 (two new UX Design Decisions), Section 19 (one new UX Risk). No other section is changed by Revision 2. Superseded text is struck through and retained, never deleted, per this project's supersede-not-delete convention. Full rationale and field-level detail in `EBC-R1.3-WS12-012`, the companion decision record for this amendment. |
 
+> **Navigation note (27 September 2026, added under `EBC-R1.3-WS13-002` Revision 4a; a pointer only, not a revision of this document).** Journey Workspace (WS13) decisions add several Journey Planning touchpoints. They are specified in `docs/09-Development/EBC-R1.3-WS13-002-SOPHIE-Journey-Workspace-UX-Design-and-Experience-Specification.md`:
+> - the optional **Service Category** field ("Needed to confirm"): §36.2;
+> - the **Confirmed decision dialog**, with confirmed travel dates and the owner, nights, dates–nights and Service Category checks: §36.3;
+> - the **replacement planning record** banner and the "Pre-filled / Carried / Copied from JRN-…" labels: §36.4;
+> - non-blocking guidance on the **carried Version 1 proposal**: §36.6.
+>
+> This document's text, revisions and approval status are unchanged.
+
+
 ---
 
 ## 0. Repository Readiness Check (Mandatory — Project Instructions §14/§15)

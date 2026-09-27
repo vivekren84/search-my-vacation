@@ -24,6 +24,9 @@ This inventory intentionally represents logical Workspace screens rather than im
 
 ## 2. Dashboard
 
+> **WS13 revision (EBC-R1.3-WS13-002, 24-Sep-2026):** The Dashboard's Quick Action "Create Journey" is removed (D-09, CM-03) and DASH-01/02 become the Journey Workspace Dashboard. See *WS13 Revision* at the end of this document.
+
+
 | ID | Screen | Purpose | Primary User | Major Interactions | Navigation Relationships |
 |---|---|---|---|---|---|
 | DASH-01 | Dashboard (My Work) | Default landing screen; business-first summary of what needs the current user's attention today. Acts as the Workspace User's operational home and primary decision-support surface. | Every Workspace User | Toggle to Team view; claim an unclaimed item directly from a card; open any card's underlying record | Entry point from login; links out to any Journey Planning Record, Journey, Vendor Confirmation, Task or Follow-up a card summarises |
@@ -44,6 +47,9 @@ This inventory intentionally represents logical Workspace screens rather than im
 | JP-09 | Journey Planning Record — History | Full stage-transition and audit history | Any Workspace User (view) | None (read-only) | Back to JP-02 |
 
 ## 4. Journey Workspace
+
+> **WS13 revision (EBC-R1.3-WS13-002, 24-Sep-2026):** JW-01 has no claim step (Journeys arrive owned, D-03); JW-04 is renamed **Vendor Bookings** (D-07); JW-05 **Readiness**; JW-07 **Document Readiness** (no upload, D-10); new logical screens JW-09 to JW-17 are added. See *WS13 Revision* at the end of this document.
+
 
 | ID | Screen | Purpose | Primary User | Major Interactions | Navigation Relationships |
 |---|---|---|---|---|---|
@@ -151,3 +157,68 @@ Every screen within the Journey Workspace should support the following principle
 *Reviewed by the Product Owner as part of the Release 1.3 UX Architecture Review.*
 *This document completes the Release 1.3 UX Architecture package and provides the structural screen inventory that will guide Solution Architecture, Engineering planning and future low-fidelity wireframing.*
 *Status: Approved.*
+
+---
+
+## WS13 Revision — EBC-R1.3-WS13-002 (24 September 2026)
+
+*Additive revision by Sophie (UX). The original text above is kept unchanged, following the project's supersede-not-delete convention. Where this section differs, it governs for Journey Workspace. Source: `docs/09-Development/EBC-R1.3-WS13-002-SOPHIE-Journey-Workspace-UX-Design-and-Experience-Specification.md`, built on the frozen product baseline `EBC-R1.3-WS13-001` Revision 2 (D-01 to D-13).*
+
+### A. Dashboard (DASH-01 / DASH-02)
+
+| Change | Detail |
+|---|---|
+| Purpose | Operational management view (D-09): Active Journeys, Journey Planning (Active Leads), Today's Tasks, Upcoming Departures, Pending Vendor Bookings, Payments Due (Payment follow-ups, I-01), Operational Alerts, Recent Activity |
+| Quick Actions | "Create Journey" removed (CM-03) and "My Work" removed (UX-01, Product Owner review 26-Sep-2026). Remaining: New Lead, Add Traveller, New Vendor (ratified order kept) |
+| Interactions | "Claim an unclaimed item directly from a card" no longer applies to Journeys (none are unclaimed); still applies to Journey Planning records |
+
+### B. Journey Workspace screens JW-01 to JW-08 (revised)
+
+| ID | Revised name | Change |
+|---|---|---|
+| JW-01 | Active Journeys | Summary strip (FR-JW-34); owner filter Mine / named user; **no claim, no create**. "From: Journey Creation flow" now means Journeys appear automatically after Journey Planning conversion. |
+| JW-02 | Journey — Header and Overview | Sticky header with Journey Owner, **Primary Operational Contact** and Travellers shown separately (D-12), seven-stage lifecycle stepper (D-01), primary action, alert banner |
+| JW-03 | Journey — Itinerary | Read-only accepted Proposal Version snapshot. "Request an itinerary change (routes to Itinerary Studio)" is not offered in Release 1.3; operational changes go to JW-09, material changes to JW-13 |
+| JW-04 | Journey — **Vendor Bookings** (was Vendor Confirmations) | Booking lifecycle Draft → Requested → Pending Information → Confirmed → Booked; Cancelled (D-07) |
+| JW-05 | Journey — **Readiness** | Configuration-driven Readiness Template (D-04), four categories, derived Not Ready / At Risk / Ready |
+| JW-06 | Journey — Tasks & Follow-ups | Categories Operational, Traveller follow-up, Payment (D-05, I-01) |
+| JW-07 | Journey — **Documents (Document Readiness)** | Status, external reference, external link, notes. **No upload** (D-10); OQ-014 resolved for Journey Workspace |
+| JW-08 | Journey — History (Journey Timeline) | Adds supersession pin, POC changes, booking transitions, archive events (FR-JW-30) |
+
+### C. New logical screens
+
+| ID | Screen | Realised as |
+|---|---|---|
+| JW-09 | Journey — Activity & Changes (communications, notes, Change Records) | Tab |
+| JW-10 | Search & Filters | Control on JW-01 / JW-11 |
+| JW-11 | Closed & Archived Journeys | Page |
+| JW-12 | Lifecycle action dialogs | Dialogs |
+| JW-13 | Material change (replacement path) | Dialog + On Hold state |
+| JW-14 | Archive ~~/ Unarchive~~ (Administrator) — **Rev 4:** no Unarchive in Release 1.3 | Dialog |
+| JW-15 | Primary Operational Contact editor | Side panel |
+| JW-16 | Vendor Booking detail | Drawer |
+| JW-17 | Assign / Reassign and Legacy adoption | Dialog / panel |
+
+### D. Screen count
+
+Journey Workspace: 8 → **17** logical screens. Workspace total: 43 → **52**. VM-04 "Vendor Confirmations Queue" is read as the cross-Journey view of Vendor Bookings in Requested or Pending Information (FR-JW-17); its relabel belongs to WS16.
+
+### Revision 2 update (26-Sep-2026, Product Owner review of WS13-002)
+
+- UX-01: Dashboard Quick Actions are New Lead, Add Traveller, New Vendor.
+- UX-03: each action appears once per operational context (e.g. *View readiness* only once on JW-02).
+- UX-04: the terminal state **Journey Closed** is shown to Workspace Users as **Completed** (label only; lifecycle unchanged). JW-11 outcome filter: Completed / Cancelled / Superseded.
+- UX-05: JW-04 distinguishes **Confirmed** (outline pill) from **Booked** (solid pill + reference).
+- UX-06: task category chips carry icons (Operational, Payment, Traveller follow-up).
+- UX-07: JW-13 primary button reads **Create Replacement Journey**.
+
+### Revision 4 update (27-Sep-2026, WS13 UX synchronisation UXA-01 to UXA-06)
+
+*Alignment with WS13-001 Rev 3 (POD-01–08, PD-A–E, O-A2–O-A5) and WS13-004A. Detail: `EBC-R1.3-WS13-002` §36. No workflow redesign.*
+
+- **JW-14 Archive:** irreversible in Release 1.3 (POD-08, PD-E). Reason required; acknowledgement checkbox for Journeys that are not Completed, Cancelled or Superseded. Archived Journeys are read-only, viewable and searchable.
+- **JW-17 adoption panel:** adds a required Service Category with no pre-selection (PD-C, BR-036/043).
+- **JW-02 header:** Service Category chip, editable by the owner or an Administrator, with a History entry (POD-07).
+- **JW-07 Documents:** Document Type picker; replacement Journeys show "Carried from JRN-…, re-verify" and "Review required" (BR-046).
+- **JW-09 Change Record:** Change Category picker (POD-04). **JW-04:** "Service type" and Vendor Code in the vendor picker (I-06, PD-D).
+- **Journey Planning touchpoints (WS13-driven, WS12 documents unchanged):** JP-03/JP-04 optional Service Category ("Needed to confirm"); JP-13 Confirmed dialog with confirmed dates and the owner, nights, dates–nights and Service Category checks; replacement record banner and provenance labels; guidance on the carried Version 1 proposal (BR-047, non-blocking). Wireframe: `mockups/EBC-R1.3-WS13-002-WF-08-Replacement-Provenance-Service-Category-Archive.png`.

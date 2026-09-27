@@ -4,7 +4,7 @@
 
 **Owner:** Search My Vacation — Product & Experience
 
-**Last updated:** 31 August 2026
+**Last updated:** 26 September 2026
 
 This index identifies the canonical repository location for the specifications that govern the current Search My Vacation product and EBC delivery workflow. Files outside these paths are not authoritative unless a later approved decision explicitly replaces them.
 
@@ -96,6 +96,7 @@ This index identifies the canonical repository location for the specifications t
 | External Integration Definition of Done | `docs/30-Governance/External-Integration-Definition-of-Done.md` | Standard for when an external-provider integration is considered done |
 | Release 1.2 Lessons Learned | `docs/40-Retrospectives/Release-1.2-Lessons-Learned.md` | Retrospective — currently scoped to Workstream 5's MSG91/DLT onboarding experience, not a general Release 1.2 retrospective |
 | SMS/OTP Operations Runbook | `docs/50-Operations/SMS-OTP-Operations-Runbook.md` | Operational runbook for the Journey Passport OTP/SMS integration |
+| Product Evolution Backlog | `docs/10-Backlog/PRODUCT-EVOLUTION-BACKLOG.md` | Register of Product Owner-approved future capabilities not yet planned into any release (`PEB-0##`), e.g. `PEB-001` Journey Amendment and `PEB-008` Traveller Relationship Timeline. Governance rules are in the document itself. |
 
 ## Journey Director Release 1 Architecture
 

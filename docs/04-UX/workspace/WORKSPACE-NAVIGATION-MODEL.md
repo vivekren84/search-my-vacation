@@ -101,6 +101,9 @@ On traveller acceptance, the Journey Planning Record converts to a Journey (BR-0
 
 ### 4.5 Managing Active Journeys
 
+> **WS13 revision (EBC-R1.3-WS13-002, 24-Sep-2026):** Journeys no longer use a claim interaction: they arrive owned by the Journey Planning owner (D-03). Revised tab set and text in *WS13 Revision* at the end.
+
+
 Journey Workspace's Active Journeys queue (FR-WS-019) uses the same claim/ownership interaction as Journey Planning. The contextual tab bar (Overview, Itinerary, Vendor Confirmations, Operational Readiness, Tasks & Follow-ups, Documents, History) supports the day-to-day operational work PO-REVIEW-04 approved: booking coordination, traveller servicing, vendor coordination, operational readiness tracking.
 
 ### 4.6 Operational Awareness
@@ -110,6 +113,9 @@ Operational awareness should remain proactive rather than reactive.
 Workspace Users should not be required to navigate through multiple modules to determine whether action is required. The Workspace should surface important operational conditions at the earliest appropriate moment while avoiding unnecessary interruptions.
 
 ### 4.7 Completing Work
+
+> **WS13 revision (EBC-R1.3-WS13-002, 24-Sep-2026):** Journey outcomes are Journey Closed, Cancelled and Superseded; Archived is administrative (D-01, D-08, D-13). See *WS13 Revision*.
+
 
 A Journey Planning Record closing (Confirmed/Lost/Archived) or a Journey concluding (Successfully Completed/Cancelled/Archived) is a deliberate, owner-driven action, never an automatic timeout. On completion, the record leaves the active queue but remains fully reachable (Section 3 above), and — for a Successfully Completed Journey — Itinerary Studio's Learning Repository (PD-IS-005) becomes the natural next-navigation point for capturing operational learnings, surfaced as a suggested action rather than a forced step.
 
@@ -140,9 +146,35 @@ Every navigation decision should reinforce the feeling that the Workspace is a t
 
 ## 6. Open Items Carried From Discovery
 
+> **WS13 revision (EBC-R1.3-WS13-002, 24-Sep-2026):** The Phase 2 stage-badge open item is **closed**: the Product Owner approved the D-01 lifecycle. See *WS13 Revision*.
+
+
 - Role-based navigation-item visibility (which items or actions are Administrator-only) is marked **Role TBC** pending OQ-001, and applies to: Vendor lifecycle changes, Destination Profile approval, Workspace Configuration, user activation/deactivation, Operational Queue configuration, Master Itinerary promotion (PD-IS-008), Dashboard's Team-filter (FR-DASH-06, itself still Proposed).
 - Phase 2 (Journey Workspace) stage-badge granularity in the contextual tab bar's History view reflects the illustrative, not-yet-approved six-stage model (Discovery A-UX-03) until Product Owner confirmation.
 
 ---
 
 *Prepared by Sophie, UX, UI and Frontend Experience Specialist, on behalf of Team Satvi, per EBC-R1.3-WS4-001.*
+
+---
+
+## WS13 Revision — EBC-R1.3-WS13-002 (24 September 2026)
+
+*Additive revision by Sophie (UX). The original text above is kept unchanged, following the project's supersede-not-delete convention. Where this section differs, it governs for Journey Workspace. Source: `docs/09-Development/EBC-R1.3-WS13-002-SOPHIE-Journey-Workspace-UX-Design-and-Experience-Specification.md`, built on the frozen product baseline `EBC-R1.3-WS13-001` Revision 2 (D-01 to D-13).*
+
+### §4.5 Managing Active Journeys (revised)
+
+Journey Workspace's Active Journeys list opens on the viewer's own Journeys (owner filter "Mine"), sorted by departure date, with a summary strip of stage and risk counts. Every Journey arrives owned (D-03); there is no unclaimed pool and no claim action. Owners may assign their own Journey; Administrators may reassign any Journey before a terminal outcome. The contextual tab bar is: Overview · Itinerary · Vendor Bookings · Readiness · Documents · Tasks & Follow-ups · Activity & Changes · History.
+
+### §4.7 Completing Work (revised for Journeys)
+
+A Journey moves Travel Complete → Post Travel → **Journey Closed** by deliberate owner actions. Cancelled and Superseded are the other terminal outcomes. Archiving is a separate administrative action, not a way of completing work. The learning-capture suggestion (Itinerary Studio) is not offered in Release 1.3 because Itinerary Studio is not built.
+
+### §6 Open Items — status
+
+- Phase 2 stage granularity: **closed.** Approved lifecycle (D-01): Confirmed → In Preparation → Ready to Travel → Travelling → Travel Complete → Post Travel → Journey Closed; On Hold overlay; Cancelled and Superseded terminal; Archived administrative.
+- Role TBC items (OQ-001) remain open; the Dashboard Team scope stays Role TBC.
+
+### Revision 2 update (26-Sep-2026, Product Owner review of WS13-002)
+
+- UX-04: the terminal state **Journey Closed** is presented to Workspace Users with the label **Completed**. Lifecycle, business rules and product terminology are unchanged; references above to Journey Closed name the state.

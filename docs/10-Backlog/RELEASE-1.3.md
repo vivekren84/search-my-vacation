@@ -4,6 +4,25 @@
 
 ---
 
+Current Active Workstream
+
+WS13 – Journey Workspace
+
+Status:
+Ready to Commence
+
+Previous Workstream:
+WS12 – Complete
+
+Next Planned Workstreams
+
+WS14 Traveller Hub
+WS15 Itinerary Studio
+WS16 Vendor Management
+WS17 Destination Intelligence
+
+---
+
 ## Document Information
 
 | Item | Value |

@@ -199,3 +199,23 @@ With these conceptual boundaries established, the subsequent Data Architecture d
 
 *Prepared by Archie (Technical Architect) on behalf of Team Satvi, per `EBC-R1.3-WS11-003`.*
 *Every entity above traces to a named Product Specification Business Object, except `WorkspaceUser` (§2.12), which is disclosed explicitly as an architecture-introduced entity required to implement Approved ownership and role capabilities.*
+
+---
+
+## 7. WS13 Revision Note (`EBC-R1.3-WS13-003`, 26 September 2026)
+
+*Additive note following the supersede-not-delete convention. §2.4 and §3 above are retained as written for traceability.*
+
+- **§2.4 Journey: ownership superseded by D-03.** A Journey is **owned at creation** by the Journey Planning record's owner and is never unassigned. The sentence "the new Journey is created unclaimed by default" no longer applies.
+- **§2.4 Journey: lifecycle superseded by D-01.** The flexible `operational_stage` field is replaced by the approved seven-stage lifecycle (Confirmed → … → Journey Closed), with Cancelled and Superseded as terminal outcomes and On Hold and Archived as overlays (AD-WS13-001). "Completed" is a UX label for `journey_closed` only.
+- **§3 Journey aggregate children, renamed per the WS13 baseline:** Vendor Booking (was "Vendor Confirmation", D-07); Readiness Item with a Readiness Template (was "Operational Readiness item", D-04); Document Requirement (metadata only, D-10); Change Record (D-06); Primary Operational Contact (D-12); Journey Activity; Tasks/Follow-ups (shared).
+- **New relationship:** replacement Journey → `supersedes_journey_id` → original Journey (D-13); Journey Planning Record → `replaces_journey_id` → held Journey (CM-02).
+- Full detail: `docs/09-Development/EBC-R1.3-WS13-003-…-Architecture-Validation-and-Solution-Alignment.md` §4.1, §6.
+
+### 7.1 Alignment note (`EBC-R1.3-WS13-004A`, 27 September 2026)
+
+*Additive.*
+- **Journey** gains one primary **Service Category** (POD-02/07). Legacy Journeys may remain unclassified until explicitly classified (PD-C).
+- **Journey Document** references a **Document Type** (one Document Type to many Journey Documents, POD-03).
+- **Archived** Journeys are read-only, with no restoration in Release 1.3 (POD-08, PD-E).
+- A **Replacement Journey** inherits operational context from the original (PD-B). The planning record is pre-filled with trip parameters, destination, Service Category, a proposal Version 1 copied from the accepted snapshot, carried notes and vendor-quotation baselines. At conversion, the contact and Journey Documents are copied. The original aggregate is never modified beyond its hold and supersession fields (WS13-004A §4).

@@ -113,6 +113,9 @@ Persistent across every screen (per the UX Design Brief's Consistency principle,
 
 ## 6. Contextual Navigation
 
+> **WS13 revision (EBC-R1.3-WS13-002, 24-Sep-2026):** The Journey tab set is revised for Journey Workspace. See *WS13 Revision* at the end of this document.
+
+
 Within a single Journey Planning Record or Journey, a consistent contextual tab set applies (exact tab set finalised in the Screen Inventory), reflecting the object's own composition in the Specification:
 
 **Journey Planning Record (§7.3):** Overview · Requirements · Proposal Versions · Vendor Quotations · Discovery Notes/Activities · Tasks & Follow-ups · History
@@ -137,6 +140,9 @@ Both objects share the same **History** tab pattern (full stage-transition histo
 There is no traveller-facing entry point: the Workspace has no public surface (Specification §13, Assumption 1, Confirmed).
 
 ## 8. Exit Points and Cross-Navigation
+
+> **WS13 revision (EBC-R1.3-WS13-002, 24-Sep-2026):** Journey outcomes are now Journey Closed, Cancelled and **Superseded**; Archived is an administrative state, not an outcome (D-01, D-08, D-13). See *WS13 Revision* at the end.
+
 
 - **Journey Planning Record → Journey.** The single most important cross-navigation event in the Workspace: on traveller acceptance, a Journey Planning Record converts one-way into a Journey (BR-012/PD-JW-001). This is not a navigation link a user follows; it is a state transition the Workspace performs, after which the record's home moves from Journey Planning's queue to Journey Workspace's Active Journeys queue. The Interaction Flows document specifies this transition's user-facing moment in full.
 - **Journey Planning Record → Closed (Lost/Archived), without a Journey.** Exits the active Journey Planning queue but remains reachable from Traveller Hub and search — never deleted (BR-007/PD-JP-007).
@@ -168,3 +174,33 @@ There is no traveller-facing entry point: the Workspace has no public surface (S
 *Reviewed by the Product Owner as part of the Release 1.3 UX Architecture Review.*
 *This document establishes the Information Architecture baseline for Journey Workspace and forms the foundation for the Navigation Model, User Journeys, Interaction Flows and Screen Inventory.*
 *Status: Approved with Product Owner refinements.*
+
+---
+
+## WS13 Revision — EBC-R1.3-WS13-002 (24 September 2026)
+
+*Additive revision by Sophie (UX). The original text above is kept unchanged, following the project's supersede-not-delete convention. Where this section differs, it governs for Journey Workspace. Source: `docs/09-Development/EBC-R1.3-WS13-002-SOPHIE-Journey-Workspace-UX-Design-and-Experience-Specification.md`, built on the frozen product baseline `EBC-R1.3-WS13-001` Revision 2 (D-01 to D-13).*
+
+### §6 Contextual Navigation — Journey tab set (revised)
+
+**Journey:** Overview · Itinerary · **Vendor Bookings** · **Readiness** · Documents · Tasks & Follow-ups · **Activity & Changes** · History
+
+"Vendor Confirmations" becomes Vendor Bookings (D-07). "Operational Readiness" becomes Readiness. Activity & Changes is added for communications, Operational Notes and Change Records (FR-JW-13, 19, 20). The Journey Header (identity, Journey Owner, Primary Operational Contact, Travellers, lifecycle, primary action, alerts) sits above the tabs on every tab.
+
+### §8 Exit Points — Journey (revised)
+
+- **Journey → Journey Closed / Cancelled / Superseded.** Leaves Active Journeys; stays reachable from Closed & Archived Journeys (JW-11), search and Traveller Hub.
+- **Superseded** (D-13): the original Journey links forward to its replacement and the replacement links back. It is never presented as Cancelled.
+- **Archived** (D-08) is an administrative state applied by an Administrator at any time, with a reason. It hides the Journey from active views and never changes its stage or outcome.
+- **Material change** is a new cross-navigation: Journey (placed On Hold) → new, pre-filled Journey Planning record → on its confirmation, a replacement Journey.
+
+### Revision 2 update (26-Sep-2026, Product Owner review of WS13-002)
+
+- UX-04: the terminal state **Journey Closed** is presented to Workspace Users with the label **Completed**. Lifecycle, business rules and product terminology are unchanged; references above to Journey Closed name the state.
+
+### Revision 4 update (27-Sep-2026, WS13 UX synchronisation UXA-01 to UXA-06)
+
+*Alignment with WS13-001 Rev 3 (POD-01–08, PD-A–E, O-A2–O-A5) and WS13-004A. Detail: `EBC-R1.3-WS13-002` §36. No workflow redesign.*
+
+- **Archived** Journeys are read-only and cannot be restored in Release 1.3 (POD-08). The earlier note that archiving is reversible no longer applies to Journeys.
+- The Journey header carries the **Service Category** (POD-02/07) as identity context.

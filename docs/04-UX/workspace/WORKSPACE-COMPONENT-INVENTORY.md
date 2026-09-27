@@ -21,6 +21,9 @@ No file listed below changes its props, behaviour, or position in the component 
 
 ## 2. Inventory
 
+> **WS13 revision (EBC-R1.3-WS13-002, 24-Sep-2026):** Journey Workspace adds planned (not yet implemented) components and changes the `QuickActions` label list. See *WS13 Revision*.
+
+
 | Component | Path | Touched by this refinement? | Nature of change |
 |---|---|---|---|
 | `WorkspaceShell` | `web/components/workspace/layout/WorkspaceShell.tsx` | Yes | Background token swap only (`#F9FAFB` → `var(--color-cream)`); no structural change |
@@ -62,3 +65,27 @@ Every other component listed above changes only its internal JSX/class names —
 ---
 
 *Prepared by Sophie, UX, UI and Frontend Experience Specialist, on behalf of Team Satvi, per EBC-R1.3-WS11-011A.*
+
+---
+
+## WS13 Revision — EBC-R1.3-WS13-002 (24 September 2026)
+
+*Additive revision by Sophie (UX). The original text above is kept unchanged, following the project's supersede-not-delete convention. Where this section differs, it governs for Journey Workspace. Source: `docs/09-Development/EBC-R1.3-WS13-002-SOPHIE-Journey-Workspace-UX-Design-and-Experience-Specification.md`, built on the frozen product baseline `EBC-R1.3-WS13-001` Revision 2 (D-01 to D-13).*
+
+### Changes to existing components (planned, for WS13 Engineering)
+
+| Component | Change |
+|---|---|
+| `QuickActions` | Remove "Create Journey" (CM-03) and "My Work" (UX-01, 26-Sep-2026) from `WORKSPACE_QUICK_ACTIONS` |
+| `KpiGrid` / `KpiCard` | Live values; tile becomes a link; optional caption line |
+| `EmptyState`, `Toast` | Reused unchanged |
+
+### New components (planned; no new dependency, tokens only)
+
+Dashboard panel · Journey stage badge (extends the WS12 badge) · overlay chip (On Hold, Archived, legacy, archive eligible, vendor inactive) · lifecycle stepper (+ compact variant) · status banner · alert banner / alert row · people card (Journey Owner / Primary Operational Contact / Travellers) · readiness state chip and category card · booking row with mini-stepper · side panel (drawer) · task category chip with icon (UX-06: Operational, Payment, Traveller follow-up; inline SVG) · booking status pill (UX-05: outline Confirmed vs solid Booked) · segmented status control · quick-add row · summary strip · masked reference field.
+
+### Revision 4 update (27-Sep-2026, WS13 UX synchronisation UXA-01 to UXA-06)
+
+*Alignment with WS13-001 Rev 3 (POD-01–08, PD-A–E, O-A2–O-A5) and WS13-004A. Detail: `EBC-R1.3-WS13-002` §36. No workflow redesign.*
+
+Planned components (tokens only, no new dependency): provenance chip (Pre-filled / Carried / Copied from JRN-…); "Review required" chip; Service Category chip and picker dialog; archive acknowledgement row; Change Category picker; Decision dialog field-error summary.

@@ -207,3 +207,30 @@ Following Product Owner approval of the proposed architectural decisions recorde
 
 *Prepared by Archie (Technical Architect) on behalf of Team Satvi, per `EBC-R1.3-WS11-003`.*
 *Every decision marked "Proposed" above requires Product Owner and Archie sign-off before Rad begins implementation. Decisions marked "Confirmed" restate an already-Approved Product decision at the implementation level and carry no independent approval requirement of their own.*
+
+---
+
+## 8. WS13 Decisions — Journey Workspace (Proposed, `EBC-R1.3-WS13-003`, 26 September 2026)
+
+*Additive section. Nothing above is rewritten. Full reasoning, alternatives and evidence: `docs/09-Development/EBC-R1.3-WS13-003-ARCHIE-Journey-Workspace-Architecture-Validation-and-Solution-Alignment.md` §6.*
+
+| ID | Decision | Status |
+|---|---|---|
+| AD-WS13-001 | Journey lifecycle persistence: extend (never recreate) `workspace_journeys` with a `CHECK`-constrained `stage` (7 D-01 values, terminal success `journey_closed`), an orthogonal `outcome` (`cancelled` / `superseded`), an On Hold overlay (stage unchanged while held) and an Archive overlay. Owner is `on delete restrict`. The bootstrap `status` column is deprecated, not dropped. Legacy rows are adopted through a hybrid backfill plus Administrator completion (BR-036). Supersedes Domain Model §2.4 "flexible operational_stage" and "created unclaimed". | Proposed |
+| AD-WS13-002 | Journey lifecycle, ownership, hold, outcome, archive and multi-row operations are transactional, self-authorising `SECURITY DEFINER` RPCs with audit in the same transaction. Single-row child writes use RLS through `workspace_can_edit_journey()`. | Proposed |
+| AD-WS13-003 | Conversion RPC v2 (CM-01/CM-02): confirmed dates as parameters, in-function authorisation, owner required, carries owner, destination, trip parameters, accepted Proposal Version and initial POC; Journey reference `JRN-####` (OQ-024); supersession in the same transaction. Link stored once (`supersedes_journey_id`) plus `replaces_journey_id` on the planning record. The old 2-argument overload is dropped. | Proposed |
+| AD-WS13-004 | Operational state (readiness, booking and document counts, KPIs, archive eligibility, next action) is derived through one `security_invoker` summary view and one pure `derivations.ts`, never stored | Proposed |
+| AD-WS13-005 | Condition-keyed alerts: live derivation for display; notifications extended with `condition_key`, `resolved_at` and a unique active-condition index for delivery; reconciled on mutation and by a daily Vercel Cron (first implementation of AD-WS11-005); nullable audit actor for system events only | Proposed |
+| AD-WS13-006 | Database-backed `workspace_configuration` and Readiness Template tables (seeded defaults, no editing UI in Release 1.3); read-only bootstrap `settings` and `vendor-management` modules; `workspace_tasks.category`/`kind`; `workspace_vendors.lifecycle_state` | Proposed |
+| AD-WS13-007 | Workspace User directory (`workspace_user_directory()` SECURITY DEFINER), `display_name` and `deactivated_at` on `workspace_users`; deactivation, not deletion, is the user-exit path | Proposed |
+
+### 8.1 Alignment with post-architecture Product decisions (`EBC-R1.3-WS13-004A`, 27 September 2026)
+
+*Additive. **No new decision.** The existing AD-WS13 decisions are applied to the latest Product decisions. Detail: `EBC-R1.3-WS13-004A-ARCHIE-Architecture-Clarification-Note-Replacement-Journey-Mapping.md` and WS13-003 §15.*
+
+| AD | Alignment |
+|---|---|
+| AD-WS13-001 | Journey `service_category` (nullable only while `legacy_pending`, PD-C) |
+| AD-WS13-002 | `…_unarchive` withdrawn (POD-08, PD-E). `…_start_material_change` is the second sanctioned cross-aggregate transactional function, mirroring conversion. |
+| AD-WS13-003 | Conversion v2 blocks on missing owner, Service Category, nights or dates, and on a dates–nights mismatch (PD-A, POD-06). The replacement branch copies the Primary Operational Contact and Journey Documents (with verification reset). |
+| AD-WS13-006 | Vendor baseline plus `vendor_code` `VEN-XXXXX` (POD-05, PD-D); `change_category` list; Document Types; Vendor Service Types |

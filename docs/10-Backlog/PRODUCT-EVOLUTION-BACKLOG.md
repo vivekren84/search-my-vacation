@@ -25,6 +25,7 @@ Distinct from : RELEASE-1.3-BACKLOG.md (decisions/vision items already accepted 
 |---|---|---|---|
 | 1.0 | 19-Sep-2026 | Tiger | Initial establishment, per `EBC-R1.3-GOV-004`. Defines the Product Evolution Backlog (PEB) governance framework (purpose, definition, inclusion/exclusion criteria, lifecycle, relationship to existing registers, governance rules) and records an Initial Candidate List of eight items named in the originating EBC, reviewed against the current repository record. Seven are recorded as genuine candidates (none ratified); one (Traveller Timeline) is disclosed as already-approved Workspace Business Module scope and explicitly not added — see Section 8.2. `PEB-001` (Journey Amendment) additionally records a Product Owner decision issued directly within the originating EBC's own text. |
 | 1.1 | 21-Sep-2026 | Tiger | Cross-reference update only, per `EBC-R1.3-WS12-008`. The "Distinct from" table's "Technical debt" row (intro block and Section 2.1) now also names the newly-established `docs/10-Backlog/TECH-DEBT.md` register, alongside its existing `RELEASE-1.3-BACKLOG.md` §9 pointer. No inclusion/exclusion criterion, candidate item, or governance rule changed; the underlying principle (Product Evolution Items are module-scale business capabilities, never engineering-internal debt) is unchanged. Documentation only. |
+| 1.2 | 26-Sep-2026 | Arjun (at the Product Owner's direct instruction) | Added `PEB-008` — Traveller Relationship Timeline (new Section 8.3), raised by the Product Owner during the WS13 UX review (`EBC-R1.3-WS13-002`). `PEB-002` was already allocated (Corporate Journey Planning), so the next free identifier was used. Recorded as Ratified by the Product Owner, not scoped to any release. Its boundary with the already-approved Traveller Hub (WS14) "Traveller Timeline" capability (Section 8.2) is recorded in the entry. No other entry, criterion or governance rule changed. No Release 1.3 artefact, WS13 baseline, UX, Architecture or Engineering document was modified. Documentation only. |
 
 ---
 
@@ -230,6 +231,36 @@ Per this card's own instruction, the items below are **not** migrated automatica
 
 **Traveller Timeline — reviewed, not recorded as a Product Evolution candidate.**
 Named as an example in this EBC's own text, but `SMV-WORKSPACE-PRODUCT-SPECIFICATION-v2.0.md` §6.2 already records it as an **approved** Traveller Hub (WS14) capability — "approved but not yet drafted as FRs," tracked as Open Question OQ-018 in the Requirements Traceability Matrix. It is already-ratified, workstream-scoped Product content, not an unratified future-evolution idea, and including it here would misrepresent already-approved scope as merely "recommended." Not added to Section 8.1. This exclusion is disclosed here, per this register's own convention (Section 7) that a reviewed item's disposition is always recorded, never silently dropped — the same discipline `FUTURE-CONSIDERATIONS.md` §5.1 applies to its own closure reviews.
+
+
+### 8.3 Entries Added After Establishment
+
+**PEB-008 — Traveller Relationship Timeline**
+
+*Status:* **Ratified** — Product Owner direction, 26-Sep-2026. The Product Owner raised it during the WS13 Journey Workspace UX review (`EBC-R1.3-WS13-002`) and asked for it to be recorded here. The Product Owner's own labels are *Future Enhancement* and *Product Discovery Required*. No target release, priority or estimate is assigned, per Section 4.
+
+*Identifier note:* the Product Owner suggested `PEB-002`, but that identifier is already allocated (Corporate Journey Planning, Section 8.1). `PEB-008` is the next free identifier. No existing identifier was changed.
+
+*Description:* a timeline showing the complete relationship between Search My Vacation and a traveller over time, rather than individual journeys in isolation. It is intended to become the historical record of every interaction between Search My Vacation and a traveller. Illustrative lifecycle, as given by the Product Owner:
+
+```
+Lead → Journey Planning → Journey → Travel → Post Travel → Feedback → Referral → Repeat Traveller
+```
+
+*Objective:* allow Workspace Users to understand the complete customer relationship rather than viewing individual journeys in isolation.
+
+*Expected future capabilities (Product Owner's list, not yet analysed):* complete customer timeline; multiple journeys over time; repeat traveller visibility; referral relationships; feedback history; journey history; customer lifetime relationship; future analytics opportunities.
+
+*Release impact:* none on Release 1.3. It is not required for WS13, and it does not change the frozen WS13 Product Baseline or any Product, UX, Architecture or Engineering baseline.
+
+*Relationship and boundary, disclosed so the two items are not confused later:*
+
+- **Traveller Hub (WS14) "Traveller Timeline"** is already approved Workspace scope (`SMV-WORKSPACE-PRODUCT-SPECIFICATION-v2.0.md` §6.2; Section 8.2 above). It is a chronological view of a traveller's interactions and Journeys (UX `TH-03`), and remains WS14 scope. PEB-008 does not replace or re-scope it. PEB-008 is the broader, future evolution: the lifetime relationship view, including feedback history, referral relationships and analytics, none of which is in any approved Release 1.3 scope. The future Product Discovery for PEB-008 should start from whatever WS14 delivers for the Traveller Timeline and extend it, not duplicate it.
+- **Relationship Health scoring** was explicitly deferred out of Release 1.3 in the Traveller Hub review (Spec §6.2). Any "customer lifetime relationship" or "analytics" work under PEB-008 should consider that deferred item together with this one.
+- The **Journey Workspace** (WS13) and the Workspace Business Lifecycle already describe a "Future Traveller Relationship" loop: a completed Journey feeds the Traveller's history. PEB-008 would be the product capability that makes that loop visible over the whole relationship.
+- `docs/02-Product/PRODUCT-ROADMAP.md` names a "Travel Memories Timeline". That is a traveller-facing idea, whereas PEB-008 is Workspace-internal. They are recorded as related, not the same, for the future discovery to confirm.
+
+*Next step:* Product Discovery when a future release's delivery planning evaluates it (Section 4, "Candidate Release"). No analysis has been performed at this stage, as instructed.
 
 ---
 

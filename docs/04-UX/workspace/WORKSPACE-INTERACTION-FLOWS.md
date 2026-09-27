@@ -62,6 +62,9 @@ Each flow uses the notation: **[User Action]** → *(System Response)* → **[Us
 
 ## 4. Flow — Journey Creation
 
+> **WS13 revision (EBC-R1.3-WS13-002, 24-Sep-2026):** Steps 4, 6 and 7 are revised: confirmed travel dates are captured in Journey Planning before conversion (D-02), and the Journey arrives **owned** by the Journey Planning owner, with no claim step (D-03). See *WS13 Revision*.
+
+
 **Preconditions:** A Journey Planning Record's current Proposal Version has been accepted by the traveller.
 
 **Flow:**
@@ -90,6 +93,9 @@ This distinction is intentional and reflects the Product Owner's business rule t
 
 ## 5. Flow — Vendor Assignment
 
+> **WS13 revision (EBC-R1.3-WS13-002, 24-Sep-2026):** For Journey Workspace, "Vendor Confirmation" is now a **Vendor Booking** with its own lifecycle (D-07). See *WS13 Revision*.
+
+
 **Preconditions:** A confirmed Journey (Journey Workspace) requires a supplier booking, or a Journey Planning Record requires a commercial quotation from a supplier.
 
 **Flow (Journey Workspace — confirming a booking):**
@@ -110,6 +116,9 @@ This distinction is intentional and reflects the Product Owner's business rule t
 **Postconditions:** The Vendor Confirmation or Vendor Quotation is recorded and correctly attributed to the Journey or Journey Planning Record; Vendor lifecycle state (Active/Inactive) and Preferred Partner designation remain unaffected by the act of assignment (BR-016/PD-VM-003 — independent concerns).
 
 ## 6. Flow — Journey Completion
+
+> **WS13 revision (EBC-R1.3-WS13-002, 24-Sep-2026):** Outcomes are revised: Journey Closed (from Post Travel), Cancelled, Superseded; Archived is administrative (D-01, D-08, D-13). See *WS13 Revision*.
+
 
 **Preconditions:** A Journey in Journey Workspace has reached the point of operational closure.
 
@@ -153,3 +162,48 @@ The interaction flows within Journey Workspace are guided by the following princ
 ---
 
 *Prepared by Sophie, UX, UI and Frontend Experience Specialist, on behalf of Team Satvi, per EBC-R1.3-WS4-001.*
+
+---
+
+## WS13 Revision — EBC-R1.3-WS13-002 (24 September 2026)
+
+*Additive revision by Sophie (UX). The original text above is kept unchanged, following the project's supersede-not-delete convention. Where this section differs, it governs for Journey Workspace. Source: `docs/09-Development/EBC-R1.3-WS13-002-SOPHIE-Journey-Workspace-UX-Design-and-Experience-Specification.md`, built on the frozen product baseline `EBC-R1.3-WS13-001` Revision 2 (D-01 to D-13).*
+
+### §4 Journey Creation (revised steps)
+
+- **Step 1a (new):** the Workspace User records Confirmed Travel Start and End Dates in Journey Planning before recording the Confirmed decision (D-02, BR-027; CM-01, a Journey Planning change for Tiger to schedule).
+- **Step 4:** carries party, destination, **confirmed** dates, trip parameters, accepted Proposal Version, and an initial **Primary Operational Contact** from the party (I-04).
+- **Step 6:** the new Journey enters **Confirmed**, owned by the Journey Planning owner at conversion, and the owner receives "Journey confirmed" (FR-JW-07). *Supersedes the original "unclaimed by default".*
+- **Step 7:** removed (no claim step).
+- **Replacement variant (D-13):** when the Journey Planning record was created by a material change, its conversion also marks the original Journey **Superseded** and links the two.
+
+### §5 Vendor Assignment — Journey Workspace (revised)
+
+1. Open the Journey's **Vendor Bookings** tab → Add booking (Active vendors only) → saved as **Draft**.
+2. Mark requested → optionally Pending Information (reason) → Information supplied → Mark confirmed → Mark booked (booking reference required).
+3. Cancel at any non-terminal status with a reason; bookings are never deleted and there is no "Amended" status.
+4. An operational change affecting a Confirmed or Booked booking returns it to **Requested** until reconfirmed (BR-037).
+5. Bookings in Requested or Pending Information feed Pending Vendor Confirmations (KPI) and the global queue.
+
+### §6 Journey Completion (revised)
+
+1. Owner moves Travelling → Travel Complete (on/after end date) → Post Travel → **Mark as Completed** → Journey Closed (terminal; shown to users as Completed).
+2. Cancelled (reason; allowed from Confirmed to Travelling or On Hold) offers vendor cancellation tasks for open bookings.
+3. Superseded is set only by the replacement path, never chosen in a closing dialog.
+4. Archive is an Administrator action at any time, with a reason; it is never a completion outcome.
+5. The Itinerary Studio learning offer is deferred (module not built).
+
+### Revision 2 update (26-Sep-2026, Product Owner review of WS13-002)
+
+- UX-04: the terminal state **Journey Closed** is presented to Workspace Users with the label **Completed**. Lifecycle, business rules and product terminology are unchanged; references above to Journey Closed name the state.
+- UX-07: the material-change action's button reads **Create Replacement Journey**.
+- UX-05: in Vendor Assignment, Confirmed and Booked have distinct visual treatments (outline vs solid).
+- UX-08 (final Product Owner review, 26-Sep-2026): the Post Travel action is labelled **Mark as Completed** (previously "Close Journey"), matching the other lifecycle actions.
+
+### Revision 4 update (27-Sep-2026, WS13 UX synchronisation UXA-01 to UXA-06)
+
+*Alignment with WS13-001 Rev 3 (POD-01–08, PD-A–E, O-A2–O-A5) and WS13-004A. Detail: `EBC-R1.3-WS13-002` §36. No workflow redesign.*
+
+- **Journey Creation, step 1a (revised):** the Confirmed decision takes confirmed start and end dates. Conversion is blocked, with field-level messages, when the owner is missing, when Number of Nights is missing or doesn't match the dates, or when no Service Category is set (PD-A, POD-06, POD-07). Nothing is auto-corrected.
+- **Material change / replacement:** the replacement planning record opens with values "Pre-filled from JRN-…". It carries Proposal Version 1 ("Carried from JRN-…", with non-blocking review guidance), copied notes and a quotation baseline from Booked bookings with Active vendors. At conversion, the Primary Operational Contact and Journey Documents are carried; documents show "Review required" where Verified or N/A was reset (BR-046).
+- **Archive:** irreversible in Release 1.3; the Journey becomes read-only. There is no Unarchive flow (POD-08).
