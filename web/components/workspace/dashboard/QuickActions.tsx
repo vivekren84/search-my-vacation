@@ -14,12 +14,16 @@
 // Lead") now renders as the single primary, amber-filled action —
 // reflecting the approved "Inquiry First" design principle — with the
 // remaining four as warm-outline secondary actions.
+//
+// EBC-R1.3-WS13-005 Phase A (CM-03): "Create Journey" removed (D-09,
+// FR-JW-05 AC1: a Journey is created only by Journey Planning conversion)
+// and "My Work" removed (WS13-002 UX-01: the Dashboard itself is the
+// user's work). The remaining three keep their ratified labels and order,
+// with "New Lead" still the single primary action (WS13-002 §6.5).
 const WORKSPACE_QUICK_ACTIONS: readonly string[] = [
   "New Lead",
-  "Create Journey",
   "Add Traveller",
   "New Vendor",
-  "My Work",
 ];
 
 export default function QuickActions() {
