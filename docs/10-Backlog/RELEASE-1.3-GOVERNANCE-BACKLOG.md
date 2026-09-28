@@ -77,6 +77,50 @@ Each recommendation below follows the same rationale: Release 1.2's MSG91/DLT ex
 
 **Owner (proposed):** Tiger.
 
+### 2.7 Align Project Instructions with the Engineering Governance Principles
+
+*Added 27-Sep-2026 by `EBC-R1.3-GOV-005`, at the Product Owner's direction (`DEC-R1.3-018`, decision D-5). Unlike §2.1–§2.6, this item does not arise from `EBC-R1.2-GOV-001`.*
+
+**Recommendation:** Update the Claude Project Instructions so they match the Engineering Governance Principles in `docs/15-AI-Operating-Model/CLAUDE.md` §7. At minimum, §26 (Git and Branch Safety) currently recommends `feature/<ebc-number>-<short-description>` and `fix/<short-description>` branches; it should instead point to the release branch (`release/rX.Y`, EP-001), hotfix branches (EP-002) and the merge criteria (EP-004). Also review §12 (Standard Delivery Lifecycle) and §14–§15 (workspace and session checks) for a reference to the Engineering Ready Baseline and the frozen-baseline change process (EP-003, EP-005, EP-007). Because Project Instructions rank above the Handbook, the Handbook stays the single detailed source and the Instructions should link to it rather than restate it.
+
+**Constraint:** Do not modify the Project Instructions during Release 1.3.
+
+**Due:** Before Release 1.4 planning begins.
+
+**Priority (recommended, not authorised):** High — until aligned, the two sources give different branch guidance.
+
+**Owner (proposed):** Tiger (draft), Vivek (approval — the Project Instructions are maintained by the Product Owner).
+
+### 2.8 Engineering phase approval lifecycle and report sections
+
+*Added 28-Sep-2026 by `EBC-R1.3-WS13-005` (Phase A Delivery Closure). Does not arise from `EBC-R1.2-GOV-001`.*
+
+**Recommendation:** During the post–Release 1.3 Governance Documentation Review, propose adding to the Engineering Handbook (`docs/15-AI-Operating-Model/CLAUDE.md` §7) the phase approval lifecycle validated in WS13 Phase A: **Engineering Completion → QA Validation → Product Owner Acceptance → Delivery Closure → Next Phase Authorisation**. Include the report sections adopted in Phase A: Engineering Completion Report — Engineering Deviations, Phase Readiness, Deployment Considerations; QA Completion Report — Baseline Conformance, QA Coverage Summary; Product Owner Acceptance recorded as a governance decision without a separate EBC; Delivery Closure as the final gate before the next phase. Consider combining with §2.7 so the Project Instructions and Handbook are updated together.
+
+**Constraint:** Applies within Release 1.3 as working practice; the Handbook is changed only through the review (EP-005, Handbook §19).
+
+**Due:** Post–Release 1.3 Governance Documentation Review, before Release 1.4 planning.
+
+**Priority (recommended, not authorised):** Medium.
+
+**Owner (proposed):** Tiger (draft), Vivek (approval).
+
+### 2.9 Release 1.4 architectural review — Preview and Production environment isolation
+
+*Added 28-Sep-2026 by `EBC-R1.3-WS13-005`, at the Product Owner's direction (`DEC-R1.3-020`, C4). Does not arise from `EBC-R1.2-GOV-001`.*
+
+**Context:** In Release 1.3, Preview and Production intentionally share one Supabase project and database. Every migration applied for Preview therefore also changes Production, and QA data created on Preview lives in the Production database.
+
+**Recommendation:** As part of Release 1.4 planning, Archie evaluates whether Preview and Production should move to separate Supabase projects for proper environment isolation. The review should cover migration workflow and parity, data seeding and test identities, environment-variable contracts in Vercel (Production vs Preview), authentication settings, cost, and the migration path from the shared database.
+
+**Nature:** A planned architectural review, **not** a committed implementation decision. Any resulting change needs an ADR and Product Owner approval.
+
+**Due:** Release 1.4 planning.
+
+**Priority (recommended, not authorised):** High — the shared database is the main environment risk carried by Release 1.3.
+
+**Owner (proposed):** Archie (review), Tiger (scheduling), Vivek (decision).
+
 ---
 
 ## 3. How to Use This Backlog

@@ -33,6 +33,7 @@ Distinct from : RELEASE-1.3-BACKLOG.md (the product/UX/engineering-technical-deb
 | 1.8 | 16-Sep-2026 | Tiger | Workstream Closure Review Log entry for Workstream 11 (SMV Workspace — Product Ratification Closure), per `EBC-R1.3-WS11-005` Product Ratification & Release Governance Synchronisation. Outcome: None identified — the two architectural decisions and the Open Question this ratification resolved (AD-WS11-002, AD-WS11-006, OQ-001) were already correctly tracked in this register's own §3.1/§4/§5.1 entries and in the Architecture package's own register, not as FCR candidates; no new deferred item was named by the ratification itself. This log entry does not edit the prior `EBC-R1.3-WS11-004` row (15-Sep-2026) above, which still describes AD-WS11-002/AD-WS11-006 as Proposed and OQ-001 as open — that row is a historical record of that review's own findings at the time, left unedited per this register's append-only convention (§5, "no entry below is assigned a target release... this register is a historical record as much as a live one"). |
 | 1.9 | 18-Sep-2026 | Tiger | Workstream Closure Review Log entry for Workstream 11 (SMV Workspace — Workspace Foundation Completion Closure), per `EBC-R1.3-WS11-013` Governance & Documentation Synchronisation. Outcome: **Additions made** — `FCR-024` (§3.4 Engineering): the `guard.ts` fallback redirect not preserving `redirectTo`, named as a Future Consideration in `EBC-R1.3-WS11-011F` §13 and reaffirmed unaffected in `EBC-R1.3-WS11-011H` §14. `FCR-025` (§3.3 UX): the reserved navigation icon slot (WS11A-11), classified "Future Consideration" by Archie's own Architecture Review (`EBC-R1.3-WS11-011B` §14) and never adopted. Updated the Traceability Matrix (§4) and this Workstream Closure Review Log (§5.1) accordingly. No existing entry changed; no scope, priority or estimate introduced. Not logged as Future Considerations, per this card's own instruction to record only intentionally-deferred items: the 27 QA "Not Tested" items recorded across `EBC-R1.3-WS11-011E`/`-011I` (Password Reset end-to-end, `privilege_user` role coverage, remaining placeholder-module clicks, multi-tab/keyboard-only negative cases) — these are pending validation coverage, not deferred product or engineering enhancements, and remain Keerthi's own recommended follow-up QA rather than register material. |
 | 1.10 | 18-Sep-2026 | Tiger | Workstream Closure Review Log entry for Workstream 11 (SMV Workspace — Governance Transition / Foundation Closure), per `EBC-R1.3-WS11-015` Workspace Foundation Governance Transition & Release Synchronisation (closing out the Product Owner's Product Acceptance decision recorded in `EBC-R1.3-WS11-014`: **Accepted with Conditions**). Outcome: **None identified** — reviewed; the two outstanding conditions (committing the WS11-007→011H code change set and the six outstanding Rad/Keerthi reports to `docs/09-Development/`) are repository-governance and milestone-completion items, already tracked via `DEC-R1.3-011` in `RELEASE-1.3.md`, not intentionally-deferred product or engineering enhancements within this register's own §1 scope. No new FCR entry added. This closure also formally redefines WS11's scope as Foundation-only; the Workspace business modules are out of WS11's closed scope and will be tracked under future, separately-numbered Workspace workstream(s) once approved — none are created or renumbered by this update. |
+| 1.11 | 28-Sep-2026 | Tiger | Per `EBC-R1.3-WS13-005` Phase A Delivery Closure: added `FCR-026` (PO-OBS-01, Dashboard KPI iconography) and `FCR-027` (OBS-QA-PA-01, header overflow at narrow widths) to §3.3, traceability rows (§4) and a Workstream Closure Review Log entry (§5.1). |
 
 ---
 
@@ -205,6 +206,22 @@ No entry below is assigned a target release. Per this register's own establishin
 *Suggested Review Timing:* Alongside `FCR-023`, when a UI component/icon library is next evaluated for the Workspace.
 *Status:* Deferred.
 
+**FCR-026 — Dashboard KPI iconography differs from the approved UX mockups (PO-OBS-01)**
+*Description:* During Phase A acceptance the Product Owner noted that the Workspace Dashboard KPI icons differ from the iconography in the approved UX mockups (`EBC-R1.3-WS13-002` wireframes) and prefers the mockup style. Not a Phase A defect or regression; outside Phase A scope.
+*Originating EBC/ADR:* `EBC-R1.3-WS13-005-TIGER-Phase-A-Delivery-Closure-and-Phase-0-Authorisation.md` §3 (PO-OBS-01).
+*Reason for Deferral:* Recorded by the Product Owner as future Product Direction for a UI refinement or UX enhancement activity; no impact on Phase A acceptance.
+*Dependencies:* Likely `FCR-023` (UI component/icon library selection), if the mockup icons require an icon set the repository does not yet have. Sophie to confirm.
+*Suggested Review Timing:* The next Workspace UI refinement or UX enhancement activity, or WS13 Phase 3 (Dashboard live KPIs), whichever comes first.
+*Status:* Deferred.
+
+**FCR-027 — Header account menu overflows at narrow browser widths (OBS-QA-PA-01)**
+*Description:* At 500 px width the header account-menu button overflows the viewport by 4 px (`scrollWidth` 504 vs `clientWidth` 500). Pre-existing, unrelated to Phase A. Widths below 500 px were not tested (QA limitation L-01).
+*Originating EBC/ADR:* `EBC-R1.3-WS13-005-QA-PA-KEERTHI-Phase-A-CM-03-QA-Completion-Report.md` (OBS-QA-PA-01, L-01).
+*Reason for Deferral:* Informational; accepted by the Product Owner as a future backlog consideration.
+*Dependencies:* None.
+*Suggested Review Timing:* The next Workspace header or responsive refinement, and before Release 1.3 release readiness (phone-width check).
+*Status:* Deferred.
+
 ### 3.4 Engineering
 
 **FCR-011 — One-time narrative-content migration (Bootstrap Workbook adoption)**
@@ -331,6 +348,8 @@ No entry below is assigned a target release. Per this register's own establishin
 | `docs/20-Architecture/workspace/WORKSPACE-ARCHITECTURE-DISCOVERY.md` (via `EBC-R1.3-WS11-004`) | FCR-023 |
 | `docs/09-Development/EBC-R1.3-WS11-011F-RAD-Workspace-Foundation-Final-Remediation-Implementation-Report.md` (and `-011H`) | FCR-024 |
 | `docs/09-Development/EBC-R1.3-WS11-011B-ARCHIE-Workspace-UX-Architecture-Review-Engineering-Readiness.md` | FCR-025 |
+| `docs/09-Development/EBC-R1.3-WS13-005-TIGER-Phase-A-Delivery-Closure-and-Phase-0-Authorisation.md` | FCR-026 |
+| `docs/09-Development/EBC-R1.3-WS13-005-QA-PA-KEERTHI-Phase-A-CM-03-QA-Completion-Report.md` | FCR-027 |
 
 Every FCR entry above traces to at least one specific, completed governance document — no entry in Section 3 was originated by this register itself.
 
@@ -377,6 +396,8 @@ Per the closure-trigger rule above, every workstream closure logs an explicit ou
 | Workstream 11 — SMV Workspace (Workspace Foundation Completion Closure) | `EBC-R1.3-WS11-013-TIGER-Release-1.3-Governance-Documentation-Synchronisation-Workspace-Foundation-Completion.md` (this review; closes out the Engineering/UX/QA/Regression delivery chain `EBC-R1.3-WS11-007` through `-011I`) | Tiger | 18-Sep-2026 | **Additions made** — FCR-024 (§3.4 Engineering, `guard.ts` redirect preservation) and FCR-025 (§3.3 UX, reserved nav icon slot, WS11A-11), both already named as deferred within their own originating reports and not previously logged in this register. No other deferred item found beyond what those reports already disclosed as resolved, in scope, or already tracked (`FCR-023`). The 27 QA "Not Tested" items recorded across `-011E`/`-011I` were considered and **not** added — these are Keerthi's own recommended follow-up validation coverage, not intentionally-deferred product or engineering enhancements, per this register's own §1 scope statement and this closure card's explicit instruction not to introduce new backlog items. |
 
 | Workstream 11 — SMV Workspace (Governance Transition / Foundation Closure) | `EBC-R1.3-WS11-015-TIGER-Workspace-Foundation-Governance-Transition-Release-Synchronisation.md` (this review; closes out the Product Owner's Product Acceptance decision recorded in `EBC-R1.3-WS11-014`: **Accepted with Conditions**) | Tiger | 18-Sep-2026 | **None identified** — reviewed; the two outstanding conditions (repository-governance and milestone-completion items, not engineering or product defects) are tracked via `DEC-R1.3-011` in `RELEASE-1.3.md`, not as Future Considerations. WS11 is formally closed and redefined as the Foundation-only workstream; the Workspace business modules will be tracked under future, separately-numbered Workspace workstream(s) once approved. |
+
+| Workstream 13 — Journey Workspace (Phase A Delivery Closure — CM-03) | `EBC-R1.3-WS13-005-TIGER-Phase-A-Delivery-Closure-and-Phase-0-Authorisation.md` | Tiger | 28-Sep-2026 | Additions made — FCR-026 (PO-OBS-01, Dashboard KPI iconography), FCR-027 (OBS-QA-PA-01, header overflow at narrow widths). WS13 itself remains In Progress. |
 
 Future rows follow the same pattern, including an explicit "None identified" outcome where applicable (e.g. `| Workstream N — <name> | <closure card> | <persona> | <date> | None identified — reviewed, no new deferred items named. |`).
 
