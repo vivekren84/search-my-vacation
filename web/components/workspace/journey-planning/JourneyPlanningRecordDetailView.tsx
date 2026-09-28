@@ -36,6 +36,15 @@
 // validateLeadCreatedToDiscoveryGate), so this UI treatment is a
 // convenience, not the actual control.
 //
+// EBC-R1.3-WS13-005 Phase 0 (CM-01, CM-02, CM-05, CM-07, PD-A; UX Rev 4a
+// §36.2/§36.3): the Trip Basics panel gains the optional Service Category;
+// "Confirm → Convert to Journey" now opens ConfirmJourneyDialog (confirmed
+// dates, nights and Service Category shown, every unmet prerequisite shown
+// at once); a record that replaces an On Hold Journey shows the
+// replacement banner (UXO-11 (b)). Lost and Archived are unchanged.
+// The banner shows the Journey reference as text: the Journey page it will
+// link to arrives in WS13 Phase 1.
+//
 // Known limitation (unchanged from WS12-007): the proposal-version
 // "itinerary" form only captures a SINGLE destination per version
 // (name/nights/notes) plus an optional price estimate, not a full
@@ -61,6 +70,9 @@ import type { WorkspaceTask, WorkspaceTaskStatus } from "@/lib/workspace/shared/
 
 import { AUDIT_EVENT_LABELS, ORIGIN_CHANNEL_LABELS, OUTCOME_LABELS, STAGE_LABELS } from "./journeyPlanningLabels";
 import TripBasicsPanel, { type TripBasicsValues, EMPTY_TRIP_BASICS_VALUES } from "./TripBasicsPanel";
+import ConfirmJourneyDialog from "./ConfirmJourneyDialog";
+import { useServiceCategoryOptions } from "./useServiceCategoryOptions";
+import type { JourneyPlanningFieldIssue } from "@/lib/workspace/journey-planning/validation";
 
 interface DetailResponse {
   ok: boolean;
@@ -81,6 +93,9 @@ interface DetailResponse {
     intendedTravelMonth: string | null;
     nights: number | null;
     preferredDepartureCity: string | null;
+    // EBC-R1.3-WS13-005 Phase 0 (CM-07, CM-02).
+    serviceCategory: string | null;
+    replacesJourneyId: string | null;
   };
   proposal: { id: string; currentVersionId: string | null } | null;
   proposalVersions: Array<{
@@ -108,12 +123,20 @@ interface DetailResponse {
   // the indicator below can never drift from what the gate actually
   // checks.
   tripBasics: { completed: number; total: number; missing: JourneyPlanningGatedParameterField[] };
+  // EBC-R1.3-WS13-005 Phase 0 (WS13-004A AC-01): the On Hold Journey this
+  // record replaces, if any.
+  replacement: {
+    id: string;
+    journeyReference: string;
+    confirmedStartDate: string | null;
+    confirmedEndDate: string | null;
+  } | null;
 }
 
 interface HistoryEvent {
   id: string;
   eventType: WorkspaceAuditEventType;
-  actorId: string;
+  actorId: string | null;
   eventData: Record<string, unknown>;
   createdAt: string;
 }
@@ -131,6 +154,7 @@ function toTripBasicsValues(record: DetailResponse["record"]): TripBasicsValues 
     intendedTravelMonth: record.intendedTravelMonth ?? "",
     nights: record.nights === null ? "" : String(record.nights),
     preferredDepartureCity: record.preferredDepartureCity ?? "",
+    serviceCategory: record.serviceCategory ?? "",
   };
 }
 
@@ -156,6 +180,11 @@ export default function JourneyPlanningRecordDetailView({
   const [taskAssignee, setTaskAssignee] = useState("");
   const [tripBasicsDraft, setTripBasicsDraft] = useState<TripBasicsValues>(EMPTY_TRIP_BASICS_VALUES);
   const [savingTripBasics, setSavingTripBasics] = useState(false);
+  // EBC-R1.3-WS13-005 Phase 0 (CM-01/05/07): Confirm dialog state.
+  const serviceCategories = useServiceCategoryOptions();
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [confirmBusy, setConfirmBusy] = useState(false);
+  const [confirmIssues, setConfirmIssues] = useState<JourneyPlanningFieldIssue[]>([]);
   const { toasts, pushToast, dismissToast } = useWorkspaceToasts();
 
   async function load() {
@@ -233,7 +262,7 @@ export default function JourneyPlanningRecordDetailView({
     return <EmptyState title="Could not load this record" description={state.message} />;
   }
 
-  const { record, proposalVersions, activities, vendorQuotations, tripBasics } = state.data;
+  const { record, proposalVersions, activities, vendorQuotations, tripBasics, replacement } = state.data;
   // WS12-010 Defect D3/D4: "closed" is intentionally excluded here. Reaching
   // Closed always requires an outcome, which the Decision panel below
   // supplies explicitly — a generic "Move to Closed" button can never
@@ -290,6 +319,14 @@ export default function JourneyPlanningRecordDetailView({
         intendedTravelMonth: tripBasicsDraft.intendedTravelMonth || undefined,
         nights: tripBasicsDraft.nights === "" ? undefined : Number(tripBasicsDraft.nights),
         preferredDepartureCity: tripBasicsDraft.preferredDepartureCity || undefined,
+        // EBC-R1.3-WS13-005 Phase 0 (CM-07): "Not set" clears a previously
+        // set value (null); otherwise unchanged fields are omitted.
+        serviceCategory:
+          tripBasicsDraft.serviceCategory !== ""
+            ? tripBasicsDraft.serviceCategory
+            : record.serviceCategory !== null
+              ? null
+              : undefined,
       };
       const response = await fetch(`/api/workspace/journey-planning/${recordId}/trip-basics`, {
         method: "POST",
@@ -310,9 +347,92 @@ export default function JourneyPlanningRecordDetailView({
     }
   }
 
+  // EBC-R1.3-WS13-005 Phase 0 (CM-01, CM-05, CM-07): record the Confirmed
+  // decision with the confirmed dates. Field issues from the server are
+  // shown inside the dialog; any other failure uses the existing toast.
+  async function confirmJourney(dates: { confirmedStartDate: string; confirmedEndDate: string }) {
+    setConfirmBusy(true);
+    try {
+      const response = await fetch(`/api/workspace/journey-planning/${recordId}/decision`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ outcome: "confirmed", ...dates }),
+      });
+      const result = await response.json();
+      if (!response.ok || !result.ok) {
+        if (Array.isArray(result.issues) && result.issues.length > 0) {
+          setConfirmIssues(
+            (result.issues as JourneyPlanningFieldIssue[]).map((issue) =>
+              issue.code === "original_not_on_hold" && replacement
+                ? {
+                    ...issue,
+                    message: `The original Journey ${replacement.journeyReference} is no longer on hold, so this replacement can't be confirmed. Open ${replacement.journeyReference} to check its status.`,
+                  }
+                : issue,
+            ),
+          );
+        } else {
+          setConfirmOpen(false);
+          pushToast(result.message ?? "Could not record the decision.", "error");
+        }
+        return;
+      }
+      setConfirmOpen(false);
+      setConfirmIssues([]);
+      pushToast(result.journeyReference ? `Journey ${result.journeyReference} created.` : "Journey created.", "success");
+      await Promise.all([load(), loadHistory(), loadTasks()]);
+    } catch {
+      pushToast("Could not reach the Workspace API.", "error");
+    } finally {
+      setConfirmBusy(false);
+    }
+  }
+
+  function editTripBasicsFromDialog() {
+    setConfirmOpen(false);
+    setConfirmIssues([]);
+    document.getElementById("trip-basics")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    document.getElementById("tripBasics-serviceCategory")?.focus({ preventScroll: true });
+  }
+
+  const serviceCategoryLabel =
+    record.serviceCategory === null
+      ? null
+      : (serviceCategories.options?.find((option) => option.code === record.serviceCategory)?.label ?? null);
+
   return (
     <div className="flex flex-col gap-8">
       <ToastStack toasts={toasts} onDismiss={dismissToast} />
+
+      {replacement ? (
+        <div
+          role="status"
+          className="rounded-[var(--radius-lg)] border border-[var(--color-border-warm)] bg-[var(--color-amber)]/10 px-4 py-3 text-sm text-[var(--color-espresso)]"
+        >
+          Replacement planning for {replacement.journeyReference} · The original Journey is on hold until this is
+          confirmed.
+        </div>
+      ) : null}
+
+      {confirmOpen ? (
+        <ConfirmJourneyDialog
+          ownerId={record.ownerId}
+          ownerLabel={record.ownerId ? (isOwner ? "You" : record.ownerId) : "Unassigned"}
+          nights={record.nights}
+          serviceCategory={record.serviceCategory}
+          serviceCategoryLabel={serviceCategoryLabel}
+          replacement={replacement}
+          busy={confirmBusy}
+          serverIssues={confirmIssues}
+          onCancel={() => {
+            setConfirmOpen(false);
+            setConfirmIssues([]);
+            document.getElementById("decision-confirm-trigger")?.focus();
+          }}
+          onConfirm={confirmJourney}
+          onEditTripBasics={editTripBasicsFromDialog}
+        />
+      ) : null}
 
       <section className="rounded-[var(--radius-lg)] border border-[var(--color-border-warm)] bg-white p-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
@@ -387,9 +507,13 @@ export default function JourneyPlanningRecordDetailView({
           <div className="mt-4 flex flex-wrap gap-2 border-t border-[var(--color-border-warm)] pt-4">
             <p className="w-full text-sm font-semibold text-[var(--color-espresso)]">Record decision:</p>
             <button
+              id="decision-confirm-trigger"
               type="button"
               disabled={busy}
-              onClick={() => post("/decision", { outcome: "confirmed" })}
+              onClick={() => {
+                setConfirmIssues([]);
+                setConfirmOpen(true);
+              }}
               className="rounded-full bg-[var(--color-amber)] px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-[var(--color-espresso)] hover:bg-[#e88a16] disabled:opacity-50"
             >
               Confirm → Convert to Journey
@@ -414,14 +538,20 @@ export default function JourneyPlanningRecordDetailView({
         ) : null}
       </section>
 
-      <section className="flex flex-col gap-3">
+      <section id="trip-basics" className="flex scroll-mt-24 flex-col gap-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 className="text-sm font-bold uppercase tracking-wide text-[var(--color-espresso)]">Trip Basics</h2>
           <span className="rounded-full bg-[var(--color-amber)]/14 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[var(--color-espresso)]">
             Trip Basics — {tripBasics.completed} of {tripBasics.total} needed before Planning
           </span>
         </div>
-        <TripBasicsPanel values={tripBasicsDraft} onChange={setTripBasicsDraft} mode="detail" />
+        <TripBasicsPanel
+          values={tripBasicsDraft}
+          onChange={setTripBasicsDraft}
+          mode="detail"
+          serviceCategoryOptions={serviceCategories.options}
+          serviceCategoryLoadFailed={serviceCategories.failed}
+        />
         <button
           type="button"
           disabled={savingTripBasics}

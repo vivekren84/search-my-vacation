@@ -33,6 +33,14 @@
 // text) rather than inventing a new typeahead component was judged the
 // smaller, more consistent change; flagged for Sri/Keerthi.
 
+//
+// EBC-R1.3-WS13-005 Phase 0 (CM-07; UX Rev 4a §36.2, UXA-02): adds the
+// optional Service Category select ("Not set" by default) beside the other
+// Trip Basics fields, tagged "Needed to confirm" (reusing the "Needed
+// before Planning" tag pattern). It is NOT part of the five-field Planning
+// gate (BR-021 unchanged). Options come from configuration
+// (service_categories), passed in by the caller.
+
 export interface TripBasicsValues {
   adults: string;
   children: string;
@@ -40,6 +48,8 @@ export interface TripBasicsValues {
   intendedTravelMonth: string;
   nights: string;
   preferredDepartureCity: string;
+  // EBC-R1.3-WS13-005 Phase 0: "" = Not set.
+  serviceCategory: string;
 }
 
 export const EMPTY_TRIP_BASICS_VALUES: TripBasicsValues = {
@@ -49,11 +59,21 @@ export const EMPTY_TRIP_BASICS_VALUES: TripBasicsValues = {
   intendedTravelMonth: "",
   nights: "",
   preferredDepartureCity: "",
+  serviceCategory: "",
 };
+
+export interface ServiceCategoryOption {
+  code: string;
+  label: string;
+}
 
 interface TripBasicsPanelProps {
   values: TripBasicsValues;
   onChange: (values: TripBasicsValues) => void;
+  // EBC-R1.3-WS13-005 Phase 0: active configured Service Categories; null
+  // while loading or when they could not be loaded.
+  serviceCategoryOptions: ServiceCategoryOption[] | null;
+  serviceCategoryLoadFailed?: boolean;
   // Purely documentary for now — every field below behaves identically at
   // creation and during Discovery editing (WS12-012 §5.2: "the same
   // fields... now editable in place"). Kept so call sites can state their
@@ -64,6 +84,14 @@ interface TripBasicsPanelProps {
 const REQUIRED_TAG = (
   <span className="rounded-full bg-[var(--color-amber)] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[var(--color-espresso)]">
     Required
+  </span>
+);
+
+// EBC-R1.3-WS13-005 Phase 0 (UX Rev 4a §36.2): same visual pattern as
+// "Needed before Planning", different wording.
+const NEEDED_TO_CONFIRM_TAG = (
+  <span className="rounded-full border border-dashed border-[var(--color-border-warm)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[var(--color-espresso)]/60">
+    Needed to confirm
   </span>
 );
 
@@ -119,7 +147,12 @@ function ZeroValidNumberField({
   );
 }
 
-export default function TripBasicsPanel({ values, onChange }: TripBasicsPanelProps) {
+export default function TripBasicsPanel({
+  values,
+  onChange,
+  serviceCategoryOptions,
+  serviceCategoryLoadFailed = false,
+}: TripBasicsPanelProps) {
   function set<K extends keyof TripBasicsValues>(key: K, value: TripBasicsValues[K]) {
     onChange({ ...values, [key]: value });
   }
@@ -214,6 +247,38 @@ export default function TripBasicsPanel({ values, onChange }: TripBasicsPanelPro
               placeholder="e.g. Mumbai"
             />
             <span className="text-xs text-[var(--color-espresso)]/50">Where the group will be flying from.</span>
+          </label>
+
+          <label
+            htmlFor="tripBasics-serviceCategory"
+            className="flex min-w-[12rem] flex-col gap-1 text-sm text-[var(--color-espresso)]"
+          >
+            <span className="flex items-center gap-2">Service Category {NEEDED_TO_CONFIRM_TAG}</span>
+            <select
+              id="tripBasics-serviceCategory"
+              name="tripBasics-serviceCategory"
+              value={values.serviceCategory}
+              disabled={serviceCategoryOptions === null}
+              onChange={(event) => set("serviceCategory", event.target.value)}
+              className="rounded border border-[var(--color-border-warm)] bg-white px-3 py-2 disabled:opacity-60"
+            >
+              <option value="">Not set</option>
+              {(serviceCategoryOptions ?? []).map((option) => (
+                <option key={option.code} value={option.code}>
+                  {option.label}
+                </option>
+              ))}
+              {values.serviceCategory !== "" &&
+              serviceCategoryOptions !== null &&
+              !serviceCategoryOptions.some((option) => option.code === values.serviceCategory) ? (
+                <option value={values.serviceCategory}>{values.serviceCategory}</option>
+              ) : null}
+            </select>
+            <span className="text-xs text-[var(--color-espresso)]/50">
+              {serviceCategoryLoadFailed
+                ? "Couldn't load Service Categories. Reload the page to try again."
+                : "Optional while planning. You'll need it to confirm the Journey."}
+            </span>
           </label>
         </div>
       </div>

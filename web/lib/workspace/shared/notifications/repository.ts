@@ -26,6 +26,11 @@ function mapRow(row: Record<string, unknown>): WorkspaceNotification {
     isRead: row.is_read as boolean,
     createdAt: row.created_at as string,
     readAt: (row.read_at as string | null) ?? null,
+    // EBC-R1.3-WS13-005 Phase 0 (M03). `?? null` keeps this safe against a
+    // database where M03 is not yet applied (columns absent from `*`).
+    conditionKey: (row.condition_key as string | null) ?? null,
+    resolvedAt: (row.resolved_at as string | null) ?? null,
+    resolution: (row.resolution as WorkspaceNotification["resolution"]) ?? null,
   };
 }
 

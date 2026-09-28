@@ -37,9 +37,14 @@ import {
 import type { WorkspaceTask, WorkspaceTaskStatus } from "../shared/tasks-follow-ups/types";
 
 import type { WorkspaceRole } from "../shared/types";
+import { isActiveServiceCategory } from "../settings/service";
+import { getJourneyReferenceSummary } from "../journey-workspace/service";
+import type { JourneyReferenceSummary } from "../journey-workspace/types";
 
 import {
   convertJourneyPlanningRecordToJourney,
+  JourneyPlanningConversionError,
+  JourneyPlanningRepositoryError,
   fetchJourneyPlanningRecordById,
   fetchProposalByRecordId,
   insertBootstrapCorporateContact,
@@ -58,7 +63,12 @@ import {
   updateVendorQuotationStatus,
 } from "./repository";
 import {
+  CONVERSION_ISSUE_MESSAGES,
+  getConversionPrerequisiteIssues,
   getMissingPlanningParameters,
+  JourneyPlanningValidationError,
+  SERVICE_CATEGORY_INVALID_ISSUE,
+  type JourneyPlanningFieldIssue,
   validateCreateJourneyPlanningRecordInput,
   validateDecisionOutcome,
   validateItinerarySnapshot,
@@ -77,6 +87,7 @@ import type {
   PlanningActivityType,
   Proposal,
   ProposalVersion,
+  RecordJourneyPlanningDecisionInput,
   UpdateJourneyPlanningTripBasicsInput,
   VendorQuotation,
   VendorQuotationStatus,
@@ -124,6 +135,9 @@ export async function createJourneyPlanningRecord(
   input: CreateJourneyPlanningRecordInput,
 ): Promise<JourneyPlanningRecord> {
   validateCreateJourneyPlanningRecordInput(input);
+  if (input.serviceCategory !== undefined) {
+    await assertActiveServiceCategory(supabase, input.serviceCategory);
+  }
 
   // AD-WS12-001/AD-WS12-003: resolve inline bootstrap creation fields to
   // ids before inserting the Journey Planning record itself, since the
@@ -152,6 +166,15 @@ export async function createJourneyPlanningRecord(
   return record;
 }
 
+// EBC-R1.3-WS13-005 Phase 0 (CM-07, POD-07): a supplied Service Category
+// must be an ACTIVE entry of the configured list (WS13-001 §11.2). The
+// same rule is re-checked by the conversion RPC.
+async function assertActiveServiceCategory(supabase: SupabaseClient, code: string): Promise<void> {
+  if (!(await isActiveServiceCategory(supabase, code))) {
+    throw new JourneyPlanningValidationError(SERVICE_CATEGORY_INVALID_ISSUE.code, [SERVICE_CATEGORY_INVALID_ISSUE]);
+  }
+}
+
 export async function getJourneyPlanningQueue(
   supabase: SupabaseClient,
   filters: JourneyPlanningQueueFilters = {},
@@ -166,6 +189,10 @@ export interface JourneyPlanningRecordDetail {
   activities: PlanningActivity[];
   vendorQuotations: VendorQuotation[];
   tripBasics: JourneyPlanningTripBasicsStatus;
+  // EBC-R1.3-WS13-005 Phase 0 (UX Rev 4a §36.3; WS13-004A AC-01): the On
+  // Hold Journey this record replaces (banner and Decision-dialog date
+  // defaults).
+  replacement: JourneyReferenceSummary | null;
 }
 
 export async function getJourneyPlanningRecordDetail(
@@ -184,6 +211,10 @@ export async function getJourneyPlanningRecordDetail(
     listVendorQuotations(supabase, recordId),
   ]);
 
+  const replacement = record.replacesJourneyId
+    ? await getJourneyReferenceSummary(supabase, record.replacesJourneyId)
+    : null;
+
   return {
     record,
     proposal,
@@ -191,6 +222,7 @@ export async function getJourneyPlanningRecordDetail(
     activities,
     vendorQuotations,
     tripBasics: computeTripBasicsStatus(record),
+    replacement,
   };
 }
 
@@ -420,6 +452,9 @@ export async function updateJourneyPlanningTripBasics(
   }
 
   validateUpdateJourneyPlanningTripBasicsInput(patch);
+  if (patch.serviceCategory !== undefined && patch.serviceCategory !== null) {
+    await assertActiveServiceCategory(supabase, patch.serviceCategory);
+  }
 
   const updated = await updateJourneyPlanningTripBasicsRecord(supabase, recordId, patch);
 
@@ -570,12 +605,20 @@ export async function addPlanningActivity(
 // BR-012 / WS12-005 Section 6.5: recording a Decision either converts the
 // record into a Journey (outcome = "confirmed", via the atomic RPC) or
 // closes it directly without a Journey (outcome = "lost" | "archived").
+//
+// EBC-R1.3-WS13-005 Phase 0 (CM-01, CM-05, CM-07, PD-A; UX Rev 4a §36.3):
+// "confirmed" now carries the Confirmed Travel Start and End Dates. Every
+// conversion prerequisite (owner, dates, nights, dates-nights consistency,
+// Service Category) is checked first and reported together; the
+// self-authorising conversion RPC v2 re-checks each one and remains the
+// authority. Lost and Archived are unchanged.
 export async function recordJourneyPlanningDecision(
   supabase: SupabaseClient,
   actor: JourneyPlanningActor,
   recordId: string,
-  outcome: "confirmed" | "lost" | "archived",
-): Promise<{ record: JourneyPlanningRecord; journeyId: string | null }> {
+  outcome: RecordJourneyPlanningDecisionInput["outcome"],
+  dates: Pick<RecordJourneyPlanningDecisionInput, "confirmedStartDate" | "confirmedEndDate"> = {},
+): Promise<{ record: JourneyPlanningRecord; journeyId: string | null; journeyReference: string | null }> {
   const record = await fetchJourneyPlanningRecordById(supabase, recordId);
   if (!record) {
     throw new JourneyPlanningRepositoryNotFoundError();
@@ -590,9 +633,35 @@ export async function recordJourneyPlanningDecision(
   }
 
   if (outcome === "confirmed") {
-    const journeyId = await convertJourneyPlanningRecordToJourney(supabase, recordId, actor.id);
-    const updated = await fetchJourneyPlanningRecordById(supabase, recordId);
-    return { record: updated ?? record, journeyId };
+    const issues = getConversionPrerequisiteIssues({
+      ownerId: record.ownerId,
+      nights: record.nights,
+      serviceCategory: record.serviceCategory,
+      confirmedStartDate: dates.confirmedStartDate,
+      confirmedEndDate: dates.confirmedEndDate,
+    });
+    if (issues.length > 0) {
+      throw new JourneyPlanningValidationError(issues[0].code, issues);
+    }
+
+    let journeyId: string;
+    try {
+      journeyId = await convertJourneyPlanningRecordToJourney(
+        supabase,
+        recordId,
+        actor.id,
+        dates.confirmedStartDate as string,
+        dates.confirmedEndDate as string,
+      );
+    } catch (error) {
+      throw translateConversionError(error);
+    }
+
+    const [updated, journey] = await Promise.all([
+      fetchJourneyPlanningRecordById(supabase, recordId),
+      getJourneyReferenceSummary(supabase, journeyId),
+    ]);
+    return { record: updated ?? record, journeyId, journeyReference: journey?.journeyReference ?? null };
   }
 
   validateDecisionOutcome(record.stage, outcome);
@@ -606,7 +675,50 @@ export async function recordJourneyPlanningDecision(
     eventData: { outcome },
   });
 
-  return { record: updated, journeyId: null };
+  return { record: updated, journeyId: null, journeyReference: null };
+}
+
+// EBC-R1.3-WS13-005 Phase 0: turns a conversion RPC rejection into the
+// module's existing error types, so the decision route keeps its existing
+// 403 / 404 / 400 handling. Field-level issues use the UX Rev 4a §36.3
+// messages. A mismatch caught only by the RPC (e.g. nights edited by a
+// colleague in the meantime) is reported with the generic mismatch copy.
+function translateConversionError(error: unknown): Error {
+  if (!(error instanceof JourneyPlanningConversionError)) {
+    return error instanceof Error ? error : new Error("conversion_failed");
+  }
+  const fieldIssue = (field: string, message: string): JourneyPlanningFieldIssue[] => [
+    { field, code: error.code, message },
+  ];
+  switch (error.code) {
+    case "not_authorised":
+      return new JourneyPlanningAuthorizationError("cannot_record_decision");
+    case "not_found":
+      return new JourneyPlanningRepositoryNotFoundError();
+    case "record_not_in_decision_stage":
+    case "already_converted":
+      return new JourneyPlanningAuthorizationError(`record_${error.code}`);
+    case "owner_required":
+      return new JourneyPlanningValidationError(error.code, fieldIssue("ownerId", CONVERSION_ISSUE_MESSAGES.owner_required));
+    case "dates_required":
+      return new JourneyPlanningValidationError(error.code, fieldIssue("confirmedDates", CONVERSION_ISSUE_MESSAGES.dates_required));
+    case "dates_invalid":
+      return new JourneyPlanningValidationError(error.code, fieldIssue("confirmedDates", CONVERSION_ISSUE_MESSAGES.dates_invalid));
+    case "nights_required":
+      return new JourneyPlanningValidationError(error.code, fieldIssue("nights", CONVERSION_ISSUE_MESSAGES.nights_required));
+    case "dates_nights_mismatch":
+      return new JourneyPlanningValidationError(
+        error.code,
+        fieldIssue("confirmedDates", "The confirmed dates don't match the number of nights in Trip Basics. Change the dates or the nights so they match."),
+      );
+    case "service_category_required":
+    case "service_category_invalid":
+      return new JourneyPlanningValidationError(error.code, fieldIssue("serviceCategory", CONVERSION_ISSUE_MESSAGES[error.code]));
+    case "original_not_on_hold":
+      return new JourneyPlanningValidationError(error.code, fieldIssue("replacement", CONVERSION_ISSUE_MESSAGES.original_not_on_hold));
+    default:
+      return new JourneyPlanningRepositoryError("journey_planning_record_conversion_failed");
+  }
 }
 
 // R-ENG-JP-02 adjacent: closing a record outside the normal

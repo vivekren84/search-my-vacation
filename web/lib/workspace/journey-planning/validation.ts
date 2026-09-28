@@ -40,6 +40,8 @@ import {
   type NewBootstrapTravellerInput,
   type UpdateJourneyPlanningTripBasicsInput,
 } from "./types";
+import { checkConversionDates } from "../journey-workspace/validation";
+import { nightsBetween } from "../shared/time/businessDate";
 
 // EBC-R1.3-WS12-016 / PRA-01: a single field-specific validation issue.
 // `field` matches the request-body / form-field key (e.g. "adults",
@@ -190,10 +192,31 @@ export function validateCreateJourneyPlanningRecordInput(
     }),
   );
 
+  // EBC-R1.3-WS13-005 Phase 0 (CM-07): optional; format only here. Whether
+  // the code is an active configured Service Category is checked by the
+  // service against configuration (it needs a database read).
+  if (input.serviceCategory !== undefined && !isServiceCategoryCodeFormat(input.serviceCategory)) {
+    issues.push(SERVICE_CATEGORY_INVALID_ISSUE);
+  }
+
   if (issues.length > 0) {
     throw new JourneyPlanningValidationError(issues[0].code, issues);
   }
 }
+
+// EBC-R1.3-WS13-005 Phase 0 (CM-07, POD-07): Service Category code format,
+// mirroring the M10 CHECK (workspace_journey_planning_records_service_category_format_check).
+const SERVICE_CATEGORY_CODE_PATTERN = /^[a-z][a-z0-9_]*$/;
+
+export function isServiceCategoryCodeFormat(value: unknown): value is string {
+  return typeof value === "string" && SERVICE_CATEGORY_CODE_PATTERN.test(value);
+}
+
+export const SERVICE_CATEGORY_INVALID_ISSUE: JourneyPlanningFieldIssue = {
+  field: "serviceCategory",
+  code: "service_category_invalid",
+  message: "Choose a Service Category from the list.",
+};
 
 function validateNewBootstrapTraveller(input: NewBootstrapTravellerInput): JourneyPlanningFieldIssue[] {
   if (!input.fullName || input.fullName.trim().length === 0) {
@@ -301,7 +324,8 @@ export function validateUpdateJourneyPlanningTripBasicsInput(
     input.infants === undefined &&
     input.intendedTravelMonth === undefined &&
     input.nights === undefined &&
-    input.preferredDepartureCity === undefined
+    input.preferredDepartureCity === undefined &&
+    input.serviceCategory === undefined
   ) {
     throw new JourneyPlanningValidationError("trip_basics_update_requires_at_least_one_field", [
       {
@@ -326,9 +350,81 @@ export function validateUpdateJourneyPlanningTripBasicsInput(
 
   issues.push(...validateTripBasicsFieldValues(input));
 
+  // EBC-R1.3-WS13-005 Phase 0 (CM-07): null clears the optional value.
+  if (
+    input.serviceCategory !== undefined &&
+    input.serviceCategory !== null &&
+    !isServiceCategoryCodeFormat(input.serviceCategory)
+  ) {
+    issues.push(SERVICE_CATEGORY_INVALID_ISSUE);
+  }
+
   if (issues.length > 0) {
     throw new JourneyPlanningValidationError(issues[0].code, issues);
   }
+}
+
+// EBC-R1.3-WS13-005 Phase 0: Journey conversion prerequisites (CM-01,
+// CM-05, CM-07, PD-A; BR-026, BR-027, BR-043; I-05), checked BEFORE the
+// conversion RPC so the user sees every unmet prerequisite at once
+// (PRA-01 precedent). The RPC re-checks each one and stays the authority.
+// Codes and messages follow UX Rev 4a §36.3 exactly.
+export const CONVERSION_ISSUE_MESSAGES = {
+  owner_required: "Assign an owner before confirming. A Journey always has an owner.",
+  dates_required: "Add the confirmed start and end dates.",
+  dates_invalid: "The end date can't be before the start date.",
+  nights_required: "Add the number of nights in Trip Basics before confirming.",
+  service_category_required: "Choose a Service Category before confirming.",
+  service_category_invalid: "Choose a Service Category before confirming.",
+  original_not_on_hold:
+    "The original Journey is no longer on hold, so this replacement can't be confirmed. Open the original Journey to check its status.",
+} as const;
+
+export function datesNightsMismatchMessage(dateNights: number, recordNights: number): string {
+  return `These dates cover ${dateNights} nights, but Trip Basics says ${recordNights}. Change the dates or the nights so they match.`;
+}
+
+export function getConversionPrerequisiteIssues(input: {
+  ownerId: string | null;
+  nights: number | null;
+  serviceCategory: string | null;
+  confirmedStartDate?: string;
+  confirmedEndDate?: string;
+}): JourneyPlanningFieldIssue[] {
+  const issues: JourneyPlanningFieldIssue[] = [];
+  if (input.ownerId === null) {
+    issues.push({ field: "ownerId", code: "owner_required", message: CONVERSION_ISSUE_MESSAGES.owner_required });
+  }
+  for (const code of checkConversionDates({
+    confirmedStartDate: input.confirmedStartDate,
+    confirmedEndDate: input.confirmedEndDate,
+    nights: input.nights,
+  })) {
+    if (code === "dates_required") {
+      issues.push({ field: "confirmedDates", code, message: CONVERSION_ISSUE_MESSAGES.dates_required });
+    } else if (code === "dates_invalid") {
+      issues.push({ field: "confirmedDates", code, message: CONVERSION_ISSUE_MESSAGES.dates_invalid });
+    } else if (code === "nights_required") {
+      issues.push({ field: "nights", code, message: CONVERSION_ISSUE_MESSAGES.nights_required });
+    } else {
+      issues.push({
+        field: "confirmedDates",
+        code,
+        message: datesNightsMismatchMessage(
+          nightsBetween(input.confirmedStartDate as string, input.confirmedEndDate as string),
+          input.nights as number,
+        ),
+      });
+    }
+  }
+  if (input.serviceCategory === null) {
+    issues.push({
+      field: "serviceCategory",
+      code: "service_category_required",
+      message: CONVERSION_ISSUE_MESSAGES.service_category_required,
+    });
+  }
+  return issues;
 }
 
 // EBC-R1.3-WS12-013 / FR-JP-34 / BR-021 / BR-023: the Discovery→Planning

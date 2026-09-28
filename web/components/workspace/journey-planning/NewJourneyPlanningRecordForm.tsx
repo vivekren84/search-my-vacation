@@ -44,6 +44,7 @@ import {
 
 import { ORIGIN_CHANNEL_LABELS } from "./journeyPlanningLabels";
 import TripBasicsPanel, { type TripBasicsValues, EMPTY_TRIP_BASICS_VALUES } from "./TripBasicsPanel";
+import { useServiceCategoryOptions } from "./useServiceCategoryOptions";
 
 export default function NewJourneyPlanningRecordForm() {
   const router = useRouter();
@@ -58,6 +59,8 @@ export default function NewJourneyPlanningRecordForm() {
   const [contactEmail, setContactEmail] = useState("");
   const [tripBasics, setTripBasics] = useState<TripBasicsValues>(EMPTY_TRIP_BASICS_VALUES);
   const [submitting, setSubmitting] = useState(false);
+  // EBC-R1.3-WS13-005 Phase 0 (CM-07): Service Category options.
+  const serviceCategories = useServiceCategoryOptions();
   const [error, setError] = useState<string[] | null>(null);
 
   const availableOriginChannels = JOURNEY_PLANNING_ORIGIN_CHANNELS.filter(
@@ -83,6 +86,8 @@ export default function NewJourneyPlanningRecordForm() {
       intendedTravelMonth: tripBasics.intendedTravelMonth || undefined,
       nights: tripBasics.nights === "" ? undefined : Number(tripBasics.nights),
       preferredDepartureCity: tripBasics.preferredDepartureCity || undefined,
+      // EBC-R1.3-WS13-005 Phase 0 (CM-07): optional while planning.
+      serviceCategory: tripBasics.serviceCategory || undefined,
     };
 
     const body =
@@ -269,7 +274,13 @@ export default function NewJourneyPlanningRecordForm() {
         </>
       )}
 
-      <TripBasicsPanel values={tripBasics} onChange={setTripBasics} mode="create" />
+      <TripBasicsPanel
+        values={tripBasics}
+        onChange={setTripBasics}
+        mode="create"
+        serviceCategoryOptions={serviceCategories.options}
+        serviceCategoryLoadFailed={serviceCategories.failed}
+      />
 
       {error ? (
         <div className="rounded-lg bg-[color-mix(in_srgb,var(--color-error)_10%,transparent)] px-3 py-2 text-sm text-[var(--color-error)]">

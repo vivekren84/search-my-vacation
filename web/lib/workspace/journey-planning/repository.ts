@@ -62,7 +62,43 @@ function mapRecordRow(row: Record<string, unknown>): JourneyPlanningRecord {
     intendedTravelMonth: (row.intended_travel_month as string | null) ?? null,
     nights: (row.nights as number | null) ?? null,
     preferredDepartureCity: (row.preferred_departure_city as string | null) ?? null,
+    // EBC-R1.3-WS13-005 Phase 0 (M10). `?? null` keeps reads working if the
+    // columns are not yet present (Preview deployed before migrations).
+    serviceCategory: (row.service_category as string | null) ?? null,
+    replacesJourneyId: (row.replaces_journey_id as string | null) ?? null,
   };
+}
+
+// EBC-R1.3-WS13-005 Phase 0: errors raised by
+// public.workspace_convert_journey_planning_record (M10) carry a stable
+// code as their message. Mapped here to short codes the service turns into
+// field-specific feedback (UX Rev 4a §36.3).
+export class JourneyPlanningConversionError extends Error {
+  constructor(readonly code: string) {
+    super("Journey Planning conversion rejected");
+    this.name = "JourneyPlanningConversionError";
+  }
+}
+
+const CONVERSION_RPC_ERROR_CODES: Record<string, string> = {
+  workspace_conversion_actor_mismatch: "not_authorised",
+  workspace_conversion_not_authorised: "not_authorised",
+  workspace_journey_planning_record_not_found: "not_found",
+  workspace_journey_planning_record_not_in_decision_stage: "record_not_in_decision_stage",
+  workspace_journey_planning_record_already_converted: "already_converted",
+  workspace_conversion_owner_required: "owner_required",
+  workspace_conversion_dates_required: "dates_required",
+  workspace_conversion_dates_invalid: "dates_invalid",
+  workspace_conversion_nights_required: "nights_required",
+  workspace_conversion_dates_nights_mismatch: "dates_nights_mismatch",
+  workspace_conversion_service_category_required: "service_category_required",
+  workspace_conversion_service_category_invalid: "service_category_invalid",
+  workspace_conversion_original_not_on_hold: "original_not_on_hold",
+};
+
+export function mapConversionRpcErrorCode(message: string | undefined): string {
+  if (!message) return "conversion_failed";
+  return CONVERSION_RPC_ERROR_CODES[message.trim()] ?? "conversion_failed";
 }
 
 // AD-WS12-001/AD-WS12-003 bootstrap creation, invoked from the service
@@ -145,6 +181,8 @@ export async function insertJourneyPlanningRecord(
       intended_travel_month: input.intendedTravelMonth ?? null,
       nights: input.nights ?? null,
       preferred_departure_city: input.preferredDepartureCity ?? null,
+      // EBC-R1.3-WS13-005 Phase 0 (CM-07): only sent when supplied.
+      ...(input.serviceCategory !== undefined ? { service_category: input.serviceCategory } : {}),
     })
     .select("*")
     .single();
@@ -231,13 +269,15 @@ export async function updateJourneyPlanningTripBasics(
   recordId: string,
   patch: UpdateJourneyPlanningTripBasicsInput,
 ): Promise<JourneyPlanningRecord> {
-  const update: Record<string, number | string> = {};
+  const update: Record<string, number | string | null> = {};
   if (patch.adults !== undefined) update.adults = patch.adults;
   if (patch.children !== undefined) update.children = patch.children;
   if (patch.infants !== undefined) update.infants = patch.infants;
   if (patch.intendedTravelMonth !== undefined) update.intended_travel_month = patch.intendedTravelMonth;
   if (patch.nights !== undefined) update.nights = patch.nights;
   if (patch.preferredDepartureCity !== undefined) update.preferred_departure_city = patch.preferredDepartureCity;
+  // EBC-R1.3-WS13-005 Phase 0 (CM-07): null clears the optional value.
+  if (patch.serviceCategory !== undefined) update.service_category = patch.serviceCategory;
 
   const { data, error } = await supabase
     .from("workspace_journey_planning_records")
@@ -253,18 +293,29 @@ export async function updateJourneyPlanningTripBasics(
   return mapRecordRow(data);
 }
 
+// EBC-R1.3-WS13-005 Phase 0 (M10, AD-WS13-003): conversion RPC v2 with the
+// confirmed travel dates (CM-01). The RPC authorises itself and validates
+// owner, dates, nights and Service Category; its rejection codes are
+// mapped by mapConversionRpcErrorCode.
 export async function convertJourneyPlanningRecordToJourney(
   supabase: SupabaseClient,
   recordId: string,
   actorId: string,
+  confirmedStartDate: string,
+  confirmedEndDate: string,
 ): Promise<string> {
   const { data, error } = await supabase.rpc("workspace_convert_journey_planning_record", {
     p_record_id: recordId,
     p_actor_id: actorId,
+    p_confirmed_start_date: confirmedStartDate,
+    p_confirmed_end_date: confirmedEndDate,
   });
 
-  if (error || !data) {
-    throw new JourneyPlanningRepositoryError("journey_planning_record_conversion_failed");
+  if (error) {
+    throw new JourneyPlanningConversionError(mapConversionRpcErrorCode(error.message));
+  }
+  if (!data) {
+    throw new JourneyPlanningConversionError("conversion_failed");
   }
 
   return data as string;

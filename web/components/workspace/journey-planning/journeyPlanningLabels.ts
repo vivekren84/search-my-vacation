@@ -56,6 +56,40 @@ export const AUDIT_EVENT_LABELS: Record<WorkspaceAuditEventType, string> = {
   task_created: "Task created",
   task_updated: "Task updated",
   trip_basics_updated: "Trip Basics updated",
+  // EBC-R1.3-WS13-005 Phase 0 (M02): Journey Workspace events. The Journey
+  // History screen (Phase 1) owns their final presentation; these labels
+  // keep this map complete and are what a Journey Planning record shows if
+  // one ever appears in its own History.
+  journey_created: "Journey created",
+  journey_stage_changed: "Stage changed",
+  journey_stage_stepped_back: "Stepped back",
+  journey_on_hold: "Placed on hold",
+  journey_resumed: "Resumed",
+  journey_cancelled: "Journey cancelled",
+  journey_closed: "Marked as Completed",
+  journey_superseded: "Journey superseded",
+  journey_reassigned: "Journey reassigned",
+  journey_archived: "Journey archived",
+  journey_service_category_changed: "Service Category changed",
+  journey_contact_changed: "Primary Operational Contact changed",
+  journey_template_assigned: "Readiness template assigned",
+  journey_template_changed: "Readiness template changed",
+  journey_legacy_adopted: "Legacy Journey adopted",
+  readiness_item_updated: "Readiness item updated",
+  vendor_booking_created: "Vendor booking added",
+  vendor_booking_status_changed: "Vendor booking status changed",
+  vendor_booking_updated: "Vendor booking updated",
+  document_added: "Document added",
+  document_status_changed: "Document status changed",
+  document_updated: "Document updated",
+  document_reference_updated: "External reference updated",
+  change_record_created: "Operational change recorded",
+  activity_logged: "Activity logged",
+  note_added: "Note added",
+  material_change_started: "Material change started",
+  alert_raised: "Alert raised",
+  alert_resolved: "Alert resolved",
+  legacy_backfilled: "Legacy record prepared",
 };
 
 // EBC-R1.3-WS12-013 / WS12-012 §4.2: user-facing labels and helper text

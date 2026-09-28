@@ -36,3 +36,35 @@ export async function fetchWorkspaceUserRole(
 
   return (data?.role as WorkspaceRole | undefined) ?? null;
 }
+
+// EBC-R1.3-WS13-005 Phase 0 (M01, AD-WS13-007): role plus activation
+// state. Selects `*` rather than naming deactivated_at so this read keeps
+// working against a database where M01 is not yet applied (the column is
+// then simply absent and the user is treated as active) -- the Preview
+// deployment can therefore go live before the Product Owner applies the
+// Phase 0 migrations without breaking sign-in.
+export interface WorkspaceUserAccess {
+  role: WorkspaceRole;
+  deactivatedAt: string | null;
+}
+
+export async function fetchWorkspaceUserAccess(
+  supabase: SupabaseClient,
+  userId: string,
+): Promise<WorkspaceUserAccess | null> {
+  const { data, error } = await supabase
+    .from("workspace_users")
+    .select("*")
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  if (error) {
+    throw new WorkspaceUserRepositoryError("workspace_user_lookup_failed");
+  }
+  if (!data?.role) return null;
+
+  return {
+    role: data.role as WorkspaceRole,
+    deactivatedAt: (data.deactivated_at as string | null | undefined) ?? null,
+  };
+}

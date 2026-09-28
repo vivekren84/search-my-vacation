@@ -66,6 +66,8 @@ export async function POST(request: Request) {
       intendedTravelMonth: body.intendedTravelMonth,
       nights: body.nights,
       preferredDepartureCity: body.preferredDepartureCity,
+      // EBC-R1.3-WS13-005 Phase 0 (CM-07): optional while planning.
+      serviceCategory: body.serviceCategory,
     });
     return jsonResponse({ ok: true, record }, 201);
   } catch (error) {

@@ -27,6 +27,9 @@ function mapRow(row: Record<string, unknown>): WorkspaceTask {
     createdAt: row.created_at as string,
     updatedAt: row.updated_at as string,
     completedAt: (row.completed_at as string | null) ?? null,
+    // EBC-R1.3-WS13-005 Phase 0 (M04).
+    category: (row.category as string | null) ?? null,
+    kind: ((row.kind as WorkspaceTask["kind"] | null) ?? "task"),
   };
 }
 
@@ -34,17 +37,22 @@ export async function insertWorkspaceTask(
   supabase: SupabaseClient,
   input: CreateWorkspaceTaskInput,
 ): Promise<WorkspaceTask> {
+  const row: Record<string, unknown> = {
+    entity_type: input.entityType,
+    entity_id: input.entityId,
+    title: input.title,
+    description: input.description ?? null,
+    due_at: input.dueAt ?? null,
+    assigned_to_user_id: input.assignedToUserId ?? null,
+    created_by_user_id: input.createdByUserId,
+  };
+  // EBC-R1.3-WS13-005 Phase 0 (M04): only sent when supplied.
+  if (input.category !== undefined) row.category = input.category;
+  if (input.kind !== undefined) row.kind = input.kind;
+
   const { data, error } = await supabase
     .from("workspace_tasks")
-    .insert({
-      entity_type: input.entityType,
-      entity_id: input.entityId,
-      title: input.title,
-      description: input.description ?? null,
-      due_at: input.dueAt ?? null,
-      assigned_to_user_id: input.assignedToUserId ?? null,
-      created_by_user_id: input.createdByUserId,
-    })
+    .insert(row)
     .select("*")
     .single();
 

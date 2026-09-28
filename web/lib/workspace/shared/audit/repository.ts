@@ -22,7 +22,7 @@ function mapAuditLogRow(row: Record<string, unknown>): WorkspaceAuditLogEntry {
     entityType: row.entity_type as string,
     entityId: row.entity_id as string,
     eventType: row.event_type as WorkspaceAuditLogEntry["eventType"],
-    actorId: row.actor_id as string,
+    actorId: (row.actor_id as string | null) ?? null,
     eventData: (row.event_data as Record<string, unknown>) ?? {},
     createdAt: row.created_at as string,
   };

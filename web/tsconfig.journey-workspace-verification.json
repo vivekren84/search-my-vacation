@@ -1,0 +1,27 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "allowJs": false,
+    "incremental": false,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "noEmit": false,
+    "outDir": "./node_modules/.cache/smv-journey-workspace-verification",
+    "plugins": [],
+    "rootDir": ".",
+    "target": "ES2022",
+    "types": ["node"]
+  },
+  "include": [
+    "lib/workspace/journey-workspace/types.ts",
+    "lib/workspace/journey-workspace/validation.ts",
+    "lib/workspace/journey-workspace/derivations.ts",
+    "lib/workspace/journey-workspace/verification/**/*.ts",
+    "lib/workspace/journey-planning/types.ts",
+    "lib/workspace/journey-planning/validation.ts",
+    "lib/workspace/settings/types.ts",
+    "lib/workspace/settings/validation.ts",
+    "lib/workspace/shared/time/**/*.ts"
+  ],
+  "exclude": ["node_modules"]
+}

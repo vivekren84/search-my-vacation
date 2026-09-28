@@ -105,6 +105,12 @@ export interface JourneyPlanningRecord {
   intendedTravelMonth: string | null;
   nights: number | null;
   preferredDepartureCity: string | null;
+  // EBC-R1.3-WS13-005 Phase 0 (M10). CM-07 / POD-07 / BR-043: the Service
+  // Category code (configuration service_categories) -- optional while
+  // planning, required for conversion. CM-02: the On Hold Journey this
+  // record replaces (set only by the Phase 4 material-change RPC).
+  serviceCategory: string | null;
+  replacesJourneyId: string | null;
 }
 
 export interface NewBootstrapTravellerInput {
@@ -150,6 +156,8 @@ export interface CreateJourneyPlanningRecordInput {
   intendedTravelMonth?: string;
   nights?: number;
   preferredDepartureCity?: string;
+  // EBC-R1.3-WS13-005 Phase 0 (CM-07, POD-07): optional at creation.
+  serviceCategory?: string;
 }
 
 // EBC-R1.3-WS12-013: partial update of Trip Basics on an existing record
@@ -164,6 +172,19 @@ export interface UpdateJourneyPlanningTripBasicsInput {
   intendedTravelMonth?: string;
   nights?: number;
   preferredDepartureCity?: string;
+  // EBC-R1.3-WS13-005 Phase 0 (CM-07, UX Rev 4a §36.2): edited in the Trip
+  // Basics panel. `null` clears it back to "Not set" (it is optional while
+  // planning); omitted leaves it unchanged.
+  serviceCategory?: string | null;
+}
+
+// EBC-R1.3-WS13-005 Phase 0 (CM-01, UX Rev 4a §36.3): the Decision request
+// carries only the confirmed dates in addition to the outcome; Number of
+// Nights and Service Category come from the record itself.
+export interface RecordJourneyPlanningDecisionInput {
+  outcome: JourneyPlanningOutcome;
+  confirmedStartDate?: string;
+  confirmedEndDate?: string;
 }
 
 export interface JourneyPlanningQueueFilters {

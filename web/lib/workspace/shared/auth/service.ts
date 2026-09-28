@@ -10,7 +10,7 @@
 import { createWorkspaceSupabaseServerClient } from "../supabase/server";
 import type { WorkspaceUser } from "../types";
 import { deriveWorkspaceDisplayName } from "./displayName";
-import { fetchWorkspaceUserRole } from "./repository";
+import { fetchWorkspaceUserAccess } from "./repository";
 
 export type WorkspaceAuthState =
   | { status: "unauthenticated" }
@@ -30,8 +30,14 @@ export async function getWorkspaceAuthState(): Promise<WorkspaceAuthState> {
 
   if (!user) return { status: "unauthenticated" };
 
-  const role = await fetchWorkspaceUserRole(supabase, user.id);
-  if (!role) return { status: "unauthorized" };
+  // EBC-R1.3-WS13-005 Phase 0 (AD-WS13-007): a deactivated Workspace User
+  // is treated exactly like an unprovisioned one ("unauthorized"), so the
+  // existing sign-in copy and redirects apply unchanged -- no new UX state.
+  // requireWorkspaceUser() and authenticateWorkspaceApiRequest() both use
+  // this function, so every protected page and API route rejects them.
+  const access = await fetchWorkspaceUserAccess(supabase, user.id);
+  if (!access || access.deactivatedAt) return { status: "unauthorized" };
+  const role = access.role;
 
   // EBC-R1.3-WS11-011: reuse the same display-name derivation the public
   // header's client-side hook already uses (auth/displayName.ts), rather

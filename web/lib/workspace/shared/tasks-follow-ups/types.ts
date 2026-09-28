@@ -4,6 +4,10 @@
 
 export type WorkspaceTaskStatus = "open" | "completed" | "cancelled";
 
+// EBC-R1.3-WS13-005 Phase 0 (M04, AD-WS13-006): a follow-up requires a
+// due date (FR-JW-24 AC2), enforced by the database CHECK.
+export type WorkspaceTaskKind = "task" | "follow_up";
+
 export interface WorkspaceTask {
   id: string;
   entityType: string;
@@ -17,6 +21,10 @@ export interface WorkspaceTask {
   createdAt: string;
   updatedAt: string;
   completedAt: string | null;
+  // EBC-R1.3-WS13-005 Phase 0 (M04): category code from the configured
+  // task_categories list; null = Operational (every pre-WS13 task).
+  category: string | null;
+  kind: WorkspaceTaskKind;
 }
 
 export interface CreateWorkspaceTaskInput {
@@ -27,4 +35,8 @@ export interface CreateWorkspaceTaskInput {
   dueAt?: string;
   assignedToUserId?: string;
   createdByUserId: string;
+  // EBC-R1.3-WS13-005 Phase 0 (M04). Optional; omitted keys are not sent,
+  // so Journey Planning task creation is byte-for-byte unchanged.
+  category?: string;
+  kind?: WorkspaceTaskKind;
 }
