@@ -4,13 +4,13 @@
 | --- | --- |
 | **Document ID** | AIOM-002 |
 | **Document Title** | SMV Engineering Handbook |
-| **Version** | 1.0 |
-| **Status** | Approved |
+| **Version** | 1.1 |
+| **Status** | Approved (v1.1 approved by Vivek, 27-Sep-2026 — `DEC-R1.3-018`) |
 | **Owner** | Search My Vacation |
 | **Operational Custodian** | Team Satvi |
 | **Approved By** | Vivek — Business Owner and Product Manager |
 | **Effective Date** | 2026-08-09 |
-| **Last Updated** | 2026-08-09 |
+| **Last Updated** | 2026-09-27 |
 | **Classification** | Internal |
 | **Purpose** | Define the repository-wide engineering baseline for building, validating, documenting, and releasing Search My Vacation safely and consistently. |
 | **Related Documents** | [AI Operating Model Overview](./README.md); [Team Satvi Operating Model](./TEAM-SATVI.md) |
@@ -22,6 +22,7 @@
 | Version | Date | Summary |
 | --- | --- | --- |
 | 1.0 | 2026-08-09 | Initial approved engineering handbook covering repository context, workflow, implementation standards, product guardrails, verification, and release readiness. |
+| 1.1 | 2026-09-27 | `EBC-R1.3-GOV-005` (Tiger): §7 expanded into the canonical home of the Engineering Governance Principles v1.0 (EP-001–EP-009) — release branch strategy, protected `main`, Engineering Ready Baseline, frozen baseline and change governance, persona ownership, merge criteria, Preview-before-Production, governance commit, release governance lifecycle, and the Release 1.3 adoption record. Git hygiene list retained as §7.8 (items 2, 4 and 7 aligned to EP-001/EP-002). Minor version: additive governance guidance; no product, UX, architecture or engineering behaviour changed. **Approved by Vivek, 27-Sep-2026 (`DEC-R1.3-018`)**, with the Release 1.3 exceptions recorded in §7.9. |
 
 ---
 
@@ -33,7 +34,7 @@
 4. [Repository structure](#4-repository-structure)
 5. [Team Satvi engineering model](#5-team-satvi-engineering-model)
 6. [Engineering workflow](#6-engineering-workflow)
-7. [Git workflow](#7-git-workflow)
+7. [Git workflow and engineering governance](#7-git-workflow-and-engineering-governance)
 8. [Coding standards](#8-coding-standards)
 9. [Architecture principles](#9-architecture-principles)
 10. [Journey Passport engineering guardrails](#10-journey-passport-engineering-guardrails)
@@ -270,22 +271,144 @@ Vivek makes the final release decision. A green build is evidence, not release a
 
 ---
 
-## 7. Git workflow
+## 7. Git workflow and engineering governance
 
-The detailed branch and integration process belongs in the planned `playbooks/Git-Workflow.md` playbook. Until that playbook is published, use this baseline:
+This section is the canonical home of the **SMV Engineering Governance Principles v1.0** (`EP-001`–`EP-009`), established by `EBC-R1.3-GOV-005` from the practice validated during Release 1.3 Workstream 13 (Journey Workspace). Other documents link here rather than restating these rules. The detailed step-by-step procedure (commands, hotfix handling, conflict resolution) belongs in the planned `playbooks/Git-Workflow.md`; until it is published, this section is the baseline.
+
+These principles govern **process only**. They do not change any product, UX, architecture or engineering behaviour.
+
+### 7.1 Engineering Governance Principles
+
+| ID | Principle | Rule |
+| --- | --- | --- |
+| **EP-001** | Release branch strategy | Every release has its own dedicated release branch, created from `main`. Engineering work for that release happens only within that release branch. `main` represents Production. |
+| **EP-002** | Protected `main` | No direct engineering work happens on `main`. All development originates from an approved Release or Hotfix branch. |
+| **EP-003** | Engineering Ready Baseline | Implementation begins only after the release's Engineering Ready Baseline (§7.3) is established and frozen. |
+| **EP-004** | Release merge criteria | A release branch merges into `main` only after Engineering Complete, QA Complete, Product Acceptance and Release Approval (§7.5). |
+| **EP-005** | Frozen planning baseline | Once the Engineering Ready Baseline is established, the Product, UX, Architecture and Engineering Planning baselines are frozen. Changes require formal governance approval (§7.6). |
+| **EP-006** | Persona ownership | Each Team Satvi persona owns only its discipline (§7.7). No persona modifies another persona's baseline. |
+| **EP-007** | No silent changes | Engineering never silently modifies approved Product, UX or Architecture behaviour. Where implementation needs a behavioural change: stop implementation, raise a governance clarification, obtain Product Owner approval, then continue (§7.6). |
+| **EP-008** | Preview before Production | All engineering work deploys to Preview first. Production deployment happens only by merging the approved release branch into `main`. |
+| **EP-009** | Governance commit | Every release has one governance commit that records its Engineering Ready Baseline. That commit is the reference point for Engineering, QA, Product Acceptance and future comparison. |
+
+### 7.2 Branch strategy
+
+```text
+main                      Production. No direct engineering work (EP-002).
+ │
+ ├── release/r<major>.<minor>   One per release, created from main (EP-001).
+ │     │                         Holds the governance commit (EP-009) and all
+ │     │                         engineering work for that release. Deploys to Preview (EP-008).
+ │     └── merges into main only when EP-004 is satisfied.
+ │
+ └── hotfix/<short-description>  Permitted by EP-002 for urgent Production fixes.
+                                 Detailed hotfix procedure: planned playbooks/Git-Workflow.md.
+```
+
+- The recommended release-branch name is `release/r<major>.<minor>` (for example `release/r1.4`).
+- Merging a release branch into `main`, pushing to `main`, tagging and publishing a release remain Product Owner actions or require the Product Owner's explicit instruction.
+- Never force-push, rewrite shared history, or delete a release branch without explicit authority.
+
+### 7.3 Engineering Ready Baseline
+
+Before implementation starts, each release establishes **one Engineering Ready Baseline per release, not per workstream** (`DEC-R1.3-018`). It is made up of:
+
+| Baseline | Owner | Evidence |
+| --- | --- | --- |
+| Approved Product baseline | Arjun (approved by Vivek) | Product discovery, business analysis, requirements, business rules, acceptance criteria |
+| Approved UX baseline | Sophie (approved by Vivek) | UX specification, wireframes, interaction and responsive expectations |
+| Approved Architecture baseline | Archie (approved by Vivek) | Architecture validation, decisions, clarification notes |
+| Approved Engineering Planning | Rad (approved by Vivek) | Engineering plan, phases, migration, testing and regression strategy |
+| Approved Governance | Tiger (approved by Vivek) | Release tracker, decision log and feature register synchronised with the above |
+
+The baseline is established when all five are approved and synchronised and the Product Owner makes the **governance commit** (EP-009) on the release branch. The governance commit contains planning and governance documentation only — no implementation code — and its message states that it establishes the Engineering Ready Baseline. From that commit onward the baseline is frozen (EP-005).
+
+### 7.4 Release governance lifecycle
+
+| Stage | Lead | Outcome | Gate |
+| --- | --- | --- | --- |
+| 1. Release initiation | Tiger / Vivek | Release scope and workstreams agreed; release branch created from `main` | EP-001 |
+| 2. Product discovery and baseline | Arjun | Approved Product baseline | Product Owner approval |
+| 3. UX design | Sophie | Approved UX baseline | Product Owner approval |
+| 4. Architecture validation and clarification | Archie | Approved Architecture baseline | Product Owner approval |
+| 5. Engineering planning | Rad | Approved Engineering Planning | Product Owner approval |
+| 6. Governance synchronisation | Tiger | Tracker, decisions and registers aligned with stages 2–5 | Product Owner approval |
+| 7. Engineering Ready Baseline | Vivek | Governance commit made; baseline frozen | EP-003, EP-005, EP-009 |
+| 8. Implementation | Rad | Work delivered on the release branch and deployed to Preview | EP-002, EP-007, EP-008 |
+| 9. Engineering Complete | Rad | Lint, type, build and targeted checks pass; diff reviewed | Engineering report |
+| 10. QA Complete | Keerthi | Functional and regression validation against the frozen baseline (Sri's experience review where traveller-facing) | QA report |
+| 11. Product Acceptance | Vivek | Accepted, conditionally accepted or rework | Acceptance record |
+| 12. Release Approval | Vivek | Release decision recorded | EP-004 |
+| 13. Production | Vivek | Release branch merged into `main` | EP-004, EP-008 |
+| 14. Release closure | Tiger | Tracker closed; lessons and backlog recorded | Closure record |
+
+Work may return to an earlier stage when evidence requires it; any change to a frozen baseline follows §7.6. This lifecycle applies the general [Team Satvi delivery lifecycle](./README.md#delivery-lifecycle) to release branching and baselines; it does not replace it.
+
+### 7.5 Merge criteria
+
+A release branch may merge into `main` only when all of the following are recorded:
+
+- [ ] **Engineering Complete** — Rad's engineering report with checks run and results.
+- [ ] **QA Complete** — Keerthi's validation report, with no open release-blocking defects.
+- [ ] **Product Acceptance** — Vivek's acceptance decision, with any conditions closed.
+- [ ] **Release Approval** — Vivek's release decision in the release tracker.
+
+A green build or a successful Preview deployment is evidence, not approval.
+
+### 7.6 Change governance after the baseline is frozen
+
+1. The person who finds the need for a change **stops** the affected work. Unaffected work may continue.
+2. They raise a **governance clarification** to Tiger stating what changes, why, and which baseline it affects.
+3. The **owning persona** (§7.7) assesses the change and updates its own baseline document.
+4. **Vivek approves or rejects** the change. The decision is recorded in the release tracker.
+5. Implementation **continues** against the approved, updated baseline.
+
+Engineering defaults for gaps the baseline does not cover must be labelled as defaults and routed through this process; they are not silent decisions.
+
+### 7.7 Persona ownership
+
+| Discipline | Owner |
+| --- | --- |
+| Product | Arjun |
+| UX | Sophie |
+| Architecture | Archie |
+| Engineering | Rad |
+| QA | Keerthi |
+| Traveller experience | Sri |
+| Governance | Tiger |
+| Approval | Vivek (Product Owner) |
+
+A persona may review, question or recommend changes to another persona's baseline; only the owning persona edits it, and only Vivek approves it. See §5 for engineering accountability.
+
+### 7.8 Git hygiene baseline
 
 1. Inspect the working tree before editing and preserve unrelated changes.
-2. Start from the approved base branch and use a short-lived branch for scoped work unless Vivek has authorised another workflow.
+2. Work on the approved release branch (EP-001) or an approved hotfix branch (EP-002), never directly on `main`.
 3. Keep commits intentional, reviewable, and limited to one coherent concern.
-4. Use descriptive conventional-style subjects where practical, for example `feat(journey-passport): add callback preference`, `fix(journey-director): preserve selected region`, or `docs(ai-model): add engineering handbook`.
+4. Use descriptive conventional-style subjects where practical, for example `feat(journey-passport): add callback preference`, `fix(journey-director): preserve selected region`, or `chore(governance): establish Release 1.4 Engineering Ready Baseline`.
 5. Do not commit secrets, local environments, build output, dependency directories, or accidental generated files.
 6. Review the staged diff before committing. Confirm generated and lockfile changes are intentional.
-7. Do not rewrite shared history, force-push, bypass required checks, or push directly to a protected branch without explicit authority.
+7. Do not rewrite shared history, force-push, bypass required checks, or push to `main` without explicit authority.
 8. Use pull-request or review evidence appropriate to risk. Link the EBC, issue, specification, decision, and validation report where they exist.
 9. Resolve feedback in the code and source documentation; do not leave contradictory guidance in review comments alone.
 10. After integration, ensure the branch, documentation, and deployment evidence identify what actually shipped.
 
 Never discard, overwrite, or reformat unrelated working-tree changes merely to obtain a clean status.
+
+### 7.9 Adoption record
+
+| Release | Adoption | Evidence |
+| --- | --- | --- |
+| **Release 1.3** | **First release operating under these principles**, applied from its Engineering Ready Baseline onward. WS1–WS12 engineering pre-dates the principles and was committed on local `main`. | Governance commit `61b06e6` ("chore(governance): establish Release 1.3 Engineering Ready Baseline for WS13", 27-Sep-2026). Adoption assessment: `docs/09-Development/EBC-R1.3-GOV-005-TIGER-Engineering-Governance-Principles-v1.0.md`. |
+| Release 1.4 onward | Adopt as written, starting at lifecycle stage 1 with a dedicated `release/rX.Y` branch created from `main` (EP-001). | — |
+
+**Approved Release 1.3 exceptions and conditions (`DEC-R1.3-018`, 27-Sep-2026):**
+
+- **Release branch (EP-001):** Release 1.3 continues on its established engineering branch, `feature/r1.3-ws13-journey-workspace`, which serves as Release 1.3's release branch. No `release/r1.3` branch is introduced, to avoid restructuring branches during an active release.
+- **Engineering Ready Baseline (EP-003/EP-009):** one per release. Release 1.3's baseline is governance commit `61b06e6`.
+- **Local `main` (EP-002/EP-004):** local `main` holds unpushed commits, including WS11/WS12 engineering. It stays unpushed until Release 1.3 receives Product Acceptance and Release Approval.
+- **Deployment mapping (EP-008), confirmed by the Product Owner:** `main` → Production; `feature/r1.3-ws13-journey-workspace` → Preview.
+- **Project Instructions:** §26 of the Claude Project Instructions still recommends `feature/<ebc-number>-…` branches. It is not changed during Release 1.3; alignment with this section is a governance backlog item due before Release 1.4 planning (`docs/10-Backlog/RELEASE-1.3-GOVERNANCE-BACKLOG.md` §2.7). Until then, for release work this section is followed where the two differ, per the Product Owner's decision.
 
 ---
 

@@ -22,6 +22,7 @@ Release 1.2 introduced several governance document types alongside the pre-exist
 | **Standing operational definitions and provider inventories** | `docs/30-Governance/` | Provider Dependency Register; External Integration Definition of Done. |
 | **What's proposed for the next release** | `docs/10-Backlog/RELEASE-1.3-BACKLOG.md` (product/technical debt) and `RELEASE-1.3-GOVERNANCE-BACKLOG.md` (governance/operational playbooks) | Two deliberately separate documents — see the distinction stated in the Governance Backlog's own header. |
 | **A specific EBC's own record of what it did** | `docs/09-Development/` | Individual implementation, review, QA and governance-synchronization cards, named by EBC ID. |
+| **How engineering work is branched, baselined, merged and released** (Engineering Governance Principles `EP-001`–`EP-009`, Engineering Ready Baseline, merge criteria, Release Governance Lifecycle) | `docs/15-AI-Operating-Model/CLAUDE.md` §7 (Engineering Handbook) | Single canonical source, applicable to every release. Release trackers record adoption and exceptions only; they do not restate the principles. Added by `EBC-R1.3-GOV-005`. |
 | **Where any of the above should canonically live** | `docs/00-Project-Compass/DOCUMENT-INDEX.md` | The repository-wide document index; this map is one of its entries. |
 
 ## Why the Decision Log and the Release Tracker Aren't Merged

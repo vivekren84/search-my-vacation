@@ -4,7 +4,7 @@
 
 **Owner:** Search My Vacation — Product & Experience
 
-**Last updated:** 26 September 2026
+**Last updated:** 27 September 2026
 
 This index identifies the canonical repository location for the specifications that govern the current Search My Vacation product and EBC delivery workflow. Files outside these paths are not authoritative unless a later approved decision explicitly replaces them.
 
@@ -23,7 +23,7 @@ This index identifies the canonical repository location for the specifications t
 | Document | Canonical path | Purpose |
 | --- | --- | --- |
 | AIOM-001 — AI Operating Model Overview | `docs/15-AI-Operating-Model/README.md` | Entry point and navigation for the Team Satvi AI Operating Model |
-| AIOM-002 — SMV Engineering Handbook | `docs/15-AI-Operating-Model/CLAUDE.md` | Repository-wide engineering baseline, workflow, and technical conventions |
+| AIOM-002 — SMV Engineering Handbook | `docs/15-AI-Operating-Model/CLAUDE.md` | Repository-wide engineering baseline, workflow, and technical conventions; canonical home of the Engineering Governance Principles (`EP-001`–`EP-009`) and Release Governance Lifecycle (§7) |
 | AIOM-003 — Team Satvi Operating Model | `docs/15-AI-Operating-Model/TEAM-SATVI.md` | Team structure, collaboration, governance, and decision model |
 | AIOM-010 — Tiger Persona Manual | `docs/15-AI-Operating-Model/personas/Tiger.md` | Programme and delivery leadership mandate and boundaries |
 | AIOM-011 — Arjun Persona Manual | `docs/15-AI-Operating-Model/personas/Arjun.md` | Product and business analysis mandate and boundaries |
