@@ -256,6 +256,29 @@ Every entry records:
 
 ---
 
+## 10A. WS13 Entries
+
+`TD-WS13-001` (deprecated `workspace_journeys.status` column) is reserved for Tiger's log per `EBC-R1.3-WS13-004` GO-09 and is not recorded here.
+
+### TD-WS13-002 — Constraint-name collision prevents a fresh replay of migration `20260921070200`
+
+| Field | Value |
+|---|---|
+| ID | `TD-WS13-002` |
+| Title | Constraint-name collision prevents a fresh replay of migration `20260921070200` |
+| Category | Infrastructure |
+| Workstream | WS13 — Journey Workspace (found during Phase 0 local migration testing) |
+| Priority | Low |
+| Description | In `supabase/migrations/20260921070200_workspace_journey_planning_records.sql`, the inline column CHECK on `outcome` (line 34) receives PostgreSQL's automatic name `workspace_journey_planning_records_outcome_check`, which is also the explicit name of the table-level constraint on line 43. Replaying all migrations on an empty PostgreSQL 17.6 database fails at this file with "constraint … already exists". Found by Rad while testing `EBC-R1.3-WS13-005-P0` migrations locally (OBS-P0-01). |
+| Reason | The file is already recorded as applied on the shared Supabase project, so the live database and the normal `db push` path are unaffected. It only matters when the full history is replayed. |
+| Impact | `supabase db reset`, a new Supabase branch or a new environment built from migrations fails until worked around. |
+| Suggested Resolution | Archie/Rad to choose a non-destructive fix (for example, a baseline or squash approach, or an agreed amendment to the historical file) without changing the live schema. Phase 0 migrations already avoid the pattern by using explicit, distinct constraint names. |
+| Suggested Release / Sprint | Not yet scheduled |
+| Status | Open |
+| Date Logged | 28-Sep-2026 |
+
+---
+
 ## 11. Cross-References Established by This Card
 
 Per this card's own Deliverable 6 ("Update any relevant engineering governance documentation if necessary to reference the new Technical Debt Register"), two single-line cross-reference updates are made — no product backlog item content, priority, or status is changed by either:

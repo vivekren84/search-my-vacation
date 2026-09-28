@@ -51,7 +51,7 @@ Phase 0 delivers the WS13 database foundation and the new Journey Planning → J
 | WP-0.2 | Audit event types, system actor | M02; `shared/audit/types.ts`, `repository.ts`; labels | Done |
 | WP-0.3 | Condition-keyed notifications (AD-WS13-005) | M03 (columns, resolution, partial unique index); types/repository | Schema done. Raise/resolve condition functions deferred to P3 (Deviation ED-05). |
 | WP-0.4 | Task category / follow-up kind | M04; tasks types/repository | Done |
-| WP-0.5 | Configuration + readiness templates (AD-WS13-006, POD-01..04) | M05; `lib/workspace/settings/*` | Done. `document_types` and `vendor_service_types` seeded empty (EP-02 pending). Template items pending (EP-03). |
+| WP-0.5 | Configuration + readiness templates (AD-WS13-006, POD-01..04) | M05; `lib/workspace/settings/*` | Done. `document_types` and `vendor_service_types` seeded empty (EP-02 pending). Template items pending (EP-02; seeded by M05b in Phase 2). |
 | WP-0.6 | Vendor baseline (POD-05, PD-D) | M06; `lib/workspace/vendor-management/*` | Done |
 | WP-0.7 | Journey lifecycle extension (AD-WS13-001/003) | M07; `journey-workspace/types.ts`, `validation.ts`, `repository.ts` | Done |
 | WP-0.8 | Journey child tables + RLS | M08 | Done |
@@ -363,5 +363,91 @@ This is the exact script tested locally (72 lines; the WS12 function body is cop
   - Confirm whether "no bookings yet" should block readiness before Phase 2 uses it.
 - **OBS-P0-03:** `fetchWorkspaceUserRole` is now unused (superseded by `fetchWorkspaceUserAccess`). Candidate for TECH-DEBT cleanup; not removed, to keep the change minimal.
 - **OBS-P0-04:** Keerthi needs QA identities: Administrator, owner consultant, non-owner consultant, and one deactivated user (`deactivated_at` set by Vivek).
-- **OBS-P0-05:** EP-02 (document types, vendor service types) and EP-03 (readiness template items) content is still pending. It is seeded empty and not needed until Phases 2–3.
+- **OBS-P0-05:** EP-02 content (readiness template items, Document Types, Vendor Service Types) and EP-03 (vendor records) are still pending. The lists are seeded empty and the content is loaded by M05b in Phase 2 (WS13-004 §6.3). *(Corrected in Addendum A: the original wording mislabelled EP-03.)*
 - **OBS-P0-06 (for PO cleanup):** `_to_delete/` in the repo holds build/transfer leftovers (`ws13-p0-*.tgz`, `ws13-005-*.tgz`, `next-stale-*`, a build log, an old git lock). Delete the folder when convenient. It is untracked.
+
+---
+
+## Addendum A — Review Responses (2026-09-28)
+
+Responds to Tiger's Phase 0 engineering review. No code or migration was changed.
+
+### A.1 ED-06 — references to the legacy conversion function
+
+**Repository: verified — no remaining reference.** Search of the whole repository (excluding `node_modules`, `.next`, `_to_delete`) at `84c8904`:
+
+| Place | Result |
+|---|---|
+| Application code / API routes | One caller: `web/lib/workspace/journey-planning/repository.ts`. It calls the **new 4-argument** signature (`p_record_id, p_actor_id, p_confirmed_start_date, p_confirmed_end_date`). The only other `.rpc(` call is `workspace_user_directory`. |
+| Edge Functions | None. The repository has no `supabase/functions/` directory. |
+| Database triggers, views, other SQL functions | None. Only the defining migration (`20260921070600`) and M10 name it. The `create trigger` statements in other migrations are `updated_at` triggers. |
+| Scheduled jobs | None. No `pg_cron` / `pg_net` usage in any migration; no GitHub workflows; no `vercel.json` crons. |
+| Production code (`origin/main`) | No reference (no workspace code on `main`). |
+| Documentation | Mentions only (historical reports and plans). |
+
+**Live database: not verifiable from here.** Objects created directly in the Supabase dashboard would not be in the repository, and PostgreSQL does not record dependencies on names used inside PL/pgSQL bodies, so the `DROP` would not fail even if something still used it. Before Step 5, run these read-only checks in the Supabase SQL editor; each should return **no rows**:
+
+```sql
+-- Other functions whose body calls the legacy function
+select n.nspname, p.proname
+from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+where p.prosrc ilike '%workspace_convert_journey_planning_record%'
+  and p.proname <> 'workspace_convert_journey_planning_record';
+
+-- Views that reference it
+select schemaname, viewname from pg_views
+where definition ilike '%workspace_convert_journey_planning_record%';
+
+-- Only if pg_cron is enabled (skip if "relation cron.job does not exist")
+select jobid, jobname from cron.job
+where command ilike '%workspace_convert_journey_planning_record%';
+```
+
+and, from the repository root: `npx supabase functions list --linked` (expect no functions).
+
+Transitional note: any **older** Preview deployment of this branch (before `84c8904`) calls the 2-argument function and cannot convert after M10. Step 6 (deploy immediately) covers this.
+
+### A.2 Readiness evaluation — how it works today
+
+1. Readiness is evaluated from the **readiness items of the Journey's assigned template**. Items are created when a template is assigned ("Start preparation", Phase 1). A Journey with no template is `not_ready`.
+2. Only **Mandatory** items that are not **Not Applicable** count. Optional items never block (POD-01).
+3. An item is resolved when:
+   - manual item: status is Complete;
+   - system item `all_bookings_booked`: number of non-cancelled bookings **equals** number of Booked bookings;
+   - system item `all_required_documents_received`: number of Mandatory documents still Outstanding **is zero**.
+4. State: `ready` if no mandatory item is unresolved; otherwise `at_risk` inside the readiness window (14 days); otherwise `not_ready`.
+
+The implementation is in `…100800_workspace_journey_operational_summary_view.sql` (M09) and mirrored in `web/lib/workspace/journey-workspace/derivations.ts`.
+
+**Confirmed: the behaviour comes purely from the comparison.** With no bookings, `0 non-cancelled = 0 booked`, so the item counts as resolved. It is a business-rule clarification, not a defect. **The same pattern applies to documents:** with no Mandatory documents recorded, `all_required_documents_received` is also resolved. Both rules should be decided together.
+
+**Mapping to the Product states (for Arjun):** the view already holds the counts needed to derive a booking progress state without new data:
+
+| Product state | Derivation |
+|---|---|
+| Not Started | 0 non-cancelled bookings |
+| In Progress | ≥1 non-cancelled booking, not all Booked |
+| Completed | ≥1 non-cancelled booking and all Booked |
+
+The readiness rule would then resolve `all_bookings_booked` only when Completed. Open point for Arjun: a Journey that genuinely needs no SMV-arranged bookings would then rely on the item being marked Not Applicable (template must allow N/A).
+
+**Timing:** readiness has no consumer until Journey screens (Phase 1) and template content (M05b, Phase 2). The rule can therefore be corrected either (a) in M09 before the migration is applied (requires re-running the local tests), or (b) through a small corrective `create or replace view` migration plus the TypeScript mirror in Phase 1/2. Rad recommends (b), so the reviewed and tested Phase 0 package is applied unchanged.
+
+### A.3 Temporary implementations and known limitations within Release 1.3
+
+| ID | Item | Current Phase 0 behaviour | Planned resolution |
+|---|---|---|---|
+| TL-01 | Journey Owner display (ED-04) | "You" or raw user id in the Confirm dialog | Phase 1: use the user directory (M01) |
+| TL-02 | Replacement Journey reference (ED-01) | Plain text | Phase 1: link to Journey detail |
+| TL-03 | Condition alerts (ED-05) | Schema only | Phase 3 |
+| TL-04 | Reference content (EP-02 / EP-03) | Document Types, Vendor Service Types and readiness template items empty; templates exist as headers only | Phase 2: M05b + vendor load, once PO content is supplied |
+| TL-05 | **Newly declared (ED-07):** header / user-menu name does not yet read `display_name` | WS13-004 WP-0.1 said the display name should prefer `display_name`; Phase 0 added the column and the directory but the header still derives the name from the sign-in profile. No visible effect today because `display_name` is empty for everyone. | Phase 1, together with TL-01 |
+| TL-06 | No screen to set display names or deactivate a user | Done by an Administrator directly in Supabase (`workspace_users.display_name`, `deactivated_at`) | **Not in the current WS13 plan.** PO decision: accept database-managed for R1.3, or add a small admin item |
+| TL-07 | Legacy Journeys | Marked `legacy_pending`; not visible or adoptable | Phase 1: adoption (JW-17) |
+| TL-08 | Journey History labels for new events | Interim labels in `journeyPlanningLabels.ts` | Phase 1: Journey History screen |
+| TL-09 | Readiness "no bookings / no documents" rule | Counts as resolved (A.2) | Arjun decision; Phase 1/2 corrective migration |
+
+By design, not temporary: a converted Journey has no Journey screen and no readiness template until Phase 1 ("Start preparation" assigns the template).
+
+Technical debt (not required for R1.3 closure): the deprecated `workspace_journeys.status` column (TD-WS13-001), unused `fetchWorkspaceUserRole`, and the fresh-replay constraint-name collision (OBS-P0-01, now logged as `TD-WS13-002` in `docs/10-Backlog/TECH-DEBT.md`).
+
