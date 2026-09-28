@@ -10,6 +10,7 @@
 | Plan reference | EBC-R1.3-WS13-004 §4–§6 (WP-0.1 … WP-0.14) |
 | Date | 2026-09-28 |
 | Status | **Engineering complete — migrations PREPARED, NOT APPLIED.** Handed to Tiger for coordination; Vivek executes the migration sequence. |
+| Revision | 3 — documentation only (final deployment sequence, §5). See Revision History. |
 
 Rad's technical completion does not equal Keerthi's functional approval, Sri's experience approval or Product Owner acceptance.
 
@@ -101,16 +102,28 @@ None change product rules, UX structure or architecture. Each is raised for Tige
 
 ## 5. Deployment Considerations
 
-### 5.1 Approved sequence (Tiger)
+### 5.1 Approved deployment sequence (final)
+
+Approved by Tiger and the Product Owner during the Phase 0 engineering review (28-Sep-2026). It supersedes the original 8-step sequence (see Revision History). Main changes: the freeze comes **before** the backup, the live dependency checks are added before the migrations are applied, and migration parity is a step of its own.
 
 1. Announce the maintenance window.
-2. Temporarily stop recording Confirmed JP decisions.
-3. Take a logical backup before applying migrations.
-4. Verify the migration baseline.
-5. Apply all Phase 0 migrations as a single deployment unit.
-6. Deploy the Phase 0 application immediately afterwards.
-7. Smoke-test that recording a Confirmed JP decision succeeds.
-8. Resume normal operations.
+2. Freeze Journey Planning Confirmed decisions.
+3. Take the logical backup (§5.2).
+4. Verify the migration baseline (24/24) (§5.3).
+5. Perform the live dependency checks (Addendum A.1).
+6. Execute the following to apply M01–M10 (§5.3):
+   ```bash
+   npx supabase db push --linked --dry-run
+   npx supabase db push --linked
+   ```
+7. Redeploy the Preview deployment (§5.4).
+8. Perform smoke testing (§5.4).
+9. Verify migration parity (34/34) (§5.3).
+10. Resume normal operations.
+
+Why the freeze comes first: a Confirmed decision recorded after the backup would not be in it, and one recorded after M10 but before step 7 would fail, because the old application still calls the removed function.
+
+Phase 0 QA (Keerthi) starts only after step 7, once the Preview has been rebuilt against the migrated database.
 
 ### 5.2 Step 3 — logical backup (approved procedure)
 
@@ -127,7 +140,7 @@ ls -la "$BACKUP_DIR"
 - Capture `TS` once and reuse it.
 - The backup stays **outside the repository** and is **never committed**, because it contains traveller and lead personal data.
 
-### 5.3 Steps 4–5 — baseline and apply (run from the repository root)
+### 5.3 Steps 4, 6 and 9 — baseline, apply, parity (run from the repository root)
 
 ```bash
 cd /Users/viveksophu/Documents/Projects/SearchMyVacation
@@ -137,21 +150,23 @@ git pull --ff-only
 # Step 4: baseline — expect 24 local = 24 remote, plus 10 local-only (20260928100000 … 20260928100900)
 npx supabase migration list --linked
 
-# Step 5: preview what will be applied (expect exactly the 10 Phase 0 files), then apply as one unit
+# Step 5: live dependency checks — Addendum A.1 (SQL editor queries + functions list); all must return nothing
+
+# Step 6: preview what will be applied (expect exactly the 10 Phase 0 files), then apply as one unit
 npx supabase db push --linked --dry-run
 npx supabase db push --linked
 
-# Parity check — expect 34 local = 34 remote
+# Step 9: parity — expect 34 local = 34 remote
 npx supabase migration list --linked
 ```
 
-- **Approval point (ED-06):** confirm before `db push` that dropping `workspace_convert_journey_planning_record(uuid, uuid)` in M10 is accepted.
+- **ED-06:** removal of `workspace_convert_journey_planning_record(uuid, uuid)` by M10 is approved, subject to step 5 returning no references. If step 5 finds a reference, stop before step 6 and escalate to Tiger.
 - If `db push` stops part-way, do **not** re-run blindly. Record the output and run `migration list`. Then decide between completing and rolling back (§8).
 
-### 5.4 Steps 6–7 — deploy and smoke test
+### 5.4 Steps 7–8 — redeploy and smoke test
 
-- **Step 6:** redeploy the Vercel Preview for the feature branch (Redeploy on the latest Preview deployment) so the running app matches the schema.
-- **Step 7 smoke test** (Administrator or record owner, on a test JP record in Decision stage):
+- **Step 7:** redeploy the Vercel Preview for the feature branch (Redeploy on the latest Preview deployment) so the running app matches the schema.
+- **Step 8 smoke test** (Administrator or record owner, on a test JP record in Decision stage):
   1. In Trip Basics, set nights and a Service Category. Save.
   2. Choose **Confirm → Convert to Journey**. Enter start/end dates that match the nights.
   3. Expect the toast "Journey JRN-10xx created." and the record closed as Confirmed.
@@ -385,7 +400,7 @@ Responds to Tiger's Phase 0 engineering review. No code or migration was changed
 | Production code (`origin/main`) | No reference (no workspace code on `main`). |
 | Documentation | Mentions only (historical reports and plans). |
 
-**Live database: not verifiable from here.** Objects created directly in the Supabase dashboard would not be in the repository, and PostgreSQL does not record dependencies on names used inside PL/pgSQL bodies, so the `DROP` would not fail even if something still used it. Before Step 5, run these read-only checks in the Supabase SQL editor; each should return **no rows**:
+**Live database: not verifiable from here.** Objects created directly in the Supabase dashboard would not be in the repository, and PostgreSQL does not record dependencies on names used inside PL/pgSQL bodies, so the `DROP` would not fail even if something still used it. At step 5 of the final sequence (§5.1), before the migrations are applied, run these read-only checks in the Supabase SQL editor; each should return **no rows**:
 
 ```sql
 -- Other functions whose body calls the legacy function
@@ -405,7 +420,7 @@ where command ilike '%workspace_convert_journey_planning_record%';
 
 and, from the repository root: `npx supabase functions list --linked` (expect no functions).
 
-Transitional note: any **older** Preview deployment of this branch (before `84c8904`) calls the 2-argument function and cannot convert after M10. Step 6 (deploy immediately) covers this.
+Transitional note: any **older** Preview deployment of this branch (before `84c8904`) calls the 2-argument function and cannot convert after M10. Step 7 of the final sequence (§5.1, redeploy the Preview immediately) covers this.
 
 ### A.2 Readiness evaluation — how it works today
 
@@ -450,4 +465,14 @@ The readiness rule would then resolve `all_bookings_booked` only when Completed.
 By design, not temporary: a converted Journey has no Journey screen and no readiness template until Phase 1 ("Start preparation" assigns the template).
 
 Technical debt (not required for R1.3 closure): the deprecated `workspace_journeys.status` column (TD-WS13-001), unused `fetchWorkspaceUserRole`, and the fresh-replay constraint-name collision (OBS-P0-01, now logged as `TD-WS13-002` in `docs/10-Backlog/TECH-DEBT.md`).
+
+---
+
+## Revision History
+
+| Rev | Date | Change | Type |
+|---|---|---|---|
+| 1 | 28-Sep-2026 | Initial Phase 0 Engineering Completion Report (commit `84c8904`). | Engineering |
+| 2 | 28-Sep-2026 | Addendum A (review responses); EP-02/EP-03 label corrected; TD-WS13-002 cross-reference (commit `ea31f05`). | Documentation only |
+| 3 | 28-Sep-2026 | §5 updated to the final approved 10-step deployment sequence (freeze before backup; live dependency checks before apply; parity as its own step). Replaces the original 8 steps: announce; stop Confirmed JP decisions; logical backup; verify baseline; apply all migrations as one unit; deploy immediately; smoke test; resume. | Documentation only |
 
