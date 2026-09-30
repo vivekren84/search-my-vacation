@@ -6,7 +6,7 @@
 Document Type : Engineering Governance Register (documentation only — no code, no configuration, no schema change)
 Release       : Established during Release 1.3 (`EBC-R1.3-WS12-008`); intended to remain live and release-independent across future releases
 Persona       : Tiger — Programme and Delivery Lead
-Status        : ESTABLISHED — register created; three initial WS12 items seeded, none yet actioned
+Status        : ACTIVE — 8 open items (TD-WS12-001 to -005, TD-WS13-001 to -003); none resolved (updated 30-Sep-2026, `EBC-R1.3-WS13-006`)
 Owner         : Rad (Engineering and Implementation Specialist) — day-to-day custodian; Tiger — governance and prioritisation oversight
 Related documents : docs/10-Backlog/RELEASE-1.3-BACKLOG.md §9 (historical, WS5-sourced Engineering Technical Debt — superseded for new entries, not migrated); docs/10-Backlog/PRODUCT-EVOLUTION-BACKLOG.md; docs/10-Backlog/FUTURE-CONSIDERATIONS.md; docs/10-Backlog/RELEASE-1.3.md; docs/09-Development/EBC-R1.3-WS12-007-RADHA-Journey-Planning-Engineering-Implementation.md
 Distinct from : RELEASE-1.3-BACKLOG.md (product decisions, candidate features and vision items — not engineering-internal quality items), PRODUCT-EVOLUTION-BACKLOG.md (Product Owner-approved future business capabilities, module/workstream-scale), FUTURE-CONSIDERATIONS.md (tactical items a completed workstream's own review explicitly deferred, spanning any discipline — Product, UX, Architecture or Engineering), RELEASE-1.3-GOVERNANCE-BACKLOG.md (process/playbook recommendations). This register holds only engineering-internal quality debt — code, architecture, performance, accessibility, security, infrastructure, developer experience, documentation and testing — never product enhancements, feature requests, roadmap items or future releases. See Section 6 for the full relationship analysis.
@@ -27,6 +27,8 @@ Distinct from : RELEASE-1.3-BACKLOG.md (product decisions, candidate features an
 |---|---|---|---|
 | 1.0 | 21-Sep-2026 | Tiger | Initial establishment, per `EBC-R1.3-WS12-008`. Defines the Technical Debt Register's purpose, ownership, prioritisation model, lifecycle, and its relationship to the Product Backlog and Release Planning. Defines nine debt categories and the standard entry format. Seeds three initial entries (`TD-WS12-001`–`003`) identified during WS12 engineering smoke validation. Cross-referenced from `RELEASE-1.3-BACKLOG.md` §9 and `PRODUCT-EVOLUTION-BACKLOG.md`'s "Distinct from" table (one line each, disclosed in Section 11 below) — no product backlog item content changed. |
 | 1.1 | 22-Sep-2026 | Rad | Lifecycle review per `EBC-R1.3-WS12-010` (QA Defect Resolution). `TD-WS12-001`, `TD-WS12-002`, `TD-WS12-003` reviewed: none marked Resolved. `TD-WS12-001` annotated (not resolved) — WS12-010 incidentally added `id`/`name` attributes to the Journey Planning module's own form controls while fixing an unrelated defect; the register's own cross-Workspace scope is unaddressed, so Status remains Open. `TD-WS12-002`/`TD-WS12-003` untouched by WS12-010 (no images or preload changes made); Status remains Open on both. No entry deleted or renumbered. |
+| 1.2 | 28-Sep-2026 | Rad | Added `TD-WS13-002` (fresh-replay constraint-name collision, OBS-P0-01) under new §10A, per `EBC-R1.3-WS13-005-P0` Addendum A. *Row added retrospectively on 30-Sep-2026 by Tiger (`EBC-R1.3-WS13-006`): the entry was added without a change-history row.* |
+| 1.3 | 30-Sep-2026 | Tiger | Phase 0 synchronisation per `EBC-R1.3-WS13-006`. Logged the items `EBC-R1.3-WS13-004` GO-09 assigned to Tiger: `TD-WS13-001` (deprecated `workspace_journeys.status`), `TD-WS12-004` (SEC-02, JP `using (true)` UPDATE policies), `TD-WS12-005` (SEC-03, open notification INSERT). Added `TD-WS13-003` (unused `fetchWorkspaceUserRole`, OBS-P0-03). Set a suggested release on `TD-WS13-002`. Header status line brought current. |
 
 ---
 
@@ -258,7 +260,7 @@ Every entry records:
 
 ## 10A. WS13 Entries
 
-`TD-WS13-001` (deprecated `workspace_journeys.status` column) is reserved for Tiger's log per `EBC-R1.3-WS13-004` GO-09 and is not recorded here.
+`TD-WS13-001` was reserved for Tiger's log per `EBC-R1.3-WS13-004` GO-09; it is recorded below (30-Sep-2026, `EBC-R1.3-WS13-006`) together with the two WS12 security items GO-09 also assigned (`TD-WS12-004`, `TD-WS12-005`, in §10B).
 
 ### TD-WS13-002 — Constraint-name collision prevents a fresh replay of migration `20260921070200`
 
@@ -273,9 +275,87 @@ Every entry records:
 | Reason | The file is already recorded as applied on the shared Supabase project, so the live database and the normal `db push` path are unaffected. It only matters when the full history is replayed. |
 | Impact | `supabase db reset`, a new Supabase branch or a new environment built from migrations fails until worked around. |
 | Suggested Resolution | Archie/Rad to choose a non-destructive fix (for example, a baseline or squash approach, or an agreed amendment to the historical file) without changing the live schema. Phase 0 migrations already avoid the pattern by using explicit, distinct constraint names. |
-| Suggested Release / Sprint | Not yet scheduled |
+| Suggested Release / Sprint | Release 1.4 — before any new environment is built (prerequisite for the environment-isolation review, `RELEASE-1.3-GOVERNANCE-BACKLOG.md` §2.9). Proposed 30-Sep-2026, Product Owner to confirm. |
 | Status | Open |
 | Date Logged | 28-Sep-2026 |
+
+### TD-WS13-001 — Deprecated `workspace_journeys.status` column still present
+
+| Field | Value |
+|---|---|
+| ID | `TD-WS13-001` |
+| Title | Remove the deprecated `workspace_journeys.status` column after WS13 stabilises |
+| Category | Architecture |
+| Workstream | WS13 — Journey Workspace |
+| Priority | Low |
+| Description | AD-WS13-001 replaces the old `status` column with the `stage` lifecycle. M07 (`20260928100600`) keeps `status` and marks it "deprecated (TD-WS13-001)" instead of dropping it, so older code keeps working during the transition. |
+| Reason | Dropping it in Phase 0 would add risk to the coupled M07/M10 deployment for no benefit. |
+| Impact | Two sources of Journey state until removed; a risk of new code reading the wrong one. |
+| Suggested Resolution | After WS13 is complete and no code reads `status`, drop it with a reviewed migration (Archie Q-JW-01). |
+| Suggested Release / Sprint | Release 1.4 (proposed; Product Owner to confirm) |
+| Owner | Rad (Archie reviews the migration) |
+| Status | Open |
+| Date Logged | 30-Sep-2026 |
+
+### TD-WS13-003 — Unused `fetchWorkspaceUserRole` helper
+
+| Field | Value |
+|---|---|
+| ID | `TD-WS13-003` |
+| Title | Remove unused `fetchWorkspaceUserRole` |
+| Category | Code Quality |
+| Workstream | WS13 — Journey Workspace (Phase 0, OBS-P0-03) |
+| Priority | Very Low |
+| Description | Phase 0 replaced `fetchWorkspaceUserRole` with `fetchWorkspaceUserAccess` (which also reads deactivation). The old function is no longer called but was left in place to keep the change minimal. |
+| Reason | Dead code only; no behaviour impact. |
+| Impact | Risk that new code uses the old helper and misses the deactivation check. |
+| Suggested Resolution | Delete the function in the next change that touches the auth helpers. |
+| Suggested Release / Sprint | WS13 Phase 1 (opportunistic), otherwise Release 1.4 |
+| Owner | Rad |
+| Status | Open |
+| Date Logged | 30-Sep-2026 |
+
+---
+
+## 10B. WS12 Security Posture Entries (logged from WS13 architecture review)
+
+Source: `EBC-R1.3-WS13-003` §3 (SEC-02, SEC-03) and `EBC-R1.3-WS13-004` GO-09. SEC-01 was fixed in Phase 0 (conversion v2); SEC-04 is mitigated by deactivation replacing deletion (AD-WS13-007) and is not logged.
+
+### TD-WS12-004 — Journey Planning UPDATE policies are `using (true) with check (true)` (SEC-02)
+
+| Field | Value |
+|---|---|
+| ID | `TD-WS12-004` |
+| Title | Add record-scoped RLS to Journey Planning UPDATE policies |
+| Category | Security |
+| Workstream | WS12 — Journey Planning (found in WS13 architecture review) |
+| Priority | Medium |
+| Description | Journey Planning tables allow any authenticated Workspace user to update any row at database level; record-scoped authorisation exists only in application code. |
+| Reason | Application checks enforce the rules today, and WS13 tables do not repeat the pattern (AD-WS13-002). It is a defence-in-depth gap, not an open exploit through the UI. |
+| Impact | A client that calls the API directly with a valid session could bypass application-level ownership rules. |
+| Suggested Resolution | A security hardening card: replace the permissive policies with owner/Administrator-scoped policies or move writes to self-authorising RPCs, with WS12 regression. |
+| Suggested Release / Sprint | Security hardening card — Release 1.3 or 1.4 (Archie Q-JW-02; Product Owner to decide) |
+| Owner | Archie (design), Rad (build) |
+| Status | Open |
+| Date Logged | 30-Sep-2026 |
+
+### TD-WS12-005 — `workspace_notifications` INSERT is `with check (true)` (SEC-03)
+
+| Field | Value |
+|---|---|
+| ID | `TD-WS12-005` |
+| Title | Restrict who can insert Workspace notifications |
+| Category | Security |
+| Workstream | WS12 — Journey Planning / WS11 Foundation (found in WS13 architecture review) |
+| Priority | Medium |
+| Description | Any authenticated user can insert a notification addressed to any other user. |
+| Reason | No UI writes notifications directly; WS13 system alerts are written by RPC or service role (AD-WS13-005). |
+| Impact | A direct API caller could create misleading notifications for other users. |
+| Suggested Resolution | Limit INSERT to RPC / service role (or to rows where the caller is the actor), in the same hardening card as `TD-WS12-004`, ideally before Phase 3 (alerts). |
+| Suggested Release / Sprint | Same as `TD-WS12-004`; before WS13 Phase 3 recommended |
+| Owner | Archie (design), Rad (build) |
+| Status | Open |
+| Date Logged | 30-Sep-2026 |
 
 ---
 

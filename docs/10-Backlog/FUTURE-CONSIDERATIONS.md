@@ -34,6 +34,7 @@ Distinct from : RELEASE-1.3-BACKLOG.md (the product/UX/engineering-technical-deb
 | 1.9 | 18-Sep-2026 | Tiger | Workstream Closure Review Log entry for Workstream 11 (SMV Workspace — Workspace Foundation Completion Closure), per `EBC-R1.3-WS11-013` Governance & Documentation Synchronisation. Outcome: **Additions made** — `FCR-024` (§3.4 Engineering): the `guard.ts` fallback redirect not preserving `redirectTo`, named as a Future Consideration in `EBC-R1.3-WS11-011F` §13 and reaffirmed unaffected in `EBC-R1.3-WS11-011H` §14. `FCR-025` (§3.3 UX): the reserved navigation icon slot (WS11A-11), classified "Future Consideration" by Archie's own Architecture Review (`EBC-R1.3-WS11-011B` §14) and never adopted. Updated the Traceability Matrix (§4) and this Workstream Closure Review Log (§5.1) accordingly. No existing entry changed; no scope, priority or estimate introduced. Not logged as Future Considerations, per this card's own instruction to record only intentionally-deferred items: the 27 QA "Not Tested" items recorded across `EBC-R1.3-WS11-011E`/`-011I` (Password Reset end-to-end, `privilege_user` role coverage, remaining placeholder-module clicks, multi-tab/keyboard-only negative cases) — these are pending validation coverage, not deferred product or engineering enhancements, and remain Keerthi's own recommended follow-up QA rather than register material. |
 | 1.10 | 18-Sep-2026 | Tiger | Workstream Closure Review Log entry for Workstream 11 (SMV Workspace — Governance Transition / Foundation Closure), per `EBC-R1.3-WS11-015` Workspace Foundation Governance Transition & Release Synchronisation (closing out the Product Owner's Product Acceptance decision recorded in `EBC-R1.3-WS11-014`: **Accepted with Conditions**). Outcome: **None identified** — reviewed; the two outstanding conditions (committing the WS11-007→011H code change set and the six outstanding Rad/Keerthi reports to `docs/09-Development/`) are repository-governance and milestone-completion items, already tracked via `DEC-R1.3-011` in `RELEASE-1.3.md`, not intentionally-deferred product or engineering enhancements within this register's own §1 scope. No new FCR entry added. This closure also formally redefines WS11's scope as Foundation-only; the Workspace business modules are out of WS11's closed scope and will be tracked under future, separately-numbered Workspace workstream(s) once approved — none are created or renumbered by this update. |
 | 1.11 | 28-Sep-2026 | Tiger | Per `EBC-R1.3-WS13-005` Phase A Delivery Closure: added `FCR-026` (PO-OBS-01, Dashboard KPI iconography) and `FCR-027` (OBS-QA-PA-01, header overflow at narrow widths) to §3.3, traceability rows (§4) and a Workstream Closure Review Log entry (§5.1). |
+| 1.12 | 30-Sep-2026 | Tiger | Per `EBC-R1.3-WS13-006` Phase 0 Deployment Closure: added `FCR-028` (automated migration and deployment verification) to §3.4, a traceability row (§4) and a closure-review log entry (§5.1). |
 
 ---
 
@@ -288,6 +289,16 @@ No entry below is assigned a target release. Per this register's own establishin
 *Suggested Review Timing:* If the authentication or routing architecture changes, or as a low-risk defence-in-depth improvement whenever a future Workspace authentication card is next opened.
 *Status:* Deferred.
 
+**FCR-028 — Automated migration and deployment verification**
+*Description:* In WS13 Phase 0 every deployment check was run by hand: migration baseline and parity (`supabase migration list`), dry-run, live dependency checks and the smoke test. A CI step (for example on the release branch) could report migration parity and run the dependency queries and a scripted smoke test automatically.
+*Originating EBC/ADR:* `EBC-R1.3-WS13-006-TIGER-Phase-0-Deployment-Closure-and-Governance-Synchronisation.md` (from the Phase 0 deployment, `DEC-R1.3-021`).
+*Reason for Deferral:* CI/CD implementation is out of scope for Release 1.3 governance (`EBC-R1.3-GOV-005` Out of Scope). The manual runbook (`RELEASE-1.3-GOVERNANCE-BACKLOG.md` §2.10) covers Release 1.3.
+*Dependencies:* Runbook §2.10 (defines the checks to automate); environment-isolation review §2.9; `TD-WS13-002` (a fresh replay must work before CI can build a throwaway database).
+*Suggested Review Timing:* Release 1.4 planning, alongside §2.9.
+*Status:* Deferred.
+
+Items reviewed and **not** added here, to avoid duplicates: the Release Deployment Runbook, maintenance-window announcement, phase deployment checklist and backup handling (all in `RELEASE-1.3-GOVERNANCE-BACKLOG.md` §2.10); Preview/Production separation (§2.9).
+
 ### 3.5 Documentation
 
 **FCR-015 — ADR addendum recording the new Destination Intelligence ↔ geo-truth dependency edge**
@@ -350,6 +361,7 @@ No entry below is assigned a target release. Per this register's own establishin
 | `docs/09-Development/EBC-R1.3-WS11-011B-ARCHIE-Workspace-UX-Architecture-Review-Engineering-Readiness.md` | FCR-025 |
 | `docs/09-Development/EBC-R1.3-WS13-005-TIGER-Phase-A-Delivery-Closure-and-Phase-0-Authorisation.md` | FCR-026 |
 | `docs/09-Development/EBC-R1.3-WS13-005-QA-PA-KEERTHI-Phase-A-CM-03-QA-Completion-Report.md` | FCR-027 |
+| `docs/09-Development/EBC-R1.3-WS13-006-TIGER-Phase-0-Deployment-Closure-and-Governance-Synchronisation.md` | FCR-028 |
 
 Every FCR entry above traces to at least one specific, completed governance document — no entry in Section 3 was originated by this register itself.
 
@@ -398,6 +410,8 @@ Per the closure-trigger rule above, every workstream closure logs an explicit ou
 | Workstream 11 — SMV Workspace (Governance Transition / Foundation Closure) | `EBC-R1.3-WS11-015-TIGER-Workspace-Foundation-Governance-Transition-Release-Synchronisation.md` (this review; closes out the Product Owner's Product Acceptance decision recorded in `EBC-R1.3-WS11-014`: **Accepted with Conditions**) | Tiger | 18-Sep-2026 | **None identified** — reviewed; the two outstanding conditions (repository-governance and milestone-completion items, not engineering or product defects) are tracked via `DEC-R1.3-011` in `RELEASE-1.3.md`, not as Future Considerations. WS11 is formally closed and redefined as the Foundation-only workstream; the Workspace business modules will be tracked under future, separately-numbered Workspace workstream(s) once approved. |
 
 | Workstream 13 — Journey Workspace (Phase A Delivery Closure — CM-03) | `EBC-R1.3-WS13-005-TIGER-Phase-A-Delivery-Closure-and-Phase-0-Authorisation.md` | Tiger | 28-Sep-2026 | Additions made — FCR-026 (PO-OBS-01, Dashboard KPI iconography), FCR-027 (OBS-QA-PA-01, header overflow at narrow widths). WS13 itself remains In Progress. |
+
+| Workstream 13 — Journey Workspace (Phase 0 Deployment Closure — not a workstream closure) | `EBC-R1.3-WS13-006-TIGER-Phase-0-Deployment-Closure-and-Governance-Synchronisation.md` | Tiger | 30-Sep-2026 | Additions made — FCR-028 (automated deployment verification). Deployment runbook items routed to the Governance Backlog §2.10, not duplicated here. WS13 remains In Progress. |
 
 Future rows follow the same pattern, including an explicit "None identified" outcome where applicable (e.g. `| Workstream N — <name> | <closure card> | <persona> | <date> | None identified — reviewed, no new deferred items named. |`).
 

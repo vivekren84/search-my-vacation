@@ -29,6 +29,18 @@ Effective Date: 26 August 2026
 
 Each recommendation below follows the same rationale: Release 1.2's MSG91/DLT experience showed that a first-time external-provider integration carries real, non-obvious operational risk (regulatory chains, provider-account quirks, approval-timeline uncertainty) that a purely engineering-focused EBC does not surface until implementation is already underway. A short, provider-category-specific playbook — written once a provider is actually selected — prevents each future integration from rediscovering this the hard way.
 
+### 2.0 Status summary (added 30-Sep-2026, `EBC-R1.3-WS13-006`)
+
+| Item | Title | Status | Due |
+|---|---|---|---|
+| §2.1–§2.6 | Provider playbooks and third-party standards (from `EBC-R1.2-GOV-001`) | Not started — each waits for its provider to be selected | When scoped |
+| §2.7 | Align Project Instructions with the Engineering Governance Principles | Open — deferred by decision (`DEC-R1.3-018` D-5) | Before Release 1.4 planning |
+| §2.8 | Engineering phase approval lifecycle and report sections | Open — in use as working practice (Phase A, Phase 0) | Post–Release 1.3 Governance Documentation Review |
+| §2.9 | Release 1.4 review: Preview/Production environment isolation | Open | Release 1.4 planning |
+| §2.10 | Phase / Release Deployment Runbook | **New — Open** | Before the next WS13 migration deployment |
+
+No item is complete yet. Phase 0 exercised §2.8 and the practices now written up as §2.10; neither is closed until written into the canonical documents.
+
 ### 2.1 Payment Gateway Playbook
 
 **Recommendation:** When Search My Vacation selects a payment gateway (for deposits, full payments, or refunds), produce a playbook covering: merchant account onboarding and KYC, PCI-DSS scope boundaries for a Next.js/Vercel/Supabase stack, webhook signature verification, refund/chargeback operational flow, and sandbox-to-production credential transition. This is likely the highest-risk future integration on this list, given the regulatory and fraud-liability surface of payments specifically.
@@ -91,6 +103,8 @@ Each recommendation below follows the same rationale: Release 1.2's MSG91/DLT ex
 
 **Owner (proposed):** Tiger (draft), Vivek (approval — the Project Instructions are maintained by the Product Owner).
 
+**Status (30-Sep-2026):** Open — deferred to before Release 1.4 planning.
+
 ### 2.8 Engineering phase approval lifecycle and report sections
 
 *Added 28-Sep-2026 by `EBC-R1.3-WS13-005` (Phase A Delivery Closure). Does not arise from `EBC-R1.2-GOV-001`.*
@@ -104,6 +118,8 @@ Each recommendation below follows the same rationale: Release 1.2's MSG91/DLT ex
 **Priority (recommended, not authorised):** Medium.
 
 **Owner (proposed):** Tiger (draft), Vivek (approval).
+
+**Status (30-Sep-2026):** Open — used as working practice in Phase A and Phase 0.
 
 ### 2.9 Release 1.4 architectural review — Preview and Production environment isolation
 
@@ -120,6 +136,29 @@ Each recommendation below follows the same rationale: Release 1.2's MSG91/DLT ex
 **Priority (recommended, not authorised):** High — the shared database is the main environment risk carried by Release 1.3.
 
 **Owner (proposed):** Archie (review), Tiger (scheduling), Vivek (decision).
+
+**Status (30-Sep-2026):** Open. RISK-R1.3-001 in the tracker records the accepted Release 1.3 risk. Note: a separate environment built from migrations first needs TD-WS13-002 fixed.
+
+### 2.10 Phase / Release Deployment Runbook
+
+*Added 30-Sep-2026 by `EBC-R1.3-WS13-006`, from the WS13 Phase 0 deployment (`DEC-R1.3-021`). Does not arise from `EBC-R1.2-GOV-001`.*
+
+**Context:** The Phase 0 deployment sequence lives only inside Rad's Phase 0 report (`EBC-R1.3-WS13-005-P0` §5). Phases 1–4 will need the same steps, and no execution log of the Phase 0 run is kept in the repository.
+
+**Recommendation:** Write one reusable runbook, owned by Tiger with Rad, covering:
+
+1. **Maintenance announcement:** who is told, how far ahead, and the wording for the Workspace team.
+2. **Phase deployment checklist:** freeze before backup; Docker running (needed by `supabase db dump`); logical backup (schema, data, roles) and **verification** (files present, non-empty, recorded); baseline `migration list`; live dependency checks for anything being dropped; `db push --dry-run`, then apply as one unit; Preview on the matching code; smoke test script; parity `migration list`; resume.
+3. **Stop rules:** what to do if a step fails or `db push` stops part-way (record output, run `migration list`, decide between completing and rolling back).
+4. **Rollback:** the difference between a forward-fix migration and a backup restore, and who decides.
+5. **Backup handling:** location outside the repository, never committed (personal data), retention period and deletion.
+6. **Deployment record template:** date and time, operator, backup location and verification, baseline and parity counts, dry-run output summary, dependency-check result, Preview deployment id, smoke-test result, issues. Filed with the phase's closure record.
+
+Canonical home: an Operations runbook under `docs/50-Operations/`, linked from Engineering Handbook §7 (EP-008). Until published, `EBC-R1.3-WS13-005-P0` §5 remains the procedure.
+
+**Priority (recommended, not authorised):** High — Phase 1 is expected to include further migrations on the shared database (RISK-R1.3-001).
+
+**Owner (proposed):** Tiger (draft), Rad (technical steps), Vivek (approval and operator).
 
 ---
 
