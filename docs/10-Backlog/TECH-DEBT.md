@@ -6,7 +6,7 @@
 Document Type : Engineering Governance Register (documentation only — no code, no configuration, no schema change)
 Release       : Established during Release 1.3 (`EBC-R1.3-WS12-008`); intended to remain live and release-independent across future releases
 Persona       : Tiger — Programme and Delivery Lead
-Status        : ACTIVE — 8 open items (TD-WS12-001 to -005, TD-WS13-001 to -003); none resolved (updated 30-Sep-2026, `EBC-R1.3-WS13-006`)
+Status        : ACTIVE — 10 open items (TD-WS12-001 to -005, TD-WS13-001 to -005); none resolved (updated 1-Oct-2026, `EBC-R1.3-WS13-016`)
 Owner         : Rad (Engineering and Implementation Specialist) — day-to-day custodian; Tiger — governance and prioritisation oversight
 Related documents : docs/10-Backlog/RELEASE-1.3-BACKLOG.md §9 (historical, WS5-sourced Engineering Technical Debt — superseded for new entries, not migrated); docs/10-Backlog/PRODUCT-EVOLUTION-BACKLOG.md; docs/10-Backlog/FUTURE-CONSIDERATIONS.md; docs/10-Backlog/RELEASE-1.3.md; docs/09-Development/EBC-R1.3-WS12-007-RADHA-Journey-Planning-Engineering-Implementation.md
 Distinct from : RELEASE-1.3-BACKLOG.md (product decisions, candidate features and vision items — not engineering-internal quality items), PRODUCT-EVOLUTION-BACKLOG.md (Product Owner-approved future business capabilities, module/workstream-scale), FUTURE-CONSIDERATIONS.md (tactical items a completed workstream's own review explicitly deferred, spanning any discipline — Product, UX, Architecture or Engineering), RELEASE-1.3-GOVERNANCE-BACKLOG.md (process/playbook recommendations). This register holds only engineering-internal quality debt — code, architecture, performance, accessibility, security, infrastructure, developer experience, documentation and testing — never product enhancements, feature requests, roadmap items or future releases. See Section 6 for the full relationship analysis.
@@ -29,6 +29,7 @@ Distinct from : RELEASE-1.3-BACKLOG.md (product decisions, candidate features an
 | 1.1 | 22-Sep-2026 | Rad | Lifecycle review per `EBC-R1.3-WS12-010` (QA Defect Resolution). `TD-WS12-001`, `TD-WS12-002`, `TD-WS12-003` reviewed: none marked Resolved. `TD-WS12-001` annotated (not resolved) — WS12-010 incidentally added `id`/`name` attributes to the Journey Planning module's own form controls while fixing an unrelated defect; the register's own cross-Workspace scope is unaddressed, so Status remains Open. `TD-WS12-002`/`TD-WS12-003` untouched by WS12-010 (no images or preload changes made); Status remains Open on both. No entry deleted or renumbered. |
 | 1.2 | 28-Sep-2026 | Rad | Added `TD-WS13-002` (fresh-replay constraint-name collision, OBS-P0-01) under new §10A, per `EBC-R1.3-WS13-005-P0` Addendum A. *Row added retrospectively on 30-Sep-2026 by Tiger (`EBC-R1.3-WS13-006`): the entry was added without a change-history row.* |
 | 1.3 | 30-Sep-2026 | Tiger | Phase 0 synchronisation per `EBC-R1.3-WS13-006`. Logged the items `EBC-R1.3-WS13-004` GO-09 assigned to Tiger: `TD-WS13-001` (deprecated `workspace_journeys.status`), `TD-WS12-004` (SEC-02, JP `using (true)` UPDATE policies), `TD-WS12-005` (SEC-03, open notification INSERT). Added `TD-WS13-003` (unused `fetchWorkspaceUserRole`, OBS-P0-03). Set a suggested release on `TD-WS13-002`. Header status line brought current. |
+| 1.4 | 1-Oct-2026 | Tiger | Phase 0 QA review per `EBC-R1.3-WS13-016`. Added `TD-WS13-004` (success toast not announced to screen readers, OBS-P0-QA-01) and `TD-WS13-005` (browser session kept after authorisation refusal, OBS-P0-QA-06). Other QA observations reviewed and not logged as debt (planned work, UX decisions or unconfirmed performance findings — see the card's §C). |
 
 ---
 
@@ -314,6 +315,42 @@ Every entry records:
 | Owner | Rad |
 | Status | Open |
 | Date Logged | 30-Sep-2026 |
+
+### TD-WS13-004 — Conversion success toast not announced to screen readers
+
+| Field | Value |
+|---|---|
+| ID | `TD-WS13-004` |
+| Title | Add a live region to Workspace success toasts |
+| Category | Accessibility |
+| Workstream | WS13 — Journey Workspace (Phase 0 QA, OBS-P0-QA-01) |
+| Priority | Low |
+| Description | The "Journey JRN-xxxx created." toast has no ARIA live region, so screen readers do not announce it. Found by Keerthi in Phase 0 QA. |
+| Reason | Keyboard flow passed; the toast is confirmation, not the only path to the result. The visible-duration / missing-reference part is a UX question tracked as carry-forward WS13-P1-G, not here. |
+| Impact | Screen-reader users get no confirmation that the Journey was created. |
+| Suggested Resolution | Use a polite live region (`role="status"`) for success toasts, in the shared toast component. |
+| Suggested Release / Sprint | WS13 Phase 1 (with Journey screens) |
+| Owner | Rad (Sophie confirms pattern) |
+| Status | Open |
+| Date Logged | 1-Oct-2026 |
+
+### TD-WS13-005 — Browser session kept after authorisation refusal
+
+| Field | Value |
+|---|---|
+| ID | `TD-WS13-005` |
+| Title | Sign out the browser session when a deactivated or unprovisioned user is refused |
+| Category | Security |
+| Workstream | WS13 — Journey Workspace (Phase 0 QA, OBS-P0-QA-06) |
+| Priority | Low |
+| Description | When a deactivated user signs in, Workspace refuses access correctly, but the Supabase session stays in the browser. |
+| Reason | Every page and API still refuses the user (P0-INACT-01..03 Passed), so there is no access gap. It is session hygiene. |
+| Impact | A leftover valid session on a shared device; possible confusion if the account is reactivated. |
+| Suggested Resolution | Call sign-out when access is refused for `unauthorized` / deactivated, then show the refusal message. |
+| Suggested Release / Sprint | WS13 Phase 1 (with deactivated-user behaviour, `OD-R1.3-7`) |
+| Owner | Rad |
+| Status | Open |
+| Date Logged | 1-Oct-2026 |
 
 ---
 

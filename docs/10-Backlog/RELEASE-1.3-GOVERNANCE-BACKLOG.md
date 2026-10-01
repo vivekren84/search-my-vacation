@@ -37,9 +37,10 @@ Each recommendation below follows the same rationale: Release 1.2's MSG91/DLT ex
 | §2.7 | Align Project Instructions with the Engineering Governance Principles | Open — deferred by decision (`DEC-R1.3-018` D-5) | Before Release 1.4 planning |
 | §2.8 | Engineering phase approval lifecycle and report sections | Open — in use as working practice (Phase A, Phase 0) | Post–Release 1.3 Governance Documentation Review |
 | §2.9 | Release 1.4 review: Preview/Production environment isolation | Open | Release 1.4 planning |
-| §2.10 | Phase / Release Deployment Runbook | **New — Open** | Before the next WS13 migration deployment |
+| §2.10 | Phase / Release Deployment Runbook | Open — not yet written | Before the next WS13 migration deployment |
+| §2.11 | QA Execution Playbook | **New — Open** (added 1-Oct-2026) | Before Phase 1 QA |
 
-No item is complete yet. Phase 0 exercised §2.8 and the practices now written up as §2.10; neither is closed until written into the canonical documents.
+No item is complete yet. Phase 0 exercised §2.8, §2.10 and §2.11 as working practice; none is closed until written into the canonical documents. *Updated 1-Oct-2026 (`EBC-R1.3-WS13-016`).*
 
 ### 2.1 Payment Gateway Playbook
 
@@ -139,6 +140,8 @@ No item is complete yet. Phase 0 exercised §2.8 and the practices now written u
 
 **Status (30-Sep-2026):** Open. RISK-R1.3-001 in the tracker records the accepted Release 1.3 risk. Note: a separate environment built from migrations first needs TD-WS13-002 fixed.
 
+**Scope extended (1-Oct-2026, `EBC-R1.3-WS13-016`):** the review also covers a dedicated non-production QA database and the Preview/QA environment strategy. Phase 0 QA wrote test records into the shared (Production) database, which must now be removed before release (`DEC-R1.3-022` (5)).
+
 ### 2.10 Phase / Release Deployment Runbook
 
 *Added 30-Sep-2026 by `EBC-R1.3-WS13-006`, from the WS13 Phase 0 deployment (`DEC-R1.3-021`). Does not arise from `EBC-R1.2-GOV-001`.*
@@ -159,6 +162,30 @@ Canonical home: an Operations runbook under `docs/50-Operations/`, linked from E
 **Priority (recommended, not authorised):** High — Phase 1 is expected to include further migrations on the shared database (RISK-R1.3-001).
 
 **Owner (proposed):** Tiger (draft), Rad (technical steps), Vivek (approval and operator).
+
+### 2.11 QA Execution Playbook
+
+*Added 1-Oct-2026 by `EBC-R1.3-WS13-016`, from WS13 Phase 0 QA (`DEC-R1.3-022`). Does not arise from `EBC-R1.2-GOV-001`.*
+
+**Context:** The Phase 0 QA rules were agreed in the handover card and decisions D1–D3. They are not yet written down in one reusable place.
+
+**Recommendation:** One QA playbook (Keerthi, with Tiger) covering:
+
+1. Authentication procedure — the Product Owner signs in; QA never handles credentials.
+2. Handover card contents — environment, Preview deployment id, identities, test data, scope, Not Executed rules.
+3. Preview as the authoritative environment; localhost only to reproduce.
+4. QA data naming (`QA-WS13-P<phase>-…`) and the removal step before release.
+5. When "Passed (by reference)" to an engineering test is allowed.
+6. Evidence retention — where screenshots are stored (Phase 0 evidence folder `QA-WS13-P0-evidence/` is not in the repository, and Administrator-run screenshots were not kept).
+7. Device coverage below 500 px — Chrome cannot render it; use a real phone or device emulation (noted as a limit in Phase A and Phase 0).
+
+Canonical home: the planned `playbooks/Validation-Report-Template.md` / QA playbook in the AI Operating Model (Handbook §18 roadmap), linked from §7.
+
+**Priority (recommended, not authorised):** Medium.
+
+**Owner (proposed):** Keerthi (draft), Tiger (review), Vivek (approval).
+
+**Status (1-Oct-2026):** Open.
 
 ---
 

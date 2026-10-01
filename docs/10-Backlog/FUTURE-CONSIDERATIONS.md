@@ -35,6 +35,7 @@ Distinct from : RELEASE-1.3-BACKLOG.md (the product/UX/engineering-technical-deb
 | 1.10 | 18-Sep-2026 | Tiger | Workstream Closure Review Log entry for Workstream 11 (SMV Workspace — Governance Transition / Foundation Closure), per `EBC-R1.3-WS11-015` Workspace Foundation Governance Transition & Release Synchronisation (closing out the Product Owner's Product Acceptance decision recorded in `EBC-R1.3-WS11-014`: **Accepted with Conditions**). Outcome: **None identified** — reviewed; the two outstanding conditions (committing the WS11-007→011H code change set and the six outstanding Rad/Keerthi reports to `docs/09-Development/`) are repository-governance and milestone-completion items, already tracked via `DEC-R1.3-011` in `RELEASE-1.3.md`, not intentionally-deferred product or engineering enhancements within this register's own §1 scope. No new FCR entry added. This closure also formally redefines WS11's scope as Foundation-only; the Workspace business modules are out of WS11's closed scope and will be tracked under future, separately-numbered Workspace workstream(s) once approved — none are created or renumbered by this update. |
 | 1.11 | 28-Sep-2026 | Tiger | Per `EBC-R1.3-WS13-005` Phase A Delivery Closure: added `FCR-026` (PO-OBS-01, Dashboard KPI iconography) and `FCR-027` (OBS-QA-PA-01, header overflow at narrow widths) to §3.3, traceability rows (§4) and a Workstream Closure Review Log entry (§5.1). |
 | 1.12 | 30-Sep-2026 | Tiger | Per `EBC-R1.3-WS13-006` Phase 0 Deployment Closure: added `FCR-028` (automated migration and deployment verification) to §3.4, a traceability row (§4) and a closure-review log entry (§5.1). |
+| 1.13 | 1-Oct-2026 | Tiger | Per `EBC-R1.3-WS13-016`: added `FCR-029` (Workspace QA identities and credential handling) and `FCR-030` (response-time monitoring) to §3.4, traceability (§4) and a closure-review log entry (§5.1). |
 
 ---
 
@@ -297,6 +298,22 @@ No entry below is assigned a target release. Per this register's own establishin
 *Suggested Review Timing:* Release 1.4 planning, alongside §2.9.
 *Status:* Deferred.
 
+**FCR-029 — Workspace QA identities and credential handling**
+*Description:* In Phase 0 QA the Product Owner signed in for every QA session so that QA personas never handled credentials, and the QA accounts (Tiger, Archie, Sneaky) are ad hoc. Future releases need permanent, clearly named QA users per role (including a deactivated user) and a way to run QA sessions without the Product Owner present — for example a secrets manager, per-environment test accounts, or Supabase test sign-in on a non-production project.
+*Originating EBC/ADR:* `EBC-R1.3-WS13-016` (from `EBC-R1.3-WS13-015-QA` §2, `DEC-R1.3-022` (1)).
+*Reason for Deferral:* The manual procedure works for Release 1.3 and keeps credentials with the Product Owner. Automating it depends on the environment decision.
+*Dependencies:* `RELEASE-1.3-GOVERNANCE-BACKLOG.md` §2.9 (a non-production QA database makes permanent QA users safe).
+*Suggested Review Timing:* Release 1.4 planning, with §2.9.
+*Status:* Deferred.
+
+**FCR-030 — Workspace response-time monitoring**
+*Description:* Phase 0 QA recorded a manual baseline: list API 1.5–3.2 s; create ~9 s; claim / stage change ~5–10 s; conversion 6.8 s. There is no ongoing measurement. Add monitoring (for example Vercel Speed Insights / function timing, or Supabase query insights) with agreed targets.
+*Originating EBC/ADR:* `EBC-R1.3-WS13-015-QA` §9 (OBS-P0-QA-02), via `EBC-R1.3-WS13-016`.
+*Reason for Deferral:* Monitoring is new tooling outside Release 1.3 scope. The immediate question — are 5–10 s actions acceptable — is carried to Phase 1 as WS13-P1-J.
+*Dependencies:* WS13-P1-J findings; Archie for any new dependency.
+*Suggested Review Timing:* Release 1.4 planning.
+*Status:* Deferred.
+
 Items reviewed and **not** added here, to avoid duplicates: the Release Deployment Runbook, maintenance-window announcement, phase deployment checklist and backup handling (all in `RELEASE-1.3-GOVERNANCE-BACKLOG.md` §2.10); Preview/Production separation (§2.9).
 
 ### 3.5 Documentation
@@ -362,6 +379,7 @@ Items reviewed and **not** added here, to avoid duplicates: the Release Deployme
 | `docs/09-Development/EBC-R1.3-WS13-005-TIGER-Phase-A-Delivery-Closure-and-Phase-0-Authorisation.md` | FCR-026 |
 | `docs/09-Development/EBC-R1.3-WS13-005-QA-PA-KEERTHI-Phase-A-CM-03-QA-Completion-Report.md` | FCR-027 |
 | `docs/09-Development/EBC-R1.3-WS13-006-TIGER-Phase-0-Deployment-Closure-and-Governance-Synchronisation.md` | FCR-028 |
+| `docs/09-Development/EBC-R1.3-WS13-015-QA-KEERTHI-Phase-0-QA-Completion-Report.md` (via `EBC-R1.3-WS13-016`) | FCR-029, FCR-030 |
 
 Every FCR entry above traces to at least one specific, completed governance document — no entry in Section 3 was originated by this register itself.
 
@@ -412,6 +430,8 @@ Per the closure-trigger rule above, every workstream closure logs an explicit ou
 | Workstream 13 — Journey Workspace (Phase A Delivery Closure — CM-03) | `EBC-R1.3-WS13-005-TIGER-Phase-A-Delivery-Closure-and-Phase-0-Authorisation.md` | Tiger | 28-Sep-2026 | Additions made — FCR-026 (PO-OBS-01, Dashboard KPI iconography), FCR-027 (OBS-QA-PA-01, header overflow at narrow widths). WS13 itself remains In Progress. |
 
 | Workstream 13 — Journey Workspace (Phase 0 Deployment Closure — not a workstream closure) | `EBC-R1.3-WS13-006-TIGER-Phase-0-Deployment-Closure-and-Governance-Synchronisation.md` | Tiger | 30-Sep-2026 | Additions made — FCR-028 (automated deployment verification). Deployment runbook items routed to the Governance Backlog §2.10, not duplicated here. WS13 remains In Progress. |
+
+| Workstream 13 — Journey Workspace (Phase 0 QA governance synchronisation — not a workstream closure) | `EBC-R1.3-WS13-016-TIGER-Phase-0-Governance-Synchronisation-and-Decision-Consolidation.md` | Tiger | 1-Oct-2026 | Additions made — FCR-029 (QA identities and credentials), FCR-030 (response-time monitoring). Non-production QA database and Preview/QA environment strategy folded into Governance Backlog §2.9; QA process into §2.11; accessibility into `TD-WS13-004` — not duplicated here. |
 
 Future rows follow the same pattern, including an explicit "None identified" outcome where applicable (e.g. `| Workstream N — <name> | <closure card> | <persona> | <date> | None identified — reviewed, no new deferred items named. |`).
 
