@@ -36,6 +36,7 @@ Distinct from : RELEASE-1.3-BACKLOG.md (the product/UX/engineering-technical-deb
 | 1.11 | 28-Sep-2026 | Tiger | Per `EBC-R1.3-WS13-005` Phase A Delivery Closure: added `FCR-026` (PO-OBS-01, Dashboard KPI iconography) and `FCR-027` (OBS-QA-PA-01, header overflow at narrow widths) to §3.3, traceability rows (§4) and a Workstream Closure Review Log entry (§5.1). |
 | 1.12 | 30-Sep-2026 | Tiger | Per `EBC-R1.3-WS13-006` Phase 0 Deployment Closure: added `FCR-028` (automated migration and deployment verification) to §3.4, a traceability row (§4) and a closure-review log entry (§5.1). |
 | 1.13 | 1-Oct-2026 | Tiger | Per `EBC-R1.3-WS13-016`: added `FCR-029` (Workspace QA identities and credential handling) and `FCR-030` (response-time monitoring) to §3.4, traceability (§4) and a closure-review log entry (§5.1). |
+| 1.14 | 1-Oct-2026 | Tiger | Per `EBC-R1.3-WS13-018` Phase 0 Delivery Closure: closure-review log entry (§5.1) — none identified. |
 
 ---
 
@@ -432,6 +433,8 @@ Per the closure-trigger rule above, every workstream closure logs an explicit ou
 | Workstream 13 — Journey Workspace (Phase 0 Deployment Closure — not a workstream closure) | `EBC-R1.3-WS13-006-TIGER-Phase-0-Deployment-Closure-and-Governance-Synchronisation.md` | Tiger | 30-Sep-2026 | Additions made — FCR-028 (automated deployment verification). Deployment runbook items routed to the Governance Backlog §2.10, not duplicated here. WS13 remains In Progress. |
 
 | Workstream 13 — Journey Workspace (Phase 0 QA governance synchronisation — not a workstream closure) | `EBC-R1.3-WS13-016-TIGER-Phase-0-Governance-Synchronisation-and-Decision-Consolidation.md` | Tiger | 1-Oct-2026 | Additions made — FCR-029 (QA identities and credentials), FCR-030 (response-time monitoring). Non-production QA database and Preview/QA environment strategy folded into Governance Backlog §2.9; QA process into §2.11; accessibility into `TD-WS13-004` — not duplicated here. |
+
+| Workstream 13 — Journey Workspace (Phase 0 Delivery Closure — not a workstream closure) | `EBC-R1.3-WS13-018-TIGER-Phase-0-Delivery-Closure.md` | Tiger | 1-Oct-2026 | None identified — reviewed; all Phase 0 items were already routed by `EBC-R1.3-WS13-006` (FCR-028) and `EBC-R1.3-WS13-016` (FCR-029, FCR-030). WS13 remains In Progress. |
 
 Future rows follow the same pattern, including an explicit "None identified" outcome where applicable (e.g. `| Workstream N — <name> | <closure card> | <persona> | <date> | None identified — reviewed, no new deferred items named. |`).
 
