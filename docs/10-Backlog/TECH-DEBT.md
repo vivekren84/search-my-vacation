@@ -6,7 +6,7 @@
 Document Type : Engineering Governance Register (documentation only — no code, no configuration, no schema change)
 Release       : Established during Release 1.3 (`EBC-R1.3-WS12-008`); intended to remain live and release-independent across future releases
 Persona       : Tiger — Programme and Delivery Lead
-Status        : ACTIVE — 10 open items (TD-WS12-001 to -005, TD-WS13-001 to -005); none resolved (updated 1-Oct-2026, `EBC-R1.3-WS13-016`)
+Status        : ACTIVE — 11 open items (TD-WS12-001 to -005, TD-WS13-001 to -006); none resolved (updated 4-Oct-2026, `EBC-R1.3-WS13-021`)
 Owner         : Rad (Engineering and Implementation Specialist) — day-to-day custodian; Tiger — governance and prioritisation oversight
 Related documents : docs/10-Backlog/RELEASE-1.3-BACKLOG.md §9 (historical, WS5-sourced Engineering Technical Debt — superseded for new entries, not migrated); docs/10-Backlog/PRODUCT-EVOLUTION-BACKLOG.md; docs/10-Backlog/FUTURE-CONSIDERATIONS.md; docs/10-Backlog/RELEASE-1.3.md; docs/09-Development/EBC-R1.3-WS12-007-RADHA-Journey-Planning-Engineering-Implementation.md
 Distinct from : RELEASE-1.3-BACKLOG.md (product decisions, candidate features and vision items — not engineering-internal quality items), PRODUCT-EVOLUTION-BACKLOG.md (Product Owner-approved future business capabilities, module/workstream-scale), FUTURE-CONSIDERATIONS.md (tactical items a completed workstream's own review explicitly deferred, spanning any discipline — Product, UX, Architecture or Engineering), RELEASE-1.3-GOVERNANCE-BACKLOG.md (process/playbook recommendations). This register holds only engineering-internal quality debt — code, architecture, performance, accessibility, security, infrastructure, developer experience, documentation and testing — never product enhancements, feature requests, roadmap items or future releases. See Section 6 for the full relationship analysis.
@@ -30,6 +30,7 @@ Distinct from : RELEASE-1.3-BACKLOG.md (product decisions, candidate features an
 | 1.2 | 28-Sep-2026 | Rad | Added `TD-WS13-002` (fresh-replay constraint-name collision, OBS-P0-01) under new §10A, per `EBC-R1.3-WS13-005-P0` Addendum A. *Row added retrospectively on 30-Sep-2026 by Tiger (`EBC-R1.3-WS13-006`): the entry was added without a change-history row.* |
 | 1.3 | 30-Sep-2026 | Tiger | Phase 0 synchronisation per `EBC-R1.3-WS13-006`. Logged the items `EBC-R1.3-WS13-004` GO-09 assigned to Tiger: `TD-WS13-001` (deprecated `workspace_journeys.status`), `TD-WS12-004` (SEC-02, JP `using (true)` UPDATE policies), `TD-WS12-005` (SEC-03, open notification INSERT). Added `TD-WS13-003` (unused `fetchWorkspaceUserRole`, OBS-P0-03). Set a suggested release on `TD-WS13-002`. Header status line brought current. |
 | 1.4 | 1-Oct-2026 | Tiger | Phase 0 QA review per `EBC-R1.3-WS13-016`. Added `TD-WS13-004` (success toast not announced to screen readers, OBS-P0-QA-01) and `TD-WS13-005` (browser session kept after authorisation refusal, OBS-P0-QA-06). Other QA observations reviewed and not logged as debt (planned work, UX decisions or unconfirmed performance findings — see the card's §C). |
+| 1.5 | 4-Oct-2026 | Tiger | Phase 1 implementation authorisation per `EBC-R1.3-WS13-021` / `DEC-R1.3-026`. Added `TD-WS13-006` (deactivation not enforced in RLS read policies; Archie AR-F1, `EBC-R1.3-WS13-020A` AC-8), routed to the RLS hardening card with `TD-WS12-004`/`-005`; `OBS-P1-04` noted for the same card. Phase 1 dispositions of `TD-WS13-003`/`-004`/`-005` (In) and `TD-WS13-001`/`-002` (Deferred) are recorded in `EBC-R1.3-WS13-020` Rev 2 §11; entries unchanged until resolved. |
 
 ---
 
@@ -351,6 +352,25 @@ Every entry records:
 | Owner | Rad |
 | Status | Open |
 | Date Logged | 1-Oct-2026 |
+
+
+### TD-WS13-006 — Deactivation not enforced in RLS read policies
+
+| Field | Value |
+|---|---|
+| ID | `TD-WS13-006` |
+| Title | Make `workspace_current_user_role()` return no role for a deactivated user |
+| Category | Security |
+| Workstream | WS13 — Journey Workspace (Phase 1 architecture review, Archie AR-F1, `EBC-R1.3-WS13-020A`) |
+| Priority | Medium |
+| Description | `workspace_current_user_role()` (`20260916090000`) returns the caller's role whether or not `deactivated_at` is set; M01 added `deactivated_at` without changing it. Read policies that test `workspace_current_user_role() is not null` (Journey child tables, the summary view through `security_invoker`, configuration tables), and the `using (true)` read policies, therefore still admit a deactivated user who holds a valid Supabase session. Through the permissive WS12 UPDATE policies (`TD-WS12-004`), that user could also edit Journey Planning records. |
+| Reason | Pre-existing, not introduced by M11. Every Workspace page and API refuses deactivated users, and every Journey write checks deactivation in the database. Phase 1 signs the session out on refusal (`TD-WS13-005`), which closes the normal path. Changing the function changes the meaning of every policy across WS11–WS13 and needs its own regression, so it is not done inside M11 (`DEC-R1.3-026`, ND-12). |
+| Impact | Low likelihood (a deliberate insider calling the REST API after deactivation); medium impact (read access to traveller data; Journey Planning edits). |
+| Suggested Resolution | On the RLS hardening card, with `TD-WS12-004` and `TD-WS12-005`: a reviewed change to `workspace_current_user_role()` (return null when deactivated) plus WS11–WS13 regression. The same card should review `OBS-P1-04` (`workspace_audit_log` and `workspace_tasks` SELECT `using (true)` for any authenticated session; `EBC-R1.3-WS13-020` §10, §18). |
+| Suggested Release / Sprint | Security hardening card before WS13 Phase 3 |
+| Owner | Archie (design), Rad (build) |
+| Status | Open |
+| Date Logged | 4-Oct-2026 |
 
 ---
 

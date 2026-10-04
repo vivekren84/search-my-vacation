@@ -37,8 +37,8 @@ Each recommendation below follows the same rationale: Release 1.2's MSG91/DLT ex
 | §2.7 | Align Project Instructions with the Engineering Governance Principles | Open — deferred by decision (`DEC-R1.3-018` D-5) | Before Release 1.4 planning |
 | §2.8 | Engineering phase approval lifecycle and report sections | Open — in use as working practice (Phase A, Phase 0) | Post–Release 1.3 Governance Documentation Review |
 | §2.9 | Release 1.4 review: Preview/Production environment isolation | Open | Release 1.4 planning |
-| §2.10 | Phase / Release Deployment Runbook | Open — not yet written | **Gate:** approved before WS13 Phase 1 migration M11 is applied (`DEC-R1.3-025` C-6) |
-| §2.11 | QA Execution Playbook | **New — Open** (added 1-Oct-2026) | **Gate:** approved before the WS13 Phase 1 QA handover (`DEC-R1.3-025` C-6) |
+| §2.10 | Phase / Release Deployment Runbook | Open — not yet written | **Gate:** approved before WS13 Phase 1 migration M11 is applied (`DEC-R1.3-025` C-6; `DEC-R1.3-026` C-1, Checkpoint 3). Drafting starts in parallel with Milestone A (Tiger, Rad). |
+| §2.11 | QA Execution Playbook | **New — Open** (added 1-Oct-2026) | **Gate:** approved before the WS13 Phase 1 QA handover (`DEC-R1.3-025` C-6; `DEC-R1.3-026` C-3, before Checkpoint 5) |
 
 No item is complete yet. Phase 0 exercised §2.8, §2.10 and §2.11 as working practice; none is closed until written into the canonical documents. *Updated 1-Oct-2026 (`EBC-R1.3-WS13-016`). §2.10 and §2.11 made Phase 1 gates 3-Oct-2026 (`EBC-R1.3-WS13-019`, `DEC-R1.3-025`).*
 

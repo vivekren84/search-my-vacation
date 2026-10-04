@@ -9,7 +9,7 @@
 | Decision authority | Vivek — Product Owner |
 | Date | 3 October 2026 |
 | Status | **Decision recorded — Engineering Planning Approved with Conditions** (`DEC-R1.3-025`, 3-Oct-2026) |
-| Revision | Rev 2, 3-Oct-2026: Product Owner decision (§16), repository verification for condition C-1 (§17) and governance synchronisation (§18) added. Sections 0–15 are kept as submitted, apart from the status lines in §6, §13 and §15. |
+| Revision | Rev 2, 3-Oct-2026: Product Owner decision (§16), repository verification for condition C-1 (§17) and governance synchronisation (§18) added. Sections 0–15 are kept as submitted, apart from the status lines in §6, §13 and §15. Rev 3, 4-Oct-2026: correction note added to §12 (OBS-P1-01). |
 | Recommendation | **Engineering Planning Approved with Conditions** |
 | Authorises | Engineering Planning only (EBC-R1.3-WS13-020). Not implementation. |
 
@@ -232,6 +232,8 @@ The success criteria in the card (§13) are broadly right, but two items need bo
 
 - **"Core workspace tabs"** should mean **Overview, Itinerary and History** only. Bookings, Readiness, Documents, Tasks and Activity & Changes are Phase 2 (`WS13-004` §4). In Phase 1 those tabs should either be absent or shown as unavailable, which Sophie confirms during planning.
 - **"Journey lifecycle management"** in Phase 1 covers the transitions in `WS13-004` §4 P1. The readiness gate (BR-028) becomes real only when readiness items exist (Phase 2), so "Ready to Travel" is not reachable end-to-end until then.
+
+> **Rev 3 correction (4-Oct-2026, `EBC-R1.3-WS13-021` N-1):** the sentence above is not accurate. With empty readiness templates, a Journey derives `ready`, so Ready to Travel **is** reachable in Phase 1 (Rad `EBC-R1.3-WS13-020` OBS-P1-01). This is now governed by Product Owner Decision 4 (`DEC-R1.3-026`): readiness workflow exposed but not enforced in Phase 1.
 
 **Proposed Phase 1 success criteria** (for Product Owner approval; Arjun maps each to FR/BR identifiers in `WS13-020`):
 
