@@ -162,3 +162,322 @@ export interface JourneyReferenceSummary {
   outcome: JourneyOutcome | null;
   stage: JourneyStage;
 }
+
+// ---------------------------------------------------------------------
+// EBC-R1.3-WS13-022 Phase 1 Milestone A (WP-1.2): service and API types.
+// Engineering baseline: EBC-R1.3-WS13-020 Rev 2 §8; UX Rev 4a §7–§9, §13,
+// §16, §20, §21 with EBC-R1.3-WS13-020B.
+// ---------------------------------------------------------------------
+
+// Error codes returned by the Journey Workspace API. Each M11 RPC raises
+// `workspace_journey_<code>` (supabase/migrations/20261004100000_
+// workspace_journey_lifecycle_rpcs.sql); errors.ts maps them. Keep this
+// list in lockstep with the SQL and with errors.ts.
+export type JourneyWorkspaceErrorCode =
+  | "not_authorised"
+  | "not_found"
+  | "archived"
+  | "terminal"
+  | "legacy_pending"
+  | "not_legacy"
+  | "stale"
+  | "on_hold"
+  | "already_on_hold"
+  | "not_on_hold"
+  | "transition_not_allowed"
+  | "hold_not_allowed"
+  | "cancel_not_allowed"
+  | "close_not_allowed"
+  | "readiness_incomplete"
+  | "start_date_not_reached"
+  | "end_date_not_reached"
+  | "template_invalid"
+  | "template_already_assigned"
+  | "owner_unchanged"
+  | "new_owner_invalid"
+  | "service_category_invalid"
+  | "service_category_required"
+  | "service_category_unchanged"
+  | "reason_required"
+  | "reason_too_long"
+  | "note_too_long"
+  | "booking_invalid"
+  | "replacement_open"
+  | "dates_required"
+  | "dates_invalid"
+  | "dates_nights_mismatch"
+  | "contact_invalid"
+  // Application-level codes (not raised by SQL).
+  | "invalid_request"
+  | "operation_failed";
+
+export interface JourneyFieldIssue {
+  field: string;
+  code: JourneyWorkspaceErrorCode;
+  message: string;
+}
+
+// WS13-001 §11 BR-040 contact types.
+export type OperationalContactType =
+  | "individual_traveller"
+  | "corporate_organisation"
+  | "b2b_travel_partner"
+  | "other_authorised_entity";
+
+export const OPERATIONAL_CONTACT_TYPES: readonly OperationalContactType[] = [
+  "individual_traveller",
+  "corporate_organisation",
+  "b2b_travel_partner",
+  "other_authorised_entity",
+];
+
+export interface OperationalContact {
+  id: string;
+  contactType: OperationalContactType;
+  name: string;
+  organisation: string | null;
+  phone: string | null;
+  email: string | null;
+  updatedAt: string;
+}
+
+export interface OperationalContactInput {
+  contactType: OperationalContactType;
+  name: string;
+  organisation: string | null;
+  phone: string | null;
+  email: string | null;
+}
+
+// ---- Actions (UX Rev 4a §9.3; getAvailableJourneyActions in derivations.ts)
+
+export type JourneyActionKind =
+  | "start_preparation"
+  | "mark_ready_to_travel"
+  | "mark_travelling"
+  | "mark_travel_complete"
+  | "begin_post_travel"
+  | "mark_completed"
+  | "step_back"
+  | "place_on_hold"
+  | "resume"
+  | "cancel"
+  | "reassign"
+  | "edit_service_category"
+  | "edit_contact"
+  | "adopt";
+
+export const JOURNEY_ACTION_KINDS: readonly JourneyActionKind[] = [
+  "start_preparation",
+  "mark_ready_to_travel",
+  "mark_travelling",
+  "mark_travel_complete",
+  "begin_post_travel",
+  "mark_completed",
+  "step_back",
+  "place_on_hold",
+  "resume",
+  "cancel",
+  "reassign",
+  "edit_service_category",
+  "edit_contact",
+  "adopt",
+];
+
+export type JourneyActionDisabledReason =
+  | "readiness_outstanding" // n readiness items outstanding (BR-028)
+  | "template_required" // In Preparation without a template (defensive)
+  | "before_start_date" // Mark travelling before the departure date
+  | "before_end_date"; // Mark travel complete before the return date
+
+export type JourneyActionAvailability =
+  | { state: "available" }
+  | { state: "disabled"; reason: JourneyActionDisabledReason; availableFrom?: string; outstandingCount?: number }
+  | { state: "hidden" };
+
+// Why a viewer cannot change the Journey at all (drives the single
+// read-only line under the stepper, UX §9.3).
+export type JourneyReadOnlyReason = "not_owner" | "archived" | "terminal" | "legacy_awaiting_adoption";
+
+export interface AvailableJourneyActions {
+  primary: JourneyActionKind | null;
+  actions: Record<JourneyActionKind, JourneyActionAvailability>;
+  readOnlyReason: JourneyReadOnlyReason | null;
+}
+
+// ---- List (JW-01; UX §7, §20; FR-JW-03, FR-JW-29, FR-JW-34)
+
+export type JourneyScope = "mine" | "team";
+export type JourneyListSort = "departure" | "last_activity" | "created";
+export type JourneyDeparturePreset = "this_week" | "next_14_days" | "this_month" | "custom";
+export type JourneySummaryChip =
+  | JourneyStage
+  | "at_risk"
+  | "departing"
+  | "on_hold";
+
+export interface JourneyListQuery {
+  scope: JourneyScope;
+  ownerId: string | null; // named owner (Team scope)
+  stages: JourneyStage[];
+  onHold: boolean | null;
+  readiness: ReadinessState | null;
+  departing: boolean; // summary-strip chip: departing within the configured window
+  departure: JourneyDeparturePreset | null;
+  departureFrom: string | null; // custom range, YYYY-MM-DD
+  departureTo: string | null;
+  q: string | null;
+  sort: JourneyListSort;
+  groupByStage: boolean;
+}
+
+export interface JourneyListItem {
+  id: string;
+  journeyReference: string;
+  partyKind: "traveller" | "corporate";
+  partyName: string | null;
+  destinationRegion: string | null;
+  serviceCategory: string | null;
+  confirmedStartDate: string | null;
+  confirmedEndDate: string | null;
+  daysToDeparture: number | null;
+  departingWithinWindow: boolean;
+  stage: JourneyStage;
+  onHold: boolean;
+  adoptionStatus: JourneyAdoptionStatus;
+  readinessState: ReadinessState;
+  readinessMandatoryTotal: number;
+  primaryContactName: string | null;
+  ownerId: string | null;
+  ownerName: string | null;
+  ownerActive: boolean;
+  nextAction: JourneyNextActionKindName;
+  createdAt: string;
+  lastActivityAt: string | null;
+}
+
+// Duplicated name of derivations.ts JourneyNextActionKind to keep types.ts
+// free of imports from derivations.ts (derivations.ts imports types.ts).
+export type JourneyNextActionKindName =
+  | "start_preparation"
+  | "resolve_readiness"
+  | "mark_ready_to_travel"
+  | "await_departure"
+  | "mark_travelling"
+  | "log_activity"
+  | "mark_travel_complete"
+  | "begin_post_travel"
+  | "mark_completed"
+  | "resume"
+  | "complete_adoption"
+  | "none";
+
+export type JourneySummaryCounts = Record<JourneySummaryChip, number>;
+
+export interface JourneyListResult {
+  items: JourneyListItem[];
+  counts: JourneySummaryCounts;
+  query: JourneyListQuery;
+  today: string;
+}
+
+// ---- Detail (JW-02)
+
+export interface JourneyPersonRef {
+  id: string;
+  name: string;
+  active: boolean;
+}
+
+export interface JourneyParty {
+  kind: "traveller" | "corporate";
+  travellerId: string | null;
+  corporateContactId: string | null;
+  name: string | null;
+  companyName: string | null;
+}
+
+export interface JourneyLinkRef {
+  id: string;
+  journeyReference: string;
+}
+
+export interface JourneyDetail {
+  journey: Journey;
+  summary: JourneyOperationalSummaryRow;
+  party: JourneyParty;
+  contact: OperationalContact | null;
+  owner: JourneyPersonRef | null;
+  planningRecord: { id: string; title: string } | null;
+  readinessTemplate: { id: string; code: string; name: string } | null;
+  supersedes: JourneyLinkRef | null;
+  supersededBy: JourneyLinkRef | null;
+  availableActions: AvailableJourneyActions;
+  today: string;
+}
+
+// Full summary-view row used by the detail read model (JourneyOperational-
+// Summary above is the subset the list needs).
+export interface JourneyOperationalSummaryRow extends JourneyOperationalSummary {
+  readinessOptionalOutstanding: number;
+  bookingsDraft: number;
+  bookingsRequested: number;
+  bookingsPendingInformation: number;
+  bookingsConfirmed: number;
+  bookingsCancelled: number;
+  documentsReceived: number;
+  documentsVerified: number;
+  documentsNotApplicable: number;
+  // Journey columns the view also exposes (list rows need no second query).
+  serviceCategory: string | null;
+  destinationRegion: string | null;
+  onHoldSince: string | null;
+}
+
+// ---- History (JW-08; UX §21; EBC-R1.3-WS13-020B History labels)
+
+export type JourneyHistoryCategory = "stage_status" | "ownership" | "contact_category" | "other";
+export type JourneyHistoryFilter = "all" | Exclude<JourneyHistoryCategory, "other">;
+
+export interface JourneyHistoryEntry {
+  id: string;
+  eventType: string;
+  category: JourneyHistoryCategory;
+  actorId: string | null;
+  actorName: string | null; // null for system events ("Workspace (automatic)")
+  eventData: Record<string, unknown>;
+  createdAt: string;
+}
+
+// Keyset cursor for History paging: the last entry's (created_at, id).
+// Sent to clients as the opaque token "<created_at>|<id>" (nextBefore).
+export interface JourneyHistoryCursor {
+  createdAt: string;
+  id: string;
+}
+
+export interface JourneyHistoryPage {
+  entries: JourneyHistoryEntry[];
+  hasMore: boolean;
+  nextBefore: string | null;
+}
+
+// ---- Itinerary (JW-03)
+
+export interface JourneyItinerary {
+  proposalVersionId: string;
+  versionNumber: number;
+  snapshot: Record<string, unknown>;
+  createdAt: string;
+}
+
+// ---- Mutation inputs
+
+export interface AdoptLegacyJourneyInput {
+  ownerId: string;
+  confirmedStartDate: string;
+  confirmedEndDate: string;
+  serviceCategory: string;
+  readinessTemplateId: string;
+  contact: OperationalContactInput;
+}
