@@ -37,7 +37,7 @@ Each recommendation below follows the same rationale: Release 1.2's MSG91/DLT ex
 | §2.7 | Align Project Instructions with the Engineering Governance Principles | Open — deferred by decision (`DEC-R1.3-018` D-5) | Before Release 1.4 planning |
 | §2.8 | Engineering phase approval lifecycle and report sections | Open — in use as working practice (Phase A, Phase 0) | Post–Release 1.3 Governance Documentation Review |
 | §2.9 | Release 1.4 review: Preview/Production environment isolation | Open — scope extended 7-Oct-2026 with function/database region latency (F-11) | Release 1.4 planning |
-| §2.10 | Phase / Release Deployment Runbook | Open — not yet written | **Gate:** approved before WS13 Phase 1 migration M11 is applied (`DEC-R1.3-025` C-6; `DEC-R1.3-026` C-1, Checkpoint 3). Phase 1 contents fixed 7-Oct-2026 (`DEC-R1.3-028` GF-3); drafting now (Tiger, Rad). |
+| §2.10 | Phase / Release Deployment Runbook | Open — not yet written | **Gate:** approved before WS13 Phase 1 migration M11 is applied (`DEC-R1.3-025` C-6; `DEC-R1.3-026` C-1, Checkpoint 3). Phase 1 contents fixed 7-Oct-2026 (`DEC-R1.3-028` GF-3). Supabase CLI standard, SQL Editor fallback (`DEC-R1.3-029`). **Draft v0.1** at `docs/50-Operations/RELEASE-1.3-DEPLOYMENT-RUNBOOK.md` (7-Oct-2026), awaiting Rad's technical confirmations and Checkpoint 3 approval. |
 | §2.11 | QA Execution Playbook | **New — Open** (added 1-Oct-2026) | **Gate:** approved before the WS13 Phase 1 QA handover (`DEC-R1.3-025` C-6; `DEC-R1.3-026` C-3, before Checkpoint 5) |
 | §2.12 | Engineering convention: multi-event audit timestamps and History paging (D-2) | **New — Proposed** (added 7-Oct-2026) | Post–Release 1.3 Governance Documentation Review |
 
@@ -169,7 +169,7 @@ Canonical home: an Operations runbook under `docs/50-Operations/`, linked from E
 **WS13 Phase 1 runbook contents (7-Oct-2026, `DEC-R1.3-028` GF-3; Archie `EBC-R1.3-WS13-023A`; Rad `EBC-R1.3-WS13-023` §11):**
 1. **SR-01:** apply M11 atomically; keep migration-history parity (35 = 35); reload the PostgREST schema cache (`notify pgrst, 'reload schema';`). The same for rollback.
 2. **SR-02:** pre- and post-application checks on all 12 functions (definer, `search_path=public`, owner, grants: `authenticated` true for the nine public functions, false for the three helpers; `anon` false for all), using the corrected "active Journeys" sizing query (`023` §10).
-3. **Application method — choose one and record it:** the Supabase CLI (`db push` with dry run; needs Docker and the CLI on the operator's machine; F-08 records that the engineering device has neither) or the SQL editor (explicit `begin`/`commit` plus a migration-history row).
+3. **Application method — decided 7-Oct-2026 (`DEC-R1.3-029`):** the Supabase CLI (`db push --linked` with dry run) is the standard; the SQL Editor (explicit `begin`/`commit` plus a migration-history row) is an operational fallback only. F-08 concerns the Claude engineering workspace; the operator's machine ran the CLI and Docker in Phase 0.
 4. **Order:** read-only checks (`023` §10) → apply M11 → verify → **then** push the branch.
 5. **Preview build READY, then a smoke test of the new routes.** This is the first cloud build of Milestone A code; the local build used mocked fonts and placeholder settings.
 6. **Rollback:** `023` §4.4 inside a transaction, schema reload, redeploy the previous Preview build.
