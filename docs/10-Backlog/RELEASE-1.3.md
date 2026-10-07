@@ -28,7 +28,7 @@ WS17 Destination Intelligence
 | Item | Value |
 |---|---|
 | Document | Release 1.3 Release Tracker |
-| Version | 1.29 |
+| Version | 1.30 |
 | Status | **Active** — live execution and delivery-status tracker for Release 1.3 |
 | Origin | Created per the Product Owner's decision on Decision Point D2, raised in `RELEASE-1.3-WORKSTREAM-PLAN.md` v1.1's Workstream Delivery Status Log, following `R1.3-WS2-CLOSE-01` |
 | Product Owner | Vivek |
@@ -75,6 +75,7 @@ WS17 Destination Intelligence
 | 1.27 | 4-Oct-2026 | Tiger | EBC-R1.3-WS13-021 | WS13 Phase 1 Engineering Implementation Authorisation. Added **`DEC-R1.3-026`** (Engineering Execution Plan Revision 2 approved and frozen as the Phase 1 Engineering Baseline, with `EBC-R1.3-WS13-020A`/`-020B`; Product Owner Decisions 1–8; plan §12.3 defaults confirmed; implementation authorised, beginning with Milestone A; conditions C-1 to C-4 and Checkpoints 1 to 5). WS13 row, top status, decision count (25→26), §6 (TL-06 out of Phase 1; WS13-P1-B, -H, -I decided; WS13-P1-C shipped ED-02 text recorded; disposition reference to plan §11), §8 (`OD-R1.3-7` resolved), §10 (RISK-R1.3-006 updated with the measured regions), §12 (Phase 1 gates and checkpoints) updated. Documentation only. |
 | 1.28 | 7-Oct-2026 | Tiger | EBC-R1.3-WS13-024 | WS13 Phase 1 Milestone A Checkpoint 1. Added **`DEC-R1.3-027`** (performance-baseline decisions of 4/5-Oct-2026, including the approved baseline writes to the shared database as documented in `EBC-R1.3-WS13-023`) and **`DEC-R1.3-028`** (Checkpoint 1 PASSED; Checkpoint 2 approved with conditions SR-01/SR-02; Milestone B authorised; governance follow-up actions GF-1 to GF-4). Top status, WS13 row, decision count (26→28), §6 (WS13-P1-K QA data extended; WS13-P1-L to -N added), §8 (`OD-R1.3-8` performance targets), §10 (RISK-R1.3-006 measured figures), §12 (Milestone A, Checkpoints 1 and 2 ticked; release QA-data line). `EBC-R1.3-WS13-022` filed as an administrative engineering record. Documentation only. |
 | 1.29 | 7-Oct-2026 | Tiger | EBC-R1.3-WS13-024 | Product Owner confirmation of the Checkpoint 1 outcome. Added **`DEC-R1.3-029`** (Supabase CLI is the Release 1.3 standard migration mechanism, the SQL Editor an operational fallback only; Milestone A engineering commits not pushed until Checkpoint 4; Checkpoint 1 outcome, `DEC-R1.3-027`, `DEC-R1.3-028`, `OD-R1.3-8` and the register updates confirmed). Decision count 28→29. RISK-R1.3-005 updated: deployment runbook draft v0.1 (`docs/50-Operations/RELEASE-1.3-DEPLOYMENT-RUNBOOK.md`). Documentation only. |
+| 1.30 | 7-Oct-2026 | Tiger | EBC-R1.3-WS13-024 | Product Owner approval of `DEC-R1.3-029` and of runbook v0.1 as the Checkpoint 3 working baseline. Runbook v0.2 records the Product Owner's M11 operational decisions: no maintenance freeze; no user communication; a full backup before applying M11; backup retention until Release 1.3 Product Acceptance plus 30 days. RISK-R1.3-004 updated (retention rule set); RISK-R1.3-005 updated (runbook v0.2). Rad to confirm CLI atomicity, the applying role and the smoke-test steps; Archie reviews the final runbook at Checkpoint 3. Documentation only. |
 
 ---
 
@@ -122,7 +123,7 @@ Tiger (Programme & Delivery Lead) — owns this document and consolidates delive
 
 ## Document Version
 
-1.29
+1.30
 
 ---
 
@@ -398,8 +399,8 @@ Mirrors `RELEASE-1.2.md` Section 10's format. First entries added 30-Sep-2026 (`
 | RISK-R1.3-001 | Preview and Production share one Supabase database (`DEC-R1.3-020`): every migration applied for Preview also changes Production, and Preview QA data lives in the Production database | High | Certain (by design) | Approved deployment sequence (`DEC-R1.3-021`); additive migrations; QA data named `QA-WS13-P<n>-*` and removed before release (`DEC-R1.3-022`); Release 1.4 isolation review (`RELEASE-1.3-GOVERNANCE-BACKLOG.md` §2.9) | Tiger / Vivek | Accepted for Release 1.3 |
 | RISK-R1.3-002 | Local `main` holds unpushed WS11/WS12 engineering; `origin/main` has no Workspace code while the shared database already has the WS11–WS13 schema | Medium | Low | Do not push `main` until Release Approval (`DEC-R1.3-018` D-4); release merge follows EP-004 | Vivek | Open — controlled |
 | RISK-R1.3-003 | A fresh database cannot be built from the migration history (TD-WS13-002), which blocks `db reset`, new environments and the §2.9 isolation option | Medium | Certain if attempted | Fix before any new environment is created | Archie / Rad | Open |
-| RISK-R1.3-004 | Deployment backups hold traveller and lead personal data on a local machine | Medium | Low | Stored outside the repository, never committed; retention and deletion rule to be set in the runbook (§2.10) | Vivek / Tiger | Open |
-| RISK-R1.3-005 | Phase 1 introduces migration M11 and a new QA cycle before the deployment runbook (Governance Backlog §2.10) and QA playbook (§2.11) are written | Medium | Medium | Both made gates by `DEC-R1.3-025` (C-6): runbook approved before M11 is applied; playbook approved before Phase 1 QA handover | Tiger / Rad / Keerthi; Vivek approves | Open — runbook draft v0.1 written 7-Oct-2026 (`docs/50-Operations/RELEASE-1.3-DEPLOYMENT-RUNBOOK.md`); CLI standard per `DEC-R1.3-029` |
+| RISK-R1.3-004 | Deployment backups hold traveller and lead personal data on a local machine | Medium | Low | Stored outside the repository, never committed; retention and deletion rule to be set in the runbook (§2.10) | Vivek / Tiger | Open — retention rule set 7-Oct-2026: backups kept only on the operator's machine, outside the repository, until Release 1.3 Product Acceptance plus 30 days, then removed (Product Owner; runbook A.5) |
+| RISK-R1.3-005 | Phase 1 introduces migration M11 and a new QA cycle before the deployment runbook (Governance Backlog §2.10) and QA playbook (§2.11) are written | Medium | Medium | Both made gates by `DEC-R1.3-025` (C-6): runbook approved before M11 is applied; playbook approved before Phase 1 QA handover | Tiger / Rad / Keerthi; Vivek approves | Open — runbook v0.1 accepted as the Checkpoint 3 working baseline, v0.2 written 7-Oct-2026 (`docs/50-Operations/RELEASE-1.3-DEPLOYMENT-RUNBOOK.md`); CLI standard per `DEC-R1.3-029` |
 | RISK-R1.3-006 | Workspace response times of 5–10 s (WS13-P1-J) worsen as Phase 1 adds nine RPCs | Medium | Medium | Profiling and an agreed target are part of the Phase 1 plan (`DEC-R1.3-025` C-5, SC-11); measured fact (plan `EBC-R1.3-WS13-020` §1): Supabase runs in Seoul (ap-northeast-2), Vercel functions in Washington DC (`iad1`), users in India; baseline measured first (WP-1.0, Product Owner Decision 8), baseline measured 4-Oct-2026 and accepted (`DEC-R1.3-027`; `EBC-R1.3-WS13-023` §8.1: about 0.25–0.4 s per sequential function → database call; Journey Planning detail page median 5.1 s, queue page 4.0 s); targets to be confirmed before Milestone B completion (`OD-R1.3-8`); a region change would be an architecture and Product Owner decision | Rad (Archie if architectural) | Open |
 
 ---

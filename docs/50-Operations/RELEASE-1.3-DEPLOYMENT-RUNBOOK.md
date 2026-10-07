@@ -3,13 +3,13 @@
 | Document Information | |
 |---|---|
 | Document | Phase / Release Deployment Runbook (Governance Backlog §2.10) |
-| Version | **0.1 — DRAFT, not approved** |
+| Version | **0.2 — DRAFT, not approved** (v0.1 accepted as the working baseline for Checkpoint 3, 7-Oct-2026) |
 | Status | In drafting for **Checkpoint 3** (`EBC-R1.3-WS13-021` §11). Tiger drafts; Rad supplies and confirms technical steps; Archie confirms SR-01/SR-02 coverage; Vivek approves. |
 | Owner | Tiger (document); Vivek (approval and operator) |
 | Applies to | Release 1.3 migrations on the shared Supabase project (Preview and Production share one database, `DEC-R1.3-020`) |
 | Migration mechanism | **Supabase CLI is the standard; the SQL Editor is an operational fallback only** (`DEC-R1.3-029`, 7-Oct-2026) |
 | Sources | Phase 0 sequence `EBC-R1.3-WS13-005-P0` §5 and `DEC-R1.3-021`; Archie `EBC-R1.3-WS13-023A` §7 (SR-01, SR-02); Rad `EBC-R1.3-WS13-023` §4.4, §10, §11; `DEC-R1.3-028` GF-3 |
-| Date | 7 October 2026 |
+| Date | 7 October 2026 (v0.1); 7 October 2026 (v0.2: Product Owner operational decisions recorded in A.5 and B.1) |
 
 > **Draft.** Nothing in this document authorises a deployment. M11 may be applied only after Checkpoint 3 (this runbook approved) and Checkpoint 4 (Product Owner migration authorisation). Items marked **[TO CONFIRM — owner]** are not yet verified and must be closed before approval.
 
@@ -76,7 +76,7 @@ ls -la "$BACKUP_DIR"
 
 - **Verify** that all three files exist and are non-empty before step 6. Record the sizes.
 - The backup stays **outside the repository** and is **never committed** (it holds traveller and lead personal data).
-- **Retention and deletion: [TO DECIDE — Vivek]** (RISK-R1.3-004). Proposed: keep until the phase is accepted plus 30 days, then delete; never copy to cloud storage.
+- **Retention and deletion (Product Owner decision, 7-Oct-2026):** keep each Release 1.3 deployment backup **until Release 1.3 Product Acceptance plus 30 days**; after that it may be removed. Store it only on the operator's machine, outside the repository (RISK-R1.3-004).
 
 ### A.6 Rollback
 
@@ -124,11 +124,11 @@ ls -la "$BACKUP_DIR"
 
 | # | Item | Proposed | Status |
 |---|---|---|---|
-| B-D1 | Freeze | **None.** No deployed code calls the M11 functions (Archie `023A` §7.1). | Archie confirmed; Vivek to approve with the runbook |
-| B-D2 | Announcement | Not required (no user-visible change until the branch is pushed; the Preview is not used by staff for live work) | Vivek to approve |
-| B-D3 | Backup | **Take it** (standard procedure), although M11 writes no data | Vivek to approve |
-| B-D4 | Atomicity (SR-01) | M11 has no `begin`/`commit` of its own. **[TO CONFIRM — Rad]** whether `supabase db push` applies one migration file and its history row in a single transaction on the CLI version in use. If yes, SR-01's atomicity is met by the CLI. If no, the stop rule in A.4 applies on a part-way failure: `create or replace` is idempotent, so re-applying the file after a fix is safe (Archie `023A` §7.1). | Open |
-| B-D5 | Applying role | The CLI connects as `postgres`, the owner of the Phase 0 tables, as Archie requires (`023A` §7.6). **[TO CONFIRM — Rad]** against the linked connection. | Open |
+| B-D1 | Freeze | **None.** No deployed code calls the M11 functions (Archie `023A` §7.1). | ✅ Approved by Vivek, 7-Oct-2026 |
+| B-D2 | Announcement | **None.** No user communication is required for this deployment. | ✅ Approved by Vivek, 7-Oct-2026 |
+| B-D3 | Backup | **Take a full backup** (schema, data, roles; A.5) before applying M11, although M11 writes no data. Retention: until Release 1.3 Product Acceptance plus 30 days. | ✅ Approved by Vivek, 7-Oct-2026 |
+| B-D4 | Atomicity (SR-01) — **Rad to confirm** (PO direction, 7-Oct-2026) | M11 has no `begin`/`commit` of its own. **[TO CONFIRM — Rad]** whether `supabase db push` applies one migration file and its history row in a single transaction on the CLI version in use. If yes, SR-01's atomicity is met by the CLI. If no, the stop rule in A.4 applies on a part-way failure: `create or replace` is idempotent, so re-applying the file after a fix is safe (Archie `023A` §7.1). | Open |
+| B-D5 | Applying role and CLI execution details, including the remaining smoke-test steps — **Rad to confirm** (PO direction, 7-Oct-2026) | The CLI connects as `postgres`, the owner of the Phase 0 tables, as Archie requires (`023A` §7.6). **[TO CONFIRM — Rad]** against the linked connection. | Open |
 
 ### B.2 Sequence
 
@@ -215,7 +215,7 @@ Prepared in `EBC-R1.3-WS13-023` §4.4 and verified by Archie (`023A` §6): it dr
 | Role | Name | Decision | Date |
 |---|---|---|---|
 | Engineering (technical steps) | Rad | | |
-| Architecture (SR-01, SR-02) | Archie | | |
+| Architecture (SR-01, SR-02) — Archie reviews the final runbook at Checkpoint 3 and confirms her deployment conditions are fully addressed | Archie | | |
 | Product Owner (Checkpoint 3) | Vivek | | |
 
 *Draft prepared by Tiger, Delivery Manager, on behalf of Team Satvi, 7 October 2026.*
