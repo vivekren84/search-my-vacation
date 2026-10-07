@@ -36,9 +36,10 @@ Each recommendation below follows the same rationale: Release 1.2's MSG91/DLT ex
 | §2.1–§2.6 | Provider playbooks and third-party standards (from `EBC-R1.2-GOV-001`) | Not started — each waits for its provider to be selected | When scoped |
 | §2.7 | Align Project Instructions with the Engineering Governance Principles | Open — deferred by decision (`DEC-R1.3-018` D-5) | Before Release 1.4 planning |
 | §2.8 | Engineering phase approval lifecycle and report sections | Open — in use as working practice (Phase A, Phase 0) | Post–Release 1.3 Governance Documentation Review |
-| §2.9 | Release 1.4 review: Preview/Production environment isolation | Open | Release 1.4 planning |
-| §2.10 | Phase / Release Deployment Runbook | Open — not yet written | **Gate:** approved before WS13 Phase 1 migration M11 is applied (`DEC-R1.3-025` C-6; `DEC-R1.3-026` C-1, Checkpoint 3). Drafting starts in parallel with Milestone A (Tiger, Rad). |
+| §2.9 | Release 1.4 review: Preview/Production environment isolation | Open — scope extended 7-Oct-2026 with function/database region latency (F-11) | Release 1.4 planning |
+| §2.10 | Phase / Release Deployment Runbook | Open — not yet written | **Gate:** approved before WS13 Phase 1 migration M11 is applied (`DEC-R1.3-025` C-6; `DEC-R1.3-026` C-1, Checkpoint 3). Phase 1 contents fixed 7-Oct-2026 (`DEC-R1.3-028` GF-3); drafting now (Tiger, Rad). |
 | §2.11 | QA Execution Playbook | **New — Open** (added 1-Oct-2026) | **Gate:** approved before the WS13 Phase 1 QA handover (`DEC-R1.3-025` C-6; `DEC-R1.3-026` C-3, before Checkpoint 5) |
+| §2.12 | Engineering convention: multi-event audit timestamps and History paging (D-2) | **New — Proposed** (added 7-Oct-2026) | Post–Release 1.3 Governance Documentation Review |
 
 No item is complete yet. Phase 0 exercised §2.8, §2.10 and §2.11 as working practice; none is closed until written into the canonical documents. *Updated 1-Oct-2026 (`EBC-R1.3-WS13-016`). §2.10 and §2.11 made Phase 1 gates 3-Oct-2026 (`EBC-R1.3-WS13-019`, `DEC-R1.3-025`).*
 
@@ -142,6 +143,8 @@ No item is complete yet. Phase 0 exercised §2.8, §2.10 and §2.11 as working p
 
 **Scope extended (1-Oct-2026, `EBC-R1.3-WS13-016`):** the review also covers a dedicated non-production QA database and the Preview/QA environment strategy. Phase 0 QA wrote test records into the shared (Production) database, which must now be removed before release (`DEC-R1.3-022` (5)).
 
+**Scope extended (7-Oct-2026, `EBC-R1.3-WS13-024`, `DEC-R1.3-027`):** the review also covers **function-region and database-region latency**. The WS13 Phase 1 baseline measured about 0.25–0.4 s per sequential call from Vercel functions in `iad1` (US East) to the Supabase database in Seoul, with users in India (`EBC-R1.3-WS13-023` §8.1, F-11). Co-locating the function region with the database is a candidate for this review only; the Product Owner ruled out regional optimisation or architectural change during Phase 1.
+
 ### 2.10 Phase / Release Deployment Runbook
 
 *Added 30-Sep-2026 by `EBC-R1.3-WS13-006`, from the WS13 Phase 0 deployment (`DEC-R1.3-021`). Does not arise from `EBC-R1.2-GOV-001`.*
@@ -162,6 +165,16 @@ Canonical home: an Operations runbook under `docs/50-Operations/`, linked from E
 **Priority (recommended, not authorised):** High — Phase 1 is expected to include further migrations on the shared database (RISK-R1.3-001).
 
 **Owner (proposed):** Tiger (draft), Rad (technical steps), Vivek (approval and operator).
+
+**WS13 Phase 1 runbook contents (7-Oct-2026, `DEC-R1.3-028` GF-3; Archie `EBC-R1.3-WS13-023A`; Rad `EBC-R1.3-WS13-023` §11):**
+1. **SR-01:** apply M11 atomically; keep migration-history parity (35 = 35); reload the PostgREST schema cache (`notify pgrst, 'reload schema';`). The same for rollback.
+2. **SR-02:** pre- and post-application checks on all 12 functions (definer, `search_path=public`, owner, grants: `authenticated` true for the nine public functions, false for the three helpers; `anon` false for all), using the corrected "active Journeys" sizing query (`023` §10).
+3. **Application method — choose one and record it:** the Supabase CLI (`db push` with dry run; needs Docker and the CLI on the operator's machine; F-08 records that the engineering device has neither) or the SQL editor (explicit `begin`/`commit` plus a migration-history row).
+4. **Order:** read-only checks (`023` §10) → apply M11 → verify → **then** push the branch.
+5. **Preview build READY, then a smoke test of the new routes.** This is the first cloud build of Milestone A code; the local build used mocked fonts and placeholder settings.
+6. **Rollback:** `023` §4.4 inside a transaction, schema reload, redeploy the previous Preview build.
+
+**Local tooling (F-08):** install Docker Desktop and the Supabase CLI on the engineering device before Phase 2, so the next migrations can be tested against a real local Supabase stack. Product Owner decision; local tooling only.
 
 ### 2.11 QA Execution Playbook
 
@@ -186,6 +199,16 @@ Canonical home: the planned `playbooks/Validation-Report-Template.md` / QA playb
 **Owner (proposed):** Keerthi (draft), Tiger (review), Vivek (approval).
 
 **Status (1-Oct-2026):** Open.
+
+### 2.12 Engineering convention — multi-event audit timestamps and History paging
+
+*Added 7-Oct-2026 by `EBC-R1.3-WS13-024`, from Archie's acceptance of D-2 (`EBC-R1.3-WS13-023A`). Does not arise from `EBC-R1.2-GOV-001`.*
+
+**Recommendation:** Add a standing engineering convention to the Engineering Handbook §7 (`EBC-R1.3-GOV-005`): any database function that writes more than one audit row for one entity in one call sets `created_at = clock_timestamp()`; History and other audit lists page by the keyset `(created_at, id)`. Reason: rows written in one transaction otherwise share one `now()` value and display in arbitrary order (Milestone A finding F-01; cursor ties F-03).
+
+**Owner (proposed):** Tiger (draft), Archie (review), Vivek (approval).
+
+**Status (7-Oct-2026):** Proposed.
 
 ---
 

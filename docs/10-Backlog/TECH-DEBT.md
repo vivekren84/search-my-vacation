@@ -6,7 +6,7 @@
 Document Type : Engineering Governance Register (documentation only — no code, no configuration, no schema change)
 Release       : Established during Release 1.3 (`EBC-R1.3-WS12-008`); intended to remain live and release-independent across future releases
 Persona       : Tiger — Programme and Delivery Lead
-Status        : ACTIVE — 11 open items (TD-WS12-001 to -005, TD-WS13-001 to -006); none resolved (updated 4-Oct-2026, `EBC-R1.3-WS13-021`)
+Status        : ACTIVE — 12 open items (TD-WS12-001 to -005, TD-WS13-001 to -007); none resolved (updated 7-Oct-2026, `EBC-R1.3-WS13-024`)
 Owner         : Rad (Engineering and Implementation Specialist) — day-to-day custodian; Tiger — governance and prioritisation oversight
 Related documents : docs/10-Backlog/RELEASE-1.3-BACKLOG.md §9 (historical, WS5-sourced Engineering Technical Debt — superseded for new entries, not migrated); docs/10-Backlog/PRODUCT-EVOLUTION-BACKLOG.md; docs/10-Backlog/FUTURE-CONSIDERATIONS.md; docs/10-Backlog/RELEASE-1.3.md; docs/09-Development/EBC-R1.3-WS12-007-RADHA-Journey-Planning-Engineering-Implementation.md
 Distinct from : RELEASE-1.3-BACKLOG.md (product decisions, candidate features and vision items — not engineering-internal quality items), PRODUCT-EVOLUTION-BACKLOG.md (Product Owner-approved future business capabilities, module/workstream-scale), FUTURE-CONSIDERATIONS.md (tactical items a completed workstream's own review explicitly deferred, spanning any discipline — Product, UX, Architecture or Engineering), RELEASE-1.3-GOVERNANCE-BACKLOG.md (process/playbook recommendations). This register holds only engineering-internal quality debt — code, architecture, performance, accessibility, security, infrastructure, developer experience, documentation and testing — never product enhancements, feature requests, roadmap items or future releases. See Section 6 for the full relationship analysis.
@@ -31,6 +31,7 @@ Distinct from : RELEASE-1.3-BACKLOG.md (product decisions, candidate features an
 | 1.3 | 30-Sep-2026 | Tiger | Phase 0 synchronisation per `EBC-R1.3-WS13-006`. Logged the items `EBC-R1.3-WS13-004` GO-09 assigned to Tiger: `TD-WS13-001` (deprecated `workspace_journeys.status`), `TD-WS12-004` (SEC-02, JP `using (true)` UPDATE policies), `TD-WS12-005` (SEC-03, open notification INSERT). Added `TD-WS13-003` (unused `fetchWorkspaceUserRole`, OBS-P0-03). Set a suggested release on `TD-WS13-002`. Header status line brought current. |
 | 1.4 | 1-Oct-2026 | Tiger | Phase 0 QA review per `EBC-R1.3-WS13-016`. Added `TD-WS13-004` (success toast not announced to screen readers, OBS-P0-QA-01) and `TD-WS13-005` (browser session kept after authorisation refusal, OBS-P0-QA-06). Other QA observations reviewed and not logged as debt (planned work, UX decisions or unconfirmed performance findings — see the card's §C). |
 | 1.5 | 4-Oct-2026 | Tiger | Phase 1 implementation authorisation per `EBC-R1.3-WS13-021` / `DEC-R1.3-026`. Added `TD-WS13-006` (deactivation not enforced in RLS read policies; Archie AR-F1, `EBC-R1.3-WS13-020A` AC-8), routed to the RLS hardening card with `TD-WS12-004`/`-005`; `OBS-P1-04` noted for the same card. Phase 1 dispositions of `TD-WS13-003`/`-004`/`-005` (In) and `TD-WS13-001`/`-002` (Deferred) are recorded in `EBC-R1.3-WS13-020` Rev 2 §11; entries unchanged until resolved. |
+| 1.6 | 7-Oct-2026 | Tiger | Phase 1 Milestone A Checkpoint 1 per `EBC-R1.3-WS13-024` / `DEC-R1.3-028`. Added `TD-WS13-007` (M11 SQL hygiene bundle: SR-04, SR-06, SR-07, SR-08 from Archie's `EBC-R1.3-WS13-023A`). Annotated `TD-WS13-006` with Rad's API-level confirmation (F-04), SR-09 and F-10 for the RLS hardening card. |
 
 ---
 
@@ -371,6 +372,25 @@ Every entry records:
 | Owner | Archie (design), Rad (build) |
 | Status | Open |
 | Date Logged | 4-Oct-2026 |
+| Note (7-Oct-2026, `EBC-R1.3-WS13-024`) | Confirmed at API level during Milestone A (Rad F-04): a JWT for an unprovisioned or deactivated user can read every active Journey through PostgREST; the routes refuse both users before any read. The hardening card should also cover **SR-09** (under Supabase default privileges, `service_role` keeps EXECUTE on the M11 helpers; `derive` and `notify` do not check `auth.uid()`) and note **F-10** (existing migrations truncate constraint names over 63 characters; harmless). |
+
+### TD-WS13-007 — M11 SQL hygiene items (bundle)
+
+| Field | Value |
+|---|---|
+| ID | `TD-WS13-007` |
+| Title | Tidy four non-blocking M11 SQL hygiene items with the next change to these functions |
+| Category | Code Quality |
+| Workstream | WS13 — Journey Workspace (Phase 1 Milestone A; Archie's M11 SQL review `EBC-R1.3-WS13-023A`) |
+| Priority | Low |
+| Description | **SR-04:** the SQL whitespace check uses `trim()`, which removes spaces only, so a reason, note or contact value made only of a newline, tab or non-breaking space is accepted by the RPC (the service's JavaScript `.trim()` rejects it, so the application path is safe). **SR-06:** if a Journey's adoption template is later deactivated, Start preparation fails (`template_invalid` with the same id, `template_already_assigned` with another), because the active check runs before the keep-existing branch. **SR-07:** `workspace_journey_lock_for_change` treats any mode other than `'adopt'` as `'change'`. **SR-08:** the lockstep note covers stage tables only; the four contact types are hard-coded in M11, the M08 CHECK and TypeScript `OPERATIONAL_CONTACT_TYPES`. |
+| Reason | Archie classed all four as non-blocking: no current path is unsafe (SR-04), the situation needs a template deactivation that Phase 1 cannot perform (SR-06), and the helper is internal with literal callers (SR-07, SR-08). |
+| Impact | Inconsistent validation between layers; a possible future dead end on legacy-adopted Journeys; drift risk if contact types change. |
+| Suggested Resolution | With the next change to these functions (expected Phase 2): use a whitespace-class check in SQL; reorder the template checks; raise on an unknown helper mode; extend the lockstep note to the contact types. Archie reviews. |
+| Suggested Release / Sprint | WS13 Phase 2 (with the next M11-function change) |
+| Owner | Rad (build), Archie (review) |
+| Status | Open |
+| Date Logged | 7-Oct-2026 |
 
 ---
 
