@@ -76,6 +76,7 @@ import {
   decodeJourneyHistoryCursor,
   encodeJourneyHistoryCursor,
   isJourneyStage,
+  isJourneyTerminal,
   isUuid,
   normaliseJourneyNote,
   normaliseJourneyReason,
@@ -236,6 +237,7 @@ export async function listJourneys(
     counts: computeJourneySummaryCounts(items, today),
     query,
     today,
+    departureWindowDays: settings.departureWindowDays,
   };
 }
 
@@ -580,6 +582,16 @@ export async function adoptLegacyJourney(
   requireJourneyId(journeyId);
   const journey = await fetchJourneyById(supabase, journeyId);
   if (!journey) throw new JourneyWorkspaceError("not_found");
+  // EBC-R1.3-WS13-025 Gate 1: state refusals come before field checks, in
+  // the M11 guard order (workspace_journey_lock_for_change: archived →
+  // terminal → not_legacy → Administrator). Without this, a second
+  // Administrator adopting a Journey that was adopted meanwhile was told
+  // the dates did not match the (newly stored) nights instead of
+  // "already adopted". The RPC remains the authority.
+  if (journey.archivedAt !== null) throw new JourneyWorkspaceError("archived");
+  if (isJourneyTerminal(journey)) throw new JourneyWorkspaceError("terminal");
+  if (journey.adoptionStatus !== "legacy_pending") throw new JourneyWorkspaceError("not_legacy");
+  if (actor.role !== "administrator") throw new JourneyWorkspaceError("not_authorised");
 
   const issues: JourneyFieldIssue[] = [];
   if (!isUuid(body.ownerId)) issues.push(fieldIssue("ownerId", "new_owner_invalid"));

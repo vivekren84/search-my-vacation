@@ -36,3 +36,22 @@ export async function listReadinessTemplateRows(supabase: SupabaseClient): Promi
     sort: row.sort as number,
   }));
 }
+
+// EBC-R1.3-WS13-025 Phase 1 Milestone B (Sophie EBC-R1.3-WS13-020B S-4):
+// active item count per Readiness Template, so the Start preparation dialog
+// can say "This template doesn't have readiness items yet…" only when true.
+export async function countActiveReadinessTemplateItems(supabase: SupabaseClient): Promise<Map<string, number>> {
+  const { data, error } = await supabase
+    .from("workspace_readiness_template_items")
+    .select("template_id")
+    .eq("active", true);
+  if (error) {
+    throw new WorkspaceSettingsRepositoryError("workspace_readiness_template_items_read_failed");
+  }
+  const counts = new Map<string, number>();
+  for (const row of data ?? []) {
+    const id = row.template_id as string;
+    counts.set(id, (counts.get(id) ?? 0) + 1);
+  }
+  return counts;
+}

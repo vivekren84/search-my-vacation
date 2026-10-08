@@ -379,6 +379,8 @@ export interface JourneyListResult {
   counts: JourneySummaryCounts;
   query: JourneyListQuery;
   today: string;
+  // Configured departure window (UX §26: the "Departing ≤ n days" chip label).
+  departureWindowDays: number;
 }
 
 // ---- Detail (JW-02)
@@ -397,6 +399,14 @@ export interface JourneyParty {
   companyName: string | null;
 }
 
+// The originating Journey Planning record (Overview facts rail, History
+// pin). Intended Travel Month is shown "for reference only" (FR-JW-14 AC3).
+export interface JourneyPlanningRecordRef {
+  id: string;
+  title: string;
+  intendedTravelMonth: string | null;
+}
+
 export interface JourneyLinkRef {
   id: string;
   journeyReference: string;
@@ -408,7 +418,7 @@ export interface JourneyDetail {
   party: JourneyParty;
   contact: OperationalContact | null;
   owner: JourneyPersonRef | null;
-  planningRecord: { id: string; title: string } | null;
+  planningRecord: JourneyPlanningRecordRef | null;
   readinessTemplate: { id: string; code: string; name: string } | null;
   supersedes: JourneyLinkRef | null;
   supersededBy: JourneyLinkRef | null;

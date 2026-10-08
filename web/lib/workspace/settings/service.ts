@@ -5,7 +5,7 @@
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-import { listConfigurationRows, listReadinessTemplateRows } from "./repository";
+import { countActiveReadinessTemplateItems, listConfigurationRows, listReadinessTemplateRows } from "./repository";
 import type { ReadinessTemplate, ReferenceListItem, ReferenceListKey, WorkspaceSettings } from "./types";
 import { isActiveReferenceCode, parseWorkspaceSettings } from "./validation";
 
@@ -34,4 +34,16 @@ export async function listReadinessTemplates(
 ): Promise<ReadinessTemplate[]> {
   const templates = await listReadinessTemplateRows(supabase);
   return options.activeOnly ? templates.filter((template) => template.active) : templates;
+}
+
+// EBC-R1.3-WS13-025 (020B S-4): active templates with their active item count.
+export async function listReadinessTemplatesWithItemCounts(
+  supabase: SupabaseClient,
+  options: { activeOnly?: boolean } = {},
+): Promise<Array<ReadinessTemplate & { itemCount: number }>> {
+  const [templates, counts] = await Promise.all([
+    listReadinessTemplates(supabase, options),
+    countActiveReadinessTemplateItems(supabase),
+  ]);
+  return templates.map((template) => ({ ...template, itemCount: counts.get(template.id) ?? 0 }));
 }

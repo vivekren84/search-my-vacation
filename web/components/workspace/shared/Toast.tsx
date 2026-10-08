@@ -55,15 +55,34 @@
 //
 // Auto-dismiss timing (6s) and click-to-dismiss behaviour are unchanged
 // throughout both rounds.
+//
+// EBC-R1.3-WS13-025 Phase 1 Milestone B (TD-WS13-004; WS13-P1-G; Sophie
+// EBC-R1.3-WS13-020B C-11):
+// - The stack is now always rendered as a polite live region
+//   (role="status", aria-live="polite"), so screen readers announce every
+//   toast. It must exist before a toast is inserted for the announcement
+//   to fire, so it is no longer unmounted when empty.
+// - A toast may carry one action link (e.g. "Open Journey"). A toast with
+//   an action does not auto-dismiss (WCAG 2.2.1); it stays until closed
+//   with its "Dismiss" button or the user navigates away. A link cannot sit
+//   inside a button, so action toasts render as a box with the link and a
+//   separate close button. Toasts without an action are unchanged.
 
+import Link from "next/link";
 import { useCallback, useRef, useState } from "react";
 
 export type ToastVariant = "error" | "success" | "info";
+
+export interface ToastAction {
+  label: string;
+  href: string;
+}
 
 export interface ToastMessage {
   id: string;
   variant: ToastVariant;
   message: string;
+  action?: ToastAction;
 }
 
 const VARIANT_STYLES: Record<ToastVariant, string> = {
@@ -74,8 +93,9 @@ const VARIANT_STYLES: Record<ToastVariant, string> = {
 
 // Local, per-component toast state — no shared/global store, since a
 // toast is scoped to the screen the action happened on. Auto-dismisses
-// after 6 seconds; also dismissible by click, since a validation message
-// someone needs to read shouldn't vanish before they finish reading it.
+// after 6 seconds unless it carries an action; also dismissible by click,
+// since a validation message someone needs to read shouldn't vanish before
+// they finish reading it.
 export function useWorkspaceToasts() {
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const nextId = useRef(0);
@@ -85,10 +105,10 @@ export function useWorkspaceToasts() {
   }, []);
 
   const pushToast = useCallback(
-    (message: string, variant: ToastVariant = "error") => {
+    (message: string, variant: ToastVariant = "error", options: { action?: ToastAction } = {}) => {
       const id = `toast-${nextId.current++}`;
-      setToasts((current) => [...current, { id, variant, message }]);
-      window.setTimeout(() => dismissToast(id), 6000);
+      setToasts((current) => [...current, { id, variant, message, action: options.action }]);
+      if (!options.action) window.setTimeout(() => dismissToast(id), 6000);
     },
     [dismissToast],
   );
@@ -103,20 +123,44 @@ export function ToastStack({
   toasts: ToastMessage[];
   onDismiss: (id: string) => void;
 }) {
-  if (toasts.length === 0) return null;
-
   return (
-    <div className="fixed bottom-6 right-4 z-40 flex flex-col items-end gap-2 sm:right-6">
-      {toasts.map((toast) => (
-        <button
-          key={toast.id}
-          type="button"
-          onClick={() => onDismiss(toast.id)}
-          className={`w-fit max-w-sm rounded-[var(--radius-lg)] border px-4 py-3 text-left text-sm shadow-[0_12px_32px_rgb(42_33_28_/_12%)] ${VARIANT_STYLES[toast.variant]}`}
-        >
-          {toast.message}
-        </button>
-      ))}
+    <div
+      role="status"
+      aria-live="polite"
+      className="pointer-events-none fixed bottom-6 right-4 z-40 flex flex-col items-end gap-2 sm:right-6"
+    >
+      {toasts.map((toast) =>
+        toast.action ? (
+          <div
+            key={toast.id}
+            className={`pointer-events-auto flex w-fit max-w-sm items-start gap-3 rounded-[var(--radius-lg)] border px-4 py-3 text-left text-sm shadow-[0_12px_32px_rgb(42_33_28_/_12%)] ${VARIANT_STYLES[toast.variant]}`}
+          >
+            <span>
+              {toast.message}{" "}
+              <Link href={toast.action.href} className="font-semibold underline underline-offset-2">
+                {toast.action.label}
+              </Link>
+            </span>
+            <button
+              type="button"
+              onClick={() => onDismiss(toast.id)}
+              aria-label="Dismiss"
+              className="-mr-1 -mt-0.5 rounded-full px-1.5 text-base leading-none opacity-70 hover:opacity-100"
+            >
+              ×
+            </button>
+          </div>
+        ) : (
+          <button
+            key={toast.id}
+            type="button"
+            onClick={() => onDismiss(toast.id)}
+            className={`pointer-events-auto w-fit max-w-sm rounded-[var(--radius-lg)] border px-4 py-3 text-left text-sm shadow-[0_12px_32px_rgb(42_33_28_/_12%)] ${VARIANT_STYLES[toast.variant]}`}
+          >
+            {toast.message}
+          </button>
+        ),
+      )}
     </div>
   );
 }

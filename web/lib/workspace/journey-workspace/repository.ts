@@ -13,6 +13,7 @@ import type {
   JourneyItinerary,
   JourneyLinkRef,
   JourneyOperationalSummaryRow,
+  JourneyPlanningRecordRef,
   JourneyReferenceSummary,
   JourneyStage,
   OperationalContact,
@@ -391,14 +392,20 @@ export async function searchJourneyIds(supabase: SupabaseClient, text: string): 
 export async function fetchPlanningRecordRef(
   supabase: SupabaseClient,
   recordId: string,
-): Promise<{ id: string; title: string } | null> {
+): Promise<JourneyPlanningRecordRef | null> {
   const { data, error } = await supabase
     .from("workspace_journey_planning_records")
-    .select("id, title")
+    .select("id, title, intended_travel_month")
     .eq("id", recordId)
     .maybeSingle();
   if (error) throw new JourneyWorkspaceRepositoryError("planning_record_fetch_failed");
-  return data ? { id: data.id as string, title: data.title as string } : null;
+  return data
+    ? {
+        id: data.id as string,
+        title: data.title as string,
+        intendedTravelMonth: (data.intended_travel_month as string | null) ?? null,
+      }
+    : null;
 }
 
 export async function fetchReadinessTemplateRef(
