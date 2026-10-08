@@ -6,7 +6,7 @@
 Document Type : Engineering Governance Register (documentation only — no code, no configuration, no schema change)
 Release       : Established during Release 1.3 (`EBC-R1.3-WS12-008`); intended to remain live and release-independent across future releases
 Persona       : Tiger — Programme and Delivery Lead
-Status        : ACTIVE — 12 open items (TD-WS12-001 to -005, TD-WS13-001 to -007); none resolved (updated 7-Oct-2026, `EBC-R1.3-WS13-024`)
+Status        : ACTIVE — 12 items, none resolved: 9 Open, 2 Scheduled (TD-WS13-003, -005 → `EBC-R1.3-WS13-028`), 1 In Progress (TD-WS13-004, implemented in Milestone B, pending verification) (updated 8-Oct-2026, `EBC-R1.3-WS13-027`)
 Owner         : Rad (Engineering and Implementation Specialist) — day-to-day custodian; Tiger — governance and prioritisation oversight
 Related documents : docs/10-Backlog/RELEASE-1.3-BACKLOG.md §9 (historical, WS5-sourced Engineering Technical Debt — superseded for new entries, not migrated); docs/10-Backlog/PRODUCT-EVOLUTION-BACKLOG.md; docs/10-Backlog/FUTURE-CONSIDERATIONS.md; docs/10-Backlog/RELEASE-1.3.md; docs/09-Development/EBC-R1.3-WS12-007-RADHA-Journey-Planning-Engineering-Implementation.md
 Distinct from : RELEASE-1.3-BACKLOG.md (product decisions, candidate features and vision items — not engineering-internal quality items), PRODUCT-EVOLUTION-BACKLOG.md (Product Owner-approved future business capabilities, module/workstream-scale), FUTURE-CONSIDERATIONS.md (tactical items a completed workstream's own review explicitly deferred, spanning any discipline — Product, UX, Architecture or Engineering), RELEASE-1.3-GOVERNANCE-BACKLOG.md (process/playbook recommendations). This register holds only engineering-internal quality debt — code, architecture, performance, accessibility, security, infrastructure, developer experience, documentation and testing — never product enhancements, feature requests, roadmap items or future releases. See Section 6 for the full relationship analysis.
@@ -32,6 +32,7 @@ Distinct from : RELEASE-1.3-BACKLOG.md (product decisions, candidate features an
 | 1.4 | 1-Oct-2026 | Tiger | Phase 0 QA review per `EBC-R1.3-WS13-016`. Added `TD-WS13-004` (success toast not announced to screen readers, OBS-P0-QA-01) and `TD-WS13-005` (browser session kept after authorisation refusal, OBS-P0-QA-06). Other QA observations reviewed and not logged as debt (planned work, UX decisions or unconfirmed performance findings — see the card's §C). |
 | 1.5 | 4-Oct-2026 | Tiger | Phase 1 implementation authorisation per `EBC-R1.3-WS13-021` / `DEC-R1.3-026`. Added `TD-WS13-006` (deactivation not enforced in RLS read policies; Archie AR-F1, `EBC-R1.3-WS13-020A` AC-8), routed to the RLS hardening card with `TD-WS12-004`/`-005`; `OBS-P1-04` noted for the same card. Phase 1 dispositions of `TD-WS13-003`/`-004`/`-005` (In) and `TD-WS13-001`/`-002` (Deferred) are recorded in `EBC-R1.3-WS13-020` Rev 2 §11; entries unchanged until resolved. |
 | 1.6 | 7-Oct-2026 | Tiger | Phase 1 Milestone A Checkpoint 1 per `EBC-R1.3-WS13-024` / `DEC-R1.3-028`. Added `TD-WS13-007` (M11 SQL hygiene bundle: SR-04, SR-06, SR-07, SR-08 from Archie's `EBC-R1.3-WS13-023A`). Annotated `TD-WS13-006` with Rad's API-level confirmation (F-04), SR-09 and F-10 for the RLS hardening card. |
+| 1.7 | 8-Oct-2026 | Tiger | Phase 1 Milestone B review per `EBC-R1.3-WS13-027` / `DEC-R1.3-030`, `DEC-R1.3-031`. `TD-WS13-004` → **In Progress**: implemented in `Toast.tsx` during Milestone B (`EBC-R1.3-WS13-026` §12; plan WP-1.8), accepted with Milestone B; Resolved after Preview verification. `TD-WS13-003` and `TD-WS13-005` → **Scheduled**: authorised for implementation under `EBC-R1.3-WS13-028` (WP-1.9). No item resolved. |
 
 ---
 
@@ -315,7 +316,7 @@ Every entry records:
 | Suggested Resolution | Delete the function in the next change that touches the auth helpers. |
 | Suggested Release / Sprint | WS13 Phase 1 (opportunistic), otherwise Release 1.4 |
 | Owner | Rad |
-| Status | Open |
+| Status | **Scheduled** — `EBC-R1.3-WS13-028` item 8 (WP-1.9, `DEC-R1.3-031` (3)) |
 | Date Logged | 30-Sep-2026 |
 
 ### TD-WS13-004 — Conversion success toast not announced to screen readers
@@ -333,7 +334,7 @@ Every entry records:
 | Suggested Resolution | Use a polite live region (`role="status"`) for success toasts, in the shared toast component. |
 | Suggested Release / Sprint | WS13 Phase 1 (with Journey screens) |
 | Owner | Rad (Sophie confirms pattern) |
-| Status | Open |
+| Status | **In Progress** — implemented in `components/workspace/shared/Toast.tsx` during Milestone B (polite live region; `EBC-R1.3-WS13-026` §12, plan WP-1.8), accepted with Milestone B (`DEC-R1.3-030`). Moves to Resolved after Preview verification (plan E7) and Phase 1 QA. |
 | Date Logged | 1-Oct-2026 |
 
 ### TD-WS13-005 — Browser session kept after authorisation refusal
@@ -351,7 +352,7 @@ Every entry records:
 | Suggested Resolution | Call sign-out when access is refused for `unauthorized` / deactivated, then show the refusal message. |
 | Suggested Release / Sprint | WS13 Phase 1 (with deactivated-user behaviour, `OD-R1.3-7`) |
 | Owner | Rad |
-| Status | Open |
+| Status | **Scheduled** — `EBC-R1.3-WS13-028` item 7 (WP-1.9, `DEC-R1.3-031` (3)) |
 | Date Logged | 1-Oct-2026 |
 
 

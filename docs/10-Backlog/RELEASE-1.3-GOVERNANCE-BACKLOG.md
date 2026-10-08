@@ -174,6 +174,8 @@ Canonical home: an Operations runbook under `docs/50-Operations/`, linked from E
 5. **Preview build READY, then a smoke test of the new routes.** This is the first cloud build of Milestone A code; the local build used mocked fonts and placeholder settings.
 6. **Rollback:** `023` §4.4 inside a transaction, schema reload, redeploy the previous Preview build.
 
+**Status (8-Oct-2026, `DEC-R1.3-032`):** Phase 1 runbook **v1.0 approved** at Checkpoint 3 (Rad signed, Archie confirmed; `EBC-R1.3-WS13-030` Rev 1). Part A is the reusable standard for later phases. *Earlier status, superseded:* **Status (8-Oct-2026, `EBC-R1.3-WS13-027`):** Phase 1 runbook at **v0.3 draft** (`docs/50-Operations/RELEASE-1.3-DEPLOYMENT-RUNBOOK.md`): B-D1 to B-D3 approved; B-D4, B-D5, the step 5 expectation, S-5 and the Milestone B deltas await Rad; branch question 3-12 (`ws13-milestone-b` → fast-forward `feature/r1.3-ws13-journey-workspace` at Checkpoint 4) awaits the Product Owner; Archie reviews at Checkpoint 3.
+
 **Local tooling (F-08):** install Docker Desktop and the Supabase CLI on the engineering device before Phase 2, so the next migrations can be tested against a real local Supabase stack. Product Owner decision; local tooling only.
 
 ### 2.11 QA Execution Playbook
@@ -209,6 +211,21 @@ Canonical home: the planned `playbooks/Validation-Report-Template.md` / QA playb
 **Owner (proposed):** Tiger (draft), Archie (review), Vivek (approval).
 
 **Status (7-Oct-2026):** Proposed.
+
+### 2.13 Engineering convention — no work held only in an ephemeral workspace
+
+*Added 8-Oct-2026 by `EBC-R1.3-WS13-027`, from the Milestone B review (RISK-R1.3-007). Does not arise from `EBC-R1.2-GOV-001`.*
+
+**Context:** The complete WS13 Phase 1 Milestone B implementation (about 4,500 lines) was built, validated and reported while it existed only, uncommitted, in a cloud working copy that is reclaimed after inactivity. The Product Owner's no-commit instruction protected governance sequencing but left no durable copy. `DEC-R1.3-031` (1) ordered a preservation transfer.
+
+**Recommendation:** Add a standing engineering convention to Engineering Handbook §7 (`EBC-R1.3-GOV-005`):
+1. Engineering work is synced to the Product Owner's local repository at the end of every working session and before every checkpoint report. "Uncommitted" never means "only in the cloud".
+2. Preserving work on the local repository (sync, or a local commit on a working branch) is allowed and expected even while a governance commit is on hold. A push still needs its own decision.
+3. Every checkpoint report states where the work physically resides.
+
+**Owner (proposed):** Tiger (draft), Rad (review), Vivek (approval).
+
+**Status (8-Oct-2026):** Proposed. Applied now as constraint 6.2 of `EBC-R1.3-WS13-028`.
 
 ---
 
