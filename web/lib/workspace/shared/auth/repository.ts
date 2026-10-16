@@ -20,23 +20,10 @@ export class WorkspaceUserRepositoryError extends Error {
 // the whole point of AD-WS11-002 is that RLS — evaluated against the
 // signed-in user's own JWT — is what enforces the Workspace access
 // boundary.
-export async function fetchWorkspaceUserRole(
-  supabase: SupabaseClient,
-  userId: string,
-): Promise<WorkspaceRole | null> {
-  const { data, error } = await supabase
-    .from("workspace_users")
-    .select("role")
-    .eq("user_id", userId)
-    .maybeSingle();
-
-  if (error) {
-    throw new WorkspaceUserRepositoryError("workspace_user_lookup_failed");
-  }
-
-  return (data?.role as WorkspaceRole | undefined) ?? null;
-}
-
+//
+// EBC-R1.3-WS13-028 Phase 1 WP-1.9 (TD-WS13-003): the former role-only
+// lookup was removed; every caller now uses fetchWorkspaceUserAccess.
+//
 // EBC-R1.3-WS13-005 Phase 0 (M01, AD-WS13-007): role plus activation
 // state. Selects `*` rather than naming deactivated_at so this read keeps
 // working against a database where M01 is not yet applied (the column is
@@ -46,6 +33,8 @@ export async function fetchWorkspaceUserRole(
 export interface WorkspaceUserAccess {
   role: WorkspaceRole;
   deactivatedAt: string | null;
+  /** EBC-R1.3-WS13-028 WP-1.9 (TL-05): workspace_users.display_name (M01); null when unset. */
+  displayName: string | null;
 }
 
 export async function fetchWorkspaceUserAccess(
@@ -66,5 +55,6 @@ export async function fetchWorkspaceUserAccess(
   return {
     role: data.role as WorkspaceRole,
     deactivatedAt: (data.deactivated_at as string | null | undefined) ?? null,
+    displayName: (data.display_name as string | null | undefined) ?? null,
   };
 }

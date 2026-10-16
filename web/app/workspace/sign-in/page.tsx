@@ -25,13 +25,23 @@
 // since EBC-R1.3-WS11-008 — Remediation Item 3 requires that behaviour be
 // preserved exactly.
 //
+// EBC-R1.3-WS13-028 Phase 1 WP-1.9 (WS13-P1-I, TD-WS13-005): a refused
+// account (deactivated or never provisioned, reason=unauthorized) is first
+// signed out of its Supabase session, then shown the one neutral refusal
+// (DEC-R1.3-026), so a later visit does not reuse the session.
+//
 // Wrapped in Suspense because useSearchParams() requires it for a fully
 // client-rendered page.
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import WorkspaceSignInPanel from "@/components/auth/WorkspaceSignInPanel";
-import { WORKSPACE_ROUTE_PREFIX, WORKSPACE_SIGN_IN_PATH } from "@/lib/workspace/shared/constants";
+import { signOutCurrentWorkspaceUserFromClient } from "@/lib/workspace/shared/auth/client";
+import {
+  WORKSPACE_ACCESS_REFUSED_MESSAGE,
+  WORKSPACE_ROUTE_PREFIX,
+  WORKSPACE_SIGN_IN_PATH,
+} from "@/lib/workspace/shared/constants";
 
 import modalStyles from "@/components/auth/SignInModal.module.css";
 
@@ -57,9 +67,28 @@ function WorkspaceSignInPageContent() {
       ? rawRedirectTo
       : WORKSPACE_ROUTE_PREFIX;
 
+  // WP-1.9 (TD-WS13-005): the refusal shows once the sign-out has settled.
+  // If the sign-out request itself fails, the message is still shown so the
+  // page is never left without an explanation.
+  const [refusalSignedOut, setRefusalSignedOut] = useState(false);
+  useEffect(() => {
+    if (reason !== "unauthorized") return;
+    let cancelled = false;
+    void signOutCurrentWorkspaceUserFromClient()
+      .catch(() => undefined)
+      .then(() => {
+        if (!cancelled) setRefusalSignedOut(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [reason]);
+
   const banner =
     reason === "unauthorized"
-      ? "This account isn't authorised for Workspace access. Contact an Administrator."
+      ? refusalSignedOut
+        ? WORKSPACE_ACCESS_REFUSED_MESSAGE
+        : null
       : reason === "expired"
         ? "Your session has expired. Please sign in again."
         : null;

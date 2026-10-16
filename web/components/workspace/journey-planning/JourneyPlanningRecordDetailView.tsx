@@ -42,8 +42,14 @@
 // dates, nights and Service Category shown, every unmet prerequisite shown
 // at once); a record that replaces an On Hold Journey shows the
 // replacement banner (UXO-11 (b)). Lost and Archived are unchanged.
-// The banner shows the Journey reference as text: the Journey page it will
-// link to arrives in WS13 Phase 1.
+//
+// EBC-R1.3-WS13-028 Phase 1 WP-1.9: the Confirm dialog shows the owner's
+// display name from the Workspace User directory (TL-01; 020B C-13 marker
+// for a deactivated owner); the replacement banner links to the original
+// Journey (TL-02; 020B S-3); the conversion toast carries "Open Journey"
+// and stays until closed (C-11); a closed, Confirmed record shows
+// "Converted to Journey JRN-···· →" under the stage pill (C-12), read from
+// the record's record_converted History event.
 //
 // Known limitation (unchanged from WS12-007): the proposal-version
 // "itinerary" form only captures a SINGLE destination per version
@@ -53,8 +59,10 @@
 // multiple destinations (types.ts) for whenever a richer authoring
 // surface is built.
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
+import { callJourneyApi, useDirectory } from "@/components/workspace/journey-workspace/journeyApi";
 import EmptyState from "@/components/workspace/shared/EmptyState";
 import { ToastStack, useWorkspaceToasts } from "@/components/workspace/shared/Toast";
 import type {
@@ -65,7 +73,9 @@ import type {
   PlanningActivityType,
 } from "@/lib/workspace/journey-planning/types";
 import { JOURNEY_PLANNING_ALLOWED_TRANSITIONS } from "@/lib/workspace/journey-planning/types";
+import type { JourneyDetail } from "@/lib/workspace/journey-workspace/types";
 import type { WorkspaceAuditEventType } from "@/lib/workspace/shared/audit/types";
+import { WORKSPACE_JOURNEY_WORKSPACE_PATH } from "@/lib/workspace/shared/constants";
 import type { WorkspaceTask, WorkspaceTaskStatus } from "@/lib/workspace/shared/tasks-follow-ups/types";
 
 import { AUDIT_EVENT_LABELS, ORIGIN_CHANNEL_LABELS, OUTCOME_LABELS, STAGE_LABELS } from "./journeyPlanningLabels";
@@ -186,6 +196,34 @@ export default function JourneyPlanningRecordDetailView({
   const [confirmBusy, setConfirmBusy] = useState(false);
   const [confirmIssues, setConfirmIssues] = useState<JourneyPlanningFieldIssue[]>([]);
   const { toasts, pushToast, dismissToast } = useWorkspaceToasts();
+  // EBC-R1.3-WS13-028 WP-1.9 (TL-01): display names, inactive users included.
+  const directory = useDirectory();
+
+  // EBC-R1.3-WS13-028 WP-1.9 (C-12): the Journey this record was converted
+  // into, from its record_converted History event. Conversions recorded
+  // before Phase 0 (conversion v1) carry only the Journey id, so the
+  // reference is read from the Journey itself.
+  const convertedEvent = history?.find(
+    (event) => event.eventType === "record_converted" && typeof event.eventData.journey_id === "string",
+  );
+  const convertedJourneyId = (convertedEvent?.eventData.journey_id as string | undefined) ?? null;
+  const convertedEventReference =
+    typeof convertedEvent?.eventData.journey_reference === "string" ? convertedEvent.eventData.journey_reference : null;
+  const [fetchedReference, setFetchedReference] = useState<{ journeyId: string; reference: string } | null>(null);
+  useEffect(() => {
+    if (!convertedJourneyId || convertedEventReference) return;
+    let cancelled = false;
+    void callJourneyApi<{ journey: JourneyDetail }>(`/api/workspace/journey-workspace/${convertedJourneyId}`).then(
+      (result) => {
+        if (!cancelled && result.ok) {
+          setFetchedReference({ journeyId: convertedJourneyId, reference: result.data.journey.journey.journeyReference });
+        }
+      },
+    );
+    return () => {
+      cancelled = true;
+    };
+  }, [convertedJourneyId, convertedEventReference]);
 
   async function load() {
     setState({ status: "loading" });
@@ -379,7 +417,15 @@ export default function JourneyPlanningRecordDetailView({
       }
       setConfirmOpen(false);
       setConfirmIssues([]);
-      pushToast(result.journeyReference ? `Journey ${result.journeyReference} created.` : "Journey created.", "success");
+      // EBC-R1.3-WS13-028 WP-1.9 (C-11): the action keeps the toast open
+      // until the user closes it or navigates away (Toast.tsx).
+      pushToast(
+        result.journeyReference ? `Journey ${result.journeyReference} created.` : "Journey created.",
+        "success",
+        typeof result.journeyId === "string"
+          ? { action: { label: "Open Journey", href: `${WORKSPACE_JOURNEY_WORKSPACE_PATH}/${result.journeyId}` } }
+          : undefined,
+      );
       await Promise.all([load(), loadHistory(), loadTasks()]);
     } catch {
       pushToast("Could not reach the Workspace API.", "error");
@@ -394,6 +440,34 @@ export default function JourneyPlanningRecordDetailView({
     document.getElementById("trip-basics")?.scrollIntoView({ behavior: "smooth", block: "start" });
     document.getElementById("tripBasics-serviceCategory")?.focus({ preventScroll: true });
   }
+
+  // EBC-R1.3-WS13-028 WP-1.9 (TL-01): never a raw user id. While the
+  // directory loads, or if the owner is missing from it, the same labels as
+  // the Journey page ("…", "Unknown user") are used.
+  const ownerEntry =
+    record.ownerId && directory.status === "ready"
+      ? directory.data.find((user) => user.userId === record.ownerId)
+      : undefined;
+  const confirmOwnerLabel = !record.ownerId
+    ? "Unassigned"
+    : ownerEntry
+      ? ownerEntry.displayName
+      : directory.status === "loading"
+        ? "…"
+        : "Unknown user";
+  const confirmOwnerDeactivated = ownerEntry ? !ownerEntry.isActive : false;
+
+  // EBC-R1.3-WS13-028 WP-1.9 (C-12): only a closed record with outcome
+  // Confirmed that has a Journey.
+  const convertedJourney =
+    record.stage === "closed" && record.outcome === "confirmed" && convertedJourneyId
+      ? {
+          id: convertedJourneyId,
+          reference:
+            convertedEventReference ??
+            (fetchedReference?.journeyId === convertedJourneyId ? fetchedReference.reference : null),
+        }
+      : null;
 
   const serviceCategoryLabel =
     record.serviceCategory === null
@@ -410,14 +484,21 @@ export default function JourneyPlanningRecordDetailView({
           className="rounded-[var(--radius-lg)] border border-[var(--color-border-warm)] bg-[var(--color-amber)]/10 px-4 py-3 text-sm text-[var(--color-espresso)]"
         >
           Replacement planning for {replacement.journeyReference} · The original Journey is on hold until this is
-          confirmed.
+          confirmed.{" "}
+          <Link
+            href={`${WORKSPACE_JOURNEY_WORKSPACE_PATH}/${replacement.id}`}
+            className="font-semibold underline underline-offset-2"
+          >
+            Open {replacement.journeyReference}
+          </Link>
         </div>
       ) : null}
 
       {confirmOpen ? (
         <ConfirmJourneyDialog
           ownerId={record.ownerId}
-          ownerLabel={record.ownerId ? (isOwner ? "You" : record.ownerId) : "Unassigned"}
+          ownerLabel={confirmOwnerLabel}
+          ownerDeactivated={confirmOwnerDeactivated}
           nights={record.nights}
           serviceCategory={record.serviceCategory}
           serviceCategoryLabel={serviceCategoryLabel}
@@ -444,10 +525,20 @@ export default function JourneyPlanningRecordDetailView({
               {` · ${ORIGIN_CHANNEL_LABELS[record.originChannel]}`}
             </p>
           </div>
-          <span className="rounded-full bg-[var(--color-amber)]/14 px-3 py-1 text-xs font-bold uppercase tracking-wide text-[var(--color-espresso)]">
-            {STAGE_LABELS[record.stage]}
-            {record.outcome ? ` · ${OUTCOME_LABELS[record.outcome]}` : ""}
-          </span>
+          <div className="flex flex-col items-start gap-1.5 sm:items-end">
+            <span className="rounded-full bg-[var(--color-amber)]/14 px-3 py-1 text-xs font-bold uppercase tracking-wide text-[var(--color-espresso)]">
+              {STAGE_LABELS[record.stage]}
+              {record.outcome ? ` · ${OUTCOME_LABELS[record.outcome]}` : ""}
+            </span>
+            {convertedJourney?.reference ? (
+              <Link
+                href={`${WORKSPACE_JOURNEY_WORKSPACE_PATH}/${convertedJourney.id}`}
+                className="text-sm font-semibold text-[var(--color-espresso)] underline underline-offset-2"
+              >
+                Converted to Journey {convertedJourney.reference} →
+              </Link>
+            ) : null}
+          </div>
         </div>
 
         <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">

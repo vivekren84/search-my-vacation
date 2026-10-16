@@ -32,3 +32,18 @@ export function deriveWorkspaceDisplayName(user: WorkspaceAuthDisplayNameSource)
 
   return "Workspace User";
 }
+
+// EBC-R1.3-WS13-028 Phase 1 WP-1.9 (TL-05, 020 §11): the name an
+// Administrator set in workspace_users.display_name (M01) comes first. When
+// it is empty or absent, the derivation above is used unchanged
+// (user_metadata name, then the email's local part, then "Workspace User").
+// Used by both the Server Component path (service.ts) and the public
+// header's hook (useWorkspaceAuthUser), so the two cannot drift.
+export function resolveWorkspaceDisplayName(
+  storedDisplayName: string | null | undefined,
+  user: WorkspaceAuthDisplayNameSource,
+): string {
+  const stored = storedDisplayName?.trim();
+  if (stored) return stored;
+  return deriveWorkspaceDisplayName(user);
+}

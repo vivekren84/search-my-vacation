@@ -15,6 +15,7 @@
 
 import { createWorkspaceSupabaseServerClient } from "../supabase/server";
 import { getWorkspaceAuthState } from "../auth/service";
+import { WORKSPACE_ACCESS_REFUSED_MESSAGE } from "../constants";
 import type { WorkspaceUser } from "../types";
 
 export function jsonResponse(body: unknown, status: number): Response {
@@ -32,8 +33,10 @@ export async function authenticateWorkspaceApiRequest(): Promise<WorkspaceApiAut
   if (state.status === "unauthenticated") {
     return { ok: false, response: jsonResponse({ ok: false, message: "Not signed in." }, 401) };
   }
+  // EBC-R1.3-WS13-028 WP-1.9 (WS13-P1-I): the same neutral body for a
+  // deactivated and a never-provisioned account (AC-6.2).
   if (state.status === "unauthorized") {
-    return { ok: false, response: jsonResponse({ ok: false, message: "Not provisioned as Workspace staff." }, 403) };
+    return { ok: false, response: jsonResponse({ ok: false, message: WORKSPACE_ACCESS_REFUSED_MESSAGE }, 403) };
   }
 
   return { ok: true, user: state.user, supabase };

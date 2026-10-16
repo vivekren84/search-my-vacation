@@ -3,6 +3,13 @@
 export const WORKSPACE_ROUTE_PREFIX = "/workspace";
 export const WORKSPACE_SIGN_IN_PATH = "/workspace/sign-in";
 
+// EBC-R1.3-WS13-028 Phase 1 WP-1.9 (WS13-P1-I, DEC-R1.3-026): the one
+// neutral refusal for a deactivated or never-provisioned account, used by
+// the sign-in page and the Workspace API 403 body. It discloses no account
+// state.
+export const WORKSPACE_ACCESS_REFUSED_MESSAGE =
+  "You don't have access to the SMV Workspace. If you think this is a mistake, please contact an Administrator.";
+
 // EBC-R1.3-WS11-010: Workspace Authentication UX Refinement — self-service
 // password reset (Section 5). This is the redirectTo target Supabase Auth's
 // native resetPasswordForEmail() sends the reset link to; it must be added to

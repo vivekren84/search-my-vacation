@@ -31,6 +31,8 @@ import {
 export interface ConfirmJourneyDialogProps {
   ownerId: string | null;
   ownerLabel: string;
+  /** EBC-R1.3-WS13-028 WP-1.9 (TL-01): the owner's account is deactivated. */
+  ownerDeactivated?: boolean;
   nights: number | null;
   serviceCategory: string | null;
   serviceCategoryLabel: string | null;
@@ -47,6 +49,7 @@ const FIELD_ORDER = ["confirmedDates", "nights", "serviceCategory", "ownerId", "
 export default function ConfirmJourneyDialog({
   ownerId,
   ownerLabel,
+  ownerDeactivated = false,
   nights,
   serviceCategory,
   serviceCategoryLabel,
@@ -210,6 +213,8 @@ export default function ConfirmJourneyDialog({
           <dt className="text-[var(--color-espresso)]/60">Journey Owner</dt>
           <dd>
             {ownerLabel}
+            {/* EBC-R1.3-WS13-028 WP-1.9 (TL-01): 020B C-13 marker. */}
+            {ownerDeactivated ? <span className="block text-xs text-[var(--color-espresso)]/55">Account deactivated</span> : null}
             <IssueList issues={issueFor("ownerId")} />
           </dd>
         </dl>

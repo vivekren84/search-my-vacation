@@ -9,7 +9,7 @@
 
 import { createWorkspaceSupabaseServerClient } from "../supabase/server";
 import type { WorkspaceUser } from "../types";
-import { deriveWorkspaceDisplayName } from "./displayName";
+import { resolveWorkspaceDisplayName } from "./displayName";
 import { fetchWorkspaceUserAccess } from "./repository";
 
 export type WorkspaceAuthState =
@@ -42,7 +42,8 @@ export async function getWorkspaceAuthState(): Promise<WorkspaceAuthState> {
   // EBC-R1.3-WS11-011: reuse the same display-name derivation the public
   // header's client-side hook already uses (auth/displayName.ts), rather
   // than a second implementation for Server Component callers.
-  const displayName = deriveWorkspaceDisplayName(user);
+  // EBC-R1.3-WS13-028 WP-1.9 (TL-05): workspace_users.display_name first.
+  const displayName = resolveWorkspaceDisplayName(access.displayName, user);
 
   return { status: "ok", user: { id: user.id, email: user.email ?? null, role, displayName } };
 }

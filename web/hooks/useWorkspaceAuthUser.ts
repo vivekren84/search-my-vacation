@@ -6,9 +6,15 @@
 // /workspace/**, so it cannot use the Server Component-only
 // getWorkspaceAuthState() (lib/workspace/shared/auth/service.ts, which
 // needs next/headers). It reuses the same browser Supabase client and the
-// same RLS-scoped role lookup (fetchWorkspaceUserRole) that WS-Eng-0/1
-// already built, rather than introducing a second way to read a Workspace
-// role (Project Instructions §18/§21 — no duplicate authentication logic).
+// same RLS-scoped lookup that WS-Eng-0/1 already built
+// (fetchWorkspaceUserAccess since EBC-R1.3-WS13-028 WP-1.9, TD-WS13-003),
+// rather than introducing a second way to read a Workspace role (Project
+// Instructions §18/§21 — no duplicate authentication logic).
+//
+// WP-1.9 (TD-WS13-003, AC-8.3 "behaviour unchanged"): only the role decides
+// signed-in here, exactly as before; deactivation is not checked in this
+// hook (protected pages and APIs refuse deactivated users server-side).
+// WP-1.9 (TL-05): the header name prefers workspace_users.display_name.
 //
 // A signed-in Supabase Auth user with no workspace_users row (not yet
 // Workspace staff, and there is no Traveller identity to show instead
@@ -34,8 +40,8 @@
 import { useEffect, useState } from "react";
 import type { SupabaseClient, User } from "@supabase/supabase-js";
 
-import { deriveWorkspaceDisplayName } from "@/lib/workspace/shared/auth/displayName";
-import { fetchWorkspaceUserRole } from "@/lib/workspace/shared/auth/repository";
+import { resolveWorkspaceDisplayName } from "@/lib/workspace/shared/auth/displayName";
+import { fetchWorkspaceUserAccess } from "@/lib/workspace/shared/auth/repository";
 import { createWorkspaceSupabaseBrowserClient } from "@/lib/workspace/shared/supabase/browser";
 import type { WorkspaceRole } from "@/lib/workspace/shared/types";
 
@@ -62,16 +68,16 @@ function createClientSafely(): SupabaseClient | null {
 async function resolveStateForUser(supabase: SupabaseClient, user: User | null): Promise<WorkspaceAuthUserState> {
   if (!user) return { status: "signed-out" };
 
-  const role = await fetchWorkspaceUserRole(supabase, user.id).catch(() => null);
-  if (!role) return { status: "signed-out" };
+  const access = await fetchWorkspaceUserAccess(supabase, user.id).catch(() => null);
+  if (!access) return { status: "signed-out" };
 
   return {
     status: "signed-in",
     user: {
       id: user.id,
       email: user.email ?? null,
-      role,
-      displayName: deriveWorkspaceDisplayName(user),
+      role: access.role,
+      displayName: resolveWorkspaceDisplayName(access.displayName, user),
     },
   };
 }
