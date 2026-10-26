@@ -37,11 +37,13 @@ Each recommendation below follows the same rationale: Release 1.2's MSG91/DLT ex
 | §2.7 | Align Project Instructions with the Engineering Governance Principles | Open — deferred by decision (`DEC-R1.3-018` D-5) | Before Release 1.4 planning |
 | §2.8 | Engineering phase approval lifecycle and report sections | Open — in use as working practice (Phase A, Phase 0) | Post–Release 1.3 Governance Documentation Review |
 | §2.9 | Release 1.4 review: Preview/Production environment isolation | Open — scope extended 7-Oct-2026 with function/database region latency (F-11) | Release 1.4 planning |
-| §2.10 | Phase / Release Deployment Runbook | Open — not yet written | **Gate:** approved before WS13 Phase 1 migration M11 is applied (`DEC-R1.3-025` C-6; `DEC-R1.3-026` C-1, Checkpoint 3). Phase 1 contents fixed 7-Oct-2026 (`DEC-R1.3-028` GF-3). Supabase CLI standard, SQL Editor fallback (`DEC-R1.3-029`). **Draft v0.1** at `docs/50-Operations/RELEASE-1.3-DEPLOYMENT-RUNBOOK.md` (7-Oct-2026), awaiting Rad's technical confirmations and Checkpoint 3 approval. |
+| §2.10 | Phase / Release Deployment Runbook | Open — Phase 1 runbook v1.0 approved at Checkpoint 3 (`DEC-R1.3-032`), v1.1 adds the Checkpoint 4 controls (`DEC-R1.3-033`); open as the reusable standard and pending Checkpoint 4 execution. *Status corrected 17-Oct-2026: it still read "not yet written".* | **Gate:** approved before WS13 Phase 1 migration M11 is applied (`DEC-R1.3-025` C-6; `DEC-R1.3-026` C-1, Checkpoint 3). Phase 1 contents fixed 7-Oct-2026 (`DEC-R1.3-028` GF-3). Supabase CLI standard, SQL Editor fallback (`DEC-R1.3-029`). **Draft v0.1** at `docs/50-Operations/RELEASE-1.3-DEPLOYMENT-RUNBOOK.md` (7-Oct-2026), awaiting Rad's technical confirmations and Checkpoint 3 approval. *Superseded 8-Oct-2026: v1.0 approved at Checkpoint 3; see the Status column and §2.10.* |
 | §2.11 | QA Execution Playbook | **New — Open** (added 1-Oct-2026) | **Gate:** approved before the WS13 Phase 1 QA handover (`DEC-R1.3-025` C-6; `DEC-R1.3-026` C-3, before Checkpoint 5) |
 | §2.12 | Engineering convention: multi-event audit timestamps and History paging (D-2) | **New — Proposed** (added 7-Oct-2026) | Post–Release 1.3 Governance Documentation Review |
+| §2.13 | Engineering convention: no work held only in an ephemeral workspace | **New — Proposed** (added 8-Oct-2026); applied as working practice for WP-1.9, not formally adopted | Not set (see §2.13) |
+| §2.14 | Repository housekeeping after linked-machine Git operations | **New — Proposed** (added 17-Oct-2026); no cleanup performed | Not scheduled — a separately assessed step (see §2.14) |
 
-No item is complete yet. Phase 0 exercised §2.8, §2.10 and §2.11 as working practice; none is closed until written into the canonical documents. *Updated 1-Oct-2026 (`EBC-R1.3-WS13-016`). §2.10 and §2.11 made Phase 1 gates 3-Oct-2026 (`EBC-R1.3-WS13-019`, `DEC-R1.3-025`).*
+No item is complete yet. Phase 0 exercised §2.8, §2.10 and §2.11 as working practice; none is closed until written into the canonical documents. *Updated 17-Oct-2026:* still no item is complete or closed. The Phase 1 runbook (§2.10) is approved and §2.13 has been applied operationally for WP-1.9, but applying a convention is not formal adoption: §2.13 and §2.14 remain Proposed. *Updated 1-Oct-2026 (`EBC-R1.3-WS13-016`). §2.10 and §2.11 made Phase 1 gates 3-Oct-2026 (`EBC-R1.3-WS13-019`, `DEC-R1.3-025`).*
 
 ### 2.1 Payment Gateway Playbook
 
@@ -176,6 +178,8 @@ Canonical home: an Operations runbook under `docs/50-Operations/`, linked from E
 
 **Status (8-Oct-2026, `DEC-R1.3-032`):** Phase 1 runbook **v1.0 approved** at Checkpoint 3 (Rad signed, Archie confirmed; `EBC-R1.3-WS13-030` Rev 1). Part A is the reusable standard for later phases. *Earlier status, superseded:* **Status (8-Oct-2026, `EBC-R1.3-WS13-027`):** Phase 1 runbook at **v0.3 draft** (`docs/50-Operations/RELEASE-1.3-DEPLOYMENT-RUNBOOK.md`): B-D1 to B-D3 approved; B-D4, B-D5, the step 5 expectation, S-5 and the Milestone B deltas await Rad; branch question 3-12 (`ws13-milestone-b` → fast-forward `feature/r1.3-ws13-journey-workspace` at Checkpoint 4) awaits the Product Owner; Archie reviews at Checkpoint 3.
 
+**Update (17-Oct-2026):** runbook **v1.1** (8-Oct-2026, `DEC-R1.3-033`) adds the Checkpoint 4 operational controls C4-OC-1 and C4-OC-2; no technical change. Checkpoint 4 has not been executed and M11 is not applied. Before Checkpoint 4, the Part B list of commits to push and the expected-commit checks must be reconciled with `1b1fd4d` and `c9d6ec1` (both made after v1.1), with Rad and Archie confirming. Status remains Open.
+
 **Local tooling (F-08):** install Docker Desktop and the Supabase CLI on the engineering device before Phase 2, so the next migrations can be tested against a real local Supabase stack. Product Owner decision; local tooling only.
 
 ### 2.11 QA Execution Playbook
@@ -193,6 +197,8 @@ Canonical home: an Operations runbook under `docs/50-Operations/`, linked from E
 5. When "Passed (by reference)" to an engineering test is allowed.
 6. Evidence retention — where screenshots are stored (Phase 0 evidence folder `QA-WS13-P0-evidence/` is not in the repository, and Administrator-run screenshots were not kept).
 7. Device coverage below 500 px — Chrome cannot render it; use a real phone or device emulation (noted as a limit in Phase A and Phase 0).
+8. Date-sensitive checks — expected dates are computed from the business date, not written as literals (WP-1.9 Gate 1 re-run: LC-02 and LC-04 failed on 9-Oct-2026 only because they held 8-Oct-2026 dates; `EBC-R1.3-WS13-031` §6). *Added 9-Oct-2026.*
+9. Superseded expectations — when an approved requirement changes a check's expected result, the check is re-baselined with a reference to the requirement, and the as-run result is kept (WP-1.9 DE-02: 403 → 401 after sign-out, AC-7.1/7.2; `EBC-R1.3-WS13-031` §5). *Added 9-Oct-2026.*
 
 Canonical home: the planned `playbooks/Validation-Report-Template.md` / QA playbook in the AI Operating Model (Handbook §18 roadmap), linked from §7.
 
@@ -226,6 +232,22 @@ Canonical home: the planned `playbooks/Validation-Report-Template.md` / QA playb
 **Owner (proposed):** Tiger (draft), Rad (review), Vivek (approval).
 
 **Status (8-Oct-2026):** Proposed. Applied now as constraint 6.2 of `EBC-R1.3-WS13-028`.
+
+**Update (9-Oct-2026, `EBC-R1.3-WS13-031` R-2):** the WP-1.9 implementation and report were on the Mac, but its test evidence (suites, fixture, logs, screenshots) was held only in Rad's cloud workspace. Proposed extension: the convention covers **test evidence** as well as code, kept on the Product Owner's machine outside Git tracking in an approved location (`DEC-R1.3-034` WP-D2).
+
+**Update (17-Oct-2026):** applied for WP-1.9: the evidence is held at `~/SMV-evidence/R1.3-WS13-WP-1.9` (outside Git; transferred 9-Oct-2026; manifest-verified; mobile-navigation addendum 16-Oct-2026), and the WP-1.9 work was committed locally as `c9d6ec1` (16-Oct-2026). Lesson for the convention: Project Knowledge exposes document text, not files, so the repository copy is the byte-verifiable record; Project Knowledge copies can be checked at text level only (EBC-031 §12 V-6). Status remains Proposed.
+
+### 2.14 Repository housekeeping after linked-machine Git operations
+
+*Added 17-Oct-2026 by Tiger after the WP-1.9 local commit (`c9d6ec1`). Does not arise from `EBC-R1.2-GOV-001`.*
+
+**Context:** Git commands run through the linked-machine shell cannot delete files in the repository. The `1b1fd4d` and `c9d6ec1` commits left `HEAD.lock` files, renamed to `.git/stale-HEAD-lock-*`; older renamed lock files (`index.lock.bak*`, `HEAD.lock.stale*`, an August `next-index-15.lock`) and about 251 `tmp_obj_*` files remain under `.git`. None is active; read-only Git works normally.
+
+**Recommendation:** a separately assessed housekeeping step, run by the Product Owner in Terminal on the Mac (or with an approved delete permission), that removes only stale lock copies and `tmp_obj_*` files after confirming no Git process is running; no history change. Also decide whether future commits are run by the Product Owner in Terminal.
+
+**Owner (proposed):** Tiger (procedure), Vivek (execution and approval).
+
+**Status (17-Oct-2026):** Proposed. No cleanup performed.
 
 ---
 
