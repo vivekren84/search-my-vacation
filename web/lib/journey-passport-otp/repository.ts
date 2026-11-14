@@ -7,8 +7,7 @@ import type {
   JourneyPassportOtpVerifyOutcome,
   JourneyPassportOtpVerifyResult,
 } from "./types";
-
-const EXPECTED_SUPABASE_URL = "https://jbsefolhlfkplawiuvlu.supabase.co";
+import { resolveSupabaseProjectUrl } from "../supabase/project";
 
 export class JourneyPassportOtpRepositoryError extends Error {
   constructor(readonly code: string) {
@@ -17,7 +16,11 @@ export class JourneyPassportOtpRepositoryError extends Error {
   }
 }
 
-type SupabaseEnvironment = { NEXT_PUBLIC_SUPABASE_URL?: string; SUPABASE_SECRET_KEY?: string };
+type SupabaseEnvironment = {
+  NEXT_PUBLIC_SUPABASE_URL?: string;
+  SUPABASE_PROJECT_REF?: string;
+  SUPABASE_SECRET_KEY?: string;
+};
 type OtpRpcConfig = { expirySeconds: number; resendDelaySeconds: number; maxResends: number; maxVerifyAttempts: number };
 
 function createHeaders(secretKey: string) {
@@ -49,9 +52,9 @@ export function createSupabaseJourneyPassportOtpRepository(
   config: OtpRpcConfig,
   fetcher: typeof fetch = fetch,
 ): JourneyPassportOtpRepository {
-  const projectUrl = environment.NEXT_PUBLIC_SUPABASE_URL?.replace(/\/$/, "");
+  const projectUrl = resolveSupabaseProjectUrl(environment.NEXT_PUBLIC_SUPABASE_URL, environment.SUPABASE_PROJECT_REF);
   const secretKey = environment.SUPABASE_SECRET_KEY?.trim();
-  if (projectUrl !== EXPECTED_SUPABASE_URL || !secretKey) throw new JourneyPassportOtpRepositoryError("database_not_configured");
+  if (!projectUrl || !secretKey) throw new JourneyPassportOtpRepositoryError("database_not_configured");
   // Re-bind as explicitly-typed consts so TS retains the narrowing across the
   // nested rpc() closure below (mirrors journey-leads/repository.ts's shape,
   // but this file's tsconfig/nesting combination otherwise widens both back

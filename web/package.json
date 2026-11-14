@@ -30,7 +30,7 @@
     "verify:journey-itineraries": "npm run build:journey-itinerary-generator && node node_modules/.cache/smv-journey-itineraries/scripts/journey-itineraries/verify.js && tsc -p tsconfig.itinerary-verification.json && node node_modules/.cache/smv-itinerary-verification/lib/journey-itineraries/validation/verifyItineraryRuntime.js",
     "verify:destination-itineraries": "tsc -p tsconfig.itinerary-verification.json && node node_modules/.cache/smv-itinerary-verification/lib/journey-itineraries/validation/verifyDestinationItineraries.js",
     "build:geo-validation-importer": "tsc -p scripts/geo-validation/tsconfig.json",
-    "import:geo-places": "npm run build:geo-validation-importer && node node_modules/.cache/smv-geo-validation-importer/importGeoNames.js"
+    "import:geo-places": "npm run build:geo-validation-importer && node node_modules/.cache/smv-geo-validation-importer/scripts/geo-validation/importGeoNames.js"
   },
   "dependencies": {
     "libphonenumber-js": "^1.13.11",

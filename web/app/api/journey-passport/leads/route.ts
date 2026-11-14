@@ -34,7 +34,11 @@ export async function POST(request: Request) {
 
   try {
     const otpRepository = createSupabaseJourneyPassportOtpRepository(
-      { NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SECRET_KEY: process.env.SUPABASE_SECRET_KEY },
+      {
+        NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+        SUPABASE_PROJECT_REF: process.env.SUPABASE_PROJECT_REF,
+        SUPABASE_SECRET_KEY: process.env.SUPABASE_SECRET_KEY,
+      },
       journeyPassportOtpConfig,
     );
     // DEC-R1.2-006 / EBC-R1.2-WS5-01 §6: a Journey Passport submission is
@@ -58,6 +62,7 @@ export async function POST(request: Request) {
 
     const repository = createSupabaseJourneyLeadRepository({
       NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+      SUPABASE_PROJECT_REF: process.env.SUPABASE_PROJECT_REF,
       SUPABASE_SECRET_KEY: process.env.SUPABASE_SECRET_KEY,
     });
     const notifier = createJourneyLeadNotifier({

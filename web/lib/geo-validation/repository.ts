@@ -7,8 +7,7 @@
 // This file must never import anything from web/lib/journey-director/**.
 
 import { isGeoPlaceType, type GeoPlaceType, type GeoSearchResult } from "./types";
-
-const EXPECTED_SUPABASE_URL = "https://jbsefolhlfkplawiuvlu.supabase.co";
+import { resolveSupabaseProjectUrl } from "../supabase/project";
 
 // Search backs live typing, not a one-time submission, so this is
 // deliberately tighter than the leads repository's 7000ms. This is the
@@ -29,6 +28,7 @@ export class GeoValidationRepositoryError extends Error {
 
 type SupabaseEnvironment = {
   NEXT_PUBLIC_SUPABASE_URL?: string;
+  SUPABASE_PROJECT_REF?: string;
   SUPABASE_SECRET_KEY?: string;
 };
 
@@ -83,9 +83,9 @@ export function createSupabaseGeoValidationRepository(
   environment: SupabaseEnvironment,
   fetcher: typeof fetch = fetch,
 ): GeoValidationRepository {
-  const projectUrl = environment.NEXT_PUBLIC_SUPABASE_URL?.replace(/\/$/, "");
+  const projectUrl = resolveSupabaseProjectUrl(environment.NEXT_PUBLIC_SUPABASE_URL, environment.SUPABASE_PROJECT_REF);
   const secretKey = environment.SUPABASE_SECRET_KEY?.trim();
-  if (projectUrl !== EXPECTED_SUPABASE_URL || !secretKey) {
+  if (!projectUrl || !secretKey) {
     throw new GeoValidationRepositoryError("database_not_configured");
   }
 

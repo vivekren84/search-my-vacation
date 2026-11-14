@@ -7,8 +7,7 @@ import type {
   ValidatedJourneyCallback,
   ValidatedJourneyLead,
 } from "./types";
-
-const EXPECTED_SUPABASE_URL = "https://jbsefolhlfkplawiuvlu.supabase.co";
+import { resolveSupabaseProjectUrl } from "../supabase/project";
 
 export class JourneyLeadRepositoryError extends Error {
   constructor(readonly code: string) {
@@ -19,6 +18,7 @@ export class JourneyLeadRepositoryError extends Error {
 
 type SupabaseEnvironment = {
   NEXT_PUBLIC_SUPABASE_URL?: string;
+  SUPABASE_PROJECT_REF?: string;
   SUPABASE_SECRET_KEY?: string;
 };
 
@@ -35,9 +35,9 @@ export function createSupabaseJourneyLeadRepository(
   environment: SupabaseEnvironment,
   fetcher: typeof fetch = fetch,
 ): JourneyPassportRepository {
-  const projectUrl = environment.NEXT_PUBLIC_SUPABASE_URL?.replace(/\/$/, "");
+  const projectUrl = resolveSupabaseProjectUrl(environment.NEXT_PUBLIC_SUPABASE_URL, environment.SUPABASE_PROJECT_REF);
   const secretKey = environment.SUPABASE_SECRET_KEY?.trim();
-  if (projectUrl !== EXPECTED_SUPABASE_URL || !secretKey) throw new JourneyLeadRepositoryError("database_not_configured");
+  if (!projectUrl || !secretKey) throw new JourneyLeadRepositoryError("database_not_configured");
 
   async function request(path: string, init: RequestInit, code: string) {
     let response: Response;

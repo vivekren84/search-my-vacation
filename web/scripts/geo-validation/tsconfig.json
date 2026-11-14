@@ -8,10 +8,10 @@
     "noEmit": false,
     "outDir": "../../node_modules/.cache/smv-geo-validation-importer",
     "plugins": [],
-    "rootDir": ".",
+    "rootDir": "../..",
     "target": "ES2022",
     "types": ["node"]
   },
-  "include": ["./**/*.ts"],
+  "include": ["./**/*.ts", "../../lib/supabase/project.ts"],
   "exclude": ["../../node_modules"]
 }

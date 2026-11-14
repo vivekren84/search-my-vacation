@@ -25,8 +25,8 @@
  *   4. Download https://download.geonames.org/export/dump/admin2Codes.txt
  *   5. Set GEONAMES_ALLCOUNTRIES_PATH, GEONAMES_ALTERNATENAMES_PATH,
  *      GEONAMES_ADMIN1_PATH, GEONAMES_ADMIN2_PATH to the four files above.
- *   6. Set NEXT_PUBLIC_SUPABASE_URL / SUPABASE_SECRET_KEY (already present
- *      in web/.env.local for this project) in the shell that runs this.
+ *   6. Set NEXT_PUBLIC_SUPABASE_URL / SUPABASE_PROJECT_REF /
+ *      SUPABASE_SECRET_KEY in the shell that runs this.
  *
  * Filter scope (EBC-R1.2-WS6-03 §5): GeoNames feature classes P
  * (populated places) and A (administrative divisions) only. Landmark and
@@ -45,9 +45,9 @@
 import { createReadStream } from "node:fs";
 import { createInterface } from "node:readline";
 
+import { resolveSupabaseProjectUrl } from "../../lib/supabase/project";
 import type { GeoAliasRow, GeoPlaceRow, RawAlternateName, RawGeonamesPlace } from "./types";
 
-const EXPECTED_SUPABASE_URL = "https://jbsefolhlfkplawiuvlu.supabase.co";
 const BATCH_SIZE = 500;
 
 // ARCHIE-R1.2-WS3-AR-02 (Architecture Review, 29 Aug 2026), implemented
@@ -341,11 +341,13 @@ async function main() {
   const alternateNamesPath = readEnvOrExit("GEONAMES_ALTERNATENAMES_PATH");
   const admin1Path = readEnvOrExit("GEONAMES_ADMIN1_PATH");
   const admin2Path = readEnvOrExit("GEONAMES_ADMIN2_PATH");
-  const projectUrl = readEnvOrExit("NEXT_PUBLIC_SUPABASE_URL").replace(/\/$/, "");
+  const configuredUrl = readEnvOrExit("NEXT_PUBLIC_SUPABASE_URL");
+  const projectRef = readEnvOrExit("SUPABASE_PROJECT_REF");
   const secretKey = readEnvOrExit("SUPABASE_SECRET_KEY");
+  const projectUrl = resolveSupabaseProjectUrl(configuredUrl, projectRef);
 
-  if (projectUrl !== EXPECTED_SUPABASE_URL) {
-    console.error(`NEXT_PUBLIC_SUPABASE_URL does not match the expected project (${EXPECTED_SUPABASE_URL}). Refusing to import.`);
+  if (!projectUrl) {
+    console.error("NEXT_PUBLIC_SUPABASE_URL does not match SUPABASE_PROJECT_REF. Refusing to import.");
     process.exit(1);
   }
 

@@ -16,6 +16,7 @@ export async function POST(request: Request) {
     const raw: unknown = JSON.parse(body);
     const repository = createSupabaseJourneyLeadRepository({
       NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+      SUPABASE_PROJECT_REF: process.env.SUPABASE_PROJECT_REF,
       SUPABASE_SECRET_KEY: process.env.SUPABASE_SECRET_KEY,
     });
     const accepted = await processJourneyLeadEvent(raw, repository);

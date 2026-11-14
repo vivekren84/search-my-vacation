@@ -44,6 +44,7 @@ export async function GET(request: Request) {
   try {
     const repository = createSupabaseGeoValidationRepository({
       NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+      SUPABASE_PROJECT_REF: process.env.SUPABASE_PROJECT_REF,
       SUPABASE_SECRET_KEY: process.env.SUPABASE_SECRET_KEY,
     });
     const results = await repository.searchDestinations(query, DEFAULT_SUGGESTION_LIMIT);

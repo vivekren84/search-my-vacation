@@ -32,7 +32,11 @@ export async function POST(request: Request) {
 
   try {
     const repository = createSupabaseJourneyPassportOtpRepository(
-      { NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SECRET_KEY: process.env.SUPABASE_SECRET_KEY },
+      {
+        NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+        SUPABASE_PROJECT_REF: process.env.SUPABASE_PROJECT_REF,
+        SUPABASE_SECRET_KEY: process.env.SUPABASE_SECRET_KEY,
+      },
       journeyPassportOtpConfig,
     );
     const result = await processJourneyPassportOtpVerify(parsed.value.mobileNumber, parsed.value.challengeId, parsed.value.code, repository);
