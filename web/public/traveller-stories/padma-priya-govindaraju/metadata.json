@@ -13,7 +13,8 @@
       "duration": "4 Days",
       "experienceType": "Senior-friendly Family Vacation",
       "travellerType": "Senior Travellers",
-      "featured": false
+      "featured": true,
+      "googleReviewUrl": "https://maps.app.goo.gl/wQD192x6n993gxcG7"
     }
   ],
   "media": {
@@ -39,5 +40,5 @@
     "Senior Travellers",
     "Senior-friendly Family Vacation"
   ],
-  "lastUpdated": "2026-08-11"
+  "lastUpdated": "2026-09-06"
 }
