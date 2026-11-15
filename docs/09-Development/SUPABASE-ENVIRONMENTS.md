@@ -13,6 +13,10 @@
 
 Vercel Production has Production-only values for `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_PROJECT_REF`, and `SUPABASE_SECRET_KEY`. Preview and Development have separate Pre-Prod values for those same variables. The application checks that `SUPABASE_PROJECT_REF` matches the Supabase URL hostname. No project URL is embedded in application code.
 
+**Messaging isolation (2026-11-15):** Vercel Preview has no SMS (`SMS_PROVIDER_*`) or Resend (`RESEND_API_KEY`, `JOURNEY_LEAD_FROM_EMAIL`, `JOURNEY_LEAD_NOTIFICATION_EMAILS`) variables. Those are Production-only; the SMS variables also remain on Development. Without them, the OTP SMS provider reports `not-configured` and the lead notifier is disabled, so Preview cannot send SMS or email. OTP and lead-submission testing remains intentionally disabled.
+
+**Pre-Prod schema note:** the Pre-Prod database also has the R1.3 migrations `20260916…` to `20260928…` applied. The R1.2-based line does not use those objects; reconcile them before any Pre-Prod migration work.
+
 ## Local setup
 
 `web/.env.local` is git-ignored. From the linked `web/` project directory, populate it with the Development-scoped values using `vercel env pull .env.local --environment=development`. Confirm the URL's project ref matches `SUPABASE_PROJECT_REF` and is `pkfdunyeaqdvvklutgon`. If the local link points at another Vercel project, stop and link the intended project first. Do not commit `.env.local` or paste its contents into chat.
