@@ -66,7 +66,7 @@ The existing raw-text and expression trigram indexes on `geo_places` and `geo_al
 | bombay (alias) | 732 + 84 → 679 | 18 + 4 ms → 8 ms | 23 → 9 ms |
 | banglore (typo) | 3,054 + 285 → 2,003 | 109 + 17 ms → 39 ms | 128 → 41 ms |
 
-**Why:** heap blocks fall 7–51% (narrow rows, one scan instead of two), and per-candidate work falls about 70% (stored text, no recomputation). The number of rows rejected on recheck is essentially the same, as expected, because matching semantics are unchanged.
+**Why:** heap blocks fall 17–51% (narrow rows, one scan instead of two), and per-candidate work falls about 70% (stored text, no recomputation). The number of rows rejected on recheck is essentially the same, as expected, because matching semantics are unchanged.
 
 ### Result parity and a pre-existing tie property
 
