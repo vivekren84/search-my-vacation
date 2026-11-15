@@ -13,8 +13,9 @@
       "duration": "3 Days / 2 Nights",
       "experienceType": "Kerala Getaway",
       "travellerType": "Family",
-      "featured": false,
-      "heroImage": "family.jpg"
+      "featured": true,
+      "heroImage": "family.jpg",
+      "googleReviewUrl": "https://maps.app.goo.gl/KvwpdQNcbMCNMeCk8"
     }
   ],
   "media": {
@@ -51,5 +52,5 @@
     "Kerala Getaway",
     "Family"
   ],
-  "lastUpdated": "2026-08-11"
+  "lastUpdated": "2026-09-06"
 }

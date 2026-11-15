@@ -217,26 +217,28 @@ export default async function TravellerStoryDetailPage({ params }: PageParams) {
                 </cite>
               </div>
             ) : (
-              <>
-                <div className="mx-auto mt-8 max-w-2xl rounded-[1.75rem] border border-[#e4d2b5] bg-white px-8 py-10 shadow-[0_14px_34px_rgba(91,55,18,.07)] sm:px-12">
-                  <p className="text-xs font-bold uppercase tracking-[.14em] text-[#F5951C]">Journey Snapshot</p>
-                  <p className="mt-3 font-serif text-2xl leading-tight text-[#2A211C]">
-                    {journey.travellerName}&apos;s {journey.destination} journey
-                  </p>
-                  <p className="mt-4 text-sm leading-7 text-[#80664d]">
-                    A {journey.duration.toLowerCase()} {journey.experienceType.toLowerCase()} experience, crafted around
-                    what {journey.travellerName} was hoping to feel — see the facts above, and browse the moments from
-                    the journey below.
-                  </p>
-                </div>
-
-                {/* No authentic testimonial exists for this journey — direct
-                    visitors to Google Reviews (the agreed canonical source for
-                    additional traveller feedback) instead of ending the page
-                    abruptly after the Journey Snapshot. Never a fabricated quote. */}
-                <GoogleReviewsCTA />
-              </>
+              <div className="mx-auto mt-8 max-w-2xl rounded-[1.75rem] border border-[#e4d2b5] bg-white px-8 py-10 shadow-[0_14px_34px_rgba(91,55,18,.07)] sm:px-12">
+                <p className="text-xs font-bold uppercase tracking-[.14em] text-[#F5951C]">Journey Snapshot</p>
+                <p className="mt-3 font-serif text-2xl leading-tight text-[#2A211C]">
+                  {journey.travellerName}&apos;s {journey.destination} journey
+                </p>
+                <p className="mt-4 text-sm leading-7 text-[#80664d]">
+                  A {journey.duration.toLowerCase()} {journey.experienceType.toLowerCase()} experience, crafted around
+                  what {journey.travellerName} was hoping to feel — see the facts above, and browse the moments from
+                  the journey below.
+                </p>
+              </div>
             )}
+
+            {/* Google Review CTA — evaluated independently of the testimonial/
+                snapshot above (approved Product rule, R1.3-WS2-IMP-02A: a
+                curated testimonial and a Google Review CTA are not mutually
+                exclusive). Shown whenever this specific journey has its own
+                approved Google Review URL, whether or not it also has a
+                curated testimonial. Never a generic, sitewide fallback — a
+                journey with no approved review of its own renders nothing
+                here. */}
+            {journey.googleReviewUrl ? <GoogleReviewsCTA url={journey.googleReviewUrl} /> : null}
 
             {/* 6. Gallery */}
             <Gallery images={journey.galleryImages} travellerName={journey.travellerName} />

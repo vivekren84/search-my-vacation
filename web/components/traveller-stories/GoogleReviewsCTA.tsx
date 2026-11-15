@@ -1,22 +1,26 @@
-import { siteContact } from "@/config/contact.config";
-
 /**
- * Traveller Stories — Google Reviews CTA (EBC-033: Traveller Stories Final
- * Content Polish).
+ * Traveller Stories — Google Reviews CTA (originally EBC-033: Traveller
+ * Stories Final Content Polish; behaviour aligned to the approved Product
+ * decision under R1.3-WS2-IMP-02A: Google Review CTA Final Alignment).
  *
- * Shown only on journeys with no authentic long-form testimonial (see
- * `getTestimonialForJourney`). We never fabricate a testimonial or expand
- * metadata into invented traveller quotes — Google Reviews is the agreed
- * canonical source for additional customer feedback, so a journey without
- * its own quote directs the visitor there instead of ending abruptly after
- * the Journey Snapshot.
+ * Shown whenever a journey has its own approved Google Review URL
+ * (`TravellerJourneyCard.googleReviewUrl`, sourced from the frozen
+ * `PRW-R1.3-001-Traveller-Stories.xlsx`) — independently of whether that
+ * journey also has an authentic long-form testimonial (see
+ * `getTestimonialForJourney`). A curated testimonial and this CTA are not
+ * mutually exclusive: a journey with both shows both. This component never
+ * falls back to a generic, sitewide review link — a journey with no
+ * approved review of its own renders nothing here at all, per the approved
+ * business rule ("Do not display a generic Google Reviews CTA under any
+ * circumstances"). The caller (`traveller-stories/[slug]`) is responsible
+ * for only rendering this component when a URL is available.
  *
  * Styled to match the existing "Plan My Experience" CTA card already used
  * lower on this same page (same rounded card, border, shadow, serif
  * heading, and pill button treatment) — intentionally reusing SMV's
  * existing button and card language rather than introducing a new one.
  */
-export default function GoogleReviewsCTA() {
+export default function GoogleReviewsCTA({ url }: { url: string }) {
   return (
     <div className="mx-auto mt-8 max-w-2xl rounded-[1.75rem] border border-[#e4d2b5] bg-[radial-gradient(circle_at_50%_0%,#f7dfb4,transparent_60%),#FFFDFC] px-8 py-10 text-center shadow-[0_14px_34px_rgba(91,55,18,.07)] sm:px-12">
       <p className="font-serif text-2xl leading-tight text-[#2A211C]">More Traveller Experiences</p>
@@ -26,7 +30,7 @@ export default function GoogleReviewsCTA() {
         Read more verified experiences shared by our travellers on Google Reviews.
       </p>
       <a
-        href={siteContact.googleReviewsUrl}
+        href={url}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Read Search My Vacation's traveller reviews on Google in a new tab"
