@@ -15,10 +15,14 @@ export type JourneyPassportOtpSendServiceResult = {
 
 export async function processJourneyPassportOtpSend(
   mobileNumber: string,
-  dependencies: { repository: JourneyPassportOtpRepository; smsProvider: JourneyPassportOtpSmsProvider },
+  dependencies: {
+    repository: JourneyPassportOtpRepository;
+    smsProvider: JourneyPassportOtpSmsProvider;
+    codeGenerator?: () => string;
+  },
 ): Promise<JourneyPassportOtpSendServiceResult> {
-  const { repository, smsProvider } = dependencies;
-  const code = generateOtpCode();
+  const { repository, smsProvider, codeGenerator } = dependencies;
+  const code = codeGenerator ? codeGenerator() : generateOtpCode();
   const otpHash = hashOtpCode(code, mobileNumber);
   const result = await repository.createOrResendChallenge(mobileNumber, otpHash);
 

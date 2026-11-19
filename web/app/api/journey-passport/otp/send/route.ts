@@ -55,6 +55,12 @@ export async function POST(request: Request) {
   }
 
   try {
+    const isMockAllowed =
+      (process.env.VERCEL_ENV === "preview" ||
+        process.env.NODE_ENV !== "production" ||
+        process.env.ENABLE_TEST_OTP === "true") &&
+      !process.env.SMS_PROVIDER_API_KEY;
+
     const repository = createSupabaseJourneyPassportOtpRepository(
       {
         NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -63,16 +69,22 @@ export async function POST(request: Request) {
       },
       journeyPassportOtpConfig,
     );
-    const smsProvider = createJourneyPassportOtpSmsProvider(
-      {
-        SMS_PROVIDER_API_KEY: process.env.SMS_PROVIDER_API_KEY,
-        SMS_PROVIDER_SENDER_ID: process.env.SMS_PROVIDER_SENDER_ID,
-        SMS_PROVIDER_TEMPLATE_ID: process.env.SMS_PROVIDER_TEMPLATE_ID,
-      },
-      journeyPassportOtpConfig.providerTimeoutMs,
-      journeyPassportOtpConfig.expirySeconds,
-    );
-    const result = await processJourneyPassportOtpSend(parsed.value.mobileNumber, { repository, smsProvider });
+    const smsProvider = isMockAllowed
+      ? { async send() { return { status: "sent" as const }; } }
+      : createJourneyPassportOtpSmsProvider(
+          {
+            SMS_PROVIDER_API_KEY: process.env.SMS_PROVIDER_API_KEY,
+            SMS_PROVIDER_SENDER_ID: process.env.SMS_PROVIDER_SENDER_ID,
+            SMS_PROVIDER_TEMPLATE_ID: process.env.SMS_PROVIDER_TEMPLATE_ID,
+          },
+          journeyPassportOtpConfig.providerTimeoutMs,
+          journeyPassportOtpConfig.expirySeconds,
+        );
+    const result = await processJourneyPassportOtpSend(parsed.value.mobileNumber, {
+      repository,
+      smsProvider,
+      ...(isMockAllowed ? { codeGenerator: () => "000000" } : {}),
+    });
 
     if (result.outcome !== "sent") {
       emitDiagnosticLog({
