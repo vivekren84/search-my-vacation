@@ -4,6 +4,10 @@ export {
   release1JourneyCandidates,
 } from "./release1Candidates";
 export {
+  GOVERNED_DESTINATIONS_COMPLETION,
+  type GovernedDestinationContent,
+} from "./governedCatalogueContent";
+export {
   CONCERN_CLASSIFICATION_RULES,
   THEME_MEMORY_GOAL_MAP,
   UNKNOWN_SEASONALITY,

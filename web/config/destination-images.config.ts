@@ -38,6 +38,7 @@ export const journeyCanonicalImages: Readonly<Record<string, JourneyCanonicalIma
   bali: approvedImage("bali.webp", "A Balinese temple gate and rice terraces in warm tropical light"),
   bandipur: approvedImage("bandipur-v2.webp", "A Bengal tiger moving through the dry deciduous forest of Bandipur"),
   corbett: approvedImage("corbett.webp", "A tiger in the forest and river landscape of Corbett"),
+  darjeeling: approvedImage("darjeeling.webp", "Tea gardens and the Himalayan peaks above Darjeeling"),
   dubai: approvedImage("dubai.webp", "The Burj Khalifa and Downtown Dubai skyline at golden hour"),
   goa: approvedImage("goa.webp", "A Goan coast and Portuguese church setting in warm evening light"),
   gujarat: approvedImage("gujarat.webp", "The Great Rann of Kutch with restrained Gujarati cultural details"),

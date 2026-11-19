@@ -1,4 +1,4 @@
-import { travellerStories, type TravellerStory } from "@/config/travellerStories.data";
+import { travellerStories, type TravellerStory } from "../../config/travellerStories.data";
 
 /**
  * Authentic Story Rule (Traveller Stories Listing Finalisation & Repair EBC):

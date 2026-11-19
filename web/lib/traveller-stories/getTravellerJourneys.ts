@@ -3,6 +3,7 @@ import path from "node:path";
 import sharp from "sharp";
 
 import { curatedDestinationImageForJourney } from "./curatedDestinationImage";
+import { isStoryQualityGated } from "./storyQualityGate";
 
 /**
  * Traveller Stories — journey data loader
@@ -385,7 +386,9 @@ export async function getApprovedTravellerJourneys(): Promise<TravellerJourneyCa
     }
   }
 
-  return cards.sort((a, b) => {
+  const qualifiedCards = cards.filter(isStoryQualityGated);
+
+  return qualifiedCards.sort((a, b) => {
     if (a.travelYear !== b.travelYear) return b.travelYear - a.travelYear;
     const monthDiff = monthIndex(b.travelMonth) - monthIndex(a.travelMonth);
     if (monthDiff !== 0) return monthDiff;

@@ -1,0 +1,23 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "allowJs": false,
+    "incremental": false,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "noEmit": false,
+    "outDir": "./node_modules/.cache/smv-m3-verification",
+    "plugins": [],
+    "rootDir": ".",
+    "target": "ES2022",
+    "types": ["node"]
+  },
+  "include": [
+    "lib/journey-director/**/*.ts",
+    "lib/geo-validation/**/*.ts",
+    "lib/traveller-stories/**/*.ts",
+    "config/**/*.ts",
+    "types/**/*.ts"
+  ],
+  "exclude": ["node_modules"]
+}

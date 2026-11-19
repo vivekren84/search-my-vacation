@@ -101,6 +101,12 @@ export function formatDisambiguation(result: GeoSearchResult): string {
   const label = PLACE_TYPE_LABELS[result.placeType];
   const hierarchyParts = [result.admin2Name, result.admin1Name].filter((part): part is string => Boolean(part));
   if (hierarchyParts.length > 0) return [label, ...hierarchyParts].join(", ");
-  if (result.countryCode) return [label, countryName(result.countryCode)].join(", ");
+  if (result.countryCode) {
+    const country = countryName(result.countryCode);
+    if (result.placeType === "country" && country.toLowerCase() === result.canonicalName.toLowerCase()) {
+      return label;
+    }
+    return [label, country].join(", ");
+  }
   return label;
 }
