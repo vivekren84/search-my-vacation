@@ -36,7 +36,7 @@ export function GeneralWhatsAppCard({
       journeyIntent,
     });
 
-    void recordJourneyPassportEvent(journeyReference, "whatsapp_general_handoff_opened");
+    void recordJourneyPassportEvent(journeyReference, "whatsapp_handoff_opened");
     window.open(buildWhatsAppLink(message), "_blank", "noopener,noreferrer");
   };
 

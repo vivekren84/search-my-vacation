@@ -115,8 +115,8 @@ function verifyP03WhatsAppHandoff() {
     "P-03: Unconstrained general WhatsApp continuation function exists",
   );
   assert(
-    experienceSource.includes("whatsapp_general_handoff_opened"),
-    "P-03: General WhatsApp event telemetry is recorded",
+    experienceSource.includes("whatsapp_handoff_opened"),
+    "P-03: WhatsApp event telemetry is recorded",
   );
 
   // 1. Test General WhatsApp Message Generation
