@@ -131,7 +131,7 @@ const generatedCandidateCount =
 export const RELEASE1_CATALOGUE_METADATA: RuntimeCatalogueMetadata = Object.freeze({
   catalogueVersion: `journey-intelligence-${runtimeJourneyIntelligence.manifest.generatorVersion}-${runtimeJourneyIntelligence.manifest.workbookChecksum.slice(0, 12)}`,
   catalogueEffectiveFrom,
-  catalogueReviewValidUntil: plusDays(catalogueEffectiveFrom, 30),
+  catalogueReviewValidUntil: plusDays(catalogueEffectiveFrom, 180),
   sourceDocument: "web/generated/intelligence-manifest.json",
   sourceDocumentVersion: runtimeJourneyIntelligence.manifest.generatorVersion,
   sourceDocumentLastUpdated: catalogueEffectiveFrom,
