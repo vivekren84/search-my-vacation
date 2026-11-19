@@ -7,6 +7,7 @@ import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 
 import SiteBrand from "@/components/brand/SiteBrand";
 import PublicFooter from "@/components/layout/PublicFooter";
+import { siteContact } from "@/config/contact.config";
 import { resolvePublicDestinationPassportContext } from "@/config/public-destinations.config";
 import { useJourneyPassport } from "@/hooks/useJourneyPassport";
 import { useJourneySession } from "@/context/JourneySessionContext";
@@ -22,6 +23,7 @@ import { JourneyChapterProgress } from "./JourneyChapterProgress";
 import { JourneyPassportNavigation } from "./JourneyPassportNavigation";
 import { AboutYouMoment, DestinationMoment, DiscoverMoment, PaceAndTimingMoment, SingleChoiceMoment, WelcomeMoment } from "./JourneyPassportMoments";
 import { PassportStamp } from "./PassportStamp";
+import { PreOtpTrustCard } from "./PreOtpTrustCard";
 
 // EBC-R1.2-WS5-02 §2/§8.8: "+91 98765 ••210" — country code + leading 5
 // digits + last 3 digits visible, middle masked. Pure display formatting,
@@ -84,6 +86,9 @@ export default function JourneyPassport() {
   const [otpChallengeId, setOtpChallengeId] = useState("");
   const [otpCode, setOtpCode] = useState("");
   const [otpError, setOtpError] = useState("");
+  const [otpNotice, setOtpNotice] = useState("");
+  const [leadSubmissionFailed, setLeadSubmissionFailed] = useState(false);
+  const [lastVerifiedToken, setLastVerifiedToken] = useState("");
   const [otpStatus, setOtpStatus] = useState<"idle" | "sending" | "verifying">("idle");
   const [otpNextResendAt, setOtpNextResendAt] = useState(0);
   const [otpResendExhausted, setOtpResendExhausted] = useState(false);
@@ -158,6 +163,9 @@ export default function JourneyPassport() {
     setOtpChallengeId("");
     setOtpCode("");
     setOtpError("");
+    setOtpNotice("");
+    setLeadSubmissionFailed(false);
+    setLastVerifiedToken("");
     setOtpResendExhausted(false);
     setOtpNextResendAt(0);
   };
@@ -168,6 +176,7 @@ export default function JourneyPassport() {
     if (passport.state.name.trim().length < 2) { setContactError("Please share the name you would like us to use."); return; }
     if (digits.length !== 10 || digits === "0000000000") { setContactError("Please enter a valid 10-digit mobile number."); return; }
     setContactError("");
+    setOtpNotice("");
     setOtpStatus("sending");
     try {
       const result = await sendJourneyPassportOtp(passport.state.mobile.trim());
@@ -175,16 +184,29 @@ export default function JourneyPassport() {
         setOtpChallengeId(result.challengeId);
         setOtpCode("");
         setOtpError("");
+        setOtpNotice("");
         setOtpResendExhausted(false);
         setOtpNextResendAt(Date.now() + (result.resendDelaySeconds ?? 30) * 1000);
         setOtpResendNow(Date.now());
         setContactStage("otp");
       } else if (result.outcome === "resend_too_soon") {
+        if (result.challengeId) {
+          setOtpChallengeId(result.challengeId);
+        }
+        if (result.resendDelaySeconds) {
+          setOtpNextResendAt(Date.now() + result.resendDelaySeconds * 1000);
+          setOtpResendNow(Date.now());
+        }
         setContactStage("otp");
+        setOtpNotice("A code was already sent to your mobile number. Please enter it below, or request a new code when the countdown finishes.");
       } else if (result.outcome === "resend_limit_exceeded") {
         setOtpResendExhausted(true);
         setContactStage("otp");
         setOtpError("You’ve reached the resend limit for this number. Please check the number below, or try again in a few minutes.");
+      } else if (result.outcome === "rate_limit_exceeded") {
+        setContactError("This mobile number has reached the maximum daily verification limit. Please reach out to us directly via WhatsApp.");
+      } else if (result.outcome === "cooldown_lockout") {
+        setContactError("Hourly verification limit reached for this number. Please wait 15 minutes before trying again.");
       } else if (result.outcome === "otp_unavailable") {
         setContactError(JOURNEY_LEAD_FAILURE_MESSAGE);
       } else {
@@ -210,6 +232,8 @@ export default function JourneyPassport() {
     const completedState = { ...passport.state, name: passport.state.name.trim(), mobile: passport.state.mobile.trim(), journeyReference: passportId };
     const snapshot = createJourneyPassportSnapshot(completedState);
     setContactSubmission("submitting");
+    setLeadSubmissionFailed(false);
+    setLastVerifiedToken(verificationToken);
     try {
       await submitJourneyPassportLead({
         passportReference: passportId,
@@ -227,19 +251,42 @@ export default function JourneyPassport() {
       savePassport(snapshot);
       passport.clearDraft();
       setContactSubmission("success");
+      setLeadSubmissionFailed(false);
       void recordJourneyPassportEvent(passportId, "journey_director_entered");
       setClosureStage("stamping");
     } catch {
-      // Known limitation (disclosed, not silently masked): if the OTP token
-      // was already consumed server-side but this submission call itself
-      // then fails (e.g. a network drop), the token cannot be reused and the
-      // traveller must request a new code. This mirrors the narrow window
-      // any two-sequential-server-calls design has and was accepted rather
-      // than adding cross-request transactional machinery for this EBC.
+      // UX-01: Instead of losing the verified token, the token is preserved
+      // (10-minute idempotent retry window enabled by TD-07 migration) and an
+      // emergency direct WhatsApp fallback is offered.
       setContactSubmission("idle");
-      setOtpError(JOURNEY_LEAD_FAILURE_MESSAGE);
-      otpCodeInputRef.current?.focus();
+      setLeadSubmissionFailed(true);
+      setOtpError("");
     }
+  };
+
+  const handleWhatsAppFallback = () => {
+    const completedState = { ...passport.state, name: passport.state.name.trim(), mobile: passport.state.mobile.trim(), journeyReference: passportId };
+    const snapshot = createJourneyPassportSnapshot(completedState);
+    savePassport(snapshot);
+    passport.clearDraft();
+
+    const synopsisLines = [
+      `Hello Search My Vacation, I have verified my Journey Passport (${passportId}), but encountered a temporary connection issue. Here are my journey details:`,
+      "",
+      `Traveller: ${completedState.name || "Traveller"}`,
+      `Mobile: ${completedState.mobile}`,
+      completedState.companion ? `Travelling with: ${completedState.companion}` : "",
+      completedState.dreamJourney ? `Travel feeling / mood: ${completedState.dreamJourney}` : "",
+      completedState.timing ? `Timing: ${completedState.timing}${completedState.startDate ? ` (${completedState.startDate} to ${completedState.endDate})` : ""}` : "",
+      completedState.travelStyles?.length ? `Travel styles: ${completedState.travelStyles.join(", ")}` : "",
+      completedState.preferredDestinations?.length ? `Destinations of interest: ${completedState.preferredDestinations.join(", ")}` : "",
+      completedState.getawayDescription ? `Travel notes: ${completedState.getawayDescription}` : "",
+      "",
+      "Please connect me with a Senior Journey Designer to review my Passport.",
+    ].filter(Boolean).join("\n");
+
+    void recordJourneyPassportEvent(passportId, "whatsapp_handoff_opened");
+    window.open(`${siteContact.whatsappHref}?text=${encodeURIComponent(synopsisLines)}`, "_blank", "noopener,noreferrer");
   };
 
   const verifyOtp = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -285,6 +332,9 @@ export default function JourneyPassport() {
     setOtpChallengeId("");
     setOtpCode("");
     setOtpError("");
+    setOtpNotice("");
+    setLeadSubmissionFailed(false);
+    setLastVerifiedToken("");
     setOtpResendExhausted(false);
     setOtpNextResendAt(0);
     passport.dispatch({ type: "set-completion", value: "idle" });
@@ -327,8 +377,8 @@ export default function JourneyPassport() {
             <label htmlFor="issued-passport-name" className="mt-5 block text-sm font-semibold text-[#2A211C]">Name<input id="issued-passport-name" type="text" autoComplete="name" maxLength={80} value={passport.state.name} onChange={(event) => update({ name: sanitizeTravellerName(event.target.value) })} className="mt-2 min-h-12 w-full rounded-xl border border-[#d8c4a7] bg-white px-4 text-base focus:outline-2 focus:outline-offset-2 focus:outline-[#2A211C]" /></label>
             <label htmlFor="issued-passport-mobile" className="mt-4 block text-sm font-semibold text-[#2A211C]">Mobile number<input id="issued-passport-mobile" type="tel" autoComplete="tel" inputMode="numeric" maxLength={10} value={passport.state.mobile} onChange={(event) => update({ mobile: event.target.value.replace(/\D/g, "") })} aria-describedby="issued-passport-privacy issued-passport-error" className="mt-2 min-h-12 w-full rounded-xl border border-[#d8c4a7] bg-white px-4 text-base focus:outline-2 focus:outline-offset-2 focus:outline-[#2A211C]" placeholder="e.g. 9876543210" /></label>
             {contactError ? <p id="issued-passport-error" role="alert" className="mt-3 text-sm font-semibold text-[#a1463c]">{contactError}</p> : null}
-            <p id="issued-passport-privacy" className="mt-4 text-xs leading-5 text-[#2A211C]">Used only to connect this Passport with your planning conversation. We do not sell your contact details.</p>
-            <button type="submit" className="w-full" disabled={otpStatus === "sending"} aria-busy={otpStatus === "sending"}>{otpStatus === "sending" ? "Sending your code…" : "Move to Journey Director"}{otpStatus === "idle" ? <span aria-hidden="true" className="ml-2">→</span> : null}</button>
+            <PreOtpTrustCard />
+            <button type="submit" className="w-full mt-5" disabled={otpStatus === "sending"} aria-busy={otpStatus === "sending"}>{otpStatus === "sending" ? "Sending your code…" : "Move to Journey Director"}{otpStatus === "idle" ? <span aria-hidden="true" className="ml-2">→</span> : null}</button>
             <button type="button" onClick={reviewPassport} disabled={otpStatus !== "idle"} className="mx-auto block !mt-3 !bg-transparent !text-[#2A211C] !shadow-none">Review my Passport</button>
           </form> : <form onSubmit={verifyOtp} className="journey-passport-reveal mx-auto mt-7 max-w-md text-left" noValidate>
             <h2 ref={otpHeadingRef} tabIndex={-1} className="text-center text-xl font-semibold text-[#2A211C]">Confirm your number</h2>
@@ -345,12 +395,47 @@ export default function JourneyPassport() {
                 className="mt-2 min-h-12 w-full rounded-xl border border-[#d8c4a7] bg-white px-4 text-base focus:outline-2 focus:outline-offset-2 focus:outline-[#2A211C]"
               />
             </label>
+            <p className="mt-2.5 text-center text-xs text-[#80664d]">
+              Verifying connects your Journey Passport with your advisor. Expected response: Same business day (or tomorrow morning if after 7 PM IST).
+            </p>
+            {otpNotice ? <p id="issued-passport-otp-notice" role="status" className="mt-3 text-center text-sm font-medium text-[#80664d] bg-[#f8eddd] rounded-xl p-3 border border-[#e4d2b5]">{otpNotice}</p> : null}
             {otpError ? <p id="issued-passport-otp-error" role="alert" className="mt-3 text-sm font-semibold text-[#a1463c]">{otpError}</p> : null}
             {contactSubmission === "success" ? <p id="issued-passport-otp-status" role="status" className="mt-3 text-center text-sm font-semibold text-[#4d6b46]">Number confirmed. Your Passport is connected. Preparing your possibilities…</p> : null}
-            <button type="submit" className="w-full" disabled={otpStatus === "verifying" || contactSubmission !== "idle"} aria-busy={otpStatus === "verifying" || contactSubmission === "submitting"}>{otpStatus === "verifying" || contactSubmission === "submitting" ? "Connecting your Journey Passport…" : "Verify code"}</button>
-            {otpResendExhausted ? null : otpResendSecondsRemaining > 0
-              ? <p className="mx-auto mt-3 text-center text-sm text-[#8a7a6a]">Resend available in {formatJourneyPassportOtpCountdown(otpResendSecondsRemaining)}</p>
-              : <button type="button" onClick={() => void requestOtp()} disabled={otpStatus === "sending" || contactSubmission !== "idle"} className="mx-auto block !mt-3 !bg-transparent !text-[#2A211C] !shadow-none">Resend code</button>}
+            {leadSubmissionFailed ? (
+              <div className="mt-4 rounded-2xl border border-[#d8a49c] bg-[#fff8f6] p-5 text-left shadow-sm">
+                <p className="font-serif text-base font-semibold text-[#2A211C]">
+                  Your number is verified, but we couldn’t automatically save your passport just now.
+                </p>
+                <p className="mt-1.5 text-xs leading-5 text-[#80664d]">
+                  Your travel preferences are safe in this window. You can retry connecting, or continue directly with your advisor via WhatsApp so not a single detail is lost.
+                </p>
+                <div className="mt-4 space-y-2.5">
+                  <button
+                    type="button"
+                    onClick={() => void finalizeJourneyPassportSubmission(lastVerifiedToken)}
+                    disabled={contactSubmission === "submitting"}
+                    className="w-full rounded-full bg-[#2A211C] py-3 text-sm font-bold text-white transition hover:bg-[#3d312a] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2A211C]"
+                  >
+                    {contactSubmission === "submitting" ? "Connecting your Journey Passport…" : "Retry Connecting My Passport"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleWhatsAppFallback}
+                    className="flex w-full items-center justify-center gap-2 rounded-full border border-[#25D366] bg-white py-3 text-sm font-bold text-[#128C7E] transition hover:bg-[#25D366]/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#25D366]"
+                  >
+                    <span>Continue Directly via WhatsApp</span>
+                    <span aria-hidden="true">→</span>
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <>
+                <button type="submit" className="w-full" disabled={otpStatus === "verifying" || contactSubmission !== "idle"} aria-busy={otpStatus === "verifying" || contactSubmission === "submitting"}>{otpStatus === "verifying" || contactSubmission === "submitting" ? "Connecting your Journey Passport…" : "Verify code"}</button>
+                {otpResendExhausted ? null : otpResendSecondsRemaining > 0
+                  ? <p className="mx-auto mt-3 text-center text-sm text-[#8a7a6a]">Resend available in {formatJourneyPassportOtpCountdown(otpResendSecondsRemaining)}</p>
+                  : <button type="button" onClick={() => void requestOtp()} disabled={otpStatus === "sending" || contactSubmission !== "idle"} className="mx-auto block !mt-3 !bg-transparent !text-[#2A211C] !shadow-none">Resend code</button>}
+              </>
+            )}
           </form>}
         </div> : <div role="status" aria-live="polite"><p className="passport-closure-transition-copy">Closing your Passport…</p></div>}
       </section>
