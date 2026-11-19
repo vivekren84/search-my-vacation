@@ -70,3 +70,52 @@ export function UsersIcon(props: SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
+
+/**
+ * Release 1.3 Milestone 4 (HP-02): Bespoke SVG brand icons for the
+ * Homepage "Travel confidence" Trust Points, replacing raw Unicode glyphs
+ * (◌, ✦, ↗, ◎). Sized to fit comfortably inside a 24x24 viewBox with a stroke
+ * of 1.6 to match GlobeIcon / RouteIcon / UsersIcon.
+ */
+
+export function ListenFirstIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>
+      <path d="M12 3a9 9 0 0 0-9 9c0 3.1 1.6 5.8 4 7.4" />
+      <path d="M12 7a5 5 0 0 0-5 5c0 1.9 1.1 3.6 2.7 4.4" />
+      <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none" />
+      <path d="M16 12a4 4 0 0 1-4 4" />
+      <path d="M19.5 12a7.5 7.5 0 0 1-7.5 7.5" />
+    </svg>
+  );
+}
+
+export function ThoughtfulDesignIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>
+      <path d="M12 2.5L14.2 9l6.5 2.2-6.5 2.2L12 20l-2.2-6.6L3.3 11.2l6.5-2.2z" />
+      <circle cx="12" cy="11.2" r="1.2" fill="currentColor" stroke="none" />
+      <path d="M19 3l.8 2.2L22 6l-2.2.8L19 9l-.8-2.2L16 6l2.2-.8z" />
+    </svg>
+  );
+}
+
+export function HonestAdviceIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>
+      <path d="M12 3L4 6.5v6c0 5 3.5 9.5 8 10.5 4.5-1 8-5.5 8-10.5v-6L12 3z" />
+      <path d="M9.5 12l2 2 3.5-3.5" />
+    </svg>
+  );
+}
+
+export function PersonalSupportIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>
+      <circle cx="12" cy="7.5" r="3.5" />
+      <path d="M5.5 19.5c.8-3.6 3.5-5.5 6.5-5.5s5.7 1.9 6.5 5.5" />
+      <path d="M18.5 7l.5 1.5 1.5.5-1.5.5-.5 1.5-.5-1.5-1.5-.5 1.5-.5z" />
+    </svg>
+  );
+}
+

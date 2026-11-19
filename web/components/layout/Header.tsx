@@ -40,45 +40,58 @@ export default function Header() {
           </ul>
         </nav>
 
-        <Link href="/journey-passport" className="hidden shrink-0 whitespace-nowrap rounded-full bg-[#F5951C] px-4 py-2 text-xs font-bold uppercase tracking-[0.1em] text-[#2A211C] transition hover:bg-[#F5951C] xl:inline-flex">
-          Plan My Experience
-        </Link>
-
-        <div className="relative ml-auto xl:hidden">
-          <button
-            type="button"
-            aria-expanded={isMenuOpen}
-            aria-controls="mobile-primary-navigation"
-            onClick={() => setIsMenuOpen((isOpen) => !isOpen)}
-            className="inline-flex items-center gap-2 rounded-full border border-white/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-white transition hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+        <div className="ml-auto flex items-center gap-3 xl:ml-0">
+          <Link
+            href="/journey-passport"
+            className="hidden shrink-0 whitespace-nowrap rounded-full bg-[#F5951C] px-4 py-2 text-xs font-bold uppercase tracking-[0.1em] text-[#2A211C] transition hover:bg-[#F5951C] lg:inline-flex"
           >
-            Menu
-            <span aria-hidden="true" className="h-3 w-4 border-y border-current" />
-          </button>
+            Plan My Experience
+          </Link>
 
-          {isMenuOpen ? (
-            <nav
-              id="mobile-primary-navigation"
-              aria-label="Mobile primary navigation"
-              className="absolute right-0 top-[calc(100%+0.75rem)] w-60 rounded-2xl border border-white/15 bg-[#2A211C]/95 p-2 shadow-xl shadow-black/25 backdrop-blur-md"
+          <div className="relative xl:hidden">
+            <button
+              type="button"
+              aria-expanded={isMenuOpen}
+              aria-controls="mobile-primary-navigation"
+              onClick={() => setIsMenuOpen((isOpen) => !isOpen)}
+              className="inline-flex items-center gap-2 rounded-full border border-white/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-white transition hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
             >
-              <ul>
-                {siteConfig.navigation.map((item) => (
-                  <li key={`${item.label}-${item.href}`}>
+              Menu
+              <span aria-hidden="true" className="h-3 w-4 border-y border-current" />
+            </button>
+
+            {isMenuOpen ? (
+              <nav
+                id="mobile-primary-navigation"
+                aria-label="Mobile primary navigation"
+                className="absolute right-0 top-[calc(100%+0.75rem)] w-60 rounded-2xl border border-white/15 bg-[#2A211C]/95 p-2 shadow-xl shadow-black/25 backdrop-blur-md"
+              >
+                <ul>
+                  {siteConfig.navigation.map((item) => (
+                    <li key={`${item.label}-${item.href}`}>
+                      <Link
+                        href={item.href}
+                        onClick={() => setIsMenuOpen(false)}
+                        aria-current={pathname === item.href ? "page" : undefined}
+                        className="block rounded-xl px-4 py-3 text-sm font-medium text-white transition hover:bg-white/10 focus-visible:bg-white/10 focus-visible:outline-none"
+                      >
+                        {item.label}
+                      </Link>
+                    </li>
+                  ))}
+                  <li className="lg:hidden">
                     <Link
-                      href={item.href}
+                      href="/journey-passport"
                       onClick={() => setIsMenuOpen(false)}
-                      aria-current={pathname === item.href ? "page" : undefined}
-                      className="block rounded-xl px-4 py-3 text-sm font-medium text-white transition hover:bg-white/10 focus-visible:bg-white/10 focus-visible:outline-none"
+                      className="mt-1 block rounded-xl bg-[#F5951C] px-4 py-3 text-center text-xs font-bold uppercase tracking-[0.1em] text-[#2A211C]"
                     >
-                      {item.label}
+                      Plan My Experience
                     </Link>
                   </li>
-                ))}
-                <li><Link href="/journey-passport" onClick={() => setIsMenuOpen(false)} className="mt-1 block rounded-xl bg-[#F5951C] px-4 py-3 text-sm font-bold text-[#2A211C]">Plan My Experience</Link></li>
-              </ul>
-            </nav>
-          ) : null}
+                </ul>
+              </nav>
+            ) : null}
+          </div>
         </div>
       </Container>
     </header>
