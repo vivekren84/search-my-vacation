@@ -1,5 +1,3 @@
-import { siteContact } from "../../config/contact.config.js";
-
 /**
  * WhatsApp Continuation Deep-Link Module (P-03)
  *
@@ -9,6 +7,8 @@ import { siteContact } from "../../config/contact.config.js";
  *
  * All links open directly in WhatsApp with human, unpressured micro-copy and official SMV- reference tagging.
  */
+
+export const SMV_WHATSAPP_HREF = "https://wa.me/918925838541";
 
 export interface GeneralWhatsAppParams {
   travellerName: string;
@@ -89,7 +89,7 @@ export function createPossibilityWhatsAppMessage({
 }
 
 export function buildWhatsAppLink(message: string, customBaseHref?: string): string {
-  const base = customBaseHref || siteContact.whatsappHref;
+  const base = customBaseHref || SMV_WHATSAPP_HREF;
   const cleanBase = base.endsWith("?") ? base.slice(0, -1) : base;
   const separator = cleanBase.includes("?") ? "&" : "?";
   return `${cleanBase}${separator}text=${encodeURIComponent(message)}`;
