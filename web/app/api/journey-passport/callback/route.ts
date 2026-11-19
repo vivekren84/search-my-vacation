@@ -1,8 +1,9 @@
 import { createJourneyLeadNotifier } from "@/lib/journey-leads/email";
 import { consumeJourneyLeadRateLimit, journeyLeadRateLimitKey } from "@/lib/journey-leads/rate-limit";
-import { createSupabaseJourneyLeadRepository, maskPassportReference } from "@/lib/journey-leads/repository";
+import { createSupabaseJourneyLeadRepository } from "@/lib/journey-leads/repository";
 import { JourneyCallbackProcessingError, processJourneyCallback } from "@/lib/journey-leads/service";
 import { parseJourneyCallbackSubmission } from "@/lib/journey-leads/validation";
+import { emitDiagnosticLog, resolveCorrelationId } from "@/lib/observability/diagnostics";
 
 export const runtime = "nodejs";
 
@@ -14,9 +15,20 @@ function json(body: Record<string, unknown>, status: number) {
 }
 
 export async function POST(request: Request) {
+  const startTime = performance.now();
+  const correlationId = resolveCorrelationId(request);
+
   const declaredLength = Number(request.headers.get("content-length") ?? "0");
   if (Number.isFinite(declaredLength) && declaredLength > MAX_REQUEST_BYTES) return json({ ok: false, message: FAILURE_MESSAGE }, 413);
-  if (!consumeJourneyLeadRateLimit(`callback:${journeyLeadRateLimitKey(request)}`)) return json({ ok: false, message: FAILURE_MESSAGE }, 429);
+  if (!consumeJourneyLeadRateLimit(`callback:${journeyLeadRateLimitKey(request)}`)) {
+    emitDiagnosticLog({
+      event: "callback_rate_limited",
+      level: "warn",
+      correlationId,
+      durationMs: performance.now() - startTime,
+    });
+    return json({ ok: false, message: FAILURE_MESSAGE }, 429);
+  }
 
   let raw: unknown;
   try {
@@ -28,7 +40,16 @@ export async function POST(request: Request) {
   }
 
   const parsed = parseJourneyCallbackSubmission(raw);
-  if (!parsed.ok) return json({ ok: false, message: FAILURE_MESSAGE }, 400);
+  if (!parsed.ok) {
+    emitDiagnosticLog({
+      event: "callback_validation_failed",
+      level: "warn",
+      correlationId,
+      context: { code: parsed.code },
+      durationMs: performance.now() - startTime,
+    });
+    return json({ ok: false, message: FAILURE_MESSAGE }, 400);
+  }
 
   try {
     const repository = createSupabaseJourneyLeadRepository({
@@ -44,11 +65,28 @@ export async function POST(request: Request) {
       VERCEL_URL: process.env.VERCEL_URL,
     });
     const result = await processJourneyCallback(parsed.value, { repository, notifier });
+    emitDiagnosticLog({
+      event: "callback_preference_saved",
+      level: "info",
+      correlationId,
+      context: {
+        passportReference: parsed.value.passportReference,
+        notificationStatus: result.notificationStatus,
+      },
+      durationMs: performance.now() - startTime,
+    });
     return json({ ok: true, passportReference: parsed.value.passportReference, notificationStatus: result.notificationStatus }, 200);
   } catch (error) {
-    console.error("Journey callback preference storage failed.", {
-      passportReference: maskPassportReference(parsed.value.passportReference),
-      operation: error instanceof JourneyCallbackProcessingError ? error.code : "callback_storage",
+    emitDiagnosticLog({
+      event: "callback_preference_error",
+      level: "error",
+      correlationId,
+      context: {
+        passportReference: parsed.value.passportReference,
+        operation: error instanceof JourneyCallbackProcessingError ? error.code : "callback_storage",
+      },
+      error,
+      durationMs: performance.now() - startTime,
     });
     return json({ ok: false, message: FAILURE_MESSAGE }, error instanceof JourneyCallbackProcessingError ? 409 : 503);
   }

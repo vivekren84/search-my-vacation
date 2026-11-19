@@ -5,6 +5,12 @@ import { GETAWAY_DESCRIPTION_MAX_LENGTH, sanitizeGetawayDescription } from "../j
 
 import type { JourneyCallbackSubmission, JourneyLeadDestination, JourneyLeadPassportSummary, JourneyLeadSubmission, ValidatedJourneyCallback, ValidatedJourneyLead } from "./types";
 
+/** Canonical Search My Vacation Passport reference format (Release 1.3 P-07). */
+export const CANONICAL_PASSPORT_REFERENCE_PATTERN = /^SMV-[A-Z2-9]{8}$/;
+
+/** Legacy Passport reference format retained strictly for backward-compatible lookups. */
+export const LEGACY_PASSPORT_REFERENCE_PATTERN = /^JY-[A-Z2-9]{4}-[A-Z2-9]{4}$/;
+
 const PASSPORT_REFERENCE_PATTERN = /^(?:SMV-[A-Z2-9]{8}|JY-[A-Z2-9]{4}-[A-Z2-9]{4})$/;
 // Journey Passport leads (parseJourneyLeadSubmission) AND Callback Request
 // (parseJourneyCallbackSubmission) both use this bare-10-digit/India-only
@@ -98,8 +104,16 @@ function boundedString(value: unknown, min: number, max: number) {
   return typeof value === "string" && cleanSingleLine(value).length >= min && cleanSingleLine(value).length <= max;
 }
 
+export function isCanonicalPassportReference(value: unknown): value is string {
+  return typeof value === "string" && CANONICAL_PASSPORT_REFERENCE_PATTERN.test(value);
+}
+
+export function isLegacyPassportReference(value: unknown): value is string {
+  return typeof value === "string" && LEGACY_PASSPORT_REFERENCE_PATTERN.test(value);
+}
+
 export function isJourneyPassportReference(value: unknown): value is string {
-  return typeof value === "string" && PASSPORT_REFERENCE_PATTERN.test(value);
+  return isCanonicalPassportReference(value) || isLegacyPassportReference(value);
 }
 
 export function normalizeJourneyMobile(value: string) {

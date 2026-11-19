@@ -4,6 +4,7 @@ import { createSupabaseJourneyPassportOtpRepository } from "@/lib/journey-passpo
 import { createJourneyPassportOtpSmsProvider } from "@/lib/journey-passport-otp/sms";
 import { processJourneyPassportOtpSend } from "@/lib/journey-passport-otp/service";
 import { parseJourneyPassportOtpSendRequest } from "@/lib/journey-passport-otp/validation";
+import { emitDiagnosticLog, resolveCorrelationId } from "@/lib/observability/diagnostics";
 
 export const runtime = "nodejs";
 
@@ -15,12 +16,22 @@ function json(body: Record<string, unknown>, status: number) {
 }
 
 export async function POST(request: Request) {
+  const startTime = performance.now();
+  const correlationId = resolveCorrelationId(request);
+
   const declaredLength = Number(request.headers.get("content-length") ?? "0");
   if (Number.isFinite(declaredLength) && declaredLength > MAX_REQUEST_BYTES) return json({ ok: false, message: FAILURE_MESSAGE }, 413);
-  // Distinct, OTP-specific rate-limit key from the lead-submission limiter
-  // (EBC-R1.2-WS5-01 §6.5) — OTP send/resend abuse costs SMV real SMS spend,
-  // unlike a rejected lead submission.
-  if (!consumeJourneyLeadRateLimit(`otp-send:${journeyLeadRateLimitKey(request)}`)) return json({ ok: false, message: FAILURE_MESSAGE }, 429);
+
+  // In-memory burst protection (per IP)
+  if (!consumeJourneyLeadRateLimit(`otp-send:${journeyLeadRateLimitKey(request)}`)) {
+    emitDiagnosticLog({
+      event: "otp_send_ip_rate_limited",
+      level: "warn",
+      correlationId,
+      durationMs: performance.now() - startTime,
+    });
+    return json({ ok: false, message: FAILURE_MESSAGE }, 429);
+  }
 
   let raw: unknown;
   try {
@@ -32,7 +43,16 @@ export async function POST(request: Request) {
   }
 
   const parsed = parseJourneyPassportOtpSendRequest(raw);
-  if (!parsed.ok) return json({ ok: false, code: parsed.code, message: FAILURE_MESSAGE }, 400);
+  if (!parsed.ok) {
+    emitDiagnosticLog({
+      event: "otp_send_validation_rejected",
+      level: "warn",
+      correlationId,
+      context: { code: parsed.code },
+      durationMs: performance.now() - startTime,
+    });
+    return json({ ok: false, code: parsed.code, message: FAILURE_MESSAGE }, 400);
+  }
 
   try {
     const repository = createSupabaseJourneyPassportOtpRepository(
@@ -55,20 +75,57 @@ export async function POST(request: Request) {
     const result = await processJourneyPassportOtpSend(parsed.value.mobileNumber, { repository, smsProvider });
 
     if (result.outcome !== "sent") {
-      return json({ ok: true, outcome: result.outcome }, 200);
+      emitDiagnosticLog({
+        event: "otp_send_outcome_non_sent",
+        level: "info",
+        correlationId,
+        context: { outcome: result.outcome, mobile: parsed.value.mobileNumber },
+        durationMs: performance.now() - startTime,
+      });
+
+      // UX-03: Include challengeId on resend_too_soon so client recovers from dropped responses without second SMS
+      return json({
+        ok: true,
+        outcome: result.outcome,
+        ...(result.challengeId ? { challengeId: result.challengeId } : {}),
+        resendDelaySeconds: journeyPassportOtpConfig.resendDelaySeconds,
+      }, 200);
     }
+
     if (result.smsStatus === "not-configured") {
-      // Fail closed (EBC-R1.2-WS5-03 §9 leaves this choice explicitly open —
-      // this is the resolution Rad chose, flagged for Archie confirmation):
-      // no code was actually delivered, so the traveller must not be let
-      // into the verify step. DEC-R1.2-006 requires a *verified* submission,
-      // so silently bypassing delivery would defeat that decision.
-      console.error("Journey Passport OTP send skipped — SMS provider not configured.");
+      emitDiagnosticLog({
+        event: "otp_send_provider_not_configured",
+        level: "warn",
+        correlationId,
+        context: { mobile: parsed.value.mobileNumber },
+        durationMs: performance.now() - startTime,
+      });
       return json({ ok: true, outcome: "otp_unavailable" }, 200);
     }
-    return json({ ok: true, outcome: "sent", challengeId: result.challengeId, resendDelaySeconds: journeyPassportOtpConfig.resendDelaySeconds }, 200);
-  } catch {
-    console.error("Journey Passport OTP send failed.", { operation: "otp_send" });
+
+    emitDiagnosticLog({
+      event: "otp_send_success",
+      level: "info",
+      correlationId,
+      context: { mobile: parsed.value.mobileNumber, challengeId: result.challengeId },
+      durationMs: performance.now() - startTime,
+    });
+
+    return json({
+      ok: true,
+      outcome: "sent",
+      challengeId: result.challengeId,
+      resendDelaySeconds: journeyPassportOtpConfig.resendDelaySeconds,
+    }, 200);
+  } catch (error) {
+    emitDiagnosticLog({
+      event: "otp_send_error",
+      level: "error",
+      correlationId,
+      context: { mobile: parsed.value.mobileNumber },
+      error,
+      durationMs: performance.now() - startTime,
+    });
     return json({ ok: false, message: FAILURE_MESSAGE }, 503);
   }
 }

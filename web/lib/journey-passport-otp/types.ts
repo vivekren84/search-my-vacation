@@ -1,4 +1,10 @@
-export type JourneyPassportOtpSendOutcome = "sent" | "resend_too_soon" | "resend_limit_exceeded" | "invalid_request";
+export type JourneyPassportOtpSendOutcome =
+  | "sent"
+  | "resend_too_soon"
+  | "resend_limit_exceeded"
+  | "rate_limit_exceeded"
+  | "cooldown_lockout"
+  | "invalid_request";
 export type JourneyPassportOtpVerifyOutcome = "verified" | "incorrect" | "expired" | "exhausted" | "not_found";
 
 export type JourneyPassportOtpChallengeResult = {
@@ -16,7 +22,7 @@ export type JourneyPassportOtpVerifyResult = {
 export interface JourneyPassportOtpRepository {
   createOrResendChallenge(mobileNumber: string, otpHash: string): Promise<JourneyPassportOtpChallengeResult>;
   verifyChallenge(mobileNumber: string, challengeId: string, otpHash: string): Promise<JourneyPassportOtpVerifyResult>;
-  consumeVerificationToken(mobileNumber: string, verificationToken: string): Promise<boolean>;
+  consumeVerificationToken(mobileNumber: string, verificationToken: string, passportReference?: string): Promise<boolean>;
 }
 
 export interface JourneyPassportOtpSmsProvider {

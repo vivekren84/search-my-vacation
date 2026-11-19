@@ -109,10 +109,11 @@ export function createSupabaseJourneyPassportOtpRepository(
       return result;
     },
 
-    async consumeVerificationToken(mobileNumber, verificationToken) {
+    async consumeVerificationToken(mobileNumber, verificationToken, passportReference) {
       const result = await rpc("consume_journey_passport_otp_token", {
         p_mobile_number: mobileNumber,
         p_verification_token: verificationToken,
+        p_passport_reference: passportReference ?? null,
       }, "otp_token_consume_failed");
       return result === true;
     },

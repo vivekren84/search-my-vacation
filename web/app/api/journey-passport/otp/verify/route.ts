@@ -3,6 +3,7 @@ import { consumeJourneyLeadRateLimit, journeyLeadRateLimitKey } from "@/lib/jour
 import { createSupabaseJourneyPassportOtpRepository } from "@/lib/journey-passport-otp/repository";
 import { processJourneyPassportOtpVerify } from "@/lib/journey-passport-otp/service";
 import { parseJourneyPassportOtpVerifyRequest } from "@/lib/journey-passport-otp/validation";
+import { emitDiagnosticLog, resolveCorrelationId } from "@/lib/observability/diagnostics";
 
 export const runtime = "nodejs";
 
@@ -14,9 +15,21 @@ function json(body: Record<string, unknown>, status: number) {
 }
 
 export async function POST(request: Request) {
+  const startTime = performance.now();
+  const correlationId = resolveCorrelationId(request);
+
   const declaredLength = Number(request.headers.get("content-length") ?? "0");
   if (Number.isFinite(declaredLength) && declaredLength > MAX_REQUEST_BYTES) return json({ ok: false, message: FAILURE_MESSAGE }, 413);
-  if (!consumeJourneyLeadRateLimit(`otp-verify:${journeyLeadRateLimitKey(request)}`)) return json({ ok: false, message: FAILURE_MESSAGE }, 429);
+
+  if (!consumeJourneyLeadRateLimit(`otp-verify:${journeyLeadRateLimitKey(request)}`)) {
+    emitDiagnosticLog({
+      event: "otp_verify_ip_rate_limited",
+      level: "warn",
+      correlationId,
+      durationMs: performance.now() - startTime,
+    });
+    return json({ ok: false, message: FAILURE_MESSAGE }, 429);
+  }
 
   let raw: unknown;
   try {
@@ -28,7 +41,16 @@ export async function POST(request: Request) {
   }
 
   const parsed = parseJourneyPassportOtpVerifyRequest(raw);
-  if (!parsed.ok) return json({ ok: false, code: parsed.code, message: FAILURE_MESSAGE }, 400);
+  if (!parsed.ok) {
+    emitDiagnosticLog({
+      event: "otp_verify_validation_rejected",
+      level: "warn",
+      correlationId,
+      context: { code: parsed.code },
+      durationMs: performance.now() - startTime,
+    });
+    return json({ ok: false, code: parsed.code, message: FAILURE_MESSAGE }, 400);
+  }
 
   try {
     const repository = createSupabaseJourneyPassportOtpRepository(
@@ -40,14 +62,35 @@ export async function POST(request: Request) {
       journeyPassportOtpConfig,
     );
     const result = await processJourneyPassportOtpVerify(parsed.value.mobileNumber, parsed.value.challengeId, parsed.value.code, repository);
+
+    emitDiagnosticLog({
+      event: "otp_verify_result",
+      level: result.outcome === "verified" ? "info" : "warn",
+      correlationId,
+      context: {
+        outcome: result.outcome,
+        mobile: parsed.value.mobileNumber,
+        challengeId: parsed.value.challengeId,
+        attemptsRemaining: result.attemptsRemaining,
+      },
+      durationMs: performance.now() - startTime,
+    });
+
     return json({
       ok: true,
       outcome: result.outcome,
       ...(result.verificationToken ? { verificationToken: result.verificationToken } : {}),
       ...(typeof result.attemptsRemaining === "number" ? { attemptsRemaining: result.attemptsRemaining } : {}),
     }, 200);
-  } catch {
-    console.error("Journey Passport OTP verify failed.", { operation: "otp_verify" });
+  } catch (error) {
+    emitDiagnosticLog({
+      event: "otp_verify_error",
+      level: "error",
+      correlationId,
+      context: { mobile: parsed.value.mobileNumber, challengeId: parsed.value.challengeId },
+      error,
+      durationMs: performance.now() - startTime,
+    });
     return json({ ok: false, message: FAILURE_MESSAGE }, 503);
   }
 }

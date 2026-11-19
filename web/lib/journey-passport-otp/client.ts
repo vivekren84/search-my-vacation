@@ -8,7 +8,7 @@ export class JourneyPassportOtpError extends Error {
 }
 
 export type JourneyPassportOtpSendResponse = {
-  outcome: "sent" | "resend_too_soon" | "resend_limit_exceeded" | "otp_unavailable";
+  outcome: "sent" | "resend_too_soon" | "resend_limit_exceeded" | "rate_limit_exceeded" | "cooldown_lockout" | "otp_unavailable";
   challengeId?: string;
   resendDelaySeconds?: number;
 };

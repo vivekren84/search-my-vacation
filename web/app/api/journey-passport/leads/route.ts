@@ -1,10 +1,11 @@
 import { journeyPassportOtpConfig } from "@/config/journey-passport-otp.config";
 import { createJourneyLeadNotifier } from "@/lib/journey-leads/email";
 import { consumeJourneyLeadRateLimit, journeyLeadRateLimitKey } from "@/lib/journey-leads/rate-limit";
-import { createSupabaseJourneyLeadRepository, maskPassportReference } from "@/lib/journey-leads/repository";
+import { createSupabaseJourneyLeadRepository } from "@/lib/journey-leads/repository";
 import { processJourneyLead } from "@/lib/journey-leads/service";
 import { parseJourneyLeadSubmission } from "@/lib/journey-leads/validation";
 import { createSupabaseJourneyPassportOtpRepository } from "@/lib/journey-passport-otp/repository";
+import { emitDiagnosticLog, resolveCorrelationId } from "@/lib/observability/diagnostics";
 
 export const runtime = "nodejs";
 
@@ -16,9 +17,21 @@ function json(body: Record<string, unknown>, status: number) {
 }
 
 export async function POST(request: Request) {
+  const startTime = performance.now();
+  const correlationId = resolveCorrelationId(request);
+
   const declaredLength = Number(request.headers.get("content-length") ?? "0");
   if (Number.isFinite(declaredLength) && declaredLength > MAX_REQUEST_BYTES) return json({ ok: false, message: FAILURE_MESSAGE }, 413);
-  if (!consumeJourneyLeadRateLimit(journeyLeadRateLimitKey(request))) return json({ ok: false, message: FAILURE_MESSAGE }, 429);
+
+  if (!consumeJourneyLeadRateLimit(journeyLeadRateLimitKey(request))) {
+    emitDiagnosticLog({
+      event: "lead_submission_rate_limited",
+      level: "warn",
+      correlationId,
+      durationMs: performance.now() - startTime,
+    });
+    return json({ ok: false, message: FAILURE_MESSAGE }, 429);
+  }
 
   let raw: unknown;
   try {
@@ -30,7 +43,16 @@ export async function POST(request: Request) {
   }
 
   const parsed = parseJourneyLeadSubmission(raw);
-  if (!parsed.ok) return json({ ok: false, message: FAILURE_MESSAGE }, 400);
+  if (!parsed.ok) {
+    emitDiagnosticLog({
+      event: "lead_submission_validation_failed",
+      level: "warn",
+      correlationId,
+      context: { code: parsed.code },
+      durationMs: performance.now() - startTime,
+    });
+    return json({ ok: false, message: FAILURE_MESSAGE }, 400);
+  }
 
   try {
     const otpRepository = createSupabaseJourneyPassportOtpRepository(
@@ -41,21 +63,25 @@ export async function POST(request: Request) {
       },
       journeyPassportOtpConfig,
     );
-    // DEC-R1.2-006 / EBC-R1.2-WS5-01 §6: a Journey Passport submission is
-    // accepted only after successful, single-use OTP verification. This
-    // atomically consumes the token so a captured token cannot be replayed
-    // against a second submission.
-    // EBC-R1.2-WS5-IMP-01 / OBS-4-01: the OTP challenge lifecycle (send,
-    // verify, and the journey_passport_otp_challenges.mobile_number CHECK
-    // constraint) is keyed exclusively on the E.164 representation — see
-    // parseJourneyPassportOtpSendRequest/VerifyRequest and that table's
-    // migration. mobileE164, not the bare dual-field mobileNumber used for
-    // lead storage (DEC-R1.2-019), is the only value that can ever match
-    // the verified challenge row here.
-    const verified = await otpRepository.consumeVerificationToken(parsed.value.mobileE164, parsed.value.verificationToken);
+
+    // DEC-R1.2-006 / TD-07 / UX-01: Pass passportReference so token can be idempotently
+    // retried within a 10-minute window if lead creation needs recovery.
+    const verified = await otpRepository.consumeVerificationToken(
+      parsed.value.mobileE164,
+      parsed.value.verificationToken,
+      parsed.value.passportReference,
+    );
+
     if (!verified) {
-      console.error("Journey Passport lead rejected — missing or invalid OTP verification.", {
-        passportReference: maskPassportReference(parsed.value.passportReference),
+      emitDiagnosticLog({
+        event: "lead_submission_rejected_unverified",
+        level: "warn",
+        correlationId,
+        context: {
+          passportReference: parsed.value.passportReference,
+          mobile: parsed.value.mobileE164,
+        },
+        durationMs: performance.now() - startTime,
       });
       return json({ ok: false, message: FAILURE_MESSAGE }, 403);
     }
@@ -72,11 +98,32 @@ export async function POST(request: Request) {
       VERCEL_PROJECT_PRODUCTION_URL: process.env.VERCEL_PROJECT_PRODUCTION_URL,
       VERCEL_URL: process.env.VERCEL_URL,
     });
+
     await processJourneyLead(parsed.value, { repository, notifier });
+
+    emitDiagnosticLog({
+      event: "lead_submission_success",
+      level: "info",
+      correlationId,
+      context: {
+        passportReference: parsed.value.passportReference,
+        mobile: parsed.value.mobileE164,
+      },
+      durationMs: performance.now() - startTime,
+    });
+
     return json({ ok: true, passportReference: parsed.value.passportReference }, 200);
-  } catch {
-    console.error("Journey Passport lead storage failed.", {
-      passportReference: maskPassportReference(parsed.value.passportReference), operation: "lead_storage",
+  } catch (error) {
+    emitDiagnosticLog({
+      event: "lead_storage_failed",
+      level: "error",
+      correlationId,
+      context: {
+        passportReference: parsed.value.passportReference,
+        mobile: parsed.value.mobileE164,
+      },
+      error,
+      durationMs: performance.now() - startTime,
     });
     return json({ ok: false, message: FAILURE_MESSAGE }, 503);
   }
