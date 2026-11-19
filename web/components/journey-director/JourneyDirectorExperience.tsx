@@ -839,7 +839,7 @@ function JourneyDirectorHandoff({
       knownDestination: journeySynopsis.knownDestination,
       preferredPace: journeySynopsis.preferredPace,
       preferredComfort: journeySynopsis.preferredComfort,
-      whyThisFits: selectedPossibility.whyThisFits?.[0] ?? journeySynopsis.recommendedPossibility.whyThisFits?.[0],
+      whyThisFits: selectedPossibility.reasons?.[0]?.description ?? journeySynopsis.recommendedPossibility.whyThisFits?.[0],
     });
     void recordJourneyPassportEvent(journeyReference, "whatsapp_handoff_opened");
     window.open(buildWhatsAppLink(message), "_blank", "noopener,noreferrer");
