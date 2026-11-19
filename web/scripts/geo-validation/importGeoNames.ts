@@ -84,6 +84,7 @@ const HAND_REVIEWED_ALIAS_OVERRIDES: {
   { canonicalName: "Bengaluru", countryCode: "IN", aliasText: "Bangalore", aliasType: "historic" },
   { canonicalName: "Chennai", countryCode: "IN", aliasText: "Madras", aliasType: "historic" },
   { canonicalName: "Visakhapatnam", countryCode: "IN", aliasText: "Vizag", aliasType: "abbreviation" },
+  { canonicalName: "Republic of India", countryCode: "IN", aliasText: "India", aliasType: "short" },
   // Coorg/Kodagu: per EBC-R1.2-WS6-03 §9, "Coorg" is recommended as the
   // canonical display name (matching existing traveller-facing content),
   // with "Kodagu" as the alias — this override assumes GeoNames' own

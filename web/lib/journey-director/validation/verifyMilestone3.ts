@@ -99,10 +99,18 @@ function verifyS01AndS02SearchRanking() {
     "Place type hierarchy positions administrative districts (30) below primary cities (S-01)",
   );
 
-  // Invariant 4: Rollback validity
+  // Invariant 4: Rollback validity & Alias seeding
+  assert(
+    migrationSql.includes("insert into public.geo_aliases") && migrationSql.includes("'1269750'"),
+    "Migration seeds canonical short-name alias for India (S-02)",
+  );
   assert(
     rollbackSql.includes("function public.search_geo_places(search_query text, result_limit int default 8)"),
     "Rollback SQL restores exact prior search_geo_places signature",
+  );
+  assert(
+    rollbackSql.includes("delete from public.geo_aliases") && rollbackSql.includes("'1269750'"),
+    "Rollback safely cleans up seeded alias for India",
   );
 
   // Invariant 5: Disambiguation formatting

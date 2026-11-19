@@ -118,3 +118,16 @@ begin
   return query execute sql_text;
 end;
 $func$;
+
+-- Ensure canonical short-name alias exists for major country entities whose GeoNames canonical
+-- name is the formal state name (e.g., 'Republic of India' -> alias 'India').
+-- Handled idempotently to avoid duplicating existing aliases.
+insert into public.geo_aliases (geo_place_id, alias_text, alias_type, locale)
+select p.id, 'India', 'short', 'en'
+from public.geo_places p
+where p.id = '1269750'
+  and not exists (
+    select 1 from public.geo_aliases a
+    where a.geo_place_id = p.id and lower(a.alias_text) = 'india'
+  );
+

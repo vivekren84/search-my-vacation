@@ -73,3 +73,8 @@ begin
   return query execute sql_text;
 end;
 $func$;
+
+-- Clean up seeded short-name alias for India (1269750) if rolling back
+delete from public.geo_aliases
+where geo_place_id = '1269750' and alias_text = 'India' and alias_type = 'short';
+
