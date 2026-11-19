@@ -17,6 +17,7 @@ type JourneySessionContextValue = {
   clearPassport: () => void;
 };
 
+const JOURNEY_PASSPORT_KEY = "smv:journey-director:passport:v2";
 const JOURNEY_SESSION_KEY = "smv:journey-director:session:v2";
 const JourneySessionContext = createContext<JourneySessionContextValue | null>(null);
 
@@ -27,11 +28,27 @@ export function JourneySessionProvider({ children }: { children: React.ReactNode
 
   useEffect(() => {
     try {
-      const storedPassport = sessionStorage.getItem(JOURNEY_SESSION_KEY);
+      const storedSession = sessionStorage.getItem(JOURNEY_SESSION_KEY);
+      if (storedSession) {
+        const parsedSession: unknown = JSON.parse(storedSession);
+        if (isJourneySessionSnapshot(parsedSession) && isJourneyPassportSnapshot(parsedSession.passport)) {
+          setPassport(parsedSession.passport);
+          setJourneySession(parsedSession);
+          setIsHydrated(true);
+          return;
+        } else {
+          sessionStorage.removeItem(JOURNEY_SESSION_KEY);
+        }
+      }
+
+      const storedPassport = sessionStorage.getItem(JOURNEY_PASSPORT_KEY);
       if (storedPassport) {
         const parsedPassport: unknown = JSON.parse(storedPassport);
-        if (isJourneySessionSnapshot(parsedPassport) && isJourneyPassportSnapshot(parsedPassport.passport)) { setPassport(parsedPassport.passport); setJourneySession(parsedPassport); }
-        else sessionStorage.removeItem(JOURNEY_SESSION_KEY);
+        if (isJourneyPassportSnapshot(parsedPassport)) {
+          setPassport(parsedPassport);
+        } else {
+          sessionStorage.removeItem(JOURNEY_PASSPORT_KEY);
+        }
       }
     } catch {
       // Continue without persistence when browser storage is unavailable or malformed.
@@ -44,6 +61,7 @@ export function JourneySessionProvider({ children }: { children: React.ReactNode
     setPassport(nextPassport);
     setJourneySession(null);
     try {
+      sessionStorage.setItem(JOURNEY_PASSPORT_KEY, JSON.stringify(nextPassport));
       sessionStorage.removeItem(JOURNEY_SESSION_KEY);
     } catch {
       // The current in-memory journey remains available when browser storage is unavailable.
@@ -51,14 +69,21 @@ export function JourneySessionProvider({ children }: { children: React.ReactNode
   }, []);
 
   const saveJourneySession = useCallback((nextSession: JourneySessionSnapshot) => {
-    setPassport(nextSession.passport); setJourneySession(nextSession);
-    try { sessionStorage.setItem(JOURNEY_SESSION_KEY, JSON.stringify(nextSession)); } catch {}
+    setPassport(nextSession.passport);
+    setJourneySession(nextSession);
+    try {
+      sessionStorage.setItem(JOURNEY_PASSPORT_KEY, JSON.stringify(nextSession.passport));
+      sessionStorage.setItem(JOURNEY_SESSION_KEY, JSON.stringify(nextSession));
+    } catch {
+      // The current in-memory session remains available when browser storage is unavailable.
+    }
   }, []);
 
   const clearPassport = useCallback(() => {
     setPassport(null);
     setJourneySession(null);
     try {
+      sessionStorage.removeItem(JOURNEY_PASSPORT_KEY);
       sessionStorage.removeItem(JOURNEY_SESSION_KEY);
     } catch {
       // The in-memory state has already been cleared.

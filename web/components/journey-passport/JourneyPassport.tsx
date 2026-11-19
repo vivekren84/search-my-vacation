@@ -18,6 +18,7 @@ import { isJourneyEntryPreselectionActive, resolveJourneyEntryPreselection } fro
 import { sanitizeTravellerName } from "@/lib/journey-passport/traveller-name";
 import { sendJourneyPassportOtp, verifyJourneyPassportOtp } from "@/lib/journey-passport-otp/client";
 import { isJourneyEntryExperience, isJourneyEntryInspiration, isJourneyFeeling, type JourneyPassportEntryContext, type JourneyPassportState } from "@/types/journey-passport.types";
+import { trackGoogleAdsLeadConversion } from "@/lib/analytics/google-ads";
 
 import { JourneyChapterProgress } from "./JourneyChapterProgress";
 import { JourneyPassportNavigation } from "./JourneyPassportNavigation";
@@ -250,6 +251,11 @@ export default function JourneyPassport() {
       });
       savePassport(snapshot);
       passport.clearDraft();
+      try {
+        trackGoogleAdsLeadConversion(passportId);
+      } catch {
+        // Analytics degradation fails safe without blocking traveller progression
+      }
       setContactSubmission("success");
       setLeadSubmissionFailed(false);
       void recordJourneyPassportEvent(passportId, "journey_director_entered");

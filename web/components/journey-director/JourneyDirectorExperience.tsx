@@ -5,13 +5,14 @@ import Link from "next/link";
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 
 import SiteBrand from "@/components/brand/SiteBrand";
-import { siteContact } from "@/config/contact.config";
 import { useJourneySession } from "@/context/JourneySessionContext";
 import { createJourneyRecommendationSet } from "@/lib/journey-director";
 import { createJourneyReference, createJourneySynopsis } from "@/lib/journey-director/journey-synopsis";
 import { callbackDateValidationMessage, callbackTimeWindows, currentLocalDate, isCallbackTimeWindow, isValidCallbackDate } from "@/lib/callback-preferences";
 import { recordJourneyPassportEvent, submitJourneyCallbackPreference } from "@/lib/journey-leads/client";
 import { PassportStamp } from "@/components/journey-passport/PassportStamp";
+import { GeneralWhatsAppCard } from "./GeneralWhatsAppCard";
+import { buildWhatsAppLink, createGeneralWhatsAppMessage, createPossibilityWhatsAppMessage } from "@/lib/journey-director/whatsapp";
 import type {
   JourneyPassportSnapshot,
   JourneyPossibility,
@@ -348,6 +349,14 @@ function JourneyDirectorContent({
         </h2>
         <p>{recommendationSet.destinationResolution.message}</p>
       </section>
+
+      <GeneralWhatsAppCard
+        journeyReference={restored?.journeyReference ?? journeySession?.journeyReference ?? recommendationSet.traveller?.journeyReference ?? "SMV-PENDING"}
+        travellerName={recommendationSet.traveller?.name ?? "Traveller"}
+        travellingParty={recommendationSet.traveller?.companion ?? "Companion"}
+        travelTiming={recommendationSet.traveller?.timing ?? "Upcoming"}
+        journeyIntent={recommendationSet.reflection}
+      />
 
       {recommendationSet.qualities.length > 0 ? (
         <section className={styles.qualities} aria-labelledby="qualities-heading">
@@ -803,26 +812,37 @@ function JourneyDirectorHandoff({
     }
   }
 
+  function continueGeneralOnWhatsApp() {
+    if (!journeyReference) return;
+    const message = createGeneralWhatsAppMessage({
+      travellerName: travellerName || journeySynopsis?.travellerFirstName || "Traveller",
+      journeyReference,
+      travellingParty: journeySynopsis?.travellingParty || "Travel Partner",
+      travelTiming: journeySynopsis?.travelTiming || "Upcoming",
+      journeyIntent: journeySynopsis?.journeyIntent,
+    });
+    void recordJourneyPassportEvent(journeyReference, "whatsapp_general_handoff_opened");
+    window.open(buildWhatsAppLink(message), "_blank", "noopener,noreferrer");
+  }
+
   function continueOnWhatsApp() {
     if (!selectedPossibility || !journeyReference || !journeySynopsis || !handoffConsent) return;
-    const message = [
-      "Hello Search My Vacation,",
-      "",
-      `I’m ${journeySynopsis.travellerFirstName}, and I’m ready to continue planning my journey.`,
-      `Journey Reference: ${journeyReference}`,
-      `Travelling: ${journeySynopsis.travellingParty} · ${journeySynopsis.travelTiming}`,
-      ...(journeySynopsis.knownDestination ? [`Starting point shared: ${journeySynopsis.knownDestination}`] : []),
-      `Selected journey: ${selectedPossibility.destination}, ${selectedPossibility.region}`,
-      `Recommendation: ${selectedPossibility.personalityLabel}`,
-      `What matters to me: ${journeySynopsis.journeyIntent}`,
-      ...(journeySynopsis.preferredPace !== "to-be-discussed" ? [`Preferred pace: ${journeySynopsis.preferredPace}`] : []),
-      ...(journeySynopsis.preferredComfort !== "to-be-discussed" ? [`Preferred comfort: ${journeySynopsis.preferredComfort}`] : []),
-      ...(journeySynopsis.recommendedPossibility.whyThisFits[0] ? [`Why this fits: ${journeySynopsis.recommendedPossibility.whyThisFits[0]}`] : []),
-      "",
-      "Please help me continue the conversation with my Journey Designer.",
-    ].join("\n");
+    const message = createPossibilityWhatsAppMessage({
+      travellerFirstName: journeySynopsis.travellerFirstName,
+      journeyReference,
+      travellingParty: journeySynopsis.travellingParty,
+      travelTiming: journeySynopsis.travelTiming,
+      selectedDestination: selectedPossibility.destination,
+      selectedRegion: selectedPossibility.region,
+      personalityLabel: selectedPossibility.personalityLabel,
+      journeyIntent: journeySynopsis.journeyIntent,
+      knownDestination: journeySynopsis.knownDestination,
+      preferredPace: journeySynopsis.preferredPace,
+      preferredComfort: journeySynopsis.preferredComfort,
+      whyThisFits: selectedPossibility.whyThisFits?.[0] ?? journeySynopsis.recommendedPossibility.whyThisFits?.[0],
+    });
     void recordJourneyPassportEvent(journeyReference, "whatsapp_handoff_opened");
-    window.open(`${siteContact.whatsappHref}?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
+    window.open(buildWhatsAppLink(message), "_blank", "noopener,noreferrer");
   }
 
   return (
@@ -857,7 +877,23 @@ function JourneyDirectorHandoff({
           ) : null}
         </div>
 
-        {!selectedPossibility ? <p id="preference-note" className={styles.preferenceNote}>Choose the journey that feels right before continuing with a Journey Designer. Nothing is sent automatically.</p> : null}
+        {!selectedPossibility ? (
+          <div className="mt-4 flex flex-col items-center gap-3 text-center">
+            <p id="preference-note" className={styles.preferenceNote}>
+              Choose the journey that feels right before continuing with a Journey Designer. Nothing is sent automatically.
+            </p>
+            {journeyReference ? (
+              <button
+                type="button"
+                onClick={continueGeneralOnWhatsApp}
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-[#25D366] bg-white px-5 py-2.5 text-xs font-bold text-[#128C7E] shadow-sm transition hover:bg-[#25D366]/10"
+              >
+                <span>Chat with a Journey Designer about all possibilities</span>
+                <span aria-hidden="true">→</span>
+              </button>
+            ) : null}
+          </div>
+        ) : null}
 
         {selectedPossibility && journeyReference && journeySynopsis ? (
           <div className={styles.continuationPanel}>

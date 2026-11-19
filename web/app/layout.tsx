@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
 import localFont from "next/font/local";
+import Script from "next/script";
 
 import { siteBrand } from "@/config/brand.config";
 import { siteContact } from "@/config/contact.config";
@@ -92,9 +93,32 @@ const organizationSchema = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const googleAdsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID?.trim();
+
   return (
     <html lang="en" data-scroll-behavior="smooth" className={`${inter.variable} ${poppins.variable} ${editorial.variable} h-full antialiased`}>
       <body className="min-h-screen bg-background text-foreground">
+        {googleAdsId ? (
+          <>
+            <Script
+              strategy="afterInteractive"
+              src={`https://www.googletagmanager.com/gtag/js?id=${googleAdsId}`}
+            />
+            <Script
+              id="google-ads-init"
+              strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){window.dataLayer.push(arguments);}
+                  window.gtag = gtag;
+                  gtag('js', new Date());
+                  gtag('config', '${googleAdsId}');
+                `,
+              }}
+            />
+          </>
+        ) : null}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
         <JourneySessionProvider>{children}</JourneySessionProvider>
       </body>
