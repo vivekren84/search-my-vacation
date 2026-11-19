@@ -1,4 +1,4 @@
-import { parseJourneyPassportMobile } from "@/lib/journey-leads/validation";
+import { parseJourneyPassportMobile } from "../journey-leads/validation";
 
 const TOP_LEVEL_SEND_KEYS = new Set(["mobileNumber"]);
 const TOP_LEVEL_VERIFY_KEYS = new Set(["mobileNumber", "challengeId", "code"]);

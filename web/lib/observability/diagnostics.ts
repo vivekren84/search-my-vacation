@@ -41,11 +41,13 @@ const SENSITIVE_KEYS = new Set([
 export function maskDiagnosticsMobile(value: unknown): string {
   if (typeof value !== "string" || value.trim().length === 0) return "[empty]";
   const trimmed = value.trim();
-  if (trimmed.startsWith("+") && trimmed.length >= 8) {
-    const dialCodeMatch = trimmed.match(/^(\+\d{1,4})/);
-    const prefix = dialCodeMatch ? dialCodeMatch[1] : "+";
-    const last2 = trimmed.slice(-2);
-    return `${prefix} ****** ${last2}`;
+  if (trimmed.startsWith("+91") && trimmed.length >= 5) {
+    return `+91 ****** ${trimmed.slice(-2)}`;
+  }
+  if (trimmed.startsWith("+") && trimmed.length >= 6) {
+    const match = trimmed.match(/^(\+\d{1,3})/);
+    const prefix = match ? match[1] : "+";
+    return `${prefix} ****** ${trimmed.slice(-2)}`;
   }
   if (trimmed.length >= 6) {
     return `****** ${trimmed.slice(-2)}`;
