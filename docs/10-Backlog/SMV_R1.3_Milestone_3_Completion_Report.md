@@ -131,4 +131,4 @@ The migration was applied directly to Pre-Prod database `pkfdunyeaqdvvklutgon` w
 | **Rad** | Database & Search Architect | **SIGNED OFF** | 2026-11-19 |
 | **Keerthi** | QA & Test Automation Lead | **SIGNED OFF** | 2026-11-19 |
 | **Marcus** | Platform & Infrastructure Lead | **SIGNED OFF** | 2026-11-19 |
-| **Vivek** | Product Owner & Commercial Sign-off | **PENDING APPROVAL** | 2026-11-19 |
+| **Vivek** | Product Owner & Commercial Sign-off | **APPROVED & SIGNED OFF** | 2026-11-19T21:09:44+05:30 |
