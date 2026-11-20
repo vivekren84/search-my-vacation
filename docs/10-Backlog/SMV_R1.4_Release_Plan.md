@@ -1,15 +1,15 @@
 # Release 1.4 — Destination Intelligence, Trip Anchors & Passport Experience
 
-**Release Theme:** Launch region-level intelligence, indicative Trip Anchors, family comfort signals, free-text enrichment, and a modular, polished Journey Passport.  
-**Total Backlog Items:** 21  
+**Release Theme:** Launch region-level intelligence, indicative Trip Anchors, family comfort signals, free-text enrichment, a modular polished Journey Passport, and site-wide ambient soundscape.  
+**Total Backlog Items:** 22  
 **Status:** Approved (Baseline)
 
 ---
 
 ## 1. Release Summary & Priority Breakdown
 
-- **Priority Mix:** High: 12 | Medium: 8 | Low: 1
-- **Source Mix:** Existing Backlog: 18 | New PO / Website Gap Additions: 3
+- **Priority Mix:** High: 13 | Medium: 8 | Low: 1
+- **Source Mix:** Existing Backlog: 18 | New PO / Website Gap Additions: 4
 
 ---
 
@@ -17,6 +17,7 @@
 
 | ID | Area / Phase | Requirement Title | Disposition | Priority | PO Approval Status | PO Notes |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **HP-05** | Atmospheric design | Site-Wide Ambient Soundscape & Mute/Unmute Architecture | New (PO) | High | Approved (Baseline) | World-Class PO Enhancement (Upgrade from R1.3 HP-04) |
 | **P-08** | Destination intelligence | Weighted destination model runtime & recommendation phases | Keep | High | Approved (Baseline) | Existing Backlog (Moved from R1.3) |
 | **V-01** | Destination intelligence | Region-level destination intelligence (Pilot Circuits) | Keep | High | Approved (Baseline) | Existing Backlog (Rescoped Pilot) |
 | **V-03** | Destination intelligence | Companion Destinations | Keep | Medium | Approved (Baseline) | Existing Backlog (Moved from R1.3) |
@@ -42,6 +43,24 @@
 ---
 
 ## 3. Detailed Requirement Specifications
+
+### HP-05 — Site-Wide Ambient Soundscape & Mute/Unmute Architecture
+- **Area / Phase:** Atmospheric design | **Disposition:** `New (PO)` | **Priority:** `High` | **PO Approval Status:** `Approved (Baseline)`
+- **Scope & Functional Intent:**
+  1. Migrate audio engine from `HomepageExperience.tsx` into a root-level `<AmbientAudioProvider>` in `web/app/layout.tsx` so the soundscape plays continuously without interrupting across client-side route transitions (Home → Destinations → Stories → Journey Passport → Contact).
+  2. Redesign UI control from Play/Pause to Mute/Unmute with a smooth 800ms linear gain cross-fade (from 0.0 to 0.28 ambient volume).
+  3. First-Time Discovery Engine: First-time visitors (`smv_soundscape_visited` is null) see a gentle gold ambient breathing pulse on the floating pill + a polite 7-second auto-dismissing luxury tooltip: *"Experience with sound · Tap to unmute"*. It dissolves cleanly on timeout or scroll, never obstructing content.
+  4. Cross-Device Responsive Parity:
+     - **Desktop/Laptop (1280px+):** Expanded luxury pill at `bottom-6 left-6` with track metadata (*"Sanctuary of Silence"*), volume state, and gold wave bars.
+     - **Tablet (768px–1024px):** Expanded luxury pill with touch-optimized min 44×44px tap targets.
+     - **Mobile Phone (< 768px):** Adaptive compact medallion at `bottom-5 left-4` with safe-area padding (`env(safe-area-inset-bottom)`) and dynamic collision avoidance against Journey Passport sticky action bars.
+  5. Mobile & Tab Lifecycle Safeguards:
+     - iOS Safari silent-switch bypass via direct user media touch authorization on the Unmute tap.
+     - Page Visibility API (`document.visibilitychange`) auto-ducks audio when the user switches tabs or locks mobile screen, and smoothly fades back in upon return.
+     - Persistent user preference stored in `localStorage` (`smv_soundscape_state: 'muted' | 'unmuted'`).
+- **Dependencies & Guardrails:** Next.js RootLayout client persistence, web audio cross-fade gain node or HTML5 volume ramp, mobile safe-area insets.
+- **Acceptance Criteria:** Audio plays seamlessly across route transitions without restarting; Mute/Unmute operates smoothly across desktop, tablet, and mobile; first-time visitors discover the soundtrack without intrusive popups.
+- **PO Notes:** World-Class PO Enhancement (Upgrade from R1.3 HP-04)
 
 ### P-08 — Weighted destination model runtime & recommendation phases
 - **Area / Phase:** Destination intelligence | **Disposition:** `Keep` | **Priority:** `High` | **PO Approval Status:** `Approved (Baseline)`
