@@ -81,4 +81,4 @@ The audio file placed in `web/public/audio/Sanctuary of Silence.mp3` was analyze
 | **Traveller Experience & Brand** | Sri | **SIGNED OFF** | 2026-11-19 |
 | **Quality Assurance Lead** | Keerthi | **SIGNED OFF** | 2026-11-19 |
 | **Platform & Release Lead** | Marcus | **SIGNED OFF** | 2026-11-19 |
-| **Product Owner** | **Vivek** | **PENDING FINAL APPROVAL** | 2026-11-19 |
+| **Product Owner** | **Vivek** | **APPROVED & SIGNED OFF** | 2026-11-20T09:17:30+05:30 |
