@@ -6,6 +6,8 @@ import Script from "next/script";
 import { siteBrand } from "@/config/brand.config";
 import { siteContact } from "@/config/contact.config";
 import { JourneySessionProvider } from "@/context/JourneySessionContext";
+import { AmbientAudioProvider } from "@/context/AmbientAudioContext";
+import { AmbientAudioPlayer } from "@/components/media/AmbientAudioPlayer";
 
 import "./globals.css";
 
@@ -120,7 +122,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           </>
         ) : null}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
-        <JourneySessionProvider>{children}</JourneySessionProvider>
+        <JourneySessionProvider>
+          <AmbientAudioProvider>
+            {children}
+            <AmbientAudioPlayer />
+          </AmbientAudioProvider>
+        </JourneySessionProvider>
       </body>
     </html>
   );
