@@ -8,6 +8,7 @@ import {
   callbackTimeWindows,
   currentLocalDate,
 } from "@/lib/callback-preferences";
+import { normalizeNationalDigits, isValidMobileNumber } from "@/lib/phone/phone-normalization";
 
 export default function CallbackRequest() {
   const [form, setForm] = useState({
@@ -20,9 +21,9 @@ export default function CallbackRequest() {
   });
   const today = currentLocalDate();
   const dateError = callbackDateValidationMessage(form.date, today);
-  const phoneDigits = form.phone.replace(/\D/g, "");
+  const phoneDigits = normalizeNationalDigits(form.phone);
   const phoneError =
-    form.phone && (phoneDigits.length !== 10 || phoneDigits === "0000000000")
+    form.phone && (phoneDigits.length !== 10 || phoneDigits === "0000000000" || !isValidMobileNumber(phoneDigits))
       ? "Please enter a valid 10-digit mobile number."
       : "";
   const href = useMemo(

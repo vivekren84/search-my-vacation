@@ -26,18 +26,18 @@ import { AboutYouMoment, DestinationMoment, DiscoverMoment, PaceAndTimingMoment,
 import { PassportStamp } from "./PassportStamp";
 import { PreOtpTrustCard } from "./PreOtpTrustCard";
 
+import { maskPhoneForDisplay } from "@/lib/phone/phone-normalization";
+import {
+  PASSPORT_VALIDATION_MESSAGES,
+  validateTravellerMobile,
+  validateTravellerName,
+} from "@/lib/journey-passport/validation-rules";
+
 // EBC-R1.2-WS5-02 §2/§8.8: "+91 98765 ••210" — country code + leading 5
-// digits + last 3 digits visible, middle masked. Pure display formatting,
-// not a new dependency. Only ever called with the existing 10-digit UI
-// field's value; the country-selector UI itself is a separate, out-of-scope
-// track (R1.2-05.01–05.14) for this brief.
+// digits + last 3 digits visible, middle masked. Re-delegates to centralized
+// web/lib/phone/phone-normalization.ts (Release 1.4 — TD-03).
 function maskJourneyPassportMobileForDisplay(rawMobile: string) {
-  const digits = rawMobile.replace(/\D/g, "");
-  if (digits.length !== 10) return "your number";
-  const leading = digits.slice(0, 5);
-  const last3 = digits.slice(-3);
-  const maskedCount = Math.max(digits.length - leading.length - last3.length, 0);
-  return `+91 ${leading} ${"•".repeat(maskedCount)}${last3}`;
+  return maskPhoneForDisplay(rawMobile);
 }
 
 // EBC-R1.2-WS5-02 §4: "Resend available in 0:24".
@@ -173,9 +173,16 @@ export default function JourneyPassport() {
 
   const requestOtp = async () => {
     if (otpStatus === "sending") return;
-    const digits = passport.state.mobile.replace(/\D/g, "");
-    if (passport.state.name.trim().length < 2) { setContactError("Please share the name you would like us to use."); return; }
-    if (digits.length !== 10 || digits === "0000000000") { setContactError("Please enter a valid 10-digit mobile number."); return; }
+    const nameValidation = validateTravellerName(passport.state.name);
+    if (!nameValidation.isValid) {
+      setContactError(nameValidation.error ?? PASSPORT_VALIDATION_MESSAGES.NAME_REQUIRED);
+      return;
+    }
+    const mobileValidation = validateTravellerMobile(passport.state.mobile);
+    if (!mobileValidation.isValid) {
+      setContactError(mobileValidation.error ?? PASSPORT_VALIDATION_MESSAGES.MOBILE_INVALID);
+      return;
+    }
     setContactError("");
     setOtpNotice("");
     setOtpStatus("sending");
