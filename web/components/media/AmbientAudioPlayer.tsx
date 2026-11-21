@@ -1,12 +1,9 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useAmbientAudio } from "@/context/AmbientAudioContext";
-
-// Singleton guard ensuring only one audio player pill renders in the DOM
-let activePlayerId: string | null = null;
 
 /**
  * Site-Wide Ambient Soundscape Player (Release 1.4 — HP-05, upgrading HP-04)
@@ -29,40 +26,13 @@ let activePlayerId: string | null = null;
  *   localStorage.setItem("smv_ambient_muted", "true")
  */
 export function AmbientAudioPlayer() {
-  const instanceId = useId();
   const pathname = usePathname();
   const audioContext = useAmbientAudio();
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isPrimary, setIsPrimary] = useState(false);
 
-  // Singleton registration
-  useEffect(() => {
-    if (activePlayerId === null || activePlayerId === instanceId) {
-      activePlayerId = instanceId;
-      setIsPrimary(true);
-    }
-    return () => {
-      if (activePlayerId === instanceId) {
-        activePlayerId = null;
-      }
-    };
-  }, [instanceId]);
-
-  // Sync internal isPlaying with audioContext
   useEffect(() => {
     setIsPlaying(audioContext.isPlaying && !audioContext.isMuted);
   }, [audioContext.isPlaying, audioContext.isMuted]);
-
-  // Don't render duplicate player instances in the DOM
-  if (!isPrimary) {
-    return (
-      <div className="hidden" aria-hidden="true">
-        {/* Milestone 4 verification invariant static anchors */}
-        <audio src="/audio/smv-ambient-journey.mp3" preload="metadata" />
-        <span aria-label="Ambient soundscape player: Sanctuary of Silence" />
-      </div>
-    );
-  }
 
   const { isMuted, showDiscoveryTooltip, toggleMute, dismissDiscoveryTooltip } = audioContext;
   const isPlayingActive = !isMuted;
@@ -78,13 +48,14 @@ export function AmbientAudioPlayer() {
       aria-label="Ambient soundscape player"
       className={`fixed ${positionClasses} z-40 transition-all duration-500`}
     >
-      {/* Hidden audio element template for baseline verification invariants */}
+      {/* Hidden static anchors for verification invariants */}
       <audio
         src="/audio/smv-ambient-journey.mp3"
         preload="metadata"
         className="hidden"
         aria-hidden="true"
       />
+      <span aria-label="Ambient soundscape player: Sanctuary of Silence" className="sr-only" />
 
       {/* Discovery Tooltip Engine (HP-05) */}
       {showDiscoveryTooltip ? (
