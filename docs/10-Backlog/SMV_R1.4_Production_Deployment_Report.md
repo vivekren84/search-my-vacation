@@ -1,11 +1,8 @@
 # Search My Vacation (SMV) — Release 1.4 Production Deployment, Smoke Test & Rollback Plan
 
-**Version:** `v1.4.0`  
-**Git Commit:** `e42c74d` (`main` branch)  
-**Git Tag:** `v1.4.0`  
+**Version:** `v1.4.1`  
+**Git Tag:** `v1.4.1`  
 **Base Trunk:** `release/r1.4` (Commit `2a0cedf`)  
-**Production Deployment ID:** `dpl_GJiWDp2ikFC3QKsNvtT13U56zY2V`  
-**Production Deployment URL:** `https://search-my-vacation-rydumtpul-search-my-vacation.vercel.app`  
 **Production Domains:**  
 - `https://searchmyvacation.com`  
 - `https://www.searchmyvacation.com`  
@@ -13,7 +10,7 @@
 **Product Owner:** Vivek Renganathan  
 **Technical Lead:** Tiger (CTO)  
 **Date:** November 21, 2026  
-**Status:** **PROMOTED TO PRODUCTION (LIVE) — PENDING FINAL PRODUCT OWNER SIGN-OFF**
+**Status:** **PROMOTED TO PRODUCTION (LIVE — V1.4.1 HOTFIX ACTIVE)**
 
 ---
 
