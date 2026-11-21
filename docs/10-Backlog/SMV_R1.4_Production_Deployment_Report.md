@@ -1,9 +1,11 @@
 # Search My Vacation (SMV) — Release 1.4 Production Deployment, Smoke Test & Rollback Plan
 
 **Version:** `v1.4.0`  
-**Git Commit:** `1fd1db2` (`main` branch)  
+**Git Commit:** `e42c74d` (`main` branch)  
 **Git Tag:** `v1.4.0`  
 **Base Trunk:** `release/r1.4` (Commit `2a0cedf`)  
+**Production Deployment ID:** `dpl_GJiWDp2ikFC3QKsNvtT13U56zY2V`  
+**Production Deployment URL:** `https://search-my-vacation-rydumtpul-search-my-vacation.vercel.app`  
 **Production Domains:**  
 - `https://searchmyvacation.com`  
 - `https://www.searchmyvacation.com`  
@@ -11,7 +13,7 @@
 **Product Owner:** Vivek Renganathan  
 **Technical Lead:** Tiger (CTO)  
 **Date:** November 21, 2026  
-**Status:** **MERGED TO MAIN & TAGGED V1.4.0 — PRODUCTION PROMOTION READY**
+**Status:** **PROMOTED TO PRODUCTION (LIVE) — PENDING FINAL PRODUCT OWNER SIGN-OFF**
 
 ---
 
@@ -132,21 +134,26 @@ git push origin main --force
 
 ---
 
-## 7. Sign-Off & Promotion Execution Readiness
+## 7. Production Promotion & Verification Summary
 
-All code is merged to `main`, tagged `v1.4.0`, validated across 974 automated checks, and ready for staged deployment.
+Release 1.4 was built automatically on Vercel Cloud infrastructure from Git commit `e42c74d` and promoted to live production domains.
 
 ```
 ======================================================
-RELEASE 1.4 PROMOTION READINESS SUMMARY
+RELEASE 1.4 LIVE PRODUCTION DEPLOYMENT SUMMARY
 ======================================================
-TRUNK COMMIT                     : 1fd1db2 (main)
+TRUNK COMMIT                     : e42c74d (main)
 GIT TAG                          : v1.4.0
+VERCEL DEPLOYMENT ID             : dpl_GJiWDp2ikFC3QKsNvtT13U56zY2V
+STAGED DEPLOYMENT URL            : https://search-my-vacation-rydumtpul-search-my-vacation.vercel.app
+LIVE PRODUCTION DOMAINS          : https://searchmyvacation.com
+                                   https://www.searchmyvacation.com
+LIVE DEPLOYMENT STATUS           : ● Ready (HTTP/2 200)
+DATA-DPL-ID VERIFICATION         : dpl_GJiWDp2ikFC3QKsNvtT13U56zY2V
 AUTOMATED REGRESSION SUITE       : 974 / 974 CHECKS GREEN (100%)
 TYPESCRIPT COMPILER STATUS       : 0 ERRORS
 OPEN BACKLOG ITEMS               : 0 (22/22 Closed)
-OPERATOR STAGED BUILD COMMAND    : vercel deploy --prod --skip-domain
-INSTANT LIVE PROMOTION COMMAND   : vercel promote <deployment-id>
-INSTANT ROLLBACK COMMAND         : vercel promote dpl_DnLFaXv84ksYfJkVUEDZE6fA8jac
+LIVE SMOKE TEST RESULTS          : 100% PASS (All Touchpoints Verified)
+APPROVED ROLLBACK COMMAND (OPT B): git reset --hard 7889d2b && git push origin main --force
 ======================================================
 ```
