@@ -1,0 +1,275 @@
+.section {
+  padding: clamp(3rem, 6vw, 5.5rem) 0;
+  background: #fbf7f2;
+  border-top: 1px solid #ebdcc8;
+  border-bottom: 1px solid #ebdcc8;
+}
+
+.container {
+  width: min(72rem, calc(100vw - 2.5rem));
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  max-width: 44rem;
+  margin: 0 auto 2.5rem;
+}
+
+.eyebrow {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: #8a581f;
+}
+
+.title {
+  margin-top: 0.75rem;
+  font-family: var(--font-editorial, Georgia, serif);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -0.04em;
+  color: #2a211c;
+}
+
+.subtitle {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: rgb(42 33 28 / 70%);
+}
+
+.monthScroller {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.monthButton {
+  min-width: 3.25rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid rgb(42 33 28 / 18%);
+  background: white;
+  color: #2a211c;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.monthButton:hover {
+  border-color: #f5951c;
+  background: #fdfcf9;
+}
+
+.monthButtonActive {
+  background: #2a211c;
+  border-color: #2a211c;
+  color: white;
+  box-shadow: 0 4px 14px rgba(42, 33, 28, 0.16);
+}
+
+.spotlightCard {
+  background: white;
+  border-radius: 1.75rem;
+  border: 1px solid #e4d2b5;
+  box-shadow: 0 16px 40px rgba(91, 55, 18, 0.06);
+  padding: clamp(1.75rem, 4vw, 3rem);
+}
+
+.spotlightHeader {
+  border-bottom: 1px solid #f0e4d4;
+  padding-bottom: 1.75rem;
+  margin-bottom: 2rem;
+}
+
+.badgeRow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.85rem;
+}
+
+.seasonBadge {
+  display: inline-flex;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  background: #fef4e8;
+  border: 1px solid #f6c085;
+  color: #9b5814;
+  font-size: 0.72rem;
+  font-weight: 750;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.monthBadge {
+  display: inline-flex;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  background: #f3efe9;
+  color: #5c4a38;
+  font-size: 0.72rem;
+  font-weight: 750;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.spotlightHeadline {
+  font-family: var(--font-editorial, Georgia, serif);
+  font-size: clamp(1.6rem, 3vw, 2.25rem);
+  font-weight: 400;
+  color: #2a211c;
+}
+
+.editorialLead {
+  margin-top: 0.6rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgb(42 33 28 / 85%);
+  font-weight: 500;
+}
+
+.editorialNote {
+  margin-top: 0.35rem;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: rgb(42 33 28 / 65%);
+}
+
+.columnsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .columnsGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.columnHeading {
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #8a581f;
+  margin-bottom: 1rem;
+}
+
+.cardsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.destinationCard {
+  padding: 1.25rem;
+  border-radius: 1.15rem;
+  background: #fdfaf6;
+  border: 1px solid #ecddca;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.destinationCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(91, 55, 18, 0.06);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.destName {
+  font-size: 1.1rem;
+  font-weight: 750;
+  color: #2a211c;
+}
+
+.destDuration {
+  font-size: 0.75rem;
+  font-weight: 650;
+  color: #8a581f;
+}
+
+.cardMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.5rem;
+}
+
+.metaPill {
+  display: inline-flex;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: white;
+  border: 1px solid #e5d7c3;
+  color: #5c4a38;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.visaPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: #fef4e8;
+  border: 1px solid #f6c085;
+  color: #9b5814;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.comfortSignalsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.65rem;
+}
+
+.signalPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.7rem;
+  color: rgb(42 33 28 / 75%);
+  background: white;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid #ede1d1;
+}
+
+.visaNote {
+  margin-top: 0.45rem;
+  font-size: 0.74rem;
+  color: rgb(42 33 28 / 65%);
+  line-height: 1.4;
+}
+
+.planLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 750;
+  color: #8a581f;
+  transition: color 0.15s ease;
+}
+
+.planLink:hover {
+  color: #2a211c;
+}

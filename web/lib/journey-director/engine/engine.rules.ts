@@ -85,6 +85,32 @@ export const PERSONALITY_THRESHOLDS = {
   humanReview: { destination: 50, region: 40 },
 } as const;
 
+/**
+ * Weighted Destination Model Runtime Preference Weights (Release 1.4 — P-08)
+ *
+ * Governs the relative influence of traveller choices across recommendation phases:
+ * - Primary: Dream Journey Core Intent (50%)
+ * - Secondary: Travel Styles Nuances (30%)
+ * - Tertiary: Memory Goals & Emotional Resonance (20%)
+ */
+export const PREFERENCE_TIER_WEIGHTS = {
+  primaryDreamJourney: 0.50,
+  secondaryTravelStyles: 0.30,
+  tertiaryMemoryGoals: 0.20,
+} as const;
+
+export function calculatePreferenceTierScore(
+  primaryScore: number,
+  secondaryScore: number,
+  tertiaryScore: number,
+): number {
+  return Math.round(
+    (primaryScore * PREFERENCE_TIER_WEIGHTS.primaryDreamJourney +
+      secondaryScore * PREFERENCE_TIER_WEIGHTS.secondaryTravelStyles +
+      tertiaryScore * PREFERENCE_TIER_WEIGHTS.tertiaryMemoryGoals) * 10000,
+  ) / 10000;
+}
+
 export const PACE_ORDER: readonly TravelPace[] = ["relaxed", "balanced", "explorer", "fast-paced"];
 export const COMFORT_ORDER: readonly ComfortLevel[] = ["simple", "balanced", "premium"];
 

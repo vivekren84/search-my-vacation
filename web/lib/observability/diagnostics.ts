@@ -34,25 +34,15 @@ const SENSITIVE_KEYS = new Set([
   "authorization",
 ]);
 
+import { maskPhoneForDiagnostics } from "../phone/phone-normalization";
+
 /**
  * Masks a mobile number to show only country prefix and last 2 digits.
  * Example: "+919876543210" -> "+91 ****** 10"
+ * Centralized in web/lib/phone/phone-normalization.ts (Release 1.4 - TD-03)
  */
 export function maskDiagnosticsMobile(value: unknown): string {
-  if (typeof value !== "string" || value.trim().length === 0) return "[empty]";
-  const trimmed = value.trim();
-  if (trimmed.startsWith("+91") && trimmed.length >= 5) {
-    return `+91 ****** ${trimmed.slice(-2)}`;
-  }
-  if (trimmed.startsWith("+") && trimmed.length >= 6) {
-    const match = trimmed.match(/^(\+\d{1,3})/);
-    const prefix = match ? match[1] : "+";
-    return `${prefix} ****** ${trimmed.slice(-2)}`;
-  }
-  if (trimmed.length >= 6) {
-    return `****** ${trimmed.slice(-2)}`;
-  }
-  return "******";
+  return maskPhoneForDiagnostics(value);
 }
 
 /**

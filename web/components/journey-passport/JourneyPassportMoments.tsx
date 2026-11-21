@@ -7,6 +7,7 @@ import { JOURNEY_ENTRY_ADVISORY } from "@/lib/journey-passport/entry-context";
 import { isGetawayDescriptionEmpty } from "@/lib/journey-passport/getaway-description";
 import { journeyPassportBlurPlaceholder } from "@/lib/journey-passport/image-blur-placeholders";
 import { sanitizeTravellerName } from "@/lib/journey-passport/traveller-name";
+import { getLocalToday, isValidTravellerName } from "@/lib/journey-passport/validation-rules";
 import type { JourneyMoment, JourneyPassportState } from "@/types/journey-passport.types";
 
 import { GetawayDescriptionField } from "./GetawayDescriptionField";
@@ -29,7 +30,7 @@ export function WelcomeMoment({ onBegin }: { onBegin: () => void }) {
 }
 
 export function AboutYouMoment({ headingRef, moment, name, onChange }: { headingRef: HeadingRef; moment: JourneyMoment; name: string; onChange: (value: string) => void }) {
-  const invalid = name.length > 0 && (name.trim().length < 2 || !/\p{L}/u.test(name));
+  const invalid = name.length > 0 && !isValidTravellerName(name);
   return <section className="pt-8"><MomentHeading headingRef={headingRef} moment={moment} /><div className="mx-auto mt-9 max-w-2xl rounded-[2rem] border border-[#e6d5bb] bg-white/85 p-6 shadow-[0_16px_40px_rgba(93,59,21,0.08)] sm:p-10"><label htmlFor="passport-name" className="block text-lg font-semibold text-[#2A211C]">What should we call you?</label><input id="passport-name" name="name" type="text" value={name} maxLength={80} onChange={(event) => onChange(sanitizeTravellerName(event.target.value))} autoComplete="name" aria-invalid={invalid || undefined} aria-describedby="passport-name-help" className="mt-5 min-h-14 w-full rounded-2xl border border-[#d8c4a7] bg-[#FFFDFC] px-5 text-lg text-[#2A211C] outline-none transition focus:border-[#2A211C] focus:ring-4 focus:ring-[#FFFDFC]" /><div id="passport-name-help" className="mt-4 flex flex-wrap justify-between gap-2 text-sm leading-6 text-[#2A211C]"><span>{invalid ? "Please share the name you’d like us to use." : "We’ll use your name to make every conversation feel personal."}</span><span aria-label={`${name.length} of 80 characters`}>{name.length}/80</span></div></div></section>;
 }
 
@@ -44,8 +45,7 @@ export function TravelStyleMoment({ headingRef, moment, values, onToggle }: { he
 }
 
 export function TimingMoment({ headingRef, moment, state, onUpdate }: { headingRef: HeadingRef; moment: JourneyMoment; state: JourneyPassportState; onUpdate: (value: Partial<JourneyPassportState>) => void }) {
-  const now = new Date();
-  const today = new Date(now.getTime() - now.getTimezoneOffset() * 60_000).toISOString().slice(0, 10);
+  const today = getLocalToday();
   const dateInvalid = state.timing === "Exact Dates" && Boolean((state.startDate && state.startDate < today) || (state.startDate && state.endDate && state.endDate <= state.startDate));
   return <section className="pt-8"><MomentHeading headingRef={headingRef} moment={moment} /><div role="radiogroup" aria-label="Travel timing" className="mx-auto mt-9 grid max-w-6xl gap-3.5 sm:grid-cols-2 lg:grid-cols-6">{(moment.options ?? []).map((option, index) => <SelectionCard key={option.value} option={option} compact className={index < 3 ? "lg:col-span-2" : "lg:col-span-3"} selected={state.timing === option.value} onSelect={() => onUpdate({ timing: option.value })} />)}</div>{state.timing === "I’m Flexible" ? <p role="status" className="mx-auto mt-6 max-w-3xl rounded-2xl bg-[#f8eddd] px-5 py-4 text-center text-sm text-[#2A211C]">Keeping your travel dates flexible gives us more possibilities to explore.</p> : null}{state.timing === "Exact Dates" ? <div className="journey-passport-reveal mx-auto mt-6 max-w-3xl rounded-[1.5rem] border border-[#e1ceb0] bg-[#FFFDFC] p-5 sm:p-6"><p className="mb-5 text-sm font-semibold text-[#2A211C]">Wonderful. Share the dates you already have in mind.</p><div className="grid gap-5 sm:grid-cols-2"><label className="text-sm font-semibold text-[#2A211C]">Departure date<input type="date" value={state.startDate} min={today} onChange={(event) => onUpdate({ startDate: event.target.value })} className="mt-2 min-h-12 w-full rounded-xl border border-[#d8c4a7] bg-white px-3 text-[#2A211C] focus:outline-2 focus:outline-offset-2 focus:outline-[#2A211C]" /></label><label className="text-sm font-semibold text-[#2A211C]">Return date<input type="date" value={state.endDate} min={state.startDate || today} aria-invalid={dateInvalid || undefined} aria-describedby={dateInvalid ? "date-range-error" : undefined} onChange={(event) => onUpdate({ endDate: event.target.value })} className="mt-2 min-h-12 w-full rounded-xl border border-[#d8c4a7] bg-white px-3 text-[#2A211C] focus:outline-2 focus:outline-offset-2 focus:outline-[#2A211C]" /></label></div>{dateInvalid ? <p id="date-range-error" className="mt-4 text-sm font-medium text-[#a1463c]">Your return should come after your departure.</p> : null}</div> : null}</section>;
 }
@@ -56,11 +56,25 @@ export function PaceAndTimingMoment({ headingRef, moment, state, showEntryAdviso
   const count = state.travelStyles.length;
   const dateInvalid = state.timing === "Exact Dates" && Boolean((state.startDate && state.startDate < today) || (state.startDate && state.endDate && state.endDate <= state.startDate));
 
+  // UX-04: Cross-step intent synchronization suggestions based on earlier companion & dream journey choices
+  const suggestedStyles = (state.companion === "Couple" || state.dreamJourney === "Tropical Escape")
+    ? ["Relaxation", "Food & Dining"]
+    : state.companion === "Family"
+    ? ["Culture & Heritage", "Relaxation"]
+    : (state.companion === "Friends" || state.dreamJourney === "Mountain Retreat")
+    ? ["Adventure", "Nature"]
+    : [];
+
   return <section className="pt-8"><MomentHeading headingRef={headingRef} moment={moment} />
     {showEntryAdvisory ? <p role="status" className="mx-auto mt-6 max-w-3xl rounded-2xl border border-[#e1ceb0] bg-[#f8eddd] px-5 py-4 text-center text-sm text-[#2A211C]">{JOURNEY_ENTRY_ADVISORY}</p> : null}
     <div className={`mx-auto max-w-5xl rounded-[2rem] border border-[#e6d5bb] bg-white/80 p-5 shadow-[0_16px_40px_rgba(93,59,21,0.07)] sm:p-8 ${showEntryAdvisory ? "mt-6" : "mt-9"}`}>
       <div className="flex flex-wrap items-end justify-between gap-2"><div><p className="text-xs font-bold uppercase tracking-[0.16em] text-[#2A211C]">First, choose your rhythm</p><h2 className="mt-2 text-xl font-semibold text-[#2A211C]">What memories would you love to bring back?</h2></div><p role="status" aria-live="polite" className="text-sm font-semibold text-[#2A211C]">{count} of 3 selected</p></div>
-      <div role="group" aria-label="Travel styles—choose up to three" className="mt-5 flex flex-wrap gap-2.5">{travelStyleOptions.map((option) => { const selected = state.travelStyles.includes(option.value); const unavailable = count === 3 && !selected; return <button key={option.value} type="button" aria-pressed={selected} disabled={unavailable} onClick={() => onToggle(option.value)} className={`min-h-11 rounded-full border px-4 py-2 text-sm font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2A211C] ${selected ? "border-[#F5951C] bg-[#F5951C] text-[#2A211C]" : "border-[#dcc8aa] bg-[#fffaf1] text-[#2A211C] hover:border-[#b9823f]"} disabled:cursor-not-allowed disabled:opacity-45`}><span aria-hidden="true" className="mr-1.5">{selected ? "✓" : "+"}</span>{option.label}</button>; })}</div>
+      {suggestedStyles.length > 0 && count === 0 ? (
+        <p className="mt-2 text-xs font-medium text-[#8a7258]">
+          💡 Suggested for your {state.companion ? `${state.companion.toLowerCase()} getaway` : "journey"}: {suggestedStyles.join(" · ")}
+        </p>
+      ) : null}
+      <div role="group" aria-label="Travel styles—choose up to three" className="mt-5 flex flex-wrap gap-2.5">{travelStyleOptions.map((option) => { const selected = state.travelStyles.includes(option.value); const isSuggested = suggestedStyles.includes(option.value); const unavailable = count === 3 && !selected; return <button key={option.value} type="button" aria-pressed={selected} disabled={unavailable} onClick={() => onToggle(option.value)} className={`min-h-11 rounded-full border px-4 py-2 text-sm font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2A211C] ${selected ? "border-[#F5951C] bg-[#F5951C] text-[#2A211C]" : isSuggested ? "border-[#d8be96] bg-[#fffcf7] text-[#2A211C] hover:border-[#b9823f]" : "border-[#dcc8aa] bg-[#fffaf1] text-[#2A211C] hover:border-[#b9823f]"} disabled:cursor-not-allowed disabled:opacity-45`}><span aria-hidden="true" className="mr-1.5">{selected ? "✓" : "+"}</span>{option.label}</button>; })}</div>
       <div className="my-7 h-px bg-[#eadcc7]" aria-hidden="true" />
       <div><p className="text-xs font-bold uppercase tracking-[0.16em] text-[#2A211C]">Then, choose your timing</p><h2 className="mt-2 text-xl font-semibold text-[#2A211C]">When would you love this journey to begin?</h2></div>
       <div role="radiogroup" aria-label="Travel timing" className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-6">{(moment.options ?? []).map((option, index) => <SelectionCard key={option.value} option={option} compact className={index < 3 ? "lg:col-span-2" : "lg:col-span-3"} selected={state.timing === option.value} onSelect={() => onUpdate({ timing: state.timing === option.value ? "" : option.value })} />)}</div>
@@ -81,7 +95,7 @@ export function PaceAndTimingMoment({ headingRef, moment, state, showEntryAdviso
 // resolved Preferred Destinations chip — see that file's comment for why.
 export function DestinationMoment({ headingRef, moment, state, onPreferredDestinationsChange, onGetawayDescriptionChange }: { headingRef: HeadingRef; moment: JourneyMoment; state: JourneyPassportState; onPreferredDestinationsChange: (value: SelectedDestination[]) => void; onGetawayDescriptionChange: (value: string) => void }) {
   const known = state.entryContext.destination;
-  return <section className="pt-8"><MomentHeading headingRef={headingRef} moment={moment} />{known ? <p className="mx-auto mt-6 max-w-3xl rounded-2xl bg-[#f8eddd] px-5 py-4 text-center text-sm text-[#2A211C]">We carried {known} forward from the destination you were exploring. Every choice remains yours to change.</p> : null}<PreferredDestinationsField value={state.preferredDestinations} onChange={onPreferredDestinationsChange} /><p className="mx-auto mt-6 max-w-2xl text-center text-sm font-semibold text-[#6e5a46]">Or, if it’s more of a feeling than a place yet —</p><GetawayDescriptionField value={state.getawayDescription} onChange={onGetawayDescriptionChange} /></section>;
+  return <section className="pt-8"><MomentHeading headingRef={headingRef} moment={moment} />{known ? <p className="mx-auto mt-6 max-w-3xl rounded-2xl bg-[#f8eddd] px-5 py-4 text-center text-sm text-[#2A211C]">We carried {known} forward from the destination you were exploring. Every choice remains yours to change.</p> : null}<PreferredDestinationsField value={state.preferredDestinations} onChange={onPreferredDestinationsChange} carriedForwardDestination={known} /><p className="mx-auto mt-6 max-w-2xl text-center text-sm font-semibold text-[#6e5a46]">Or, if it’s more of a feeling than a place yet —</p><GetawayDescriptionField value={state.getawayDescription} onChange={onGetawayDescriptionChange} /></section>;
 }
 
 const list = (values: string[]) => values.length < 2 ? (values[0] ?? "") : values.length === 2 ? `${values[0]} and ${values[1]}` : `${values.slice(0, -1).join(", ")}, and ${values.at(-1)}`;

@@ -1,4 +1,9 @@
 import type { JourneyFeeling } from "../../../types/journey-passport.types";
+import type { TripAnchorMetadata } from "../../../config/trip-anchors.config";
+import type { PilotCircuit, PilotRegion } from "../intelligence/pilotCircuits";
+import type { CompanionDestination } from "../catalogue/companionDestinations";
+import type { ComfortSignalDefinition } from "../../../config/comfort-signals.config";
+import type { EnrichedFreeTextIntent } from "./enrichFreeTextIntent";
 import type { JourneyPassportSnapshot } from "../../../types/journey-director";
 
 export const DECISION_ENGINE_VERSION = "1.0.0" as const;
@@ -460,6 +465,12 @@ export type EnginePossibility = {
   experienceHighlights: readonly string[];
   recommendedTravelStyle: string;
   recommendedSeason?: string;
+  tripAnchor?: TripAnchorMetadata;
+  pilotCircuits?: readonly PilotCircuit[];
+  pilotRegion?: PilotRegion;
+  companionDestinations?: readonly CompanionDestination[];
+  comfortSignals?: readonly ComfortSignalDefinition[];
+  enrichedIntent?: EnrichedFreeTextIntent;
 };
 
 export type EngineDestinationResolution =

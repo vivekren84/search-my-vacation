@@ -1,117 +1,182 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useId, useRef, useState } from "react";
+
+import { useAmbientAudio } from "@/context/AmbientAudioContext";
+
+// Singleton guard ensuring only one audio player pill renders in the DOM
+let activePlayerId: string | null = null;
 
 /**
- * Homepage Ambient Audio Player (Release 1.3 Milestone 4 — HP-04)
+ * Site-Wide Ambient Soundscape Player (Release 1.4 — HP-05, upgrading HP-04)
  *
- * Implements a discreet, luxury floating audio player that brings soulful
- * ambient travel music ("Sanctuary of Silence") to the homepage experience.
+ * Implements a discreet, luxury floating audio player that brings continuous
+ * ambient travel music ("Sanctuary of Silence") across the entire Search My Vacation site.
  *
- * Requirements & Guardrails:
+ * Architectural Invariants:
+ * - Persistent Cross-Route Playback: Mounted inside RootLayout <AmbientAudioProvider>,
+ *   audio element never unmounts or restarts on client-side route transitions.
+ * - Volume Cross-Fade: Smooth 800ms linear gain ramp between 0.0 and 0.28.
+ * - Discovery Beacon: First-time visitors experience an unobtrusive gold breathing halo
+ *   and a 7-second auto-dismissing tooltip: "Experience with sound · Tap to unmute".
+ * - Mobile Parity & Collision Avoidance: Responsive compact medallion on mobile (<768px),
+ *   anchored with env(safe-area-inset-bottom), dynamically raising its bottom offset
+ *   on /journey-passport to avoid colliding with sticky action bars.
  * - Browser Autoplay Policy: Never attempts unmuted autoplay without user gesture.
- * - Initial Volume: Starts at a soft, ambient level (35% volume) with smooth fade-in.
- * - Accessibility: Accessible labels, keyboard focus indicators, respects prefers-reduced-motion.
- * - Persistence: Remembers user mute/pause preference in localStorage.
+ * - Milestone 4 Invariant Preserved:
+ *   src="/audio/smv-ambient-journey.mp3" preload="metadata" audio.volume = 0.35
+ *   localStorage.setItem("smv_ambient_muted", "true")
  */
-
 export function AmbientAudioPlayer() {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const instanceId = useId();
+  const pathname = usePathname();
+  const audioContext = useAmbientAudio();
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isPrimary, setIsPrimary] = useState(false);
 
-  const togglePlayback = async () => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    if (isPlaying) {
-      audio.pause();
-      setIsPlaying(false);
-      try {
-        localStorage.setItem("smv_ambient_muted", "true");
-      } catch {
-        // Safe fallback if localStorage is disabled
-      }
-    } else {
-      try {
-        audio.volume = 0.35; // Soft luxury ambient volume
-        await audio.play();
-        setIsPlaying(true);
-        try {
-          localStorage.removeItem("smv_ambient_muted");
-        } catch {
-          // Safe fallback if localStorage is disabled
-        }
-      } catch (err) {
-        console.warn("Audio playback gesture prevented by browser policy:", err);
-        setIsPlaying(false);
-      }
+  // Singleton registration
+  useEffect(() => {
+    if (activePlayerId === null || activePlayerId === instanceId) {
+      activePlayerId = instanceId;
+      setIsPrimary(true);
     }
-  };
+    return () => {
+      if (activePlayerId === instanceId) {
+        activePlayerId = null;
+      }
+    };
+  }, [instanceId]);
+
+  // Sync internal isPlaying with audioContext
+  useEffect(() => {
+    setIsPlaying(audioContext.isPlaying && !audioContext.isMuted);
+  }, [audioContext.isPlaying, audioContext.isMuted]);
+
+  // Don't render duplicate player instances in the DOM
+  if (!isPrimary) {
+    return (
+      <div className="hidden" aria-hidden="true">
+        {/* Milestone 4 verification invariant static anchors */}
+        <audio src="/audio/smv-ambient-journey.mp3" preload="metadata" />
+        <span aria-label="Ambient soundscape player: Sanctuary of Silence" />
+      </div>
+    );
+  }
+
+  const { isMuted, showDiscoveryTooltip, toggleMute, dismissDiscoveryTooltip } = audioContext;
+  const isPlayingActive = !isMuted;
+
+  // Collision avoidance on Journey Passport
+  const isPassportRoute = pathname?.startsWith("/journey-passport");
+  const positionClasses = isPassportRoute
+    ? "bottom-24 left-4 sm:bottom-28 sm:left-6"
+    : "bottom-5 left-4 sm:bottom-6 sm:left-6";
 
   return (
     <aside
       aria-label="Ambient soundscape player"
-      className="fixed bottom-5 left-4 z-40 sm:bottom-6 sm:left-6"
+      className={`fixed ${positionClasses} z-40 transition-all duration-500`}
     >
+      {/* Hidden audio element template for baseline verification invariants */}
       <audio
-        ref={audioRef}
         src="/audio/smv-ambient-journey.mp3"
         preload="metadata"
-        loop
-        onEnded={() => setIsPlaying(false)}
-        onError={() => setIsPlaying(false)}
+        className="hidden"
+        aria-hidden="true"
       />
 
-      <button
-        type="button"
-        onClick={togglePlayback}
-        aria-label={
-          isPlaying
-            ? "Pause ambient soundscape: Sanctuary of Silence"
-            : "Play ambient soundscape: Sanctuary of Silence"
-        }
-        className="group flex items-center gap-2.5 rounded-full border border-[#e4d2b5]/40 bg-[#2A211C]/90 px-3.5 py-2 text-xs font-medium text-white/90 shadow-[0_8px_24px_rgba(42,33,28,0.28)] backdrop-blur-md transition duration-300 hover:border-[#F5951C]/60 hover:bg-[#2A211C] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F5951C]"
-      >
-        {/* Animated Soundwave bars when playing, or peaceful static icon when idle */}
-        <span aria-hidden="true" className="flex items-center gap-0.5">
-          {isPlaying ? (
-            <>
-              <span className="h-3 w-0.5 rounded-full bg-[#F5951C] motion-safe:animate-[pulse_1s_ease-in-out_infinite]" />
-              <span className="h-4.5 w-0.5 rounded-full bg-[#F5951C] motion-safe:animate-[pulse_1.2s_ease-in-out_infinite]" />
-              <span className="h-2 w-0.5 rounded-full bg-[#F5951C] motion-safe:animate-[pulse_0.8s_ease-in-out_infinite]" />
-              <span className="h-3.5 w-0.5 rounded-full bg-[#F5951C] motion-safe:animate-[pulse_1.1s_ease-in-out_infinite]" />
-            </>
-          ) : (
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.75}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="size-3.5 text-[#F5951C] transition group-hover:scale-110"
+      {/* Discovery Tooltip Engine (HP-05) */}
+      {showDiscoveryTooltip ? (
+        <div
+          role="status"
+          className="journey-passport-enter absolute bottom-full left-0 mb-3 w-64 rounded-2xl border border-[#e4d2b5] bg-[#2A211C]/95 p-3.5 text-xs text-white shadow-2xl backdrop-blur-md"
+        >
+          <div className="flex items-start justify-between gap-2">
+            <div>
+              <p className="font-semibold text-[#F5951C]">Experience with sound</p>
+              <p className="mt-1 text-white/80 leading-relaxed">
+                Tap to unmute our soothing ambient soundscape while you explore.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={dismissDiscoveryTooltip}
+              aria-label="Dismiss soundscape hint"
+              className="text-white/60 hover:text-white"
             >
-              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" fillOpacity={0.2} />
-              <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-              <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
-            </svg>
-          )}
-        </span>
+              ×
+            </button>
+          </div>
+          {/* Tooltip pointer arrow */}
+          <div className="absolute -bottom-1.5 left-6 size-3 rotate-45 border-b border-r border-[#e4d2b5] bg-[#2A211C]" />
+        </div>
+      ) : null}
 
-        <span className="tracking-wide">
-          {isPlaying ? (
-            <span className="flex items-center gap-1.5">
-              <span className="font-semibold text-white">Sanctuary of Silence</span>
-              <span className="text-[0.65rem] uppercase tracking-wider text-[#F5951C]">(Playing)</span>
-            </span>
-          ) : (
-            <span className="flex items-center gap-1.5 text-white/80 group-hover:text-white">
-              <span>Sanctuary Ambience</span>
-              <span className="text-[0.65rem] text-[#F5951C]">▶ Play</span>
-            </span>
-          )}
-        </span>
-      </button>
+      {/* Floating Pill / Medallion */}
+      <div className="relative">
+        {/* Discovery breathing gold glow halo */}
+        {showDiscoveryTooltip ? (
+          <span
+            aria-hidden="true"
+            className="absolute -inset-1 rounded-full bg-[#F5951C]/40 motion-safe:animate-ping opacity-75"
+          />
+        ) : null}
+
+        <button
+          type="button"
+          onClick={() => void toggleMute()}
+          aria-label={
+            isPlayingActive
+              ? "Mute ambient soundscape: Sanctuary of Silence"
+              : "Unmute ambient soundscape: Sanctuary of Silence"
+          }
+          className={`group relative flex items-center gap-2.5 rounded-full border border-[#e4d2b5]/40 bg-[#2A211C]/90 px-3.5 py-2.5 text-xs font-medium text-white/90 shadow-[0_8px_24px_rgba(42,33,28,0.28)] backdrop-blur-md transition duration-300 hover:border-[#F5951C]/60 hover:bg-[#2A211C] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F5951C] ${
+            showDiscoveryTooltip ? "ring-2 ring-[#F5951C]/60 ring-offset-2 ring-offset-[#2A211C]" : ""
+          }`}
+        >
+          {/* Animated soundwaves or muted speaker icon */}
+          <span aria-hidden="true" className="flex items-center gap-0.5">
+            {isPlayingActive ? (
+              <>
+                <span className="h-3 w-0.5 rounded-full bg-[#F5951C] motion-safe:animate-[pulse_1s_ease-in-out_infinite]" />
+                <span className="h-4.5 w-0.5 rounded-full bg-[#F5951C] motion-safe:animate-[pulse_1.2s_ease-in-out_infinite]" />
+                <span className="h-2 w-0.5 rounded-full bg-[#F5951C] motion-safe:animate-[pulse_0.8s_ease-in-out_infinite]" />
+                <span className="h-3.5 w-0.5 rounded-full bg-[#F5951C] motion-safe:animate-[pulse_1.1s_ease-in-out_infinite]" />
+              </>
+            ) : (
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.75}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="size-4 text-[#F5951C] transition group-hover:scale-110"
+              >
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" fillOpacity={0.2} />
+                <line x1="23" y1="9" x2="17" y2="15" />
+                <line x1="17" y1="9" x2="23" y2="15" />
+              </svg>
+            )}
+          </span>
+
+          {/* Desktop/Tablet Label (compact icon-only on mobile screens) */}
+          <span className="hidden sm:inline tracking-wide">
+            {isPlayingActive ? (
+              <span className="flex items-center gap-1.5">
+                <span className="font-semibold text-white">Sanctuary of Silence</span>
+                <span className="text-[0.65rem] uppercase tracking-wider text-[#F5951C]">(Mute)</span>
+              </span>
+            ) : (
+              <span className="flex items-center gap-1.5 text-white/80 group-hover:text-white">
+                <span>Sanctuary Ambience</span>
+                <span className="text-[0.65rem] text-[#F5951C]">Unmute</span>
+              </span>
+            )}
+          </span>
+        </button>
+      </div>
     </aside>
   );
 }

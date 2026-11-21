@@ -1,4 +1,9 @@
-import { parsePhoneNumberFromString } from "libphonenumber-js/max";
+import {
+  DEFAULT_PHONE_COUNTRY,
+  isValidMobileNumber,
+  normalizeNationalDigits,
+  parseMobileNumber,
+} from "../phone/phone-normalization";
 
 import { isCallbackTimeWindow, isValidCallbackDate } from "../callback-preferences";
 import { GETAWAY_DESCRIPTION_MAX_LENGTH, sanitizeGetawayDescription } from "../journey-passport/getaway-description";
@@ -61,7 +66,7 @@ const CALLBACK_KEYS = new Set([
 // storage. The country-selector UI itself (R1.2-05.01–05.14) is a separate,
 // out-of-scope track for this brief — this only changes how a bare national
 // number is *parsed and stored*, not the input field's UI.
-const DEFAULT_MOBILE_COUNTRY = "IN";
+const DEFAULT_MOBILE_COUNTRY = DEFAULT_PHONE_COUNTRY;
 
 // EBC-R1.2-WS6-09 (Rad, Phase 4). Deliberately NOT imported from
 // lib/geo-validation — mirrors that module's cap of the same name/value,
@@ -117,35 +122,22 @@ export function isJourneyPassportReference(value: unknown): value is string {
 }
 
 export function normalizeJourneyMobile(value: string) {
-  return value.replace(/\D/g, "");
+  return normalizeNationalDigits(value);
 }
 
 /**
  * Journey Passport-only E.164 phone parsing (libphonenumber-js, DEC-R1.2-017),
- * default country India (DEC-R1.2-002). Used as an ADDITIONAL gate on top of
- * MOBILE_NUMBER_PATTERN (not a replacement for it — see the dual-field note
- * above): rejects fixed-line-shaped 10-digit numbers that would otherwise
- * pass the bare digit-count pattern (SMS/OTP delivery is meaningless to a
- * landline), and supplies the E.164 string stored separately as mobileE164
- * for OTP verification / SMS delivery (EBC-R1.2-WS5-01 §3). Returns null for
- * anything libphonenumber-js cannot parse as a structurally valid number.
+ * default country India (DEC-R1.2-002). Re-delegates to centralized
+ * web/lib/phone/phone-normalization.ts (Release 1.4 — TD-03).
  */
 export function parseJourneyPassportMobile(value: string): { e164: string; national: string } | null {
-  if (typeof value !== "string" || value.trim().length === 0) return null;
-  const parsed = parsePhoneNumberFromString(value.trim(), DEFAULT_MOBILE_COUNTRY);
-  if (!parsed || !parsed.isValid()) return null;
-  // The default/`min` libphonenumber-js metadata bundle has no type-classification
-  // data, so isValid() alone accepts many non-mobile-shaped numbers (e.g. India
-  // fixed-line ranges). The `/max` bundle imported above restores getType(), so we
-  // additionally require a genuinely mobile-capable number here — OTP delivery via
-  // SMS is meaningless to a fixed-line number.
-  const type = parsed.getType();
-  if (type !== "MOBILE" && type !== "FIXED_LINE_OR_MOBILE") return null;
-  return { e164: parsed.number, national: parsed.nationalNumber };
+  const parsed = parseMobileNumber(value, DEFAULT_MOBILE_COUNTRY);
+  if (!parsed) return null;
+  return { e164: parsed.e164, national: parsed.nationalNumber };
 }
 
 export function isValidJourneyPassportMobile(value: string): boolean {
-  return parseJourneyPassportMobile(value) !== null;
+  return isValidMobileNumber(value, DEFAULT_MOBILE_COUNTRY);
 }
 
 export function parseNotificationRecipients(value: string | undefined) {

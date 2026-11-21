@@ -1,0 +1,23 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "allowJs": false,
+    "incremental": false,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "noEmit": false,
+    "outDir": "./node_modules/.cache/smv-r14-m2-verification",
+    "plugins": [],
+    "rootDir": ".",
+    "target": "ES2022",
+    "types": ["node"]
+  },
+  "include": [
+    "lib/**/*.ts",
+    "config/**/*.ts",
+    "types/**/*.ts",
+    "hooks/**/*.ts",
+    "context/**/*.ts"
+  ],
+  "exclude": ["node_modules"]
+}
