@@ -8,6 +8,8 @@ import { getItinerariesForDestination, publicItineraryLabel, resolveDestinationI
 import { getTripAnchorForDestination } from "@/config/trip-anchors.config";
 import { getPilotCircuitsForDestination } from "@/lib/journey-director/intelligence/pilotCircuits";
 import { getCompanionDestinations } from "@/lib/journey-director/catalogue/companionDestinations";
+import { getComfortSignalsForDestination } from "@/config/comfort-signals.config";
+import { getVisaLeadTime } from "@/config/seasonal-discovery.config";
 
 import styles from "./DestinationItinerarySection.module.css";
 
@@ -24,6 +26,8 @@ export default function DestinationItinerarySection({ destinationId, destination
   const tripAnchor = useMemo(() => getTripAnchorForDestination(destinationId), [destinationId]);
   const pilotCircuits = useMemo(() => getPilotCircuitsForDestination(destinationId), [destinationId]);
   const companionDestinations = useMemo(() => getCompanionDestinations(destinationId), [destinationId]);
+  const comfortSignals = useMemo(() => getComfortSignalsForDestination(destinationId), [destinationId]);
+  const visaInfo = useMemo(() => getVisaLeadTime(destinationId), [destinationId]);
 
   useEffect(() => {
     if (!selected && process.env.NODE_ENV !== "production") console.warn("No governed public destination itinerary mapping was found.", { destinationId, destinationName });
@@ -84,6 +88,27 @@ export default function DestinationItinerarySection({ destinationId, destination
       ) : null}
 
       <SuggestedItineraryContent key={selected.id} mode="destination" itinerary={selected} heading={multiple ? publicItineraryLabel(selected) : "A journey many travellers love"} eyebrow={multiple ? "Your selected starting journey" : destinationName} startingPointCopy={multiple ? undefined : SINGLE_COPY} routeTitle={publicItineraryLabel(selected)} />
+
+      {/* Family Comfort & Dietary Signals (PO-03) */}
+      {comfortSignals.length > 0 || visaInfo ? (
+        <div className={styles.comfortSection} data-testid="destination-comfort-signals">
+          <p className={styles.eyebrow}>Family Comfort & Travel Ease</p>
+          <div className={styles.comfortChips}>
+            {comfortSignals.map((signal) => (
+              <span key={signal.id} className={styles.comfortChip} title={signal.description}>
+                <span aria-hidden="true">{signal.icon}</span>
+                <span>{signal.label}</span>
+              </span>
+            ))}
+            {visaInfo ? (
+              <span className={styles.visaChip} title={visaInfo.advisoryNote}>
+                <span aria-hidden="true">🛂</span>
+                <span>{visaInfo.visaCategory} ({visaInfo.leadTimeDays === 0 ? "Instant" : `${visaInfo.leadTimeDays}d lead`})</span>
+              </span>
+            ) : null}
+          </div>
+        </div>
+      ) : null}
 
       {/* Pilot Region Circuits (V-01, V-05) */}
       {pilotCircuits.length > 0 ? (

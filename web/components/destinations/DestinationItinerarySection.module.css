@@ -171,6 +171,47 @@
   color: var(--journey-brown);
 }
 
+.comfortSection {
+  margin: 1.5rem clamp(1rem, 4vw, 3rem);
+  padding: 1.25rem;
+  border-radius: 1rem;
+  background: white;
+  border: 1px solid rgb(42 33 28 / 10%);
+}
+
+.comfortChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.75rem;
+}
+
+.comfortChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  background: #f7f3ee;
+  border: 1px solid rgb(42 33 28 / 12%);
+  color: var(--journey-brown);
+  font-size: 0.75rem;
+  font-weight: 650;
+}
+
+.visaChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  background: #fef5ea;
+  border: 1px solid rgb(245 149 28 / 30%);
+  color: #9c5c10;
+  font-size: 0.75rem;
+  font-weight: 650;
+}
+
 .companionsSection {
   margin: 2rem clamp(1rem, 4vw, 3rem);
 }

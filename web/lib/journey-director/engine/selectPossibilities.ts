@@ -2,6 +2,8 @@ import { PERSONALITY_THRESHOLDS } from "./engine.rules";
 import { getTripAnchorForDestination } from "../../../config/trip-anchors.config";
 import { getPilotCircuitsForDestination, getPilotRegionById } from "../intelligence/pilotCircuits";
 import { getCompanionDestinations } from "../catalogue/companionDestinations";
+import { getComfortSignalsForDestination } from "../../../config/comfort-signals.config";
+import { enrichFreeTextIntent } from "./enrichFreeTextIntent";
 import type {
   ConfidenceBand,
   DiversityAxis,
@@ -245,6 +247,7 @@ function qualifiesForPleasantSurprise(candidate: RankedCandidate) {
 function createPossibility(
   personality: RecommendationPersonality,
   selection: SelectionCandidate,
+  passport?: NormalizedJourneyPassport,
 ): EnginePossibility {
   const candidate = selection.ranked;
   const experiences = candidate.selectedRegion.region.themes
@@ -255,6 +258,8 @@ function createPossibility(
   const companionDestinations = getCompanionDestinations(candidate.candidate.id);
   const tripAnchor = getTripAnchorForDestination(candidate.candidate.id);
   const pilotRegion = getPilotRegionById(candidate.selectedRegion.region.id);
+  const comfortSignals = getComfortSignalsForDestination(candidate.candidate.id);
+  const enriched = passport ? enrichFreeTextIntent(passport.destinationIntent.rawText) : undefined;
 
   return {
     possibilityId: `${personality}:${candidate.candidate.id}:${candidate.selectedRegion.region.id}`,
@@ -280,6 +285,8 @@ function createPossibility(
     ...(circuits.length > 0 ? { pilotCircuits: circuits } : {}),
     ...(pilotRegion ? { pilotRegion } : {}),
     ...(companionDestinations.length > 0 ? { companionDestinations } : {}),
+    ...(comfortSignals.length > 0 ? { comfortSignals } : {}),
+    ...(enriched && enriched.hasEnrichment ? { enrichedIntent: enriched } : {}),
   };
 }
 
@@ -329,11 +336,15 @@ export function selectJourneyPossibilities(
 
   const selected: RankedCandidate[] = [perfectMatch];
   const possibilities: EnginePossibility[] = [
-    createPossibility("perfect-match", {
-      ranked: perfectMatch,
-      selectionValue: normalizedScore(perfectMatch.totalScore),
-      differentiators: [],
-    }),
+    createPossibility(
+      "perfect-match",
+      {
+        ranked: perfectMatch,
+        selectionValue: normalizedScore(perfectMatch.totalScore),
+        differentiators: [],
+      },
+      passport,
+    ),
   ];
 
   const rhythmPool = rankedCandidates.filter((candidate) => candidate.candidate.id !== perfectMatch.candidate.id);
@@ -356,7 +367,7 @@ export function selectJourneyPossibilities(
 
   if (rhythm) {
     selected.push(rhythm.ranked);
-    possibilities.push(createPossibility("different-rhythm", rhythm));
+    possibilities.push(createPossibility("different-rhythm", rhythm, passport));
   }
 
   const surprisePool = rankedCandidates.filter(
@@ -386,7 +397,7 @@ export function selectJourneyPossibilities(
 
   if (surprise) {
     selected.push(surprise.ranked);
-    possibilities.push(createPossibility("pleasant-surprise", surprise));
+    possibilities.push(createPossibility("pleasant-surprise", surprise, passport));
   }
 
   let internationalPolicy: {

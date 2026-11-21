@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Container from "@/components/layout/Container";
 import { getTripAnchorForDestination } from "@/config/trip-anchors.config";
+import { getComfortSignalsForDestination } from "@/config/comfort-signals.config";
 
 export type EditorialCardItem = {
   destinationId?: string;
@@ -26,6 +27,7 @@ export function EditorialCardGrid({ items, tone = "light", selectedId, onSelect,
       {items.map((item) => {
         const isSelected = Boolean(item.destinationId && selectedId === item.destinationId);
         const anchor = getTripAnchorForDestination(item.destinationId);
+        const comfortSignals = getComfortSignalsForDestination(item.destinationId);
         return (
           <article
             id={anchorFor(item.title)}
@@ -64,6 +66,15 @@ export function EditorialCardGrid({ items, tone = "light", selectedId, onSelect,
                   <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 ${dark ? "bg-white/10 text-white/80" : "bg-[#f4ebe1] text-[#6b4c28]"}`}>
                     <span aria-hidden="true">✨</span> {anchor.comfortTier}
                   </span>
+                </div>
+              ) : null}
+              {comfortSignals.length > 0 ? (
+                <div className="mt-2.5 flex flex-wrap items-center gap-1.5 text-[0.68rem] font-medium" data-testid="card-comfort-signals">
+                  {comfortSignals.slice(0, 2).map((sig) => (
+                    <span key={sig.id} className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 ${dark ? "bg-white/10 text-white/70" : "bg-[#f2efe9] text-[#5c4a38]"}`}>
+                      <span aria-hidden="true">{sig.icon}</span> {sig.shortTag}
+                    </span>
+                  ))}
                 </div>
               ) : null}
               <p className={`mt-4 text-[0.925rem] leading-7 ${dark ? "text-white/72" : "text-[#2A211C]"}`}>{item.copy}</p>
