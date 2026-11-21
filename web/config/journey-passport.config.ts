@@ -1,4 +1,8 @@
-import { hasNumericCharacter } from "../lib/journey-passport/traveller-name";
+import {
+  hasValidPassportDates,
+  isValidTravellerName,
+  isValidTravellerMobile,
+} from "../lib/journey-passport/validation-rules";
 import type { JourneyMoment, JourneyOption, JourneyPassportState } from "@/types/journey-passport.types";
 
 const journeyPassportImage = (group: "companions" | "dream-journeys" | "travel-styles" | "timing", name: string) =>
@@ -41,22 +45,10 @@ export const timingOptions: JourneyOption[] = [
   { value: "Exact Dates", label: "Exact Dates", description: "You already have a time in mind.", imageSrc: journeyPassportImage("timing", "exact-dates"), imageAlt: "Traveller confidently confirming a specific journey on a calendar and itinerary" },
 ];
 
-// EBC-R1.2-WS4-IMP-01 (DEC-R1.2-011): a name is valid only if it is also
-// free of numeric characters — both name inputs already sanitise on
-// change (sanitizeTravellerName), but this keeps the validator correct in
-// its own right rather than depending solely on upstream sanitisation.
-const hasValidName = (state: JourneyPassportState) => {
-  const name = state.name.trim();
-  return name.length >= 2 && name.length <= 80 && /\p{L}/u.test(name) && !hasNumericCharacter(name);
-};
-
-const localToday = () => {
-  const now = new Date();
-  const offset = now.getTimezoneOffset() * 60_000;
-  return new Date(now.getTime() - offset).toISOString().slice(0, 10);
-};
-
-const hasValidDates = (state: JourneyPassportState) => state.timing !== "Exact Dates" || Boolean(state.startDate && state.endDate && state.startDate >= localToday() && state.endDate > state.startDate);
+// Standardized Journey Passport validation (Release 1.4 — TD-05):
+// Delegates to canonical validation-rules.ts across moments and closure stages.
+const hasValidName = (state: JourneyPassportState) => isValidTravellerName(state.name);
+const hasValidDates = (state: JourneyPassportState) => hasValidPassportDates(state.timing, state.startDate, state.endDate);
 // EBC-R1.2-WS6-09 (Rad, Phase 4). Retired: the known/discovery gate this
 // validator enforced no longer exists — EBC-R1.2-WS6-08 Addendum 01 A2.1
 // (Product Owner) retires it, and Preferred Destinations / Describe Your

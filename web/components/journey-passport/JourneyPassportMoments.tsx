@@ -7,6 +7,7 @@ import { JOURNEY_ENTRY_ADVISORY } from "@/lib/journey-passport/entry-context";
 import { isGetawayDescriptionEmpty } from "@/lib/journey-passport/getaway-description";
 import { journeyPassportBlurPlaceholder } from "@/lib/journey-passport/image-blur-placeholders";
 import { sanitizeTravellerName } from "@/lib/journey-passport/traveller-name";
+import { getLocalToday, isValidTravellerName } from "@/lib/journey-passport/validation-rules";
 import type { JourneyMoment, JourneyPassportState } from "@/types/journey-passport.types";
 
 import { GetawayDescriptionField } from "./GetawayDescriptionField";
@@ -29,7 +30,7 @@ export function WelcomeMoment({ onBegin }: { onBegin: () => void }) {
 }
 
 export function AboutYouMoment({ headingRef, moment, name, onChange }: { headingRef: HeadingRef; moment: JourneyMoment; name: string; onChange: (value: string) => void }) {
-  const invalid = name.length > 0 && (name.trim().length < 2 || !/\p{L}/u.test(name));
+  const invalid = name.length > 0 && !isValidTravellerName(name);
   return <section className="pt-8"><MomentHeading headingRef={headingRef} moment={moment} /><div className="mx-auto mt-9 max-w-2xl rounded-[2rem] border border-[#e6d5bb] bg-white/85 p-6 shadow-[0_16px_40px_rgba(93,59,21,0.08)] sm:p-10"><label htmlFor="passport-name" className="block text-lg font-semibold text-[#2A211C]">What should we call you?</label><input id="passport-name" name="name" type="text" value={name} maxLength={80} onChange={(event) => onChange(sanitizeTravellerName(event.target.value))} autoComplete="name" aria-invalid={invalid || undefined} aria-describedby="passport-name-help" className="mt-5 min-h-14 w-full rounded-2xl border border-[#d8c4a7] bg-[#FFFDFC] px-5 text-lg text-[#2A211C] outline-none transition focus:border-[#2A211C] focus:ring-4 focus:ring-[#FFFDFC]" /><div id="passport-name-help" className="mt-4 flex flex-wrap justify-between gap-2 text-sm leading-6 text-[#2A211C]"><span>{invalid ? "Please share the name you’d like us to use." : "We’ll use your name to make every conversation feel personal."}</span><span aria-label={`${name.length} of 80 characters`}>{name.length}/80</span></div></div></section>;
 }
 
@@ -44,8 +45,7 @@ export function TravelStyleMoment({ headingRef, moment, values, onToggle }: { he
 }
 
 export function TimingMoment({ headingRef, moment, state, onUpdate }: { headingRef: HeadingRef; moment: JourneyMoment; state: JourneyPassportState; onUpdate: (value: Partial<JourneyPassportState>) => void }) {
-  const now = new Date();
-  const today = new Date(now.getTime() - now.getTimezoneOffset() * 60_000).toISOString().slice(0, 10);
+  const today = getLocalToday();
   const dateInvalid = state.timing === "Exact Dates" && Boolean((state.startDate && state.startDate < today) || (state.startDate && state.endDate && state.endDate <= state.startDate));
   return <section className="pt-8"><MomentHeading headingRef={headingRef} moment={moment} /><div role="radiogroup" aria-label="Travel timing" className="mx-auto mt-9 grid max-w-6xl gap-3.5 sm:grid-cols-2 lg:grid-cols-6">{(moment.options ?? []).map((option, index) => <SelectionCard key={option.value} option={option} compact className={index < 3 ? "lg:col-span-2" : "lg:col-span-3"} selected={state.timing === option.value} onSelect={() => onUpdate({ timing: option.value })} />)}</div>{state.timing === "I’m Flexible" ? <p role="status" className="mx-auto mt-6 max-w-3xl rounded-2xl bg-[#f8eddd] px-5 py-4 text-center text-sm text-[#2A211C]">Keeping your travel dates flexible gives us more possibilities to explore.</p> : null}{state.timing === "Exact Dates" ? <div className="journey-passport-reveal mx-auto mt-6 max-w-3xl rounded-[1.5rem] border border-[#e1ceb0] bg-[#FFFDFC] p-5 sm:p-6"><p className="mb-5 text-sm font-semibold text-[#2A211C]">Wonderful. Share the dates you already have in mind.</p><div className="grid gap-5 sm:grid-cols-2"><label className="text-sm font-semibold text-[#2A211C]">Departure date<input type="date" value={state.startDate} min={today} onChange={(event) => onUpdate({ startDate: event.target.value })} className="mt-2 min-h-12 w-full rounded-xl border border-[#d8c4a7] bg-white px-3 text-[#2A211C] focus:outline-2 focus:outline-offset-2 focus:outline-[#2A211C]" /></label><label className="text-sm font-semibold text-[#2A211C]">Return date<input type="date" value={state.endDate} min={state.startDate || today} aria-invalid={dateInvalid || undefined} aria-describedby={dateInvalid ? "date-range-error" : undefined} onChange={(event) => onUpdate({ endDate: event.target.value })} className="mt-2 min-h-12 w-full rounded-xl border border-[#d8c4a7] bg-white px-3 text-[#2A211C] focus:outline-2 focus:outline-offset-2 focus:outline-[#2A211C]" /></label></div>{dateInvalid ? <p id="date-range-error" className="mt-4 text-sm font-medium text-[#a1463c]">Your return should come after your departure.</p> : null}</div> : null}</section>;
 }
