@@ -7,6 +7,7 @@
 **Total Backlog Items:** 22 (13 High, 8 Medium, 1 Low)  
 **Approved Tracker Files:**  
 - `docs/10-Backlog/SMV_R1.4_Release_Plan.md`  
+- `docs/10-Backlog/SMV_Release_Lifecycle_and_Execution_SOP.md`  
 - `SMV_Release_Charter_Approved/SMV_R1.4_Release_Plan_APPROVED.xlsx`  
 - `SMV_Release_Charter_Approved/SMV_Master_Release_Charter_R1.3_to_R1.7_and_CRM_APPROVED.xlsx`
 

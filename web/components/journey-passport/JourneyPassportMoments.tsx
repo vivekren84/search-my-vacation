@@ -56,11 +56,25 @@ export function PaceAndTimingMoment({ headingRef, moment, state, showEntryAdviso
   const count = state.travelStyles.length;
   const dateInvalid = state.timing === "Exact Dates" && Boolean((state.startDate && state.startDate < today) || (state.startDate && state.endDate && state.endDate <= state.startDate));
 
+  // UX-04: Cross-step intent synchronization suggestions based on earlier companion & dream journey choices
+  const suggestedStyles = (state.companion === "Couple" || state.dreamJourney === "Tropical Escape")
+    ? ["Relaxation", "Food & Dining"]
+    : state.companion === "Family"
+    ? ["Culture & Heritage", "Relaxation"]
+    : (state.companion === "Friends" || state.dreamJourney === "Mountain Retreat")
+    ? ["Adventure", "Nature"]
+    : [];
+
   return <section className="pt-8"><MomentHeading headingRef={headingRef} moment={moment} />
     {showEntryAdvisory ? <p role="status" className="mx-auto mt-6 max-w-3xl rounded-2xl border border-[#e1ceb0] bg-[#f8eddd] px-5 py-4 text-center text-sm text-[#2A211C]">{JOURNEY_ENTRY_ADVISORY}</p> : null}
     <div className={`mx-auto max-w-5xl rounded-[2rem] border border-[#e6d5bb] bg-white/80 p-5 shadow-[0_16px_40px_rgba(93,59,21,0.07)] sm:p-8 ${showEntryAdvisory ? "mt-6" : "mt-9"}`}>
       <div className="flex flex-wrap items-end justify-between gap-2"><div><p className="text-xs font-bold uppercase tracking-[0.16em] text-[#2A211C]">First, choose your rhythm</p><h2 className="mt-2 text-xl font-semibold text-[#2A211C]">What memories would you love to bring back?</h2></div><p role="status" aria-live="polite" className="text-sm font-semibold text-[#2A211C]">{count} of 3 selected</p></div>
-      <div role="group" aria-label="Travel styles—choose up to three" className="mt-5 flex flex-wrap gap-2.5">{travelStyleOptions.map((option) => { const selected = state.travelStyles.includes(option.value); const unavailable = count === 3 && !selected; return <button key={option.value} type="button" aria-pressed={selected} disabled={unavailable} onClick={() => onToggle(option.value)} className={`min-h-11 rounded-full border px-4 py-2 text-sm font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2A211C] ${selected ? "border-[#F5951C] bg-[#F5951C] text-[#2A211C]" : "border-[#dcc8aa] bg-[#fffaf1] text-[#2A211C] hover:border-[#b9823f]"} disabled:cursor-not-allowed disabled:opacity-45`}><span aria-hidden="true" className="mr-1.5">{selected ? "✓" : "+"}</span>{option.label}</button>; })}</div>
+      {suggestedStyles.length > 0 && count === 0 ? (
+        <p className="mt-2 text-xs font-medium text-[#8a7258]">
+          💡 Suggested for your {state.companion ? `${state.companion.toLowerCase()} getaway` : "journey"}: {suggestedStyles.join(" · ")}
+        </p>
+      ) : null}
+      <div role="group" aria-label="Travel styles—choose up to three" className="mt-5 flex flex-wrap gap-2.5">{travelStyleOptions.map((option) => { const selected = state.travelStyles.includes(option.value); const isSuggested = suggestedStyles.includes(option.value); const unavailable = count === 3 && !selected; return <button key={option.value} type="button" aria-pressed={selected} disabled={unavailable} onClick={() => onToggle(option.value)} className={`min-h-11 rounded-full border px-4 py-2 text-sm font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2A211C] ${selected ? "border-[#F5951C] bg-[#F5951C] text-[#2A211C]" : isSuggested ? "border-[#d8be96] bg-[#fffcf7] text-[#2A211C] hover:border-[#b9823f]" : "border-[#dcc8aa] bg-[#fffaf1] text-[#2A211C] hover:border-[#b9823f]"} disabled:cursor-not-allowed disabled:opacity-45`}><span aria-hidden="true" className="mr-1.5">{selected ? "✓" : "+"}</span>{option.label}</button>; })}</div>
       <div className="my-7 h-px bg-[#eadcc7]" aria-hidden="true" />
       <div><p className="text-xs font-bold uppercase tracking-[0.16em] text-[#2A211C]">Then, choose your timing</p><h2 className="mt-2 text-xl font-semibold text-[#2A211C]">When would you love this journey to begin?</h2></div>
       <div role="radiogroup" aria-label="Travel timing" className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-6">{(moment.options ?? []).map((option, index) => <SelectionCard key={option.value} option={option} compact className={index < 3 ? "lg:col-span-2" : "lg:col-span-3"} selected={state.timing === option.value} onSelect={() => onUpdate({ timing: state.timing === option.value ? "" : option.value })} />)}</div>
@@ -81,7 +95,7 @@ export function PaceAndTimingMoment({ headingRef, moment, state, showEntryAdviso
 // resolved Preferred Destinations chip — see that file's comment for why.
 export function DestinationMoment({ headingRef, moment, state, onPreferredDestinationsChange, onGetawayDescriptionChange }: { headingRef: HeadingRef; moment: JourneyMoment; state: JourneyPassportState; onPreferredDestinationsChange: (value: SelectedDestination[]) => void; onGetawayDescriptionChange: (value: string) => void }) {
   const known = state.entryContext.destination;
-  return <section className="pt-8"><MomentHeading headingRef={headingRef} moment={moment} />{known ? <p className="mx-auto mt-6 max-w-3xl rounded-2xl bg-[#f8eddd] px-5 py-4 text-center text-sm text-[#2A211C]">We carried {known} forward from the destination you were exploring. Every choice remains yours to change.</p> : null}<PreferredDestinationsField value={state.preferredDestinations} onChange={onPreferredDestinationsChange} /><p className="mx-auto mt-6 max-w-2xl text-center text-sm font-semibold text-[#6e5a46]">Or, if it’s more of a feeling than a place yet —</p><GetawayDescriptionField value={state.getawayDescription} onChange={onGetawayDescriptionChange} /></section>;
+  return <section className="pt-8"><MomentHeading headingRef={headingRef} moment={moment} />{known ? <p className="mx-auto mt-6 max-w-3xl rounded-2xl bg-[#f8eddd] px-5 py-4 text-center text-sm text-[#2A211C]">We carried {known} forward from the destination you were exploring. Every choice remains yours to change.</p> : null}<PreferredDestinationsField value={state.preferredDestinations} onChange={onPreferredDestinationsChange} carriedForwardDestination={known} /><p className="mx-auto mt-6 max-w-2xl text-center text-sm font-semibold text-[#6e5a46]">Or, if it’s more of a feeling than a place yet —</p><GetawayDescriptionField value={state.getawayDescription} onChange={onGetawayDescriptionChange} /></section>;
 }
 
 const list = (values: string[]) => values.length < 2 ? (values[0] ?? "") : values.length === 2 ? `${values[0]} and ${values[1]}` : `${values.slice(0, -1).join(", ")}, and ${values.at(-1)}`;

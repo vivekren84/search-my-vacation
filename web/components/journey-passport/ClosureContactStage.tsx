@@ -3,6 +3,8 @@
 import type { FormEvent } from "react";
 
 import { sanitizeTravellerName } from "@/lib/journey-passport/validation-rules";
+import type { JourneyPassportState } from "@/types/journey-passport.types";
+import { JourneySynopsisTeaser } from "./JourneySynopsisTeaser";
 import { PreOtpTrustCard } from "./PreOtpTrustCard";
 
 export interface ClosureContactStageProps {
@@ -14,6 +16,7 @@ export interface ClosureContactStageProps {
   onMobileChange: (value: string) => void;
   onSubmit: (e: FormEvent<HTMLFormElement>) => void;
   onReviewPassport: () => void;
+  state?: Partial<JourneyPassportState>;
 }
 
 export function ClosureContactStage({
@@ -25,13 +28,18 @@ export function ClosureContactStage({
   onMobileChange,
   onSubmit,
   onReviewPassport,
+  state,
 }: ClosureContactStageProps) {
   return (
-    <form onSubmit={onSubmit} className="journey-passport-reveal mx-auto mt-7 max-w-md text-left" noValidate>
-      <h2 className="text-center text-xl font-semibold text-[#2A211C]">Keep your journey connected</h2>
-      <p className="mt-2 text-center text-sm leading-6 text-[#2A211C]">
-        Confirm your details so your Journey Director can keep this Passport connected to you.
-      </p>
+    <div className="mx-auto mt-6 max-w-xl text-left">
+      {/* PO-01 & UX-08: Interactive Journey Synopsis Preview & Teaser Mode */}
+      <JourneySynopsisTeaser state={state} className="mb-6" />
+
+      <form onSubmit={onSubmit} className="journey-passport-reveal mx-auto max-w-md text-left" noValidate>
+        <h2 className="text-center text-xl font-semibold text-[#2A211C]">Keep your journey connected</h2>
+        <p className="mt-2 text-center text-sm leading-6 text-[#2A211C]">
+          Confirm your details so your Journey Director can keep this Passport connected to you.
+        </p>
 
       <label htmlFor="issued-passport-name" className="mt-5 block text-sm font-semibold text-[#2A211C]">
         Name
@@ -89,5 +97,6 @@ export function ClosureContactStage({
         Review my Passport
       </button>
     </form>
+    </div>
   );
 }

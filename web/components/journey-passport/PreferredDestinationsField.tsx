@@ -46,6 +46,7 @@ type Props = {
   onChange: (next: SelectedDestination[]) => void;
   maxSelections?: number;
   className?: string;
+  carriedForwardDestination?: string;
 };
 
 const NO_MATCH_TEMPLATE = (query: string) =>
@@ -54,12 +55,19 @@ const UNAVAILABLE_MESSAGE =
   "We’re having trouble checking places right now. You can still describe your destination below, and we’ll pick this back up shortly.";
 const CAP_REACHED_MESSAGE = "That’s a wonderful list already — five is plenty for us to start exploring.";
 
-export function PreferredDestinationsField({ value, onChange, maxSelections = MAX_PREFERRED_DESTINATIONS, className = "" }: Props) {
+export function PreferredDestinationsField({
+  value,
+  onChange,
+  maxSelections = MAX_PREFERRED_DESTINATIONS,
+  className = "",
+  carriedForwardDestination = "",
+}: Props) {
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   const [justPulsedId, setJustPulsedId] = useState<string | null>(null);
   const [showCapMessage, setShowCapMessage] = useState(false);
+  const [isPendingDismissed, setIsPendingDismissed] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const pulseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -154,6 +162,51 @@ export function PreferredDestinationsField({ value, onChange, maxSelections = MA
       <p id={helpId} className="mt-2 text-sm leading-6 text-[#6e5a46]">
         Type a place, region or country — we’ll help you find it. Add as many as you’re considering.
       </p>
+
+      {/* UX-05: Interactive pending chip for carried-forward destinations */}
+      {carriedForwardDestination &&
+      !isPendingDismissed &&
+      !value.some((d) => d.canonicalName.toLowerCase() === carriedForwardDestination.toLowerCase()) ? (
+        <div
+          data-testid="carried-forward-pending-chip"
+          className="mt-3 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-[#e8c890] bg-[#fff9ed] p-3 text-sm"
+        >
+          <div className="flex items-center gap-2">
+            <span className="rounded-full bg-[#fcedd7] px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider text-[#ad762d]">
+              Suggested
+            </span>
+            <strong className="text-[#2A211C]">{carriedForwardDestination}</strong>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                const pendingResult: GeoSearchResult = {
+                  geoPlaceId: `carried-${carriedForwardDestination.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
+                  canonicalName: carriedForwardDestination,
+                  placeType: "region",
+                  countryCode: "IN",
+                  admin1Name: null,
+                  admin2Name: null,
+                  population: null,
+                  matchedAlias: null,
+                };
+                selectResult(pendingResult);
+              }}
+              className="min-h-11 rounded-full bg-[#F5951C] px-3.5 py-1.5 text-xs font-bold text-[#2A211C] hover:bg-[#e08512] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2A211C]"
+            >
+              Keep
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsPendingDismissed(true)}
+              className="min-h-11 rounded-full border border-[#d8c4a7] bg-white px-3 py-1.5 text-xs font-semibold text-[#6e5a46] hover:text-[#2A211C] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2A211C]"
+            >
+              Not quite
+            </button>
+          </div>
+        </div>
+      ) : null}
 
       <div className="relative mt-3">
         <input
