@@ -2,7 +2,9 @@
 
 **Release Theme:** Launch region-level intelligence, indicative Trip Anchors, family comfort signals, free-text enrichment, a modular polished Journey Passport, and site-wide ambient soundscape.  
 **Total Backlog Items:** 22  
-**Status:** Approved (Baseline)
+**Status:** **100% Complete & Verified (22/22 Items Closed — 0 Open Items)**  
+**Trunk Status:** All 4 Milestones merged cleanly into `release/r1.4` (Commit `12504fa`)  
+**Automated Verification:** 974 / 974 checks passing across all 8 suites  
 
 ---
 
@@ -10,35 +12,36 @@
 
 - **Priority Mix:** High: 13 | Medium: 8 | Low: 1
 - **Source Mix:** Existing Backlog: 18 | New PO / Website Gap Additions: 4
+- **Execution Progress:** 22 Completed / 0 Open (100% Complete)
 
 ---
 
 ## 2. Release Backlog Matrix
 
-| ID | Area / Phase | Requirement Title | Disposition | Priority | PO Approval Status | PO Notes |
+| ID | Area / Phase | Requirement Title | Disposition | Priority | Delivery Milestone | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **HP-05** | Atmospheric design | Site-Wide Ambient Soundscape & Mute/Unmute Architecture | New (PO) | High | Approved (Baseline) | World-Class PO Enhancement (Upgrade from R1.3 HP-04) |
-| **P-08** | Destination intelligence | Weighted destination model runtime & recommendation phases | Keep | High | Approved (Baseline) | Existing Backlog (Moved from R1.3) |
-| **V-01** | Destination intelligence | Region-level destination intelligence (Pilot Circuits) | Keep | High | Approved (Baseline) | Existing Backlog (Rescoped Pilot) |
-| **V-03** | Destination intelligence | Companion Destinations | Keep | Medium | Approved (Baseline) | Existing Backlog (Moved from R1.3) |
-| **V-05** | Destination intelligence | Regional journey recommendations | Keep | Medium | Approved (Baseline) | Existing Backlog (Moved from R1.3) |
-| **P-05** | Recommendations / AI | Free-text intent & theme enrichment (absorbs AI-01 & AI-02) | Keep | Medium | Approved (Baseline) | Existing Backlog (Consolidated P-05 + AI-01 + AI-02) |
-| **V-06** | Discovery experience | Traveller Inspiration & Seasonal Discovery (absorbs AI-03) | Keep | Medium | Approved (Baseline) | Existing Backlog (Consolidated V-06 + AI-03) |
-| **PO-02** | Discovery / Positioning | Consultative 'Trip Anchors' on Destination & Inspiration Cards | New (PO) | High | Approved (Baseline) | World-Class PO Enhancement |
-| **PO-03** | Discovery / Positioning | Family & Multi-Generational 'Traveller Needs & Comfort Signals' | New (PO) | High | Approved (Baseline) | World-Class PO Enhancement |
-| **PO-01** | Conversion / Trust | Interactive 'Journey Synopsis' Preview & Teaser Mode | New (PO) | High | Approved (Baseline) | World-Class PO Enhancement |
-| **TD-01** | Engineering quality | Journey Passport modularization | Keep | High | Approved (Baseline) | Existing Backlog (Moved from R1.6) |
-| **TD-02** | Engineering quality | Automated Passport and OTP regression suite | Keep | High | Approved (Baseline) | Existing Backlog (Moved from R1.6) |
-| **TD-03** | Engineering quality | Centralize mobile number normalization & canonical docs (absorbs TD-06) | Keep | Medium | Approved (Baseline) | Existing Backlog (Consolidated TD-03 + TD-06) |
-| **TD-04** | Operations / OTP | Improve OTP provider error classification | Keep | Medium | Approved (Baseline) | Existing Backlog (Moved from R1.6) |
-| **TD-05** | Engineering quality | Standardize Journey Passport validation rules | Keep | Medium | Approved (Baseline) | Existing Backlog (Moved from R1.6) |
-| **UX-04** | Passport experience | Cross-step intent synchronization | Keep | High | Approved (Baseline) | Existing Backlog |
-| **UX-05** | Passport experience | Pending suggestion chip for carried-forward destinations | Keep | High | Approved (Baseline) | Existing Backlog |
-| **UX-06** | Passport experience | Auto-growing getaway-description field | Keep | High | Approved (Baseline) | Existing Backlog |
-| **UX-07** | Passport experience | Near-limit character counter | Keep | High | Approved (Baseline) | Existing Backlog |
-| **UX-08** | Passport completion | Passport stamp timing vs OTP activation | Keep | High | Approved (Baseline) | Existing Backlog |
-| **UX-09** | Passport experience | Companion card selection styling | Keep | Low | Approved (Baseline) | Existing Backlog |
-| **P-06** | Design system | Design token reconciliation | Keep | Medium | Approved (Baseline) | Existing Backlog |
+| **HP-05** | Atmospheric design | Site-Wide Ambient Soundscape & Mute/Unmute Architecture | New (PO) | High | Milestone 1 | **Completed & Verified** |
+| **P-08** | Destination intelligence | Weighted destination model runtime & recommendation phases | Keep | High | Milestone 2 | **Completed & Verified** |
+| **V-01** | Destination intelligence | Region-level destination intelligence (Pilot Circuits) | Keep | High | Milestone 2 | **Completed & Verified** |
+| **V-03** | Destination intelligence | Companion Destinations | Keep | Medium | Milestone 2 | **Completed & Verified** |
+| **V-05** | Destination intelligence | Regional journey recommendations | Keep | Medium | Milestone 2 | **Completed & Verified** |
+| **P-05** | Recommendations / AI | Free-text intent & theme enrichment (absorbs AI-01 & AI-02) | Keep | Medium | Milestone 3 | **Completed & Verified** |
+| **V-06** | Discovery experience | Traveller Inspiration & Seasonal Discovery (absorbs AI-03) | Keep | Medium | Milestone 3 | **Completed & Verified** |
+| **PO-02** | Discovery / Positioning | Consultative 'Trip Anchors' on Destination & Inspiration Cards | New (PO) | High | Milestone 2 | **Completed & Verified** |
+| **PO-03** | Discovery / Positioning | Family & Multi-Generational 'Traveller Needs & Comfort Signals' | New (PO) | High | Milestone 3 | **Completed & Verified** |
+| **PO-01** | Conversion / Trust | Interactive 'Journey Synopsis' Preview & Teaser Mode | New (PO) | High | Milestone 4 | **Completed & Verified** |
+| **TD-01** | Engineering quality | Journey Passport modularization | Keep | High | Milestone 1 | **Completed & Verified** |
+| **TD-02** | Engineering quality | Automated Passport and OTP regression suite | Keep | High | Milestone 4 | **Completed & Verified** |
+| **TD-03** | Engineering quality | Centralize mobile number normalization & canonical docs (absorbs TD-06) | Keep | Medium | Milestone 1 | **Completed & Verified** |
+| **TD-04** | Operations / OTP | Improve OTP provider error classification | Keep | Medium | Milestone 3 | **Completed & Verified** |
+| **TD-05** | Engineering quality | Standardize Journey Passport validation rules | Keep | Medium | Milestone 1 | **Completed & Verified** |
+| **UX-04** | Passport experience | Cross-step intent synchronization | Keep | High | Milestone 4 | **Completed & Verified** |
+| **UX-05** | Passport experience | Pending suggestion chip for carried-forward destinations | Keep | High | Milestone 4 | **Completed & Verified** |
+| **UX-06** | Passport experience | Auto-growing getaway-description field | Keep | High | Milestone 4 | **Completed & Verified** |
+| **UX-07** | Passport experience | Near-limit character counter | Keep | High | Milestone 4 | **Completed & Verified** |
+| **UX-08** | Passport completion | Passport stamp timing vs OTP activation | Keep | High | Milestone 4 | **Completed & Verified** |
+| **UX-09** | Passport experience | Companion card selection styling | Keep | Low | Milestone 4 | **Completed & Verified** |
+| **P-06** | Design system | Design token reconciliation | Keep | Medium | Milestone 1 | **Completed & Verified** |
 
 ---
 
