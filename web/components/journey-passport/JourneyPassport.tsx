@@ -339,6 +339,7 @@ export default function JourneyPassport() {
                   onMobileChange={(mobile) => update({ mobile })}
                   onSubmit={handleDetailsSubmit}
                   onReviewPassport={reviewPassport}
+                  state={passport.state}
                 />
               ) : (
                 <ClosureOtpStage

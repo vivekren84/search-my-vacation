@@ -30,7 +30,7 @@
 // instruction that both destination fields share "the same card treatment,
 // same label typography, same spacing rhythm."
 
-import { useId } from "react";
+import { useEffect, useId, useRef } from "react";
 
 import { GETAWAY_DESCRIPTION_MAX_LENGTH, sanitizeGetawayDescription } from "@/lib/journey-passport/getaway-description";
 
@@ -55,9 +55,28 @@ const HELPER_TEXT =
 const PLACEHOLDER_TEXT =
   "e.g. An island that feels forgotten by time • Mountains that vanish into morning cloud • Snow settling quietly over lantern-lit streets • A place where the sea meets the mountains";
 
+// Character counter activation threshold (Release 1.4 — UX-07)
+const COUNTER_THRESHOLD = 400;
+
 export function GetawayDescriptionField({ value, onChange, maxLength = GETAWAY_DESCRIPTION_MAX_LENGTH, className = "" }: Props) {
   const fieldId = useId();
   const helpId = useId();
+  const counterId = useId();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // UX-06: Auto-grow textarea up to ~8 rows before scrolling smoothly without layout jump
+  useEffect(() => {
+    const el = textareaRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    const minHeight = 96; // ~3-4 rows
+    const maxHeight = 224; // ~8 rows
+    const nextHeight = Math.min(Math.max(el.scrollHeight, minHeight), maxHeight);
+    el.style.height = `${nextHeight}px`;
+    el.style.overflowY = el.scrollHeight > maxHeight ? "auto" : "hidden";
+  }, [value]);
+
+  const showCounter = value.length >= COUNTER_THRESHOLD;
 
   return (
     <div className={className || "mx-auto mt-6 max-w-2xl rounded-[1.5rem] border border-[#e1ceb0] bg-white/85 p-5 sm:p-6"}>
@@ -80,26 +99,34 @@ export function GetawayDescriptionField({ value, onChange, maxLength = GETAWAY_D
         (EBC-R1.2-WS6-03 Addendum 01 §2) and requiring no new mechanism.
       */}
       {/*
-        EBC-R1.2-WS6-09 (Rad, Phase 7 -- Accessibility & Interaction
-        Validation). SS5.3/SS9 of EBC-R1.2-WS6-05 specify four visible rows on
-        desktop, three on mobile, so the field invites writing without
-        pushing Continue an uncomfortable distance down the page on a small
-        screen. rows={3} is the semantic/mobile-safe HTML default; the
-        already-approved desktop min-h-28 (Phase 3) now only applies from
-        the sm: breakpoint up, with a smaller mobile-only min-h-24 added
-        alongside it -- the desktop value itself is unchanged.
+        EBC-R1.2-WS6-09 & Release 1.4 (UX-06 auto-grow & UX-07 near-limit counter).
       */}
       <textarea
+        ref={textareaRef}
         id={fieldId}
         name="getaway-description"
         rows={3}
         value={value}
         onChange={(event) => onChange(sanitizeGetawayDescription(event.target.value))}
         maxLength={maxLength}
-        aria-describedby={helpId}
+        aria-describedby={showCounter ? `${helpId} ${counterId}` : helpId}
         placeholder={PLACEHOLDER_TEXT}
-        className="mt-3 min-h-24 w-full resize-y rounded-xl border border-[#d8c4a7] bg-[#FFFDFC] px-4 py-3 text-base text-[#2A211C] placeholder:text-[#6e5a46]/70 focus:outline-2 focus:outline-offset-2 focus:outline-[#2A211C] sm:min-h-28"
+        className="mt-3 min-h-24 w-full rounded-xl border border-[#d8c4a7] bg-[#FFFDFC] px-4 py-3 text-base text-[#2A211C] placeholder:text-[#6e5a46]/70 transition-[height] duration-150 ease-out focus:outline-2 focus:outline-offset-2 focus:outline-[#2A211C] sm:min-h-28"
       />
+
+      {/* UX-07: Near-limit accessible character counter */}
+      {showCounter ? (
+        <div className="mt-2 flex items-center justify-end">
+          <p
+            id={counterId}
+            role="status"
+            aria-live="polite"
+            className="text-xs font-medium text-[#8a7258]"
+          >
+            {value.length} / {maxLength} characters
+          </p>
+        </div>
+      ) : null}
     </div>
   );
 }
