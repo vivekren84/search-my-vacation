@@ -5,6 +5,9 @@ import { useEffect, useMemo, useState } from "react";
 
 import { SuggestedItineraryContent, SuggestedItineraryFallback } from "@/components/journey-director/SuggestedItinerarySection";
 import { getItinerariesForDestination, publicItineraryLabel, resolveDestinationItinerarySelection } from "@/lib/journey-itineraries";
+import { getTripAnchorForDestination } from "@/config/trip-anchors.config";
+import { getPilotCircuitsForDestination } from "@/lib/journey-director/intelligence/pilotCircuits";
+import { getCompanionDestinations } from "@/lib/journey-director/catalogue/companionDestinations";
 
 import styles from "./DestinationItinerarySection.module.css";
 
@@ -17,6 +20,10 @@ export default function DestinationItinerarySection({ destinationId, destination
   const [selection, setSelection] = useState(() => resolveDestinationItinerarySelection({ previous: undefined, destinationId, lookup, itineraries }));
   const selected = itineraries.find((itinerary) => itinerary.id === selection.itineraryId) ?? itineraries[0];
   const multiple = itineraries.length > 1;
+
+  const tripAnchor = useMemo(() => getTripAnchorForDestination(destinationId), [destinationId]);
+  const pilotCircuits = useMemo(() => getPilotCircuitsForDestination(destinationId), [destinationId]);
+  const companionDestinations = useMemo(() => getCompanionDestinations(destinationId), [destinationId]);
 
   useEffect(() => {
     if (!selected && process.env.NODE_ENV !== "production") console.warn("No governed public destination itinerary mapping was found.", { destinationId, destinationName });
@@ -38,6 +45,26 @@ export default function DestinationItinerarySection({ destinationId, destination
 
   return (
     <div className={styles.shell} data-destination-itinerary-count={itineraries.length}>
+      {/* Consultative Trip Anchors Banner (PO-02) */}
+      <div className={styles.anchorBanner} data-testid="destination-trip-anchors">
+        <div className={styles.anchorItem}>
+          <span className={styles.anchorLabel}>Typical Duration</span>
+          <span className={styles.anchorValue}>{tripAnchor.duration}</span>
+        </div>
+        <div className={styles.anchorItem}>
+          <span className={styles.anchorLabel}>Best Season</span>
+          <span className={styles.anchorValue}>{tripAnchor.bestMonths}</span>
+        </div>
+        <div className={styles.anchorItem}>
+          <span className={styles.anchorLabel}>Journey Pace</span>
+          <span className={styles.anchorValue}>{tripAnchor.pace}</span>
+        </div>
+        <div className={styles.anchorItem}>
+          <span className={styles.anchorLabel}>Comfort Tier</span>
+          <span className={styles.anchorValue}>{tripAnchor.comfortTier}</span>
+        </div>
+      </div>
+
       {multiple ? (
         <div className={styles.selectorHeader}>
           <p className={styles.eyebrow}>Thoughtful ways to begin</p>
@@ -55,7 +82,42 @@ export default function DestinationItinerarySection({ destinationId, destination
           <p className={styles.announcement} aria-live="polite">Showing {publicItineraryLabel(selected)}</p>
         </div>
       ) : null}
+
       <SuggestedItineraryContent key={selected.id} mode="destination" itinerary={selected} heading={multiple ? publicItineraryLabel(selected) : "A journey many travellers love"} eyebrow={multiple ? "Your selected starting journey" : destinationName} startingPointCopy={multiple ? undefined : SINGLE_COPY} routeTitle={publicItineraryLabel(selected)} />
+
+      {/* Pilot Region Circuits (V-01, V-05) */}
+      {pilotCircuits.length > 0 ? (
+        <div className={styles.circuitsSection} data-testid="destination-pilot-circuits">
+          <p className={styles.eyebrow}>Regional Intelligence & Circuit</p>
+          <h3 className={styles.circuitTitle}>{pilotCircuits[0].title}</h3>
+          <p className={styles.circuitOverview}>{pilotCircuits[0].overview}</p>
+          <div className={styles.circuitMeta}>
+            <span><strong>Typical Journey:</strong> {pilotCircuits[0].typicalDays}</span>
+            <span><strong>Best Window:</strong> {pilotCircuits[0].bestSeason}</span>
+            <span><strong>Rhythm:</strong> {pilotCircuits[0].pace}</span>
+          </div>
+        </div>
+      ) : null}
+
+      {/* Companion Destinations (V-03) */}
+      {companionDestinations.length > 0 ? (
+        <div className={styles.companionsSection} data-testid="destination-companion-pairings">
+          <p className={styles.eyebrow}>Natural Journey Pairings</p>
+          <h3 className={styles.companionsHeading}>Complementary Destinations to Pair with {destinationName}</h3>
+          <div className={styles.companionsGrid}>
+            {companionDestinations.map((comp) => (
+              <div key={comp.destinationId} className={styles.companionCard}>
+                <div className={styles.companionHeader}>
+                  <h4 className={styles.companionTitle}>{comp.title}</h4>
+                  <span className={styles.companionRelationship}>{comp.relationship}</span>
+                </div>
+                <p className={styles.companionRationale}>{comp.rationale}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : null}
+
       <PlanningCta destinationId={destinationId} />
     </div>
   );

@@ -1,4 +1,7 @@
 import type { JourneyFeeling } from "../../../types/journey-passport.types";
+import type { TripAnchorMetadata } from "../../../config/trip-anchors.config";
+import type { PilotCircuit, PilotRegion } from "../intelligence/pilotCircuits";
+import type { CompanionDestination } from "../catalogue/companionDestinations";
 import type { JourneyPassportSnapshot } from "../../../types/journey-director";
 
 export const DECISION_ENGINE_VERSION = "1.0.0" as const;
@@ -460,6 +463,10 @@ export type EnginePossibility = {
   experienceHighlights: readonly string[];
   recommendedTravelStyle: string;
   recommendedSeason?: string;
+  tripAnchor?: TripAnchorMetadata;
+  pilotCircuits?: readonly PilotCircuit[];
+  pilotRegion?: PilotRegion;
+  companionDestinations?: readonly CompanionDestination[];
 };
 
 export type EngineDestinationResolution =

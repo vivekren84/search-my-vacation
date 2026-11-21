@@ -1,4 +1,7 @@
 import { PERSONALITY_THRESHOLDS } from "./engine.rules";
+import { getTripAnchorForDestination } from "../../../config/trip-anchors.config";
+import { getPilotCircuitsForDestination, getPilotRegionById } from "../intelligence/pilotCircuits";
+import { getCompanionDestinations } from "../catalogue/companionDestinations";
 import type {
   ConfidenceBand,
   DiversityAxis,
@@ -248,6 +251,11 @@ function createPossibility(
     .slice(0, 3)
     .map(titleCase);
 
+  const circuits = getPilotCircuitsForDestination(candidate.candidate.id);
+  const companionDestinations = getCompanionDestinations(candidate.candidate.id);
+  const tripAnchor = getTripAnchorForDestination(candidate.candidate.id);
+  const pilotRegion = getPilotRegionById(candidate.selectedRegion.region.id);
+
   return {
     possibilityId: `${personality}:${candidate.candidate.id}:${candidate.selectedRegion.region.id}`,
     personality,
@@ -268,6 +276,10 @@ function createPossibility(
       experiences.length > 0 ? experiences : ["A journey shaped around your story"],
     recommendedTravelStyle: travelStyle(candidate),
     recommendedSeason: recommendedSeason(candidate),
+    tripAnchor,
+    ...(circuits.length > 0 ? { pilotCircuits: circuits } : {}),
+    ...(pilotRegion ? { pilotRegion } : {}),
+    ...(companionDestinations.length > 0 ? { companionDestinations } : {}),
   };
 }
 
