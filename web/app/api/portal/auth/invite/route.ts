@@ -19,19 +19,21 @@ export async function POST(request: Request) {
     const phoneCleaned = phoneE164.trim();
     const pass = temporaryPassword || "TemporaryDefaultPass#2026";
 
-    // Register into active staff directory
+    // Register into active server staff directory
     AUTHORIZED_STAFF_ACCOUNTS[emailCleaned] = {
       fullName: fullName.trim(),
       email: emailCleaned,
       phoneE164: phoneCleaned,
       role: role || "desk_user",
       requiresPasswordChange: true,
+      password: pass,
+      status: "Pending First Login",
+      invitedAt: new Date().toISOString().split("T")[0],
     };
 
     let emailSent = false;
-    let smsSent = false;
 
-    // 1. Dispatch real invitation email via Resend
+    // 1. Dispatch real invitation email via Resend (NO OTP, Welcome & Credentials Only)
     const resendApiKey = process.env.RESEND_API_KEY;
     const fromEmail = process.env.JOURNEY_LEAD_FROM_EMAIL || "bookings@searchmyvacation.com";
 
@@ -65,8 +67,11 @@ export async function POST(request: Request) {
                     You have been provisioned as a <strong>${(role || "desk_user").replace("_", " ")}</strong> in the Search My Vacation Staff Advisor Portal.
                   </p>
                   <div style="background-color: #1F1713; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; margin: 0 0 24px;">
-                    <p style="font-size: 11px; text-transform: uppercase; tracking: 1px; color: rgba(255,255,255,0.5); margin: 0 0 8px;">
-                      Your Temporary Login Credentials:
+                    <p style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.5); margin: 0 0 8px;">
+                      Your Login Credentials:
+                    </p>
+                    <p style="font-size: 13px; margin: 0 0 6px;">
+                      <strong>Login URL:</strong> <a href="https://www.searchmyvacation.com/portal/login" style="color: #F5951C;">https://www.searchmyvacation.com/portal/login</a>
                     </p>
                     <p style="font-size: 13px; margin: 0 0 6px;">
                       <strong>Email:</strong> <span style="color: #F5951C;">${emailCleaned}</span>
@@ -106,46 +111,41 @@ export async function POST(request: Request) {
       }
     }
 
-    // 2. Dispatch SMS notification via MSG91
-    const smsApiKey = process.env.SMS_PROVIDER_API_KEY;
-    const senderId = process.env.SMS_PROVIDER_SENDER_ID;
-    const templateId = process.env.SMS_PROVIDER_TEMPLATE_ID;
-
-    if (smsApiKey && senderId && templateId && phoneCleaned) {
-      try {
-        const mobileDigits = phoneCleaned.replace(/^\+/, "").replace(/[\s\-()]/g, "");
-        const smsRes = await fetch("https://control.msg91.com/api/v5/otp", {
-          method: "POST",
-          headers: {
-            authkey: smsApiKey,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            mobile: mobileDigits,
-            sender: senderId,
-            template_id: templateId,
-            otp: "123456",
-            otp_expiry: 60,
-          }),
-        });
-        if (smsRes.ok) {
-          smsSent = true;
-        }
-      } catch (smsErr) {
-        console.error("Invite SMS error:", smsErr);
-      }
-    }
+    // Note: Per PO directive, do NOT trigger OTP on invitation. Mobile notification is pure advisory.
 
     return NextResponse.json({
       ok: true,
       emailSent,
-      smsSent,
       message: `Invitation successfully dispatched to ${emailCleaned}. Account provisioned as ${(role || "desk_user").replace("_", " ")}.`,
     });
   } catch (err: any) {
     console.error("Staff invite error:", err);
     return NextResponse.json(
       { ok: false, message: "Failed to dispatch invitation. Please try again." },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const body = await request.json();
+    const { email } = body;
+
+    if (!email) {
+      return NextResponse.json({ ok: false, message: "Email is required." }, { status: 400 });
+    }
+
+    const emailCleaned = email.trim().toLowerCase();
+    delete AUTHORIZED_STAFF_ACCOUNTS[emailCleaned];
+
+    return NextResponse.json({
+      ok: true,
+      message: `Staff account ${emailCleaned} removed from directory.`,
+    });
+  } catch (err: any) {
+    return NextResponse.json(
+      { ok: false, message: "Failed to remove staff account." },
       { status: 500 }
     );
   }

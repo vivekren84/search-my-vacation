@@ -50,6 +50,7 @@ export default function PortalLoginPage() {
 
   // Forced Password Change state for invitees
   const [showPasswordChangeModal, setShowPasswordChangeModal] = useState(false);
+  const [pendingAccount, setPendingAccount] = useState<{ fullName: string; email: string; role: string; phoneE164?: string } | null>(null);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordChangeError, setPasswordChangeError] = useState<string | null>(null);
@@ -197,37 +198,75 @@ export default function PortalLoginPage() {
   }
 
   // Handle Password Sign In
-  function handlePasswordSignIn(e: React.FormEvent) {
+  async function handlePasswordSignIn(e: React.FormEvent) {
     e.preventDefault();
     setErrorMessage(null);
 
-    if (!identifier.trim()) {
+    const idCleaned = identifier.trim();
+    const passCleaned = password.trim();
+
+    if (!idCleaned) {
       setErrorMessage("Please enter your email or registered mobile number.");
       return;
     }
 
-    const staff = findStaffAccount(identifier);
-    if (!staff) {
-      // EXACT PO MANDATED MESSAGE
-      setErrorMessage("Account not recognized. Traveller accounts opening soon");
-      return;
-    }
-
-    if (!password.trim()) {
+    if (!passCleaned) {
       setErrorMessage("Please enter your password.");
       return;
     }
 
     setIsLoading(true);
-    setTimeout(() => {
+
+    try {
+      const res = await fetch("/api/portal/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          identifier: idCleaned,
+          password: passCleaned,
+        }),
+      });
+
+      const data = await res.json();
       setIsLoading(false);
-      // Check if this invitee requires a forced password change
-      if (staff.requiresPasswordChange || password === "TemporaryDefaultPass#2026") {
+
+      if (!res.ok || !data.ok) {
+        setErrorMessage(data.message || "Account not recognized. Traveller accounts opening soon");
+        return;
+      }
+
+      setPendingAccount(data.staff);
+
+      if (data.requiresPasswordChange) {
         setShowPasswordChangeModal(true);
         return;
       }
 
       // Successful password sign in
+      localStorage.setItem(
+        "smv_staff_session",
+        JSON.stringify({
+          fullName: data.staff.fullName,
+          email: data.staff.email,
+          role: data.staff.role,
+          loggedInAt: new Date().toISOString(),
+        })
+      );
+      router.push("/portal/dashboard");
+    } catch {
+      // Offline fallback
+      setIsLoading(false);
+      const staff = findStaffAccount(idCleaned);
+      if (!staff) {
+        setErrorMessage("Account not recognized. Traveller accounts opening soon");
+        return;
+      }
+      setPendingAccount(staff);
+      if (staff.requiresPasswordChange || passCleaned === "TemporaryDefaultPass#2026") {
+        setShowPasswordChangeModal(true);
+        return;
+      }
+
       localStorage.setItem(
         "smv_staff_session",
         JSON.stringify({
@@ -238,11 +277,11 @@ export default function PortalLoginPage() {
         })
       );
       router.push("/portal/dashboard");
-    }, 600);
+    }
   }
 
   // Handle Forced Password Change
-  function handleCompletePasswordChange(e: React.FormEvent) {
+  async function handleCompletePasswordChange(e: React.FormEvent) {
     e.preventDefault();
     setPasswordChangeError(null);
 
@@ -259,19 +298,39 @@ export default function PortalLoginPage() {
       return;
     }
 
-    const staff = findStaffAccount(identifier);
-    if (staff) {
-      staff.requiresPasswordChange = false;
-      localStorage.setItem(
-        "smv_staff_session",
-        JSON.stringify({
-          fullName: staff.fullName,
-          email: staff.email,
-          role: staff.role,
-          loggedInAt: new Date().toISOString(),
-        })
-      );
+    const targetAccount = pendingAccount || findStaffAccount(identifier);
+    if (!targetAccount) {
+      setPasswordChangeError("Session context missing. Please re-enter your credentials.");
+      return;
     }
+
+    try {
+      const res = await fetch("/api/portal/auth/password/update", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: targetAccount.email,
+          newPassword: newPassword,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        setPasswordChangeError(data.message || "Failed to update password.");
+        return;
+      }
+    } catch {
+      // Offline fallback
+    }
+
+    localStorage.setItem(
+      "smv_staff_session",
+      JSON.stringify({
+        fullName: targetAccount.fullName,
+        email: targetAccount.email,
+        role: targetAccount.role,
+        loggedInAt: new Date().toISOString(),
+      })
+    );
 
     setShowPasswordChangeModal(false);
     router.push("/portal/dashboard");

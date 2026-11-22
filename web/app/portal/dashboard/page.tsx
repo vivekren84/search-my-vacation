@@ -109,10 +109,12 @@ export default function PortalDashboardPage() {
   const [inviteRole, setInviteRole] = useState<"administrator" | "privilege_user" | "desk_user">("desk_user");
   const [inviteError, setInviteError] = useState<string | null>(null);
   const [inviteSuccess, setInviteSuccess] = useState<string | null>(null);
+  const [directoryNotice, setDirectoryNotice] = useState<string | null>(null);
   const [copiedPass, setCopiedPass] = useState(false);
 
   // Claude Itinerary & PDF Generator Studio State
   const [showClaudeModal, setShowClaudeModal] = useState(false);
+  const [claudeProjectUrl, setClaudeProjectUrl] = useState("https://claude.ai");
   const [claudeInputText, setClaudeInputText] = useState("");
   const [claudeImportSuccess, setClaudeImportSuccess] = useState<string | null>(null);
   const [copiedPrompt, setCopiedPrompt] = useState(false);
@@ -152,15 +154,31 @@ export default function PortalDashboardPage() {
       router.replace("/portal/login");
     }
 
-    // Load custom invited staff if any
+    // Load persisted Claude Project URL if set
+    try {
+      const savedClaudeUrl = localStorage.getItem("smv_claude_project_url");
+      if (savedClaudeUrl) setClaudeProjectUrl(savedClaudeUrl);
+    } catch {}
+
+    // Load custom invited staff if any and purge explicit deleted test accounts
     try {
       const stored = localStorage.getItem("smv_invited_staff");
       if (stored) {
-        const customInvites = JSON.parse(stored);
+        let customInvites = JSON.parse(stored);
         if (Array.isArray(customInvites) && customInvites.length > 0) {
+          const purgedEmails = [
+            "renganathanthyagarajan@gmail.com",
+            "speeddevil.vicky@gmail.com",
+          ];
+          const activeCustomInvites = customInvites.filter(
+            (c: any) => c && c.email && !purgedEmails.includes(c.email.toLowerCase().trim())
+          );
+          if (activeCustomInvites.length !== customInvites.length) {
+            localStorage.setItem("smv_invited_staff", JSON.stringify(activeCustomInvites));
+          }
           setTeamMembers((prev) => {
             const combined = [...prev];
-            for (const c of customInvites) {
+            for (const c of activeCustomInvites) {
               if (!combined.some((m) => m.email.toLowerCase() === c.email.toLowerCase())) {
                 combined.push({
                   fullName: c.fullName,
@@ -323,10 +341,82 @@ export default function PortalDashboardPage() {
     } catch {}
 
     setTeamMembers((prev) => [...prev, newMember]);
-    setInviteSuccess(`Invitation successfully dispatched via email to ${newMember.email} and SMS to ${newMember.phoneE164}. Account provisioned as ${newMember.role.replace("_", " ")}.`);
+    setInviteSuccess(`Invitation successfully dispatched via email to ${newMember.email}. Login credentials and temporary password sent. (No mobile OTP required).`);
     setInviteName("");
     setInviteEmail("");
     setInvitePhone("+91 ");
+  }
+
+  // Revoke Staff Account Handler
+  async function handleRevokeMember(emailToRevoke: string) {
+    if (!confirm(`Are you sure you want to revoke the invite for ${emailToRevoke}?`)) {
+      return;
+    }
+
+    const emailCleaned = emailToRevoke.toLowerCase().trim();
+
+    // 1. Remove from state
+    setTeamMembers((prev) => prev.filter((m) => m.email.toLowerCase() !== emailCleaned));
+
+    // 2. Remove from localStorage
+    try {
+      const stored = localStorage.getItem("smv_invited_staff");
+      if (stored) {
+        const list = JSON.parse(stored);
+        const updated = list.filter((item: any) => item.email.toLowerCase() !== emailCleaned);
+        localStorage.setItem("smv_invited_staff", JSON.stringify(updated));
+      }
+    } catch {}
+
+    // 3. Call server DELETE endpoint
+    try {
+      await fetch("/api/portal/auth/invite", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: emailCleaned }),
+      });
+    } catch {}
+
+    setDirectoryNotice(`Staff account for ${emailCleaned} revoked and removed.`);
+    setTimeout(() => setDirectoryNotice(null), 4000);
+  }
+
+  // Launch Claude Project Pop-Up & Copy Brief
+  function handleLaunchClaudePopup() {
+    const prompt = `Search My Vacation — Bespoke Itinerary & Proposal Request
+
+1. LOCATION / DESTINATION:
+${claudeBriefLocation || "Kashmir Autumn Circuit (Srinagar, Gulmarg, Pahalgam)"}
+
+2. TRIP DURATION:
+${claudeBriefDuration || "8 Days / 7 Nights (Oct 10 - Oct 17, 2026)"}
+
+3. SPECIAL ASKS & TRAVEL CONSTRAINTS:
+${claudeBriefAsks || "- Pure Vegetarian Dining Focus\n- Family Comfort & Slow-Travel Pacing (Child age 7)\n- Interconnecting boutique heritage suites\n- Scenic chauffeured transfers with buffer times\n- Budget target: ₹3,80,000 - ₹4,00,000 INR"}
+
+4. ATTACHMENTS & ASSETS:
+${attachedFiles.length > 0 ? attachedFiles.map((f) => `- ${f.name} (${f.size})`).join("\n") : "- Flight confirmation: AI-825 (DEL to SXR)\n- Client preference dossier: Ananya Sharma Family"}
+
+OUTPUT FORMAT:
+Please produce the 18-20 page bespoke travel itinerary and formatted proposal PDF structure according to Search My Vacation guidelines:
+- Elegant day titles with morning, afternoon, and evening pacing
+- Selected boutique and heritage accommodations
+- Unsplash image tags for each day using your integrated Unsplash API key
+- Line-item commercial pricing (Net cost, 18% agency margin, estimated GST)
+- Zero hyperbolic marketing cliches.`;
+
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
+      navigator.clipboard.writeText(prompt);
+    }
+    setCopiedPrompt(true);
+    setTimeout(() => setCopiedPrompt(false), 3000);
+
+    const targetUrl = claudeProjectUrl.trim() || "https://claude.ai";
+    window.open(
+      targetUrl,
+      "SMVClaudeProjectPopup",
+      "width=1200,height=850,top=60,left=100,resizable=yes,scrollbars=yes"
+    );
   }
 
   // Copy Claude Prompt Handler
@@ -603,22 +693,22 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
               </div>
               <div className="flex items-center gap-2">
                 <button
-                  onClick={handleCopyClaudePrompt}
-                  className="rounded-xl border border-[#F5951C]/40 bg-[#F5951C]/10 px-3.5 py-1.5 text-xs font-semibold text-[#F5951C] hover:bg-[#F5951C]/20 transition flex items-center gap-1.5"
-                  title="Copy client briefing prompt for Claude Project"
+                  onClick={handleLaunchClaudePopup}
+                  className="rounded-xl bg-[#F5951C] px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-[#2A211C] hover:bg-[#e08515] transition flex items-center gap-1.5 shadow-md"
+                  title="Copy client brief and open your Claude Project in pop-up window ($0.00 extra cost)"
                 >
-                  <span>📋</span>
-                  <span>{copiedPrompt ? "Prompt Copied! ✓" : "Copy Brief for Claude"}</span>
+                  <span>🚀</span>
+                  <span>{copiedPrompt ? "Copied! Launching..." : "Launch Claude Pop-Up"}</span>
                 </button>
                 <button
                   onClick={() => {
                     setShowClaudeModal(true);
                     setClaudeImportSuccess(null);
                   }}
-                  className="rounded-xl bg-[#F5951C] px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-[#2A211C] hover:bg-[#e08515] transition flex items-center gap-1.5"
+                  className="rounded-xl border border-white/20 bg-white/5 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/10 transition flex items-center gap-1.5"
                 >
-                  <span>🤖</span>
-                  <span>Import from Claude</span>
+                  <span>⚙️</span>
+                  <span>Studio & Sync</span>
                 </button>
               </div>
             </div>
@@ -634,16 +724,23 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     <div className="flex items-center gap-2">
                       <h3 className="text-sm font-bold text-white">Claude Project Integration Bridge</h3>
                       <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-semibold">
-                        Ready to Sync
+                        Zero API Cost Pop-Up Active
                       </span>
                     </div>
                     <p className="text-xs text-white/60">
-                      Generate day-by-day itineraries using your custom Claude project prompt and sync them directly with Search My Vacation.
+                      Copy your client brief directly into your custom Claude project to generate 18-20 page proposal PDFs with Unsplash visuals at $0.00 added cost.
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2 text-xs">
+                  <button
+                    onClick={handleLaunchClaudePopup}
+                    className="px-3 py-1.5 rounded-lg bg-[#F5951C] text-[#2A211C] font-bold text-xs uppercase tracking-wider hover:bg-[#e08515] transition flex items-center gap-1.5"
+                  >
+                    <span>🚀</span>
+                    <span>Launch Pop-Up</span>
+                  </button>
                   <button
                     onClick={() => {
                       setShowClaudeModal(true);
@@ -651,7 +748,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     }}
                     className="px-3 py-1.5 rounded-lg border border-white/20 text-white/80 hover:text-white hover:border-[#F5951C] transition"
                   >
-                    View Claude Sample Output
+                    View Sample Output
                   </button>
                 </div>
               </div>
@@ -782,6 +879,13 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                 </span>
               </div>
 
+              {directoryNotice && (
+                <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs flex justify-between items-center">
+                  <span>✓ {directoryNotice}</span>
+                  <button onClick={() => setDirectoryNotice(null)} className="text-white/40 hover:text-white">✕</button>
+                </div>
+              )}
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
                 {teamMembers.map((member, idx) => (
                   <div key={idx} className="p-3.5 rounded-xl bg-[#2A211C] border border-white/5 flex flex-col justify-between space-y-2">
@@ -811,9 +915,21 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
 
                     <div className="pt-2 border-t border-white/5 flex justify-between items-center text-[10px]">
                       <span className="text-white/40">Provisioned: {member.invitedAt}</span>
-                      <span className={member.status === "Active" ? "text-emerald-400 font-semibold" : "text-amber-400 font-semibold"}>
-                        ● {member.status}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className={member.status === "Active" ? "text-emerald-400 font-semibold" : "text-amber-400 font-semibold"}>
+                          ● {member.status}
+                        </span>
+                        {member.role !== "super_admin" && (
+                          <button
+                            type="button"
+                            onClick={() => handleRevokeMember(member.email)}
+                            className="px-2 py-0.5 rounded bg-red-500/10 hover:bg-red-500/20 text-red-300 border border-red-500/30 text-[10px] font-semibold transition"
+                            title={`Revoke invitation for ${member.email}`}
+                          >
+                            Revoke
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -1093,6 +1209,31 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
               </div>
             ) : (
               <div className="space-y-4 text-xs">
+                {/* 0. Claude Project URL Configuration */}
+                <div className="p-3.5 rounded-xl bg-[#2A211C] border border-[#F5951C]/30 space-y-2">
+                  <div className="flex justify-between items-center">
+                    <label className="text-white font-bold text-xs flex items-center gap-1.5">
+                      <span>🔗</span> Your Custom Claude Project URL:
+                    </label>
+                    <span className="text-[10px] text-emerald-400 font-mono">Zero API Surcharge ($0.00)</span>
+                  </div>
+                  <input
+                    type="url"
+                    value={claudeProjectUrl}
+                    onChange={(e) => {
+                      setClaudeProjectUrl(e.target.value);
+                      try {
+                        localStorage.setItem("smv_claude_project_url", e.target.value);
+                      } catch {}
+                    }}
+                    placeholder="e.g. https://claude.ai/project/... or https://claude.ai"
+                    className="w-full rounded-xl bg-black/40 border border-white/15 px-3 py-2 text-white text-xs font-mono focus:border-[#F5951C] focus:outline-none"
+                  />
+                  <p className="text-[10px] text-white/50">
+                    Enter the URL of your existing Claude project. Clicking &quot;Launch Pop-Up&quot; will copy your client dossier and open this exact Claude project in a dedicated window.
+                  </p>
+                </div>
+
                 {/* Brief Inputs matching Vivek's Claude Project settings */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
@@ -1164,16 +1305,29 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   </div>
                 </div>
 
-                {/* Action Bar */}
-                <div className="p-3 rounded-xl bg-[#2A211C] border border-white/10 flex items-center justify-between">
-                  <span className="text-[11px] text-white/60">Ready to feed into your Claude project:</span>
-                  <button
-                    onClick={handleCopyClaudePrompt}
-                    className="px-3.5 py-1.5 rounded-lg bg-[#F5951C]/20 border border-[#F5951C]/40 text-[#F5951C] font-semibold hover:bg-[#F5951C]/30 transition flex items-center gap-1.5"
-                  >
-                    <span>📋</span>
-                    <span>{copiedPrompt ? "Prompt Copied! ✓" : "Copy Brief for Claude"}</span>
-                  </button>
+                {/* Action Bar: Copy Prompt & Launch Pop-Up */}
+                <div className="p-3 rounded-xl bg-gradient-to-r from-[#2A211C] to-[#1F1713] border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-2">
+                  <span className="text-[11px] text-white/70">
+                    {copiedPrompt ? "✓ Client dossier copied to clipboard!" : "Copy briefing dossier & launch in dedicated pop-up:"}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={handleCopyClaudePrompt}
+                      className="px-3 py-1.5 rounded-lg bg-white/10 text-white font-semibold hover:bg-white/20 transition flex items-center gap-1.5 text-xs"
+                    >
+                      <span>📋</span>
+                      <span>{copiedPrompt ? "Copied! ✓" : "Copy Brief"}</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleLaunchClaudePopup}
+                      className="px-4 py-1.5 rounded-lg bg-[#F5951C] text-[#2A211C] font-bold uppercase tracking-wider hover:bg-[#e08515] transition flex items-center gap-1.5 text-xs shadow-md"
+                    >
+                      <span>🚀</span>
+                      <span>Launch Pop-Up</span>
+                    </button>
+                  </div>
                 </div>
 
                 {/* Import / Paste Claude Output */}

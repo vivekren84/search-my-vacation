@@ -1,33 +1,7 @@
 import { NextResponse } from "next/server";
-import { AUTHORIZED_STAFF_ACCOUNTS, portalOtpStore } from "../store";
+import { AUTHORIZED_STAFF_ACCOUNTS, portalOtpStore, findStaffByEmailOrPhone } from "../store";
 
 export const runtime = "nodejs";
-
-function findStaff(identifier: string) {
-  const cleaned = identifier.trim().toLowerCase();
-  const digits = identifier.replace(/\D/g, "");
-
-  if (AUTHORIZED_STAFF_ACCOUNTS[cleaned]) {
-    return AUTHORIZED_STAFF_ACCOUNTS[cleaned];
-  }
-
-  for (const account of Object.values(AUTHORIZED_STAFF_ACCOUNTS)) {
-    if (account.email.toLowerCase() === cleaned) {
-      return account;
-    }
-    const accDigits = account.phoneE164.replace(/\D/g, "");
-    if (digits.length >= 10 && accDigits.length >= 10) {
-      if (accDigits.slice(-10) === digits.slice(-10)) {
-        return account;
-      }
-    }
-    if (accDigits && accDigits === digits) {
-      return account;
-    }
-  }
-
-  return null;
-}
 
 export async function POST(request: Request) {
   try {
@@ -41,7 +15,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const staff = findStaff(identifier);
+    const staff = findStaffByEmailOrPhone(identifier);
     if (!staff) {
       return NextResponse.json(
         { ok: false, message: "Account not recognized. Traveller accounts opening soon" },

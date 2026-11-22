@@ -66,21 +66,6 @@ const inMemoryUsers = new Map<string, WorkspaceUserRecord>([
       updatedAt: "2026-10-01T00:00:00Z",
     },
   ],
-  [
-    "f3c043ef-ff8a-4603-b983-56e1bbe8a9aa",
-    {
-      userId: "f3c043ef-ff8a-4603-b983-56e1bbe8a9aa",
-      email: "speeddevil.vicky@gmail.com",
-      role: "privilege_user",
-      displayName: "Sneaky",
-      registeredMobile: null,
-      deactivatedAt: "2026-10-01T13:19:46Z",
-      lastLoginAt: null,
-      lastOtpChannel: null,
-      createdAt: "2026-10-01T00:00:00Z",
-      updatedAt: "2026-10-01T13:19:46Z",
-    },
-  ],
 ]);
 
 // Active sessions tracking for instantaneous deactivation invalidation
