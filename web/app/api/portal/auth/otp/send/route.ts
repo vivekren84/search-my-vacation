@@ -35,9 +35,6 @@ export async function POST(request: Request) {
         { status: 403 }
       );
     }
-        { status: 404 }
-      );
-    }
 
     // Generate cryptographic 6-digit OTP
     const code = Math.floor(100000 + Math.random() * 900000).toString();

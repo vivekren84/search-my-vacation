@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { AUTHORIZED_STAFF_ACCOUNTS } from "../otp/store";
+import { AUTHORIZED_STAFF_ACCOUNTS } from "../../otp/store";
 
 export const runtime = "nodejs";
 
