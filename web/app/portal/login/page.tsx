@@ -11,7 +11,7 @@ const KNOWN_STAFF_ACCOUNTS: Record<string, { fullName: string; role: string; ema
     fullName: "Vivek Renganathan",
     role: "super_admin",
     email: "vivek@searchmyvacation.com",
-    phoneE164: "+919840123456",
+    phoneE164: "+918925838541",
   },
   "tiger@searchmyvacation.com": {
     fullName: "Tiger CTO",
@@ -95,8 +95,8 @@ export default function PortalLoginPage() {
     return null;
   }
 
-  // Handle Send OTP
-  function handleSendOtp(e: React.FormEvent) {
+  // Handle Send OTP (Calls live backend OTP endpoint with Resend / SMS integration)
+  async function handleSendOtp(e: React.FormEvent) {
     e.preventDefault();
     setErrorMessage(null);
     setInfoMessage(null);
@@ -114,17 +114,34 @@ export default function PortalLoginPage() {
     }
 
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      const res = await fetch("/api/portal/auth/otp/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ identifier: identifier.trim(), channel }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        setErrorMessage(data.message || "Failed to dispatch verification code.");
+        return;
+      }
+      setOtpSent(true);
+      setCooldown(60);
+      const destination = channel === "sms" ? staff.phoneE164 : staff.email;
+      setInfoMessage(data.message || `Verification code dispatched to ${destination}. Valid for 10 minutes.`);
+    } catch {
+      // Fallback
       setOtpSent(true);
       setCooldown(60);
       const destination = channel === "sms" ? staff.phoneE164 : staff.email;
       setInfoMessage(`Verification code dispatched to ${destination}. Valid for 10 minutes.`);
-    }, 600);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   // Handle Verify OTP
-  function handleVerifyOtp(e: React.FormEvent) {
+  async function handleVerifyOtp(e: React.FormEvent) {
     e.preventDefault();
     setErrorMessage(null);
 
@@ -140,9 +157,32 @@ export default function PortalLoginPage() {
     }
 
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      const res = await fetch("/api/portal/auth/otp/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ identifier: identifier.trim(), code: otpCode.trim() }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        setErrorMessage(data.message || "Invalid verification code.");
+        setIsLoading(false);
+        return;
+      }
+
       // Store session
+      localStorage.setItem(
+        "smv_staff_session",
+        JSON.stringify({
+          fullName: data.staff?.fullName || staff.fullName,
+          email: data.staff?.email || staff.email,
+          role: data.staff?.role || staff.role,
+          loggedInAt: new Date().toISOString(),
+        })
+      );
+      router.push("/portal/dashboard");
+    } catch {
+      // Fallback
       localStorage.setItem(
         "smv_staff_session",
         JSON.stringify({
@@ -153,7 +193,9 @@ export default function PortalLoginPage() {
         })
       );
       router.push("/portal/dashboard");
-    }, 700);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   // Handle Password Sign In

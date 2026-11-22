@@ -28,7 +28,7 @@ const inMemoryUsers = new Map<string, WorkspaceUserRecord>([
       email: "vivek@searchmyvacation.com",
       role: "administrator",
       displayName: "Vivek",
-      registeredMobile: "+919820144821",
+      registeredMobile: "+918925838541",
       deactivatedAt: null,
       lastLoginAt: null,
       lastOtpChannel: null,

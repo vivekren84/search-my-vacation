@@ -25,7 +25,7 @@ const DEFAULT_TEAM_MEMBERS: TeamMember[] = [
   {
     fullName: "Vivek Renganathan",
     email: "vivek@searchmyvacation.com",
-    phoneE164: "+91 98401 23456",
+    phoneE164: "+91 89258 38541",
     role: "super_admin",
     status: "Active",
     invitedAt: "2026-11-01",
@@ -111,12 +111,23 @@ export default function PortalDashboardPage() {
   const [inviteSuccess, setInviteSuccess] = useState<string | null>(null);
   const [copiedPass, setCopiedPass] = useState(false);
 
-  // Claude Itinerary Bridge State
+  // Claude Itinerary & PDF Generator Studio State
   const [showClaudeModal, setShowClaudeModal] = useState(false);
   const [claudeInputText, setClaudeInputText] = useState("");
   const [claudeImportSuccess, setClaudeImportSuccess] = useState<string | null>(null);
   const [copiedPrompt, setCopiedPrompt] = useState(false);
   const [itineraryUpdatedFromClaude, setItineraryUpdatedFromClaude] = useState(false);
+  const [claudeBriefLocation, setClaudeBriefLocation] = useState("Kashmir Autumn Circuit (Srinagar, Gulmarg, Pahalgam)");
+  const [claudeBriefDuration, setClaudeBriefDuration] = useState("8 Days / 7 Nights (Oct 10 - Oct 17, 2026)");
+  const [claudeBriefAsks, setClaudeBriefAsks] = useState(
+    "Pure vegetarian dining, family comfort pace for 7yo child, interconnecting boutique suites, scenic private mountain transfers, budget target: ₹3.8L - ₹4.0L"
+  );
+  const [attachedFiles, setAttachedFiles] = useState<{ name: string; size: string }[]>([
+    { name: "Client_Discovery_Notes_Ananya.pdf", size: "240 KB" },
+    { name: "Flight_Schedule_DEL_SXR.pdf", size: "115 KB" },
+  ]);
+  const [pdfGenerating, setPdfGenerating] = useState(false);
+  const [pdfReadyUrl, setPdfReadyUrl] = useState<string | null>(null);
 
   // Concierge Intelligence Radar state (US-018)
   const [radarMinimized, setRadarMinimized] = useState(false);
@@ -299,23 +310,26 @@ export default function PortalDashboardPage() {
 
   // Copy Claude Prompt Handler
   function handleCopyClaudePrompt() {
-    const prompt = `Search My Vacation — Bespoke Itinerary Generation Request
+    const prompt = `Search My Vacation — Bespoke Itinerary & Proposal Request
 
-CLIENT DOSSIER:
-- Primary Client: Ananya Sharma (Bengaluru, India)
-- Destination: Kashmir Circuit (Srinagar, Gulmarg, Pahalgam)
-- Trip Duration: 8 Days / 7 Nights (Autumn Circuit: Oct 10 - Oct 17, 2026)
-- Companions: 2 (Spouse Rohan Sharma, Child Aarav Sharma age 7)
-- Key Travel Preferences: Family Comfort, Slow Travel, Pure Vegetarian Cuisine Focus
-- Special Requirements: Interconnecting suites, child-friendly walking pace, low-altitude acclimatization, scenic mountain transfers
-- Commercial Budget Target: ₹3,80,000 - ₹4,00,000 INR
+1. LOCATION / DESTINATION:
+${claudeBriefLocation || "Kashmir Autumn Circuit (Srinagar, Gulmarg, Pahalgam)"}
 
-OUTPUT REQUIREMENTS:
-1. Day-by-Day schedule (Day 1 through Day 8) with morning, afternoon, and evening pacing.
-2. Vetted boutique & heritage accommodations with child-safe amenities.
-3. Realistic driving & transfer buffers between Srinagar, Gulmarg, and Pahalgam.
-4. Suggested authentic vegetarian culinary experiences.
-5. Zero occurrence of hyperbolic marketing buzzwords or cliches.`;
+2. TRIP DURATION:
+${claudeBriefDuration || "8 Days / 7 Nights (Oct 10 - Oct 17, 2026)"}
+
+3. SPECIAL ASKS & TRAVEL CONSTRAINTS:
+${claudeBriefAsks || "- Pure Vegetarian Dining Focus\n- Family Comfort & Slow-Travel Pacing (Child age 7)\n- Interconnecting boutique heritage suites\n- Scenic chauffeured transfers with buffer times\n- Budget target: ₹3,80,000 - ₹4,00,000 INR"}
+
+4. ATTACHMENTS & ASSETS:
+${attachedFiles.length > 0 ? attachedFiles.map((f) => `- ${f.name} (${f.size})`).join("\n") : "- Flight confirmation: AI-825 (DEL to SXR)\n- Client preference dossier: Ananya Sharma Family"}
+
+OUTPUT FORMAT:
+Please produce the day-by-day travel itinerary and formatted proposal PDF structure according to Search My Vacation guidelines:
+- Elegant day titles with morning, afternoon, and evening pacing
+- Selected boutique and heritage accommodations
+- Line-item commercial pricing (Net cost, 18% agency margin, estimated GST)
+- Zero hyperbolic marketing cliches.`;
 
     navigator.clipboard.writeText(prompt);
     setCopiedPrompt(true);
@@ -995,7 +1009,7 @@ OUTPUT REQUIREMENTS:
       )}
 
       {/* ========================================================================= */}
-      {/* MODAL 2: CLAUDE AI ITINERARY IMPORTER MODAL */}
+      {/* MODAL 2: CLAUDE AI ITINERARY & PROPOSAL PDF STUDIO */}
       {/* ========================================================================= */}
       {showClaudeModal && (
         <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
@@ -1003,10 +1017,10 @@ OUTPUT REQUIREMENTS:
             <div className="flex justify-between items-start mb-4">
               <div>
                 <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                  <span>🤖</span> Claude AI Itinerary Importer
+                  <span>🤖</span> Claude Project Itinerary & PDF Studio
                 </h3>
                 <p className="text-xs text-white/60">
-                  Paste the output generated by your Claude project to populate the SMV itinerary engine
+                  Connect your custom Claude project to generate and export client proposal PDFs
                 </p>
               </div>
               <button
@@ -1021,42 +1035,132 @@ OUTPUT REQUIREMENTS:
               <div className="space-y-4">
                 <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs">
                   <p className="font-bold flex items-center gap-2 mb-1">
-                    <span>✓</span> Itinerary Imported Successfully!
+                    <span>✓</span> Itinerary & Proposal Synchronized!
                   </p>
                   <p>{claudeImportSuccess}</p>
                 </div>
-                <div className="flex justify-end">
+
+                <div className="p-4 rounded-xl bg-[#2A211C] border border-white/10 space-y-3 text-xs">
+                  <div className="flex justify-between items-center">
+                    <span className="font-bold text-white">Proposal PDF Ready for Download:</span>
+                    <span className="text-emerald-400 font-mono text-[11px]">Format: Official Client PDF</span>
+                  </div>
+                  <div className="p-3 bg-black/40 rounded-lg flex justify-between items-center">
+                    <div>
+                      <p className="font-bold text-[#F5951C]">8-Day_Kashmir_Serenity_Circuit_Proposal_v1.0.pdf</p>
+                      <p className="text-[10px] text-white/50">Includes Day-by-Day schedule, boutique stays, pure-veg dining & GST pricing</p>
+                    </div>
+                    <button
+                      onClick={() => window.print()}
+                      className="px-3 py-1.5 rounded-lg bg-[#F5951C] text-[#2A211C] font-bold text-xs uppercase tracking-wider hover:bg-[#e08515]"
+                    >
+                      Download PDF
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex justify-end gap-3">
                   <button
                     onClick={() => {
                       setShowClaudeModal(false);
                       setClaudeImportSuccess(null);
                     }}
-                    className="px-4 py-2 rounded-xl bg-[#F5951C] text-[#2A211C] text-xs font-bold uppercase tracking-wider hover:bg-[#e08515]"
+                    className="px-4 py-2 rounded-xl bg-white/10 text-white text-xs font-bold uppercase tracking-wider hover:bg-white/20"
                   >
-                    View Updated Itinerary
+                    Close
                   </button>
                 </div>
               </div>
             ) : (
               <div className="space-y-4 text-xs">
-                <div className="p-3 rounded-xl bg-[#2A211C] border border-white/10 flex items-center justify-between">
+                {/* Brief Inputs matching Vivek's Claude Project settings */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <p className="font-semibold text-white">Target Client: Ananya Sharma</p>
-                    <p className="text-[11px] text-white/50">8-Day Kashmir Autumn Serenity Circuit</p>
+                    <label className="block text-white/70 font-semibold mb-1">
+                      1. Destination / Location <span className="text-[#F5951C]">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={claudeBriefLocation}
+                      onChange={(e) => setClaudeBriefLocation(e.target.value)}
+                      className="w-full rounded-xl bg-[#2A211C] border border-white/10 px-3 py-2 text-white text-xs focus:border-[#F5951C] focus:outline-none"
+                    />
                   </div>
-                  <button
-                    onClick={handleCopyClaudePrompt}
-                    className="px-3 py-1.5 rounded-lg border border-[#F5951C]/40 text-[#F5951C] hover:bg-[#F5951C]/10 transition flex items-center gap-1.5"
-                  >
-                    <span>📋</span>
-                    <span>{copiedPrompt ? "Prompt Copied! ✓" : "Copy Briefing Prompt"}</span>
-                  </button>
+                  <div>
+                    <label className="block text-white/70 font-semibold mb-1">
+                      2. Trip Duration <span className="text-[#F5951C]">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={claudeBriefDuration}
+                      onChange={(e) => setClaudeBriefDuration(e.target.value)}
+                      className="w-full rounded-xl bg-[#2A211C] border border-white/10 px-3 py-2 text-white text-xs focus:border-[#F5951C] focus:outline-none"
+                    />
+                  </div>
                 </div>
 
                 <div>
+                  <label className="block text-white/70 font-semibold mb-1">
+                    3. Special Asks & Client Constraints <span className="text-[#F5951C]">*</span>
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={claudeBriefAsks}
+                    onChange={(e) => setClaudeBriefAsks(e.target.value)}
+                    className="w-full rounded-xl bg-[#2A211C] border border-white/10 p-2.5 text-white text-xs focus:border-[#F5951C] focus:outline-none"
+                  />
+                </div>
+
+                {/* Attachments Section */}
+                <div>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="text-white/70 font-semibold">
+                      4. Linked Attachments & Reference Documents:
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const newName = prompt("Enter attachment file name (e.g. Flight_Voucher.pdf):", "Guest_Custom_Notes.pdf");
+                        if (newName) {
+                          setAttachedFiles((prev) => [...prev, { name: newName, size: "180 KB" }]);
+                        }
+                      }}
+                      className="text-[11px] text-[#F5951C] hover:underline"
+                    >
+                      + Add File Attachment
+                    </button>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {attachedFiles.map((file, idx) => (
+                      <span
+                        key={idx}
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#2A211C] border border-white/10 text-[11px] text-white/80"
+                      >
+                        <span>📎</span>
+                        <span>{file.name}</span>
+                        <span className="text-white/40 font-mono">({file.size})</span>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Action Bar */}
+                <div className="p-3 rounded-xl bg-[#2A211C] border border-white/10 flex items-center justify-between">
+                  <span className="text-[11px] text-white/60">Ready to feed into your Claude project:</span>
+                  <button
+                    onClick={handleCopyClaudePrompt}
+                    className="px-3.5 py-1.5 rounded-lg bg-[#F5951C]/20 border border-[#F5951C]/40 text-[#F5951C] font-semibold hover:bg-[#F5951C]/30 transition flex items-center gap-1.5"
+                  >
+                    <span>📋</span>
+                    <span>{copiedPrompt ? "Prompt Copied! ✓" : "Copy Brief for Claude"}</span>
+                  </button>
+                </div>
+
+                {/* Import / Paste Claude Output */}
+                <div>
                   <div className="flex justify-between items-center mb-1.5">
                     <label className="text-white/70 font-semibold">
-                      Paste Claude Project Output:
+                      5. Paste Claude Project Output (Markdown or JSON):
                     </label>
                     <button
                       onClick={() => setClaudeInputText(SAMPLE_CLAUDE_ITINERARY)}
@@ -1066,22 +1170,22 @@ OUTPUT REQUIREMENTS:
                     </button>
                   </div>
                   <textarea
-                    rows={8}
+                    rows={6}
                     value={claudeInputText}
                     onChange={(e) => setClaudeInputText(e.target.value)}
-                    placeholder="Paste the itinerary text or JSON response from your Claude project here..."
+                    placeholder="Paste the output generated by your Claude project here..."
                     className="w-full rounded-xl bg-[#2A211C] border border-white/10 p-3 text-white placeholder-white/30 font-mono text-[11px] focus:border-[#F5951C] focus:outline-none"
                   />
                 </div>
 
                 <div className="p-3.5 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-200 space-y-1.5">
                   <p className="font-semibold flex items-center gap-1.5">
-                    <span>💡</span> Recommended 3-Step Workflow:
+                    <span>💡</span> How your Claude Project Integrates:
                   </p>
                   <p className="text-[11px] text-blue-200/80">
-                    1. Click <strong>Copy Briefing Prompt</strong> above and paste it into your Claude project.<br />
-                    2. Let Claude produce your bespoke itinerary.<br />
-                    3. Paste Claude&apos;s output into the box above and click <strong>Parse & Populate</strong> — SMV instantly structures the schedule and updates proposal exports.
+                    1. <strong>Copy Brief:</strong> SMV bundles Location, Duration, Special Asks & Attachments.<br />
+                    2. <strong>Claude Generation:</strong> Paste into your Claude project — Claude outputs your itinerary and PDF structure.<br />
+                    3. <strong>Parse & Export:</strong> Paste Claude&apos;s output above and click <strong>Parse & Generate PDF</strong> — SMV archives the proposal and prepares your client PDF!
                   </p>
                 </div>
 
@@ -1098,7 +1202,7 @@ OUTPUT REQUIREMENTS:
                     onClick={handleParseClaudeInput}
                     className="px-4 py-2 rounded-xl bg-[#F5951C] text-[#2A211C] font-bold uppercase tracking-wider hover:bg-[#e08515] transition"
                   >
-                    Parse & Populate Itinerary
+                    Parse & Generate PDF
                   </button>
                 </div>
               </div>
