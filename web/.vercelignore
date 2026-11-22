@@ -1,0 +1,6 @@
+data/
+data/**
+.next/
+node_modules/
+.git/
+*.log

@@ -37,6 +37,10 @@ yarn-error.log*
 # vercel
 .vercel
 
+# local import datasets
+data/
+data/geonames/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

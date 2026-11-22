@@ -64,3 +64,5 @@ supabase/supabase/.temp/
 # contain large tarballs, stale build caches and other non-source cruft
 # that must never be committed to repository history.
 _to_delete/
+.vercel
+.env*
