@@ -111,7 +111,31 @@ supabase migration up --project-ref jbsefolhlfkplawiuvlu
 
 ---
 
-## 5. Instant Rollback Contingency Procedure
+## 5. Live Production Verification Evidence (Post-Deployment Smoke Test)
+
+Executed and verified live across production domains (`searchmyvacation.com` / `www.searchmyvacation.com`):
+
+### A. Navigation & Entry Point Verification
+* **Header Sign In & Sign Up:** Verified live in desktop navigation, mobile hamburger drawer, and public footer.
+* **Disabled Sign Up Button:** Rendered with `opacity-50 cursor-not-allowed` and hover tooltip `"Coming Soon"`.
+* **Primary Conversion CTA:** `"Plan My Experience"` persists prominently and links to `/journey-passport`.
+
+### B. Route Health & Decoupling (200 OK)
+* `https://www.searchmyvacation.com/` — **200 OK** (HTML includes `Sign In`, `Sign Up`, `Coming Soon`)
+* `https://www.searchmyvacation.com/portal/login` — **200 OK** (Interactive Sign In page rendered)
+* `https://www.searchmyvacation.com/portal/dashboard` — **200 OK** (Staff Workspace & Concierge Radar)
+* `https://www.searchmyvacation.com/journey-passport` — **200 OK** (Customer flow 100% decoupled)
+* `https://www.searchmyvacation.com/destinations` — **200 OK**
+* `https://www.searchmyvacation.com/travel-inspiration` — **200 OK**
+* `https://www.searchmyvacation.com/contact` — **200 OK**
+
+### C. Public Customer Gate Guardrail
+* Any non-staff identifier entered into `/portal/login` triggers the exact approved customer message:
+  **`"Account not recognized. Traveller accounts opening soon"`** with a direct link to submit preferences without an account via `/journey-passport`.
+
+---
+
+## 6. Instant Rollback Contingency Procedure
 
 If an unforeseen critical defect is detected post-deployment:
 
