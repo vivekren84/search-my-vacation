@@ -74,6 +74,24 @@ export default function PortalLoginPage() {
         return account;
       }
     }
+
+    // Check dynamic invited staff from dashboard provisioning
+    if (typeof window !== "undefined") {
+      try {
+        const stored = localStorage.getItem("smv_invited_staff");
+        if (stored) {
+          const customInvites = JSON.parse(stored);
+          for (const item of customInvites) {
+            if (item.email && item.email.toLowerCase() === cleaned) return item;
+            const itemPhone = (item.phoneE164 || "").replace(/[\s\-()]/g, "");
+            if (itemPhone && (itemPhone === phoneCleaned || itemPhone.endsWith(phoneCleaned.slice(-10)))) {
+              return item;
+            }
+          }
+        }
+      } catch {}
+    }
+
     return null;
   }
 
