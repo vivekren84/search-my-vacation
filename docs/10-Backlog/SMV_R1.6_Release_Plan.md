@@ -38,15 +38,18 @@
 - **Area / Phase:** Customer | **Disposition:** `Keep` | **Priority:** `High` | **PO Approval Status:** `Approved (Baseline)`
 - **Scope & Functional Intent:** Allow travellers to optionally create an account (without forcing registration before Passport completion) with clear consent and verification.
 - **Dependencies & Guardrails:** Maintain strict separation from Passport OTP (BOUND-01).
-- **Acceptance Criteria:** Travellers can register voluntarily to save trips and enquiries across devices.
-- **PO Notes:** Existing Backlog (Moved from R1.4)
+- **PO Mandate (Nov 2026):** **Both Mobile (E.164) and Email are strictly mandatory fields** for customer registration (no email-only or phone-only accounts). This guarantees high-trust dual-channel communication and seamless reconciliation with inbound Journey Passport submissions.
+- **Acceptance Criteria:** Travellers can register voluntarily to save trips and enquiries across devices, providing mandatory verified mobile and mandatory email.
+- **PO Notes:** Existing Backlog (Moved from R1.4). PO Mandate recorded: Mandatory Email & Mobile.
 
-### AUTH-03 — Customer login
+### AUTH-03 — Customer login & seamless password reset
 - **Area / Phase:** Customer | **Disposition:** `Keep` | **Priority:** `High` | **PO Approval Status:** `Approved (Baseline)`
-- **Scope & Functional Intent:** Provide seamless customer sign-in to access saved shortlists, Journey Synopses, and past enquiries.
-- **Dependencies & Guardrails:** Include secure session management and passwordless/OAuth options.
-- **Acceptance Criteria:** Returning travellers can log in and retrieve their saved journey history.
-- **PO Notes:** Existing Backlog (Moved from R1.4)
+- **Scope & Functional Intent:** Provide seamless customer sign-in to access saved shortlists, Journey Synopses, and past enquiries. Includes seamless self-service "Forgot Password" workflow shared with the platform authentication engine.
+- **Dependencies & Guardrails:** Include secure session management, passwordless/OAuth options, and single-channel OTP reset.
+- **Acceptance Criteria:** 
+  1. Returning travellers can log in and retrieve their saved journey history.
+  2. **Seamless Forgot Password:** Travellers can reset forgotten passwords via `/auth/forgot-password` using single-channel OTP verification dispatched to their verified mobile or email.
+- **PO Notes:** Existing Backlog (Moved from R1.4). Unified password reset architecture.
 
 ### ACCT-01 — Customer profile & family preferences
 - **Area / Phase:** Customer | **Disposition:** `Keep` | **Priority:** `Medium` | **PO Approval Status:** `Approved (Baseline)`

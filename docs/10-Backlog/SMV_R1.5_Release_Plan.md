@@ -1,7 +1,7 @@
 # Release 1.5 — Luxury Travel Staff Portal & Advisor Workspace
 
 **Release Theme:** Empower internal Journey Designers, operations desk, and administrators with authenticated access, single-channel Smart OTP, decoupled master client profiles, visual trip lifecycle pipeline, bespoke itinerary/quote builder, and authentic brand storytelling on the site.  
-**Total Backlog Items:** 21 (17 Luxury Travel Staff Portal User Stories + 4 Public Brand, Growth & Governance Deliverables)  
+**Total Backlog Items:** 22 (18 Travel Staff Portal User Stories + 4 Public Brand, Growth & Governance Deliverables)  
 **Status:** Approved (Expanded Baseline)  
 **Document Reference:** Agile Product Backlog v1.1 & SMV Master Release Charter  
 
@@ -9,8 +9,8 @@
 
 ## 1. Release Summary & Priority Breakdown
 
-- **Total Scope:** 21 Chartered Items
-- **Priority Mix:** High (P0): 11 | Medium (P1): 8 | Low (P2): 2
+- **Total Scope:** 22 Chartered Items
+- **Priority Mix:** High (P0/P1): 12 | Medium (P1): 8 | Low (P2): 2
 - **Structure:**
   - **Epic 1: Authentication & Role-Based Access Control (RBAC):** 3 Items (`US-001`, `US-002`, `US-003`) — *absorbs `V-08`, `AUTH-01`, `AUTH-04`*
   - **Epic 2: CRM-Ready Client Profiles:** 3 Items (`US-004`, `US-005`, `US-006`) — *enriches `GAP-04`*
@@ -55,6 +55,7 @@
 | **US-011** | Epic 4: Operations | Visual Trip Lifecycle Pipeline | P0 (High) | All Staff | Kanban-style pipeline board (`Inquiry`, `Proposal Sent`, `Deposit Paid`, `Vendors Confirmed`, `In-Transit`, `Post-Trip`); filters & value rollup. |
 | **US-012** | Epic 4: Operations | Segment-Level Voucher & Confirmation Vault | P0 (High) | Desk User | Supplier confirmation codes, vouchers, and 24/7 emergency contacts attached to itinerary segments; voucher/ticket file uploads. |
 | **US-013** | Epic 4: Operations | Automated Operational Risk & SLA Alerts | P1 (Med) | All Staff | Dashboard alerts for overdue deposits, unconfirmed bookings within 72h of departure, and missing documents within 14d. |
+| **US-018** | Epic 4: Operations | Concierge Intelligence Radar (Weather, Flight Status & Ground Advisories) | P1 (High) | All Staff | Persistent floating dock showing live weather, flight delays, monument closures, and emergency contacts for active/upcoming trips + destination picker. |
 | **US-014** | Epic 5: Vendors | Vetted Vendor & Contracted Rate Directory | P1 (Med) | Privileged User | Curated vendor directory categorized by destination, type, and tier; net rates, payment schedules; Desk read-only, Admin/Privileged edit. |
 | **US-015** | Epic 5: Finance | Executive Financial & Margin Summary Dashboard | P1 (Med) | Administrator | Metrics for gross bookings, vendor payables, realized margins; client deposits vs vendor payouts; one-click CSV export. |
 | **US-016** | Epic 5: Security | Encrypted Client Document Upload & Auto-Masking | P0 (High) | Desk User | Encrypted upload of passports/visas; auto-mask all but last 4 digits (`XXXX-1234`); viewing raw files requires escalation. |
@@ -72,24 +73,27 @@
 
 #### US-001 — Staff Account Provisioning & Role Assignment
 - **Priority:** `P0 - Must Have` | **Target Persona:** `Administrator`
-- **Scope & Functional Intent:** Admin creates staff accounts with company email, registered mobile number, and role assignment (`Administrator`, `Privileged User`, `Desk User`).
-- **Dependencies & Guardrails:** Preserves `BOUND-01` public conversion isolation. Staff cannot edit own registered verification channels.
+- **Scope & Functional Intent:** Admin creates staff accounts with mandatory company email, mandatory registered mobile number, auto-generated temporary default password, and role assignment (`Administrator`, `Privileged User`, `Desk User`).
+- **Dependencies & Guardrails:** Preserves `BOUND-01` public conversion isolation. Zero public self-registration. Staff cannot edit own registered verification channels.
 - **Acceptance Criteria:**
-  1. Admin can invite/create users with company domain email and mandatory registered mobile number.
-  2. Role assignment enforces module access immediately.
-  3. Staff cannot self-edit registered OTP email or mobile; requires Admin approval.
-  4. Admin can deactivate a user and immediately invalidate all active sessions.
+  1. Admin can invite/create users with mandatory company domain email AND mandatory registered mobile number (both fields strictly required).
+  2. System generates a secure temporary default password dispatched via welcome invitation (dual-channel email & SMS notification) with an account state flag `must_change_password = true`.
+  3. Role assignment enforces module access immediately.
+  4. Staff cannot self-edit registered OTP email or mobile; requires Admin approval.
+  5. Admin can deactivate a user and immediately invalidate all active sessions.
 
-#### US-002 — Login with Single-Channel OTP Delivery Preference (Email OR Mobile)
+#### US-002 — Login with Single-Channel OTP Preference (Email OR Mobile) & Password Governance
 - **Priority:** `P0 - Must Have` | **Target Persona:** `All Staff`
-- **Scope & Functional Intent:** Authenticate via company email and password. When step-up/challenge verification triggers, user chooses either registered Email OR registered Mobile to receive a 6-digit OTP via a mutually exclusive selector.
+- **Scope & Functional Intent:** Authenticate via company email and password. On first-time login with temporary default password, system enforces mandatory forced password change before granting workspace access. When challenge verification triggers, user chooses either registered Email OR registered Mobile to receive a 6-digit OTP via a mutually exclusive selector. Includes seamless forgot password reset flow.
 - **Dependencies & Guardrails:** Zero-cost test doubles for automated verification. Mutually exclusive selection prevents dual sending.
 - **Acceptance Criteria:**
   1. Primary login validates company email + password.
-  2. When challenge triggers, user sees mutually exclusive radio selection: **Company Email** OR **Registered Mobile** (displaying masked values like `j***@company.com` and `•••• ••89`).
-  3. Selecting one channel strictly prevents dispatching to the other.
-  4. OTP is 6 digits, valid for 10 minutes, with a 60-second cooldown before resending or switching channels.
-  5. Verified devices remain trusted for 14 days (configurable by Admin).
+  2. **Mandatory First-Time Password Change:** If `must_change_password === true`, user is immediately redirected to a forced password change screen requiring temporary default password, new strong password (12+ chars, entropy rules), and confirmation. Navigation to CRM, itineraries, or operational tools is strictly locked until password update succeeds.
+  3. **Seamless Forgot Password Reset:** User can trigger self-service password reset via `/portal/forgot-password` by entering registered email or mobile, verifying via single-channel OTP, and establishing a new password.
+  4. When challenge triggers, user sees mutually exclusive radio selection: **Company Email** OR **Registered Mobile** (displaying masked values like `j***@company.com` and `•••• ••89`).
+  5. Selecting one channel strictly prevents dispatching to the other.
+  6. OTP is 6 digits, valid for 10 minutes, with a 60-second cooldown before resending or switching channels.
+  7. Verified devices remain trusted for 14 days (configurable by Admin).
 
 #### US-003 — Step-Up Single-Channel OTP for Sensitive PII Access
 - **Priority:** `P1 - Should Have` | **Target Persona:** `Privileged User` / `Administrator`
@@ -204,6 +208,19 @@
 ---
 
 ### Epic 5: Vendor, Financial & Security Governance
+
+#### US-018 — Concierge Intelligence Radar (Weather, Flight Status & Ground Advisories)
+- **Priority:** `P1 - High` | **Target Persona:** `All Staff`
+- **Scope & Functional Intent:** Persistent, non-dismissible floating dock mounted across portal screens providing live situational awareness: real-time destination weather & 7-day outlook, live flight tracking (delays, gate, terminal), monument/sightseeing closures (e.g. weekly Taj Mahal Friday closure), and seasonal route advisories for currently active (`In-Transit`) and upcoming trips. Includes an exploratory dropdown to view details for any served SMV destination.
+- **Dependencies & Guardrails:** Consumes trip dates/destinations from `US-011` and flight segment vouchers from `US-012`. Internal users cannot permanently disable or unmount the widget (only minimize/expand). $0.00 in-memory test doubles (`TD-02`).
+- **Acceptance Criteria:**
+  1. Floating dock mounted at portal layout level with persistent minimized pill and expanded drawer states.
+  2. Auto-filters to destinations and flight segments of currently active (`In-Transit`) and upcoming trips.
+  3. Interactive dropdown allows exploring weather and local conditions for all served SMV destinations.
+  4. Real-time flight tracking updates (departure, arrival, gate, delay warnings) for attached flight segments.
+  5. Surfaces scheduled monument closures (e.g. Friday closures) and seasonal weather/road hazards.
+  6. Non-dismissible: cannot be disabled or hidden via settings; close action minimizes to floating status pill.
+
 
 #### US-014 — Vetted Vendor & Contracted Rate Directory
 - **Priority:** `P1 - Should Have` | **Target Persona:** `Privileged User`
