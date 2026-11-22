@@ -53,6 +53,7 @@ ALTER TABLE public.workspace_client_companions ENABLE ROW LEVEL SECURITY;
 REVOKE ALL ON public.workspace_client_companions FROM public, anon;
 GRANT ALL ON public.workspace_client_companions TO authenticated, service_role;
 
+DROP POLICY IF EXISTS workspace_client_companions_authenticated ON public.workspace_client_companions;
 CREATE POLICY workspace_client_companions_authenticated ON public.workspace_client_companions
   FOR ALL TO authenticated USING (true) WITH CHECK (true);
 
@@ -75,6 +76,7 @@ ALTER TABLE public.workspace_client_tags ENABLE ROW LEVEL SECURITY;
 REVOKE ALL ON public.workspace_client_tags FROM public, anon;
 GRANT ALL ON public.workspace_client_tags TO authenticated, service_role;
 
+DROP POLICY IF EXISTS workspace_client_tags_authenticated ON public.workspace_client_tags;
 CREATE POLICY workspace_client_tags_authenticated ON public.workspace_client_tags
   FOR ALL TO authenticated USING (true) WITH CHECK (true);
 
@@ -97,5 +99,6 @@ ALTER TABLE public.workspace_client_activities ENABLE ROW LEVEL SECURITY;
 REVOKE ALL ON public.workspace_client_activities FROM public, anon;
 GRANT ALL ON public.workspace_client_activities TO authenticated, service_role;
 
+DROP POLICY IF EXISTS workspace_client_activities_authenticated ON public.workspace_client_activities;
 CREATE POLICY workspace_client_activities_authenticated ON public.workspace_client_activities
   FOR ALL TO authenticated USING (true) WITH CHECK (true);

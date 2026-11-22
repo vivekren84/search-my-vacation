@@ -56,14 +56,17 @@ runSuite('Release 1.5 Milestone 4', 'npm run verify:r1.5-milestone-4', 61);
 // Phase 5: Pre-Prod Database Schema & Migration Integrity Audit
 console.log('--> [Phase 5] Verifying Supabase Pre-Prod Migrations & Schema Definitions...');
 const migrationsDir = join(repoRoot, 'supabase/migrations');
+const rollbacksDir = join(repoRoot, 'supabase/rollbacks');
 const expectedMigrations = [
   '20261122000000_staff_auth_rbac_m1.sql',
-  '20261122000000_staff_auth_rbac_m1.rollback.sql',
   '20261123000000_client_crm_m2.sql',
-  '20261123000000_client_crm_m2.rollback.sql',
   '20261124000000_itinerary_pricing_m3.sql',
+  '20261125000000_operations_radar_governance_m4.sql'
+];
+const expectedRollbacks = [
+  '20261122000000_staff_auth_rbac_m1.rollback.sql',
+  '20261123000000_client_crm_m2.rollback.sql',
   '20261124000000_itinerary_pricing_m3.rollback.sql',
-  '20261125000000_operations_radar_governance_m4.sql',
   '20261125000000_operations_radar_governance_m4.rollback.sql'
 ];
 
@@ -76,8 +79,16 @@ for (const file of expectedMigrations) {
     phaseErrors++;
   }
 }
+for (const file of expectedRollbacks) {
+  const filePath = join(rollbacksDir, file);
+  if (!existsSync(filePath)) {
+    console.error(`  ✗ Missing expected rollback file: ${file}`);
+    migrationsOk = false;
+    phaseErrors++;
+  }
+}
 if (migrationsOk) {
-  console.log(`  ✓ All 8 Pre-Prod migration and rollback SQL files verified in supabase/migrations/`);
+  console.log(`  ✓ All 4 Pre-Prod migration files in supabase/migrations/ and 4 rollback files in supabase/rollbacks/ verified`);
 }
 
 // Verify tables created in Release 1.5 migrations

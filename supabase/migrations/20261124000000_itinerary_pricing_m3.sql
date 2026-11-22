@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS public.workspace_itineraries (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   client_id uuid NOT NULL REFERENCES public.workspace_travellers(id) ON DELETE CASCADE,
   journey_id uuid REFERENCES public.workspace_journeys(id) ON DELETE SET NULL,
-  created_by uuid REFERENCES public.workspace_users(id) ON DELETE SET NULL,
+  created_by uuid REFERENCES public.workspace_users(user_id) ON DELETE SET NULL,
   title text NOT NULL,
   circuit_summary text,
   start_date date,
@@ -75,14 +75,14 @@ CREATE INDEX IF NOT EXISTS idx_workspace_itinerary_segments_itinerary
 CREATE TABLE IF NOT EXISTS public.workspace_margin_overrides (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   itinerary_id uuid NOT NULL REFERENCES public.workspace_itineraries(id) ON DELETE CASCADE,
-  requested_by uuid NOT NULL REFERENCES public.workspace_users(id),
+  requested_by uuid NOT NULL REFERENCES public.workspace_users(user_id),
   target_selling_price numeric(12, 2) NOT NULL,
   net_cost numeric(12, 2) NOT NULL,
   proposed_margin_percent numeric(5, 2) NOT NULL,
   floor_margin_percent numeric(5, 2) NOT NULL DEFAULT 12.00,
   justification text NOT NULL,
   status text NOT NULL CHECK (status IN ('pending', 'approved', 'rejected')) DEFAULT 'pending',
-  reviewed_by uuid REFERENCES public.workspace_users(id),
+  reviewed_by uuid REFERENCES public.workspace_users(user_id),
   reviewed_at timestamptz,
   review_notes text,
   created_at timestamptz NOT NULL DEFAULT now()
@@ -94,19 +94,27 @@ CREATE INDEX IF NOT EXISTS idx_workspace_margin_overrides_itinerary
 CREATE INDEX IF NOT EXISTS idx_workspace_margin_overrides_status
   ON public.workspace_margin_overrides (status);
 
--- 5. Create public.workspace_proposal_versions
+-- 5. Create or Enhance public.workspace_proposal_versions
 CREATE TABLE IF NOT EXISTS public.workspace_proposal_versions (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  itinerary_id uuid NOT NULL REFERENCES public.workspace_itineraries(id) ON DELETE CASCADE,
-  version_label text NOT NULL,
-  gross_selling_price numeric(12, 2) NOT NULL,
+  itinerary_id uuid REFERENCES public.workspace_itineraries(id) ON DELETE CASCADE,
+  version_label text NOT NULL DEFAULT 'v1.0',
+  gross_selling_price numeric(12, 2) NOT NULL DEFAULT 0.00,
   currency text NOT NULL DEFAULT 'INR',
-  client_snapshot jsonb NOT NULL,
+  client_snapshot jsonb NOT NULL DEFAULT '{}'::jsonb,
   is_override_approved boolean NOT NULL DEFAULT false,
-  exported_by uuid NOT NULL REFERENCES public.workspace_users(id),
-  created_at timestamptz NOT NULL DEFAULT now(),
-  CONSTRAINT uq_itinerary_version UNIQUE (itinerary_id, version_label)
+  exported_by uuid REFERENCES public.workspace_users(user_id),
+  created_at timestamptz NOT NULL DEFAULT now()
 );
+
+ALTER TABLE public.workspace_proposal_versions
+  ADD COLUMN IF NOT EXISTS itinerary_id uuid REFERENCES public.workspace_itineraries(id) ON DELETE CASCADE,
+  ADD COLUMN IF NOT EXISTS version_label text DEFAULT 'v1.0',
+  ADD COLUMN IF NOT EXISTS gross_selling_price numeric(12, 2) DEFAULT 0.00,
+  ADD COLUMN IF NOT EXISTS currency text NOT NULL DEFAULT 'INR',
+  ADD COLUMN IF NOT EXISTS client_snapshot jsonb DEFAULT '{}'::jsonb,
+  ADD COLUMN IF NOT EXISTS is_override_approved boolean NOT NULL DEFAULT false,
+  ADD COLUMN IF NOT EXISTS exported_by uuid REFERENCES public.workspace_users(user_id);
 
 CREATE INDEX IF NOT EXISTS idx_workspace_proposal_versions_itinerary
   ON public.workspace_proposal_versions (itinerary_id, version_label);
@@ -133,6 +141,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON public.workspace_margin_overrides TO aut
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.workspace_proposal_versions TO authenticated, service_role;
 
 -- RLS Policies
+DROP POLICY IF EXISTS workspace_itineraries_staff_all ON public.workspace_itineraries;
 CREATE POLICY workspace_itineraries_staff_all
   ON public.workspace_itineraries
   FOR ALL
@@ -140,6 +149,7 @@ CREATE POLICY workspace_itineraries_staff_all
   USING (true)
   WITH CHECK (true);
 
+DROP POLICY IF EXISTS workspace_itinerary_days_staff_all ON public.workspace_itinerary_days;
 CREATE POLICY workspace_itinerary_days_staff_all
   ON public.workspace_itinerary_days
   FOR ALL
@@ -147,6 +157,7 @@ CREATE POLICY workspace_itinerary_days_staff_all
   USING (true)
   WITH CHECK (true);
 
+DROP POLICY IF EXISTS workspace_itinerary_segments_staff_all ON public.workspace_itinerary_segments;
 CREATE POLICY workspace_itinerary_segments_staff_all
   ON public.workspace_itinerary_segments
   FOR ALL
@@ -154,6 +165,7 @@ CREATE POLICY workspace_itinerary_segments_staff_all
   USING (true)
   WITH CHECK (true);
 
+DROP POLICY IF EXISTS workspace_margin_overrides_staff_all ON public.workspace_margin_overrides;
 CREATE POLICY workspace_margin_overrides_staff_all
   ON public.workspace_margin_overrides
   FOR ALL
@@ -161,6 +173,7 @@ CREATE POLICY workspace_margin_overrides_staff_all
   USING (true)
   WITH CHECK (true);
 
+DROP POLICY IF EXISTS workspace_proposal_versions_staff_all ON public.workspace_proposal_versions;
 CREATE POLICY workspace_proposal_versions_staff_all
   ON public.workspace_proposal_versions
   FOR ALL

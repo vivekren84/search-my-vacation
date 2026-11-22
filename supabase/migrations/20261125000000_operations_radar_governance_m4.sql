@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS public.workspace_trip_pipeline (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   itinerary_id uuid NOT NULL REFERENCES public.workspace_itineraries(id) ON DELETE CASCADE,
   client_id uuid NOT NULL REFERENCES public.workspace_travellers(id) ON DELETE CASCADE,
-  assigned_advisor_id uuid REFERENCES public.workspace_users(id),
+  assigned_advisor_id uuid REFERENCES public.workspace_users(user_id),
   stage text NOT NULL CHECK (stage IN ('inquiry', 'proposal_sent', 'deposit_paid', 'vendors_confirmed', 'in_transit', 'post_trip')) DEFAULT 'inquiry',
   trip_title text NOT NULL,
   departure_date date,
@@ -24,6 +24,22 @@ CREATE TABLE IF NOT EXISTS public.workspace_trip_pipeline (
   created_at timestamptz NOT NULL DEFAULT now(),
   updated_at timestamptz NOT NULL DEFAULT now()
 );
+
+ALTER TABLE public.workspace_trip_pipeline
+  ADD COLUMN IF NOT EXISTS itinerary_id uuid REFERENCES public.workspace_itineraries(id) ON DELETE CASCADE,
+  ADD COLUMN IF NOT EXISTS client_id uuid REFERENCES public.workspace_travellers(id) ON DELETE CASCADE,
+  ADD COLUMN IF NOT EXISTS assigned_advisor_id uuid REFERENCES public.workspace_users(user_id),
+  ADD COLUMN IF NOT EXISTS stage text DEFAULT 'inquiry',
+  ADD COLUMN IF NOT EXISTS trip_title text,
+  ADD COLUMN IF NOT EXISTS departure_date date,
+  ADD COLUMN IF NOT EXISTS return_date date,
+  ADD COLUMN IF NOT EXISTS total_value numeric(12, 2) DEFAULT 0.00,
+  ADD COLUMN IF NOT EXISTS deposit_collected numeric(12, 2) DEFAULT 0.00,
+  ADD COLUMN IF NOT EXISTS balance_due numeric(12, 2) DEFAULT 0.00,
+  ADD COLUMN IF NOT EXISTS deposit_due_date date,
+  ADD COLUMN IF NOT EXISTS is_vip boolean DEFAULT false,
+  ADD COLUMN IF NOT EXISTS metadata jsonb DEFAULT '{}'::jsonb,
+  ADD COLUMN IF NOT EXISTS updated_at timestamptz DEFAULT now();
 
 CREATE INDEX IF NOT EXISTS idx_workspace_trip_pipeline_stage
   ON public.workspace_trip_pipeline (stage);
@@ -65,7 +81,7 @@ CREATE TABLE IF NOT EXISTS public.workspace_operational_alerts (
   message text NOT NULL,
   is_resolved boolean DEFAULT false,
   resolved_at timestamptz,
-  resolved_by uuid REFERENCES public.workspace_users(id),
+  resolved_by uuid REFERENCES public.workspace_users(user_id),
   created_at timestamptz NOT NULL DEFAULT now()
 );
 
@@ -90,6 +106,36 @@ CREATE TABLE IF NOT EXISTS public.workspace_vendors (
   updated_at timestamptz NOT NULL DEFAULT now()
 );
 
+ALTER TABLE public.workspace_trip_pipeline
+  ADD COLUMN IF NOT EXISTS itinerary_id uuid REFERENCES public.workspace_itineraries(id) ON DELETE CASCADE,
+  ADD COLUMN IF NOT EXISTS client_id uuid REFERENCES public.workspace_travellers(id) ON DELETE CASCADE,
+  ADD COLUMN IF NOT EXISTS assigned_advisor_id uuid REFERENCES public.workspace_users(user_id),
+  ADD COLUMN IF NOT EXISTS stage text DEFAULT 'inquiry',
+  ADD COLUMN IF NOT EXISTS trip_title text,
+  ADD COLUMN IF NOT EXISTS departure_date date,
+  ADD COLUMN IF NOT EXISTS return_date date,
+  ADD COLUMN IF NOT EXISTS total_value numeric(12, 2) DEFAULT 0.00,
+  ADD COLUMN IF NOT EXISTS deposit_collected numeric(12, 2) DEFAULT 0.00,
+  ADD COLUMN IF NOT EXISTS balance_due numeric(12, 2) DEFAULT 0.00,
+  ADD COLUMN IF NOT EXISTS deposit_due_date date,
+  ADD COLUMN IF NOT EXISTS is_vip boolean DEFAULT false,
+  ADD COLUMN IF NOT EXISTS metadata jsonb DEFAULT '{}'::jsonb,
+  ADD COLUMN IF NOT EXISTS updated_at timestamptz DEFAULT now();
+
+ALTER TABLE public.workspace_vendors
+  ADD COLUMN IF NOT EXISTS vendor_name text,
+  ADD COLUMN IF NOT EXISTS destination text,
+  ADD COLUMN IF NOT EXISTS category text,
+  ADD COLUMN IF NOT EXISTS tier text,
+  ADD COLUMN IF NOT EXISTS contact_person text,
+  ADD COLUMN IF NOT EXISTS contact_email text,
+  ADD COLUMN IF NOT EXISTS contact_phone_e164 text,
+  ADD COLUMN IF NOT EXISTS contracted_net_rate_terms text,
+  ADD COLUMN IF NOT EXISTS cancellation_policy text,
+  ADD COLUMN IF NOT EXISTS payment_terms text,
+  ADD COLUMN IF NOT EXISTS is_active boolean DEFAULT true,
+  ADD COLUMN IF NOT EXISTS updated_at timestamptz DEFAULT now();
+
 CREATE INDEX IF NOT EXISTS idx_workspace_vendors_destination
   ON public.workspace_vendors (destination);
 
@@ -106,7 +152,7 @@ CREATE TABLE IF NOT EXISTS public.workspace_client_documents (
   file_size_bytes integer,
   masked_identifier text NOT NULL, -- e.g. 'XXXX-8421'
   encrypted_key_ref text NOT NULL,
-  uploaded_by uuid REFERENCES public.workspace_users(id),
+  uploaded_by uuid REFERENCES public.workspace_users(user_id),
   created_at timestamptz NOT NULL DEFAULT now()
 );
 
@@ -135,8 +181,17 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON public.workspace_vendors TO authenticate
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.workspace_client_documents TO authenticated, service_role;
 
 -- Policies for internal staff
+DROP POLICY IF EXISTS workspace_trip_pipeline_staff_all ON public.workspace_trip_pipeline;
 CREATE POLICY workspace_trip_pipeline_staff_all ON public.workspace_trip_pipeline FOR ALL TO authenticated, service_role USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS workspace_segment_vouchers_staff_all ON public.workspace_segment_vouchers;
 CREATE POLICY workspace_segment_vouchers_staff_all ON public.workspace_segment_vouchers FOR ALL TO authenticated, service_role USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS workspace_operational_alerts_staff_all ON public.workspace_operational_alerts;
 CREATE POLICY workspace_operational_alerts_staff_all ON public.workspace_operational_alerts FOR ALL TO authenticated, service_role USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS workspace_vendors_staff_all ON public.workspace_vendors;
 CREATE POLICY workspace_vendors_staff_all ON public.workspace_vendors FOR ALL TO authenticated, service_role USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS workspace_client_documents_staff_all ON public.workspace_client_documents;
 CREATE POLICY workspace_client_documents_staff_all ON public.workspace_client_documents FOR ALL TO authenticated, service_role USING (true) WITH CHECK (true);
