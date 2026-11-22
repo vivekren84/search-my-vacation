@@ -33,3 +33,18 @@ This charter consolidates your core product and platform backlog items (re-seque
   - **Epic 5 (Governance):** Vetted vendor directory, executive margin dashboard, encrypted doc masking, and immutable security audit log (`US-014`–`US-017`).
   - **Public Brand & Growth:** Specialist profiles (`PO-05`), regional WhatsApp SEO cards (`GAP-05`), Resend playbook (`G-02`), and legacy cleanup (`HP-04`).
 - **R1.6 (`PO-04`):** Collaborative 'Family Decision Board' (shareable shortlist with family voting) — layered cleanly on top of Customer Wishlist (`ACCT-02`).
+
+---
+
+## Identity Governance & Onboarding Mandates (PO Approved — Nov 2026)
+
+1. **Internal Staff Accounts (Release 1.5):**
+   - **Zero Public Self-Registration:** Public sign-up is strictly forbidden on internal staff routes (`/portal/*`). Accounts can only be provisioned by authenticated Administrators (`US-001`).
+   - **Mandatory Dual Identifiers:** Both Company Email (`@searchmyvacation.com`) AND Registered Mobile (in E.164 format) are strictly mandatory upon invitation.
+   - **Default Password & Forced First-Time Change:** Admin provisioning dispatches an auto-generated temporary default password. Upon first-time login, the system strictly enforces a **mandatory forced password change** before granting access to client CRM, itineraries, or operational tools.
+   - **Smart Single-Channel OTP & Device Trust:** After changing the password, staff complete single-channel Smart OTP verification (Email or Mobile) to trust their workstation for 14 days (`US-002`).
+   - **Seamless Password Reset:** Self-service "Forgot Password" works seamlessly via single-channel OTP verification.
+
+2. **Customer Accounts (Release 1.6):**
+   - **Mandatory Dual Identifiers:** When prospective travellers optionally register an account (`AUTH-02`), **both Mobile (E.164) and Email are strictly mandatory fields** (no single-field sign-ups). This ensures high-trust dual-channel delivery and seamless reconciliation with Journey Passport submissions.
+   - **Unified Forgot Password:** External travellers use the shared single-channel OTP password reset mechanism (`AUTH-03`) to seamlessly recover forgotten passwords.

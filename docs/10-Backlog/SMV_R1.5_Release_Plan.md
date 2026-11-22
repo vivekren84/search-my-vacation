@@ -73,24 +73,27 @@
 
 #### US-001 — Staff Account Provisioning & Role Assignment
 - **Priority:** `P0 - Must Have` | **Target Persona:** `Administrator`
-- **Scope & Functional Intent:** Admin creates staff accounts with company email, registered mobile number, and role assignment (`Administrator`, `Privileged User`, `Desk User`).
-- **Dependencies & Guardrails:** Preserves `BOUND-01` public conversion isolation. Staff cannot edit own registered verification channels.
+- **Scope & Functional Intent:** Admin creates staff accounts with mandatory company email, mandatory registered mobile number, auto-generated temporary default password, and role assignment (`Administrator`, `Privileged User`, `Desk User`).
+- **Dependencies & Guardrails:** Preserves `BOUND-01` public conversion isolation. Zero public self-registration. Staff cannot edit own registered verification channels.
 - **Acceptance Criteria:**
-  1. Admin can invite/create users with company domain email and mandatory registered mobile number.
-  2. Role assignment enforces module access immediately.
-  3. Staff cannot self-edit registered OTP email or mobile; requires Admin approval.
-  4. Admin can deactivate a user and immediately invalidate all active sessions.
+  1. Admin can invite/create users with mandatory company domain email AND mandatory registered mobile number (both fields strictly required).
+  2. System generates a secure temporary default password dispatched via welcome invitation (dual-channel email & SMS notification) with an account state flag `must_change_password = true`.
+  3. Role assignment enforces module access immediately.
+  4. Staff cannot self-edit registered OTP email or mobile; requires Admin approval.
+  5. Admin can deactivate a user and immediately invalidate all active sessions.
 
-#### US-002 — Login with Single-Channel OTP Delivery Preference (Email OR Mobile)
+#### US-002 — Login with Single-Channel OTP Preference (Email OR Mobile) & Password Governance
 - **Priority:** `P0 - Must Have` | **Target Persona:** `All Staff`
-- **Scope & Functional Intent:** Authenticate via company email and password. When step-up/challenge verification triggers, user chooses either registered Email OR registered Mobile to receive a 6-digit OTP via a mutually exclusive selector.
+- **Scope & Functional Intent:** Authenticate via company email and password. On first-time login with temporary default password, system enforces mandatory forced password change before granting workspace access. When challenge verification triggers, user chooses either registered Email OR registered Mobile to receive a 6-digit OTP via a mutually exclusive selector. Includes seamless forgot password reset flow.
 - **Dependencies & Guardrails:** Zero-cost test doubles for automated verification. Mutually exclusive selection prevents dual sending.
 - **Acceptance Criteria:**
   1. Primary login validates company email + password.
-  2. When challenge triggers, user sees mutually exclusive radio selection: **Company Email** OR **Registered Mobile** (displaying masked values like `j***@company.com` and `•••• ••89`).
-  3. Selecting one channel strictly prevents dispatching to the other.
-  4. OTP is 6 digits, valid for 10 minutes, with a 60-second cooldown before resending or switching channels.
-  5. Verified devices remain trusted for 14 days (configurable by Admin).
+  2. **Mandatory First-Time Password Change:** If `must_change_password === true`, user is immediately redirected to a forced password change screen requiring temporary default password, new strong password (12+ chars, entropy rules), and confirmation. Navigation to CRM, itineraries, or operational tools is strictly locked until password update succeeds.
+  3. **Seamless Forgot Password Reset:** User can trigger self-service password reset via `/portal/forgot-password` by entering registered email or mobile, verifying via single-channel OTP, and establishing a new password.
+  4. When challenge triggers, user sees mutually exclusive radio selection: **Company Email** OR **Registered Mobile** (displaying masked values like `j***@company.com` and `•••• ••89`).
+  5. Selecting one channel strictly prevents dispatching to the other.
+  6. OTP is 6 digits, valid for 10 minutes, with a 60-second cooldown before resending or switching channels.
+  7. Verified devices remain trusted for 14 days (configurable by Admin).
 
 #### US-003 — Step-Up Single-Channel OTP for Sensitive PII Access
 - **Priority:** `P1 - Should Have` | **Target Persona:** `Privileged User` / `Administrator`
