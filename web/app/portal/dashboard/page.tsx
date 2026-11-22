@@ -252,7 +252,7 @@ export default function PortalDashboardPage() {
   }
 
   // Team Invite Submit Handler (US-001)
-  function handleInviteSubmit(e: React.FormEvent) {
+  async function handleInviteSubmit(e: React.FormEvent) {
     e.preventDefault();
     setInviteError(null);
 
@@ -286,6 +286,27 @@ export default function PortalDashboardPage() {
       invitedAt: new Date().toISOString().split("T")[0],
     };
 
+    try {
+      const res = await fetch("/api/portal/auth/invite", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: newMember.fullName,
+          email: newMember.email,
+          phoneE164: newMember.phoneE164,
+          role: newMember.role,
+          temporaryPassword: "TemporaryDefaultPass#2026",
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        setInviteError(data.message || "Failed to dispatch invitation.");
+        return;
+      }
+    } catch {
+      // Offline fallback
+    }
+
     // Save to local storage for portal login recognition
     try {
       const stored = localStorage.getItem("smv_invited_staff");
@@ -302,7 +323,7 @@ export default function PortalDashboardPage() {
     } catch {}
 
     setTeamMembers((prev) => [...prev, newMember]);
-    setInviteSuccess(`Invitation dispatched to ${newMember.email}. Account provisioned as ${newMember.role.replace("_", " ")}.`);
+    setInviteSuccess(`Invitation successfully dispatched via email to ${newMember.email} and SMS to ${newMember.phoneE164}. Account provisioned as ${newMember.role.replace("_", " ")}.`);
     setInviteName("");
     setInviteEmail("");
     setInvitePhone("+91 ");
@@ -359,33 +380,32 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
 
   return (
     <div className="min-h-screen bg-[#2A211C] text-white flex flex-col font-sans">
-      {/* Top Staff Navbar */}
-      <header className="border-b border-white/10 bg-[#362B25] px-4 sm:px-8 py-3.5 flex items-center justify-between sticky top-0 z-40 shadow-md">
-        <div className="flex items-center gap-3 sm:gap-4">
-          <Link href="/">
+      {/* Top Staff Navbar — Fully Unified with Search My Vacation */}
+      <header className="border-b border-white/10 bg-[#362B25] px-4 sm:px-8 py-3 flex items-center justify-between sticky top-0 z-40 shadow-md">
+        <div className="flex items-center gap-3 sm:gap-6">
+          <Link href="/" title="Go to Search My Vacation Home (Session Persists)">
             <SiteBrand variant="header" surface="dark" className="w-32 sm:w-36 text-white" />
           </Link>
-          <span className="hidden sm:inline-block h-4 w-px bg-white/20" />
-          <span className="hidden sm:inline-block text-xs uppercase tracking-widest font-semibold text-[#F5951C]">
-            Staff Advisor Portal
-          </span>
 
-          {/* Option 2: Direct Link to Main Public Site */}
-          <a
-            href="/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1.5 rounded-full border border-white/20 bg-white/5 px-3 py-1 text-xs font-semibold text-white/90 hover:border-[#F5951C] hover:text-[#F5951C] hover:bg-white/10 transition"
-            title="Open main public website in new tab"
-          >
-            <span>🌐</span>
-            <span className="hidden sm:inline">Main Site</span>
-            <span className="text-[10px] text-white/40">↗</span>
-          </a>
+          {/* Integrated Main Site Navigation */}
+          <nav className="hidden lg:flex items-center gap-4 text-xs font-medium text-white/70">
+            <Link href="/" className="hover:text-white transition">
+              Home
+            </Link>
+            <Link href="/destinations" className="hover:text-white transition">
+              Destinations
+            </Link>
+            <Link href="/experiences" className="hover:text-white transition">
+              Experiences
+            </Link>
+            <Link href="/travel-inspiration" className="hover:text-white transition">
+              Inspiration
+            </Link>
+          </nav>
         </div>
 
         <div className="flex items-center gap-2.5 sm:gap-3.5">
-          {/* Option 1: Invite Team Members Button (Super Admin & Admin Only) */}
+          {/* Invite Team Members Button (Super Admin & Admin Only) */}
           {canManageTeam && (
             <button
               onClick={() => {

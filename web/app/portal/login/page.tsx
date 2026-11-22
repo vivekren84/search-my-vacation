@@ -95,21 +95,15 @@ export default function PortalLoginPage() {
     return null;
   }
 
-  // Handle Send OTP (Calls live backend OTP endpoint with Resend / SMS integration)
+  // Handle Send OTP (Calls live backend OTP endpoint)
   async function handleSendOtp(e: React.FormEvent) {
     e.preventDefault();
     setErrorMessage(null);
     setInfoMessage(null);
 
-    if (!identifier.trim()) {
+    const cleanInput = identifier.trim();
+    if (!cleanInput) {
       setErrorMessage("Please enter your email or registered mobile number.");
-      return;
-    }
-
-    const staff = findStaffAccount(identifier);
-    if (!staff) {
-      // EXACT PO MANDATED MESSAGE
-      setErrorMessage("Account not recognized. Traveller accounts opening soon");
       return;
     }
 
@@ -118,19 +112,24 @@ export default function PortalLoginPage() {
       const res = await fetch("/api/portal/auth/otp/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ identifier: identifier.trim(), channel }),
+        body: JSON.stringify({ identifier: cleanInput, channel }),
       });
       const data = await res.json();
       if (!res.ok || !data.ok) {
-        setErrorMessage(data.message || "Failed to dispatch verification code.");
+        setErrorMessage(data.message || "Account not recognized. Traveller accounts opening soon");
+        setIsLoading(false);
         return;
       }
       setOtpSent(true);
       setCooldown(60);
-      const destination = channel === "sms" ? staff.phoneE164 : staff.email;
-      setInfoMessage(data.message || `Verification code dispatched to ${destination}. Valid for 10 minutes.`);
+      setInfoMessage(data.message || `Verification code dispatched to ${data.destination || cleanInput}. Valid for 10 minutes.`);
     } catch {
-      // Fallback
+      const staff = findStaffAccount(cleanInput);
+      if (!staff) {
+        setErrorMessage("Account not recognized. Traveller accounts opening soon");
+        setIsLoading(false);
+        return;
+      }
       setOtpSent(true);
       setCooldown(60);
       const destination = channel === "sms" ? staff.phoneE164 : staff.email;
@@ -145,13 +144,10 @@ export default function PortalLoginPage() {
     e.preventDefault();
     setErrorMessage(null);
 
-    const staff = findStaffAccount(identifier);
-    if (!staff) {
-      setErrorMessage("Account not recognized. Traveller accounts opening soon");
-      return;
-    }
+    const cleanInput = identifier.trim();
+    const cleanCode = otpCode.trim();
 
-    if (otpCode.trim().length !== 6) {
+    if (cleanCode.length !== 6) {
       setErrorMessage("Please enter the complete 6-digit verification code.");
       return;
     }
@@ -161,7 +157,7 @@ export default function PortalLoginPage() {
       const res = await fetch("/api/portal/auth/otp/verify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ identifier: identifier.trim(), code: otpCode.trim() }),
+        body: JSON.stringify({ identifier: cleanInput, code: cleanCode }),
       });
       const data = await res.json();
       if (!res.ok || !data.ok) {
@@ -174,25 +170,27 @@ export default function PortalLoginPage() {
       localStorage.setItem(
         "smv_staff_session",
         JSON.stringify({
-          fullName: data.staff?.fullName || staff.fullName,
-          email: data.staff?.email || staff.email,
-          role: data.staff?.role || staff.role,
+          fullName: data.staff?.fullName || "Staff Advisor",
+          email: data.staff?.email || cleanInput,
+          role: data.staff?.role || "desk_user",
           loggedInAt: new Date().toISOString(),
         })
       );
       router.push("/portal/dashboard");
     } catch {
-      // Fallback
-      localStorage.setItem(
-        "smv_staff_session",
-        JSON.stringify({
-          fullName: staff.fullName,
-          email: staff.email,
-          role: staff.role,
-          loggedInAt: new Date().toISOString(),
-        })
-      );
-      router.push("/portal/dashboard");
+      const staff = findStaffAccount(cleanInput);
+      if (staff) {
+        localStorage.setItem(
+          "smv_staff_session",
+          JSON.stringify({
+            fullName: staff.fullName,
+            email: staff.email,
+            role: staff.role,
+            loggedInAt: new Date().toISOString(),
+          })
+        );
+        router.push("/portal/dashboard");
+      }
     } finally {
       setIsLoading(false);
     }

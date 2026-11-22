@@ -5,18 +5,23 @@ export const runtime = "nodejs";
 
 function findStaff(identifier: string) {
   const cleaned = identifier.trim().toLowerCase();
-  const phoneCleaned = identifier.replace(/[\s\-()+]/g, "");
+  const digits = identifier.replace(/\D/g, "");
 
   if (AUTHORIZED_STAFF_ACCOUNTS[cleaned]) {
     return AUTHORIZED_STAFF_ACCOUNTS[cleaned];
   }
 
   for (const account of Object.values(AUTHORIZED_STAFF_ACCOUNTS)) {
-    const accPhone = account.phoneE164.replace(/[\s\-()+]/g, "");
-    if (
-      accPhone === phoneCleaned ||
-      (phoneCleaned.length >= 10 && accPhone.endsWith(phoneCleaned.slice(-10)))
-    ) {
+    if (account.email.toLowerCase() === cleaned) {
+      return account;
+    }
+    const accDigits = account.phoneE164.replace(/\D/g, "");
+    if (digits.length >= 10 && accDigits.length >= 10) {
+      if (accDigits.slice(-10) === digits.slice(-10)) {
+        return account;
+      }
+    }
+    if (accDigits && accDigits === digits) {
       return account;
     }
   }
