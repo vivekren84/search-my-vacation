@@ -40,7 +40,28 @@ export default function Header() {
           </ul>
         </nav>
 
-        <div className="ml-auto flex items-center gap-3 xl:ml-0">
+        <div className="ml-auto flex items-center gap-2.5 xl:ml-0">
+          <Link
+            href="/portal/login"
+            className="hidden shrink-0 whitespace-nowrap rounded-full border border-white/30 px-3.5 py-2 text-xs font-semibold uppercase tracking-[0.1em] text-white transition hover:border-[#F5951C] hover:text-[#F5951C] md:inline-flex"
+          >
+            Sign In
+          </Link>
+
+          <div className="relative group hidden md:inline-flex">
+            <button
+              type="button"
+              disabled
+              aria-disabled="true"
+              className="cursor-not-allowed opacity-50 shrink-0 whitespace-nowrap rounded-full border border-white/15 px-3.5 py-2 text-xs font-medium uppercase tracking-[0.1em] text-white/60"
+            >
+              Sign Up
+            </button>
+            <span className="pointer-events-none absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-[#2A211C] px-2 py-1 text-[10px] font-medium text-[#F5951C] border border-white/10 opacity-0 shadow-lg transition-opacity duration-200 group-hover:opacity-100 z-50">
+              Coming Soon
+            </span>
+          </div>
+
           <Link
             href="/journey-passport"
             className="hidden shrink-0 whitespace-nowrap rounded-full bg-[#F5951C] px-4 py-2 text-xs font-bold uppercase tracking-[0.1em] text-[#2A211C] transition hover:bg-[#F5951C] lg:inline-flex"
@@ -79,6 +100,23 @@ export default function Header() {
                       </Link>
                     </li>
                   ))}
+                  <li className="mt-2 border-t border-white/10 pt-2 flex flex-col gap-2 md:hidden">
+                    <Link
+                      href="/portal/login"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="block rounded-xl border border-white/30 px-4 py-2.5 text-center text-xs font-semibold uppercase tracking-[0.1em] text-white hover:border-[#F5951C] hover:text-[#F5951C]"
+                    >
+                      Sign In
+                    </Link>
+                    <button
+                      type="button"
+                      disabled
+                      aria-disabled="true"
+                      className="w-full cursor-not-allowed opacity-50 rounded-xl border border-white/15 px-4 py-2 text-center text-xs font-medium uppercase tracking-[0.1em] text-white/60"
+                    >
+                      Sign Up (Coming Soon)
+                    </button>
+                  </li>
                   <li className="lg:hidden">
                     <Link
                       href="/journey-passport"

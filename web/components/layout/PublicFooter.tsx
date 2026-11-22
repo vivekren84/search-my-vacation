@@ -18,7 +18,7 @@ import Container from "./Container";
 const links = [
   { title: "Discover", items: [["Destinations", "/destinations"], ["Travel Inspiration", "/travel-inspiration"], ["Plan My Experience", "/journey-passport"]] },
   { title: "About", items: [["About Us", "/about"], ["Our Promise", "/about#our-promise"], ["Contact Us", "/contact"]] },
-  { title: "Support", items: [["Privacy Policy", "/privacy-policy"], ["Terms and Conditions", "/terms-and-conditions"]] },
+  { title: "Support", items: [["Privacy Policy", "/privacy-policy"], ["Terms and Conditions", "/terms-and-conditions"], ["Sign In", "/portal/login"]] },
 ] as const;
 
 export default function PublicFooter() {
