@@ -24,6 +24,13 @@ export async function POST(request: Request) {
       );
     }
 
+    if (staff.status === "Inactive" || staff.deactivatedAt) {
+      return NextResponse.json(
+        { ok: false, message: "Account has been deactivated. Please contact your Super Administrator." },
+        { status: 403 }
+      );
+    }
+
     // Require first-time password setup before allowing single-channel OTP sign in
     if (staff.requiresPasswordChange) {
       return NextResponse.json(

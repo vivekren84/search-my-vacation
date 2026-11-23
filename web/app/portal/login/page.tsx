@@ -131,6 +131,18 @@ export default function PortalLoginPage() {
         setIsLoading(false);
         return;
       }
+      if ((staff as any).status === "Inactive" || (staff as any).deactivatedAt) {
+        setErrorMessage("Account has been deactivated. Please contact your Super Administrator.");
+        setIsLoading(false);
+        return;
+      }
+      if (staff.requiresPasswordChange) {
+        setErrorMessage(
+          "Account pending initial activation. Please sign in using your temporary password sent to your email to set your permanent credentials."
+        );
+        setIsLoading(false);
+        return;
+      }
       setOtpSent(true);
       setCooldown(60);
       const destination = channel === "sms" ? staff.phoneE164 : staff.email;
@@ -261,6 +273,10 @@ export default function PortalLoginPage() {
         setErrorMessage("Account not recognized. Traveller accounts opening soon");
         return;
       }
+      if ((staff as any).status === "Inactive" || (staff as any).deactivatedAt) {
+        setErrorMessage("Account has been deactivated. Please contact your Super Administrator.");
+        return;
+      }
       setPendingAccount(staff);
       if (staff.requiresPasswordChange || passCleaned === "TemporaryDefaultPass#2026") {
         setShowPasswordChangeModal(true);
@@ -321,6 +337,20 @@ export default function PortalLoginPage() {
     } catch {
       // Offline fallback
     }
+
+    // Clear password change requirement from localStorage if present
+    try {
+      const stored = localStorage.getItem("smv_invited_staff");
+      if (stored) {
+        const list = JSON.parse(stored);
+        const updated = list.map((item: any) =>
+          item.email?.toLowerCase() === targetAccount.email.toLowerCase()
+            ? { ...item, requiresPasswordChange: false, status: "Active" }
+            : item
+        );
+        localStorage.setItem("smv_invited_staff", JSON.stringify(updated));
+      }
+    } catch {}
 
     localStorage.setItem(
       "smv_staff_session",
@@ -600,7 +630,7 @@ export default function PortalLoginPage() {
               <span className="inline-block p-2.5 rounded-full bg-amber-500/20 text-[#F5951C] text-xl mb-2">
                 🔒
               </span>
-              <h2 className="text-lg font-bold text-white">First-Time Sign In Detected</h2>
+              <h2 className="text-lg font-bold text-white">First-Time Sign In Detected - Set Permanent Password</h2>
               <p className="mt-1 text-xs text-white/70">
                 As an internal staff member, you must replace your temporary default password before
                 accessing workspace data.

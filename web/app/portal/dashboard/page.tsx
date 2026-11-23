@@ -17,8 +17,9 @@ interface TeamMember {
   email: string;
   phoneE164: string;
   role: "super_admin" | "administrator" | "privilege_user" | "desk_user";
-  status: "Active" | "Pending First Login";
+  status: "Active" | "Pending First Login" | "Inactive";
   invitedAt: string;
+  deactivatedAt?: string | null;
 }
 
 const DEFAULT_TEAM_MEMBERS: TeamMember[] = [
@@ -185,7 +186,8 @@ export default function PortalDashboardPage() {
                   email: c.email,
                   phoneE164: c.phoneE164,
                   role: c.role,
-                  status: "Pending First Login",
+                  status: c.status || "Pending First Login",
+                  deactivatedAt: c.deactivatedAt || null,
                   invitedAt: c.invitedAt || new Date().toISOString().split("T")[0],
                 });
               }
@@ -341,21 +343,100 @@ export default function PortalDashboardPage() {
     } catch {}
 
     setTeamMembers((prev) => [...prev, newMember]);
-    setInviteSuccess(`Invitation successfully dispatched via email to ${newMember.email}. Login credentials and temporary password sent. (No mobile OTP required).`);
+    setInviteSuccess("Invitation dispatched via email. Temporary password provided. No mobile OTP required.");
     setInviteName("");
     setInviteEmail("");
     setInvitePhone("+91 ");
   }
 
-  // Revoke Staff Account Handler
-  async function handleRevokeMember(emailToRevoke: string) {
-    if (!confirm(`Are you sure you want to revoke the invite for ${emailToRevoke}?`)) {
+  // Toggle Staff User Active / Inactive Status (US-001)
+  async function handleToggleActiveStatus(member: TeamMember) {
+    const emailCleaned = member.email.trim().toLowerCase();
+
+    // Self-Protection Guardrail: Super Admin cannot be deactivated
+    if (emailCleaned === "vivek@searchmyvacation.com" || member.role === "super_admin") {
+      alert("Self-Protection Guardrail: Super Admin account cannot be deactivated.");
       return;
     }
 
-    const emailCleaned = emailToRevoke.toLowerCase().trim();
+    const isCurrentlyInactive = member.status === "Inactive";
+    const newStatus: "Active" | "Inactive" = isCurrentlyInactive ? "Active" : "Inactive";
 
-    // 1. Remove from state
+    const promptMessage = isCurrentlyInactive
+      ? `Are you sure you want to reactivate ${member.fullName} (${member.email})?`
+      : `Are you sure you want to mark ${member.fullName} (${member.email}) as Inactive? They will be immediately blocked from signing in or maintaining an active session.`;
+
+    if (!confirm(promptMessage)) {
+      return;
+    }
+
+    const nowIso = new Date().toISOString();
+
+    // 1. Update UI state
+    setTeamMembers((prev) =>
+      prev.map((m) =>
+        m.email.toLowerCase() === emailCleaned
+          ? {
+              ...m,
+              status: newStatus,
+              deactivatedAt: isCurrentlyInactive ? null : nowIso,
+            }
+          : m
+      )
+    );
+
+    // 2. Update localStorage
+    try {
+      const stored = localStorage.getItem("smv_invited_staff");
+      if (stored) {
+        const list = JSON.parse(stored);
+        const updated = list.map((item: any) =>
+          item.email?.toLowerCase() === emailCleaned
+            ? {
+                ...item,
+                status: newStatus,
+                deactivatedAt: isCurrentlyInactive ? null : nowIso,
+              }
+            : item
+        );
+        localStorage.setItem("smv_invited_staff", JSON.stringify(updated));
+      }
+    } catch {}
+
+    // 3. Call backend PATCH endpoint (updates server registry & Supabase public.workspace_users)
+    try {
+      const res = await fetch("/api/portal/auth/invite", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: emailCleaned, status: newStatus }),
+      });
+      const data = await res.json();
+      setDirectoryNotice(data.message || `Staff account status updated to ${newStatus}.`);
+    } catch {
+      setDirectoryNotice(`Staff account status updated to ${newStatus}.`);
+    }
+    setTimeout(() => setDirectoryNotice(null), 4000);
+  }
+
+  // Delete Staff User Permanently (US-001 with DB Sync)
+  async function handleDeleteMember(member: TeamMember) {
+    const emailCleaned = member.email.trim().toLowerCase();
+
+    // Self-Protection Guardrail: Super Admin cannot be deleted
+    if (emailCleaned === "vivek@searchmyvacation.com" || member.role === "super_admin") {
+      alert("Self-Protection Guardrail: Super Admin account cannot be deleted.");
+      return;
+    }
+
+    if (
+      !confirm(
+        `Are you sure you want to permanently delete ${member.fullName} (${member.email})? This action will remove the account from the directory and delete all records from the database.`
+      )
+    ) {
+      return;
+    }
+
+    // 1. Remove from UI state
     setTeamMembers((prev) => prev.filter((m) => m.email.toLowerCase() !== emailCleaned));
 
     // 2. Remove from localStorage
@@ -363,47 +444,57 @@ export default function PortalDashboardPage() {
       const stored = localStorage.getItem("smv_invited_staff");
       if (stored) {
         const list = JSON.parse(stored);
-        const updated = list.filter((item: any) => item.email.toLowerCase() !== emailCleaned);
+        const updated = list.filter((item: any) => item.email?.toLowerCase() !== emailCleaned);
         localStorage.setItem("smv_invited_staff", JSON.stringify(updated));
       }
     } catch {}
 
-    // 3. Call server DELETE endpoint
+    // 3. Call backend DELETE endpoint (removes from in-memory registry & deletes from Supabase auth.users & workspace_users)
     try {
-      await fetch("/api/portal/auth/invite", {
+      const res = await fetch("/api/portal/auth/invite", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: emailCleaned }),
       });
-    } catch {}
-
-    setDirectoryNotice(`Staff account for ${emailCleaned} revoked and removed.`);
+      const data = await res.json();
+      setDirectoryNotice(data.message || `Staff account for ${emailCleaned} permanently deleted.`);
+    } catch {
+      setDirectoryNotice(`Staff account for ${emailCleaned} permanently deleted.`);
+    }
     setTimeout(() => setDirectoryNotice(null), 4000);
   }
 
   // Launch Claude Project Pop-Up & Copy Brief
   function handleLaunchClaudePopup() {
-    const prompt = `Search My Vacation — Bespoke Itinerary & Proposal Request
+    const prompt = `SEARCH MY VACATION — BESPOKE ITINERARY CLIENT BRIEF
 
-1. LOCATION / DESTINATION:
+1. DESTINATION & REGION:
 ${claudeBriefLocation || "Kashmir Autumn Circuit (Srinagar, Gulmarg, Pahalgam)"}
 
-2. TRIP DURATION:
+2. TRIP DURATION & DATES:
 ${claudeBriefDuration || "8 Days / 7 Nights (Oct 10 - Oct 17, 2026)"}
 
-3. SPECIAL ASKS & TRAVEL CONSTRAINTS:
+3. TRAVEL PACING & STYLE:
+- Pacing: Slow-Travel Pacing, unhurried mornings, buffer time between scenic mountain transfers
+- Party Composition: Couple traveling with 7-year-old child (family comfort focus)
+- Travel Style: Mindfully paced, culturally immersive, authentic bespoke journey
+
+4. SPECIAL ASKS & CONSTRAINTS:
 ${claudeBriefAsks || "- Pure Vegetarian Dining Focus\n- Family Comfort & Slow-Travel Pacing (Child age 7)\n- Interconnecting boutique heritage suites\n- Scenic chauffeured transfers with buffer times\n- Budget target: ₹3,80,000 - ₹4,00,000 INR"}
 
-4. ATTACHMENTS & ASSETS:
+5. CLIENT DOSSIER & ATTACHMENTS:
 ${attachedFiles.length > 0 ? attachedFiles.map((f) => `- ${f.name} (${f.size})`).join("\n") : "- Flight confirmation: AI-825 (DEL to SXR)\n- Client preference dossier: Ananya Sharma Family"}
 
-OUTPUT FORMAT:
-Please produce the 18-20 page bespoke travel itinerary and formatted proposal PDF structure according to Search My Vacation guidelines:
-- Elegant day titles with morning, afternoon, and evening pacing
-- Selected boutique and heritage accommodations
-- Unsplash image tags for each day using your integrated Unsplash API key
-- Line-item commercial pricing (Net cost, 18% agency margin, estimated GST)
-- Zero hyperbolic marketing cliches.`;
+6. UNSPLASH VISUAL SPECIFICATIONS:
+- High-resolution authentic landscape and property imagery
+- Aspect ratio: 16:9 for header heroes, 4:3 for property highlights
+- Use integrated Unsplash API key to curate verified location photos for each day
+- Zero generic stock photography
+
+7. COMMERCIAL & PRICING GOVERNANCE:
+- Transparent line-item pricing (Net DMC supplier liabilities, 18% SMV agency margin, 5% estimated GST)
+- Zero hyperbolic cliches
+- Output full 18-20 page proposal structure ready for PDF compilation.`;
 
     if (typeof navigator !== "undefined" && navigator.clipboard) {
       navigator.clipboard.writeText(prompt);
@@ -414,7 +505,7 @@ Please produce the 18-20 page bespoke travel itinerary and formatted proposal PD
     const targetUrl = claudeProjectUrl.trim() || "https://claude.ai";
     window.open(
       targetUrl,
-      "SMVClaudeProjectPopup",
+      "ClaudeProject",
       "width=1200,height=850,top=60,left=100,resizable=yes,scrollbars=yes"
     );
   }
@@ -698,7 +789,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   title="Copy client brief and open your Claude Project in pop-up window ($0.00 extra cost)"
                 >
                   <span>🚀</span>
-                  <span>{copiedPrompt ? "Copied! Launching..." : "Launch Claude Pop-Up"}</span>
+                  <span>{copiedPrompt ? "✓ Copied! Launching Pop-Up..." : "Launch Claude Project Pop-Up"}</span>
                 </button>
                 <button
                   onClick={() => {
@@ -736,10 +827,10 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                 <div className="flex items-center gap-2 text-xs">
                   <button
                     onClick={handleLaunchClaudePopup}
-                    className="px-3 py-1.5 rounded-lg bg-[#F5951C] text-[#2A211C] font-bold text-xs uppercase tracking-wider hover:bg-[#e08515] transition flex items-center gap-1.5"
+                    className="px-3.5 py-1.5 rounded-lg bg-[#F5951C] text-[#2A211C] font-bold text-xs uppercase tracking-wider hover:bg-[#e08515] transition flex items-center gap-1.5 shadow-sm"
                   >
                     <span>🚀</span>
-                    <span>Launch Pop-Up</span>
+                    <span>{copiedPrompt ? "✓ Copied! Launching..." : "Launch Claude Project Pop-Up"}</span>
                   </button>
                   <button
                     onClick={() => {
@@ -751,6 +842,20 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     View Sample Output
                   </button>
                 </div>
+              </div>
+
+              {/* Headless API Evaluation Context */}
+              <div className="mt-4 p-3.5 rounded-xl bg-black/30 border border-white/10 text-xs space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-white flex items-center gap-1.5">
+                    <span>💡</span> Zero-Cost Pop-Up vs Headless API Cost Benchmark
+                  </span>
+                  <span className="text-[10px] text-emerald-400 font-mono font-semibold">100% Free Artifact Workflow</span>
+                </div>
+                <p className="text-[11px] text-white/70 leading-relaxed">
+                  Generating 50 itineraries/day (18–20 pages each) via direct Anthropic Claude 3.5 Sonnet API would cost approximately <strong>$4.50 USD/day (~₹380 INR/day)</strong> or <strong>$135.00 USD/month (~₹11,400 INR/month)</strong>.
+                  The <strong>Zero-Cost Pop-Up Artifact Launcher</strong> generates the same high-touch 18–20 page PDFs using your existing Claude project and Unsplash key at <strong>$0.00 additional API cost</strong>.
+                </p>
               </div>
 
               {itineraryUpdatedFromClaude && (
@@ -916,18 +1021,49 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     <div className="pt-2 border-t border-white/5 flex justify-between items-center text-[10px]">
                       <span className="text-white/40">Provisioned: {member.invitedAt}</span>
                       <div className="flex items-center gap-2">
-                        <span className={member.status === "Active" ? "text-emerald-400 font-semibold" : "text-amber-400 font-semibold"}>
+                        <span
+                          className={
+                            member.status === "Active"
+                              ? "text-emerald-400 font-semibold"
+                              : member.status === "Inactive"
+                              ? "text-rose-400 font-semibold"
+                              : "text-amber-400 font-semibold"
+                          }
+                        >
                           ● {member.status}
                         </span>
-                        {member.role !== "super_admin" && (
-                          <button
-                            type="button"
-                            onClick={() => handleRevokeMember(member.email)}
-                            className="px-2 py-0.5 rounded bg-red-500/10 hover:bg-red-500/20 text-red-300 border border-red-500/30 text-[10px] font-semibold transition"
-                            title={`Revoke invitation for ${member.email}`}
-                          >
-                            Revoke
-                          </button>
+                        {member.role !== "super_admin" &&
+                        member.email.toLowerCase() !== "vivek@searchmyvacation.com" ? (
+                          <div className="flex items-center gap-1.5">
+                            <button
+                              type="button"
+                              onClick={() => handleToggleActiveStatus(member)}
+                              className={`px-2 py-0.5 rounded text-[10px] font-semibold transition border ${
+                                member.status === "Inactive"
+                                  ? "bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
+                                  : "bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border-amber-500/30"
+                              }`}
+                              title={
+                                member.status === "Inactive"
+                                  ? `Reactivate account for ${member.fullName}`
+                                  : `Mark ${member.fullName} as Inactive (blocks session and login)`
+                              }
+                            >
+                              {member.status === "Inactive" ? "Reactivate" : "Mark Inactive"}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteMember(member)}
+                              className="px-2 py-0.5 rounded bg-red-500/10 hover:bg-red-500/20 text-red-300 border border-red-500/30 text-[10px] font-semibold transition"
+                              title={`Permanently delete ${member.fullName} from directory and database`}
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        ) : (
+                          <span className="px-2 py-0.5 rounded bg-white/5 text-white/50 border border-white/10 text-[9px] font-semibold flex items-center gap-1">
+                            <span>🔒</span> Protected Super Admin
+                          </span>
                         )}
                       </div>
                     </div>
@@ -1325,7 +1461,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       className="px-4 py-1.5 rounded-lg bg-[#F5951C] text-[#2A211C] font-bold uppercase tracking-wider hover:bg-[#e08515] transition flex items-center gap-1.5 text-xs shadow-md"
                     >
                       <span>🚀</span>
-                      <span>Launch Pop-Up</span>
+                      <span>{copiedPrompt ? "✓ Copied! Launching..." : "Launch Claude Project Pop-Up"}</span>
                     </button>
                   </div>
                 </div>
@@ -1352,14 +1488,14 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   />
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-200 space-y-1.5">
+                <div className="p-3.5 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-200 space-y-2">
                   <p className="font-semibold flex items-center gap-1.5">
-                    <span>💡</span> How your Claude Project Integrates:
+                    <span>💡</span> Zero-Cost Pop-Up vs Headless API Evaluation
                   </p>
-                  <p className="text-[11px] text-blue-200/80">
-                    1. <strong>Copy Brief:</strong> SMV bundles Location, Duration, Special Asks & Attachments.<br />
-                    2. <strong>Claude Generation:</strong> Paste into your Claude project — Claude outputs your itinerary and PDF structure.<br />
-                    3. <strong>Parse & Export:</strong> Paste Claude&apos;s output above and click <strong>Parse & Generate PDF</strong> — SMV archives the proposal and prepares your client PDF!
+                  <p className="text-[11px] text-blue-200/80 leading-relaxed">
+                    1. <strong>Zero-Cost Pop-Up Artifact Launcher:</strong> $0.00/month. Directly leverages your existing Claude Project and Unsplash key with zero additional infrastructure or token costs.<br />
+                    2. <strong>Headless API Cost Benchmark:</strong> Generating 50 bespoke itineraries/day (18–20 pages each) via direct Anthropic Claude 3.5 Sonnet API would cost approximately <strong>$4.50 USD/day (~₹380 INR/day)</strong> or <strong>$135.00 USD/month (~₹11,400 INR/month)</strong>.<br />
+                    3. <strong>Interactive Workflow:</strong> 1-click copies the dossier and opens your Claude Project in a pop-up window (`ClaudeProject`, 1200x850). Paste with Cmd+V, generate your proposal, and parse it back into SMV at $0.00 cost!
                   </p>
                 </div>
 

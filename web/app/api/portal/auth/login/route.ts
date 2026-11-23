@@ -31,6 +31,13 @@ export async function POST(request: Request) {
       );
     }
 
+    if (staff.status === "Inactive" || staff.deactivatedAt) {
+      return NextResponse.json(
+        { ok: false, message: "Account has been deactivated. Please contact your Super Administrator." },
+        { status: 403 }
+      );
+    }
+
     const inputPass = password.trim();
     const expectedPass = staff.password || "TemporaryDefaultPass#2026";
 

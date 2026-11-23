@@ -167,6 +167,11 @@ export class StaffAuthService {
       throw new Error("user_not_found: Target staff user does not exist");
     }
 
+    // Self-protection guardrail: Super Admin cannot be deactivated
+    if (target.email.toLowerCase() === "vivek@searchmyvacation.com") {
+      throw new Error("unauthorized_action: Super Admin account cannot be deactivated");
+    }
+
     // Mark as deactivated
     target.deactivatedAt = new Date().toISOString();
     target.updatedAt = new Date().toISOString();
@@ -198,6 +203,96 @@ export class StaffAuthService {
     });
 
     return target;
+  }
+
+  /**
+   * US-001: Admin reactivates a previously deactivated staff account
+   */
+  async reactivateStaffUser(params: {
+    actorAdminId: string;
+    targetUserId: string;
+    reason?: string;
+  }): Promise<WorkspaceUserRecord> {
+    const actor = await this.getUserById(params.actorAdminId);
+    if (!actor || actor.role !== "administrator" || actor.deactivatedAt) {
+      throw new Error("unauthorized_action: Only active Administrators can reactivate staff accounts");
+    }
+
+    const target = await this.getUserById(params.targetUserId);
+    if (!target) {
+      throw new Error("user_not_found: Target staff user does not exist");
+    }
+
+    target.deactivatedAt = null;
+    target.updatedAt = new Date().toISOString();
+
+    // Audit log
+    await staffAuditLogger.logEvent({
+      actorId: params.actorAdminId,
+      entityType: "workspace_user",
+      entityId: target.userId,
+      eventType: "user_reactivated",
+      eventData: {
+        targetUserEmail: target.email,
+        reason: params.reason ?? "Administrative reactivation",
+      },
+    });
+
+    return target;
+  }
+
+  /**
+   * US-001: Admin permanently deletes a staff account
+   */
+  async deleteStaffUser(params: {
+    actorAdminId: string;
+    targetUserId: string;
+    reason?: string;
+  }): Promise<boolean> {
+    const actor = await this.getUserById(params.actorAdminId);
+    if (!actor || actor.role !== "administrator" || actor.deactivatedAt) {
+      throw new Error("unauthorized_action: Only active Administrators can delete staff accounts");
+    }
+
+    const target = await this.getUserById(params.targetUserId);
+    if (!target) {
+      throw new Error("user_not_found: Target staff user does not exist");
+    }
+
+    // Self-protection guardrail: Super Admin cannot be deleted
+    if (target.email.toLowerCase() === "vivek@searchmyvacation.com") {
+      throw new Error("unauthorized_action: Super Admin account cannot be deleted");
+    }
+
+    // Kill all active sessions for this user immediately
+    for (const [token, session] of activeSessions.entries()) {
+      if (session.userId === target.userId) {
+        activeSessions.delete(token);
+      }
+    }
+
+    // Invalidate PII unmask grants
+    for (const [key, grant] of activePiiUnmasks.entries()) {
+      if (grant.userId === target.userId) {
+        activePiiUnmasks.delete(key);
+      }
+    }
+
+    inMemoryUsers.delete(target.userId);
+
+    // Audit log
+    await staffAuditLogger.logEvent({
+      actorId: params.actorAdminId,
+      entityType: "workspace_user",
+      entityId: target.userId,
+      eventType: "user_deactivated",
+      eventData: {
+        targetUserEmail: target.email,
+        reason: params.reason ?? "Administrative permanent deletion",
+      },
+    });
+
+    return true;
   }
 
   /**

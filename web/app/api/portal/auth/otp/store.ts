@@ -20,7 +20,8 @@ export interface AuthorizedStaffAccount {
   phoneE164: string;
   requiresPasswordChange?: boolean;
   password?: string;
-  status?: "Active" | "Pending First Login";
+  status?: "Active" | "Pending First Login" | "Inactive";
+  deactivatedAt?: string | null;
   invitedAt?: string;
 }
 

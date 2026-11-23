@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { AUTHORIZED_STAFF_ACCOUNTS } from "../../otp/store";
+import { updateSupabaseUserPassword } from "@/lib/supabase/admin";
 
 export const runtime = "nodejs";
 
@@ -39,6 +40,9 @@ export async function POST(request: Request) {
     staff.password = newPassword;
     staff.requiresPasswordChange = false;
     staff.status = "Active";
+
+    // Synchronize password with Supabase auth
+    await updateSupabaseUserPassword(emailCleaned, newPassword);
 
     return NextResponse.json({
       ok: true,

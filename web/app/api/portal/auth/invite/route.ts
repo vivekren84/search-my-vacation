@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { AUTHORIZED_STAFF_ACCOUNTS } from "../otp/store";
+import { staffAuthService } from "@/lib/staff-portal/auth/service";
+import { deleteSupabaseUserByEmail, setSupabaseUserActiveStatus } from "@/lib/supabase/admin";
 
 export const runtime = "nodejs";
 
@@ -28,6 +30,7 @@ export async function POST(request: Request) {
       requiresPasswordChange: true,
       password: pass,
       status: "Pending First Login",
+      deactivatedAt: null,
       invitedAt: new Date().toISOString().split("T")[0],
     };
 
@@ -111,12 +114,11 @@ export async function POST(request: Request) {
       }
     }
 
-    // Note: Per PO directive, do NOT trigger OTP on invitation. Mobile notification is pure advisory.
-
+    // Explicit invariant: ZERO mobile OTP dispatched on invitation
     return NextResponse.json({
       ok: true,
       emailSent,
-      message: `Invitation successfully dispatched to ${emailCleaned}. Account provisioned as ${(role || "desk_user").replace("_", " ")}.`,
+      message: "Invitation dispatched via email. Temporary password provided. No mobile OTP required.",
     });
   } catch (err: any) {
     console.error("Staff invite error:", err);
@@ -127,23 +129,123 @@ export async function POST(request: Request) {
   }
 }
 
+export async function PATCH(request: Request) {
+  try {
+    const body = await request.json();
+    const { email, status, action } = body;
+
+    if (!email || typeof email !== "string") {
+      return NextResponse.json({ ok: false, message: "Valid email is required." }, { status: 400 });
+    }
+
+    const emailCleaned = email.trim().toLowerCase();
+
+    // Self-Protection Guardrail: Super Admin cannot be deactivated
+    if (emailCleaned === "vivek@searchmyvacation.com") {
+      return NextResponse.json(
+        { ok: false, message: "Super Admin account cannot be deactivated." },
+        { status: 403 }
+      );
+    }
+
+    const shouldDeactivate = status === "Inactive" || action === "deactivate";
+    const nowIso = new Date().toISOString();
+
+    // 1. Update in-memory authorized staff registry
+    const account = AUTHORIZED_STAFF_ACCOUNTS[emailCleaned];
+    if (account) {
+      account.status = shouldDeactivate ? "Inactive" : "Active";
+      account.deactivatedAt = shouldDeactivate ? nowIso : null;
+    }
+
+    // 2. Sync with staffAuthService
+    try {
+      const authUser = await staffAuthService.getUserByEmail(emailCleaned);
+      if (authUser) {
+        const adminUser = await staffAuthService.getUserByEmail("vivek@searchmyvacation.com");
+        const adminId = adminUser?.userId || "89782ecc-b5f9-4e44-b9e5-db3e310a933e";
+        if (shouldDeactivate) {
+          await staffAuthService.deactivateStaffUser({
+            actorAdminId: adminId,
+            targetUserId: authUser.userId,
+            reason: "Deactivated via Super Admin Governance",
+          });
+        } else {
+          await staffAuthService.reactivateStaffUser({
+            actorAdminId: adminId,
+            targetUserId: authUser.userId,
+            reason: "Reactivated via Super Admin Governance",
+          });
+        }
+      }
+    } catch (e: any) {
+      console.warn("staffAuthService status sync warning:", e.message);
+    }
+
+    // 3. Sync with Supabase database (public.workspace_users & public.workspace_audit_log)
+    await setSupabaseUserActiveStatus(emailCleaned, !shouldDeactivate);
+
+    return NextResponse.json({
+      ok: true,
+      status: shouldDeactivate ? "Inactive" : "Active",
+      message: `Staff account ${emailCleaned} status updated to ${shouldDeactivate ? "Inactive" : "Active"}.`,
+    });
+  } catch (err: any) {
+    console.error("Staff status update error:", err);
+    return NextResponse.json(
+      { ok: false, message: "Failed to update staff account status." },
+      { status: 500 }
+    );
+  }
+}
+
 export async function DELETE(request: Request) {
   try {
     const body = await request.json();
     const { email } = body;
 
-    if (!email) {
-      return NextResponse.json({ ok: false, message: "Email is required." }, { status: 400 });
+    if (!email || typeof email !== "string") {
+      return NextResponse.json({ ok: false, message: "Valid email is required." }, { status: 400 });
     }
 
     const emailCleaned = email.trim().toLowerCase();
+
+    // Self-Protection Guardrail: Super Admin cannot be deleted
+    if (emailCleaned === "vivek@searchmyvacation.com") {
+      return NextResponse.json(
+        { ok: false, message: "Super Admin account cannot be deleted." },
+        { status: 403 }
+      );
+    }
+
+    // 1. Remove from in-memory server registry
     delete AUTHORIZED_STAFF_ACCOUNTS[emailCleaned];
+
+    // 2. Remove from staffAuthService
+    try {
+      const authUser = await staffAuthService.getUserByEmail(emailCleaned);
+      if (authUser) {
+        const adminUser = await staffAuthService.getUserByEmail("vivek@searchmyvacation.com");
+        const adminId = adminUser?.userId || "89782ecc-b5f9-4e44-b9e5-db3e310a933e";
+        await staffAuthService.deleteStaffUser({
+          actorAdminId: adminId,
+          targetUserId: authUser.userId,
+          reason: "Deleted via Super Admin Governance",
+        });
+      }
+    } catch (e: any) {
+      console.warn("staffAuthService delete warning:", e.message);
+    }
+
+    // 3. Delete from Supabase public.workspace_users & auth.users via Service Role
+    const dbResult = await deleteSupabaseUserByEmail(emailCleaned);
 
     return NextResponse.json({
       ok: true,
-      message: `Staff account ${emailCleaned} removed from directory.`,
+      message: dbResult.message || `Staff account ${emailCleaned} removed from directory and database.`,
     });
   } catch (err: any) {
+    console.error("Staff deletion error:", err);
     return NextResponse.json(
       { ok: false, message: "Failed to remove staff account." },
       { status: 500 }
