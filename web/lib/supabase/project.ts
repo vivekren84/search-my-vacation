@@ -10,8 +10,8 @@ export function resolveSupabaseProjectUrl(
   urlValue: string | undefined,
   projectRefValue: string | undefined,
 ): string | null {
-  const projectRef = projectRefValue?.trim();
-  const candidate = urlValue?.trim().replace(/\/+$/, "");
+  const projectRef = projectRefValue?.trim().replace(/^['"]|['"]$/g, "");
+  const candidate = urlValue?.trim().replace(/^['"]|['"]$/g, "").replace(/\/+$/, "");
   if (!projectRef || !SUPABASE_PROJECT_REF_PATTERN.test(projectRef) || !candidate) return null;
 
   try {

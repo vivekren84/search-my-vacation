@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { AUTHORIZED_STAFF_ACCOUNTS } from "../../otp/store";
-import { updateSupabaseUserPassword } from "@/lib/supabase/admin";
+import { updateSupabaseUserPassword, getSupabaseStaffUserByEmailOrPhone } from "@/lib/supabase/admin";
 
 export const runtime = "nodejs";
 
@@ -27,7 +27,15 @@ export async function POST(request: Request) {
     }
 
     const emailCleaned = email.trim().toLowerCase();
-    const staff = AUTHORIZED_STAFF_ACCOUNTS[emailCleaned];
+    let staff = AUTHORIZED_STAFF_ACCOUNTS[emailCleaned];
+
+    if (!staff) {
+      const dbStaff = await getSupabaseStaffUserByEmailOrPhone(emailCleaned);
+      if (dbStaff) {
+        AUTHORIZED_STAFF_ACCOUNTS[emailCleaned] = dbStaff;
+        staff = dbStaff;
+      }
+    }
 
     if (!staff) {
       return NextResponse.json(

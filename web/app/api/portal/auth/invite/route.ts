@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
 import { AUTHORIZED_STAFF_ACCOUNTS } from "../otp/store";
 import { staffAuthService } from "@/lib/staff-portal/auth/service";
-import { deleteSupabaseUserByEmail, setSupabaseUserActiveStatus } from "@/lib/supabase/admin";
+import {
+  deleteSupabaseUserByEmail,
+  setSupabaseUserActiveStatus,
+  createOrSyncSupabaseStaffUser,
+} from "@/lib/supabase/admin";
 
 export const runtime = "nodejs";
 
@@ -33,6 +37,15 @@ export async function POST(request: Request) {
       deactivatedAt: null,
       invitedAt: new Date().toISOString().split("T")[0],
     };
+
+    // Synchronize user into Supabase auth.users & public.workspace_users
+    await createOrSyncSupabaseStaffUser({
+      fullName: fullName.trim(),
+      email: emailCleaned,
+      phoneE164: phoneCleaned,
+      role: role || "desk_user",
+      temporaryPassword: pass,
+    });
 
     let emailSent = false;
 

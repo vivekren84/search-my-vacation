@@ -74,30 +74,14 @@ const initialAccounts: Record<string, AuthorizedStaffAccount> = {
     requiresPasswordChange: false,
     invitedAt: "2026-11-05",
   },
-  "sri@searchmyvacation.com": {
-    fullName: "Sri",
-    role: "desk_user",
-    email: "sri@searchmyvacation.com",
-    phoneE164: "+919840154321",
-    requiresPasswordChange: true,
-    password: "TemporaryDefaultPass#2026",
-    status: "Pending First Login",
-    invitedAt: "2026-11-15",
-  },
-  "keerthi@searchmyvacation.com": {
-    fullName: "Keerthi Renganathan",
-    role: "privilege_user",
-    email: "keerthi@searchmyvacation.com",
-    phoneE164: "+919840198765",
-    password: "TemporaryDefaultPass#2026",
-    status: "Active",
-    requiresPasswordChange: false,
-    invitedAt: "2026-11-10",
-  },
 };
 
 export const AUTHORIZED_STAFF_ACCOUNTS: Record<string, AuthorizedStaffAccount> =
   (globalThis as any)._smvAuthorizedStaffAccounts || initialAccounts;
+
+// Cleanse any old persisted demo accounts across warm runtime instances
+delete AUTHORIZED_STAFF_ACCOUNTS["sri@searchmyvacation.com"];
+delete AUTHORIZED_STAFF_ACCOUNTS["keerthi@searchmyvacation.com"];
 
 (globalThis as any)._smvAuthorizedStaffAccounts = AUTHORIZED_STAFF_ACCOUNTS;
 

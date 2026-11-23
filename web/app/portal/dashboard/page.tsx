@@ -22,6 +22,35 @@ interface TeamMember {
   deactivatedAt?: string | null;
 }
 
+interface ClientCompanion {
+  id?: string;
+  fullName: string;
+  relationship: string;
+  notes?: string | null;
+}
+
+interface ClientTag {
+  category: "dietary" | "pace" | "accommodation" | "comfort" | "general";
+  tagValue: string;
+}
+
+interface ClientProfileItem {
+  id: string;
+  fullName: string;
+  email: string | null;
+  phone: string | null;
+  phoneE164: string | null;
+  nationality: string | null;
+  dob?: string | null;
+  leadSource: string;
+  isVip: boolean;
+  companions: ClientCompanion[];
+  tags: ClientTag[];
+  initialActivityNote?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 const DEFAULT_TEAM_MEMBERS: TeamMember[] = [
   {
     fullName: "Vivek Renganathan",
@@ -38,22 +67,6 @@ const DEFAULT_TEAM_MEMBERS: TeamMember[] = [
     role: "administrator",
     status: "Active",
     invitedAt: "2026-11-05",
-  },
-  {
-    fullName: "Keerthi Renganathan",
-    email: "keerthi@searchmyvacation.com",
-    phoneE164: "+91 98401 98765",
-    role: "privilege_user",
-    status: "Active",
-    invitedAt: "2026-11-10",
-  },
-  {
-    fullName: "Sri",
-    email: "sri@searchmyvacation.com",
-    phoneE164: "+91 98401 54321",
-    role: "desk_user",
-    status: "Pending First Login",
-    invitedAt: "2026-11-15",
   },
 ];
 
@@ -113,6 +126,35 @@ export default function PortalDashboardPage() {
   const [directoryNotice, setDirectoryNotice] = useState<string | null>(null);
   const [copiedPass, setCopiedPass] = useState(false);
 
+  // Master Client CRM State (US-004, US-005, US-006)
+  const [clients, setClients] = useState<ClientProfileItem[]>([]);
+  const [crmLoading, setCrmLoading] = useState(false);
+  const [crmSearchQuery, setCrmSearchQuery] = useState("");
+  const [crmTagFilter, setCrmTagFilter] = useState("all");
+  const [showAddClientModal, setShowAddClientModal] = useState(false);
+  const [clientFormName, setClientFormName] = useState("");
+  const [clientFormEmail, setClientFormEmail] = useState("");
+  const [clientFormPhone, setClientFormPhone] = useState("+91 ");
+  const [clientFormCity, setClientFormCity] = useState("");
+  const [clientFormLeadSource, setClientFormLeadSource] = useState("instagram");
+  const [clientFormIsVip, setClientFormIsVip] = useState(false);
+  const [clientFormSelectedTags, setClientFormSelectedTags] = useState<string[]>([
+    "Family Comfort",
+    "Slow Travel",
+    "Pure Vegetarian",
+  ]);
+  const [clientFormCustomTag, setClientFormCustomTag] = useState("");
+  const [clientFormCompanions, setClientFormCompanions] = useState<
+    Array<{ fullName: string; relationship: string; notes: string }>
+  >([
+    { fullName: "", relationship: "spouse", notes: "" }
+  ]);
+  const [clientFormInitialNote, setClientFormInitialNote] = useState("");
+  const [clientSubmitLoading, setClientSubmitLoading] = useState(false);
+  const [clientSubmitError, setClientSubmitError] = useState<string | null>(null);
+  const [clientSubmitSuccess, setClientSubmitSuccess] = useState<string | null>(null);
+  const [duplicateWarning, setDuplicateWarning] = useState<string | null>(null);
+
   // Claude Itinerary & PDF Generator Studio State
   const [showClaudeModal, setShowClaudeModal] = useState(false);
   const [claudeProjectUrl, setClaudeProjectUrl] = useState("https://claude.ai");
@@ -161,42 +203,79 @@ export default function PortalDashboardPage() {
       if (savedClaudeUrl) setClaudeProjectUrl(savedClaudeUrl);
     } catch {}
 
-    // Load custom invited staff if any and purge explicit deleted test accounts
-    try {
-      const stored = localStorage.getItem("smv_invited_staff");
-      if (stored) {
-        let customInvites = JSON.parse(stored);
-        if (Array.isArray(customInvites) && customInvites.length > 0) {
-          const purgedEmails = [
-            "renganathanthyagarajan@gmail.com",
-            "speeddevil.vicky@gmail.com",
-          ];
-          const activeCustomInvites = customInvites.filter(
-            (c: any) => c && c.email && !purgedEmails.includes(c.email.toLowerCase().trim())
+    // 1. Fetch live synchronized staff members from backend API & Supabase
+    fetch("/api/portal/auth/users")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.ok && Array.isArray(data.users)) {
+          let deletedStaff: string[] = [];
+          try {
+            deletedStaff = JSON.parse(localStorage.getItem("smv_deleted_staff") || "[]");
+          } catch {}
+          const filtered = data.users.filter(
+            (u: any) =>
+              u &&
+              u.email &&
+              !deletedStaff.includes(u.email.toLowerCase().trim()) &&
+              u.email.toLowerCase().trim() !== "sri@searchmyvacation.com" &&
+              u.email.toLowerCase().trim() !== "keerthi@searchmyvacation.com" &&
+              u.email.toLowerCase().trim() !== "renganathanthyagarajan@gmail.com" &&
+              u.email.toLowerCase().trim() !== "speeddevil.vicky@gmail.com"
           );
-          if (activeCustomInvites.length !== customInvites.length) {
-            localStorage.setItem("smv_invited_staff", JSON.stringify(activeCustomInvites));
+          if (filtered.length > 0) {
+            setTeamMembers(filtered);
           }
-          setTeamMembers((prev) => {
-            const combined = [...prev];
-            for (const c of activeCustomInvites) {
-              if (!combined.some((m) => m.email.toLowerCase() === c.email.toLowerCase())) {
-                combined.push({
-                  fullName: c.fullName,
-                  email: c.email,
-                  phoneE164: c.phoneE164,
-                  role: c.role,
-                  status: c.status || "Pending First Login",
-                  deactivatedAt: c.deactivatedAt || null,
-                  invitedAt: c.invitedAt || new Date().toISOString().split("T")[0],
-                });
-              }
-            }
-            return combined;
-          });
         }
-      }
-    } catch {}
+      })
+      .catch(() => {
+        // Fallback to local storage if API is offline
+        try {
+          const stored = localStorage.getItem("smv_invited_staff");
+          if (stored) {
+            let customInvites = JSON.parse(stored);
+            if (Array.isArray(customInvites) && customInvites.length > 0) {
+              const purgedEmails = [
+                "sri@searchmyvacation.com",
+                "keerthi@searchmyvacation.com",
+                "renganathanthyagarajan@gmail.com",
+                "speeddevil.vicky@gmail.com",
+              ];
+              const activeCustomInvites = customInvites.filter(
+                (c: any) => c && c.email && !purgedEmails.includes(c.email.toLowerCase().trim())
+              );
+              setTeamMembers((prev) => {
+                const combined = [...prev];
+                for (const c of activeCustomInvites) {
+                  if (!combined.some((m) => m.email.toLowerCase() === c.email.toLowerCase())) {
+                    combined.push({
+                      fullName: c.fullName,
+                      email: c.email,
+                      phoneE164: c.phoneE164,
+                      role: c.role,
+                      status: c.status || "Pending First Login",
+                      deactivatedAt: c.deactivatedAt || null,
+                      invitedAt: c.invitedAt || new Date().toISOString().split("T")[0],
+                    });
+                  }
+                }
+                return combined;
+              });
+            }
+          }
+        } catch {}
+      });
+
+    // 2. Fetch live CRM client profiles
+    setCrmLoading(true);
+    fetch("/api/portal/crm/clients")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.ok && Array.isArray(data.clients)) {
+          setClients(data.clients);
+        }
+      })
+      .catch(() => {})
+      .finally(() => setCrmLoading(false));
 
     // Inactivity event listeners
     const handleActivity = () => {
@@ -327,7 +406,7 @@ export default function PortalDashboardPage() {
       // Offline fallback
     }
 
-    // Save to local storage for portal login recognition
+    // Save to local storage for portal login recognition & un-blacklist if previously deleted
     try {
       const stored = localStorage.getItem("smv_invited_staff");
       const currentList = stored ? JSON.parse(stored) : [];
@@ -340,6 +419,13 @@ export default function PortalDashboardPage() {
         invitedAt: newMember.invitedAt,
       });
       localStorage.setItem("smv_invited_staff", JSON.stringify(currentList));
+
+      const deletedStored = localStorage.getItem("smv_deleted_staff");
+      if (deletedStored) {
+        const deletedList: string[] = JSON.parse(deletedStored);
+        const filtered = deletedList.filter((e) => e !== emailTrimmed);
+        localStorage.setItem("smv_deleted_staff", JSON.stringify(filtered));
+      }
     } catch {}
 
     setTeamMembers((prev) => [...prev, newMember]);
@@ -439,13 +525,19 @@ export default function PortalDashboardPage() {
     // 1. Remove from UI state
     setTeamMembers((prev) => prev.filter((m) => m.email.toLowerCase() !== emailCleaned));
 
-    // 2. Remove from localStorage
+    // 2. Remove from localStorage & add to permanent deletion blacklist
     try {
       const stored = localStorage.getItem("smv_invited_staff");
       if (stored) {
         const list = JSON.parse(stored);
         const updated = list.filter((item: any) => item.email?.toLowerCase() !== emailCleaned);
         localStorage.setItem("smv_invited_staff", JSON.stringify(updated));
+      }
+      const deletedStored = localStorage.getItem("smv_deleted_staff");
+      const deletedList: string[] = deletedStored ? JSON.parse(deletedStored) : [];
+      if (!deletedList.includes(emailCleaned)) {
+        deletedList.push(emailCleaned);
+        localStorage.setItem("smv_deleted_staff", JSON.stringify(deletedList));
       }
     } catch {}
 
@@ -461,6 +553,166 @@ export default function PortalDashboardPage() {
     } catch {
       setDirectoryNotice(`Staff account for ${emailCleaned} permanently deleted.`);
     }
+    setTimeout(() => setDirectoryNotice(null), 4000);
+  }
+
+  // =========================================================================
+  // MASTER CLIENT CRM HANDLERS (US-004, US-005, US-006)
+  // =========================================================================
+
+  function handleAddCompanionRow() {
+    setClientFormCompanions((prev) => [
+      ...prev,
+      { fullName: "", relationship: "child", notes: "" },
+    ]);
+  }
+
+  function handleUpdateCompanion(
+    index: number,
+    field: "fullName" | "relationship" | "notes",
+    val: string
+  ) {
+    setClientFormCompanions((prev) =>
+      prev.map((c, i) => (i === index ? { ...c, [field]: val } : c))
+    );
+  }
+
+  function handleRemoveCompanionRow(index: number) {
+    setClientFormCompanions((prev) => prev.filter((_, i) => i !== index));
+  }
+
+  function handleToggleTag(tagVal: string) {
+    setClientFormSelectedTags((prev) =>
+      prev.includes(tagVal) ? prev.filter((t) => t !== tagVal) : [...prev, tagVal]
+    );
+  }
+
+  function handleAddCustomTag() {
+    const trimmed = clientFormCustomTag.trim();
+    if (trimmed && !clientFormSelectedTags.includes(trimmed)) {
+      setClientFormSelectedTags((prev) => [...prev, trimmed]);
+      setClientFormCustomTag("");
+    }
+  }
+
+  async function handleBlurDuplicateCheck() {
+    if (!clientFormEmail.trim() && (!clientFormPhone.trim() || clientFormPhone.trim() === "+91")) {
+      return;
+    }
+    try {
+      const res = await fetch(
+        `/api/portal/crm/clients/duplicate-check?email=${encodeURIComponent(
+          clientFormEmail.trim()
+        )}&phone=${encodeURIComponent(clientFormPhone.trim())}`
+      );
+      const data = await res.json();
+      if (data && data.ok && data.duplicate?.hasDuplicate) {
+        setDuplicateWarning(data.duplicate.warningMessage || "Existing client record found.");
+      } else {
+        setDuplicateWarning(null);
+      }
+    } catch {}
+  }
+
+  async function handleCreateClientSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setClientSubmitError(null);
+    setClientSubmitSuccess(null);
+
+    if (!clientFormName.trim()) {
+      setClientSubmitError("Please enter the client's full name.");
+      return;
+    }
+    if (!clientFormLeadSource) {
+      setClientSubmitError("Lead Source attribution is mandatory.");
+      return;
+    }
+
+    setClientSubmitLoading(true);
+
+    const companionsToSubmit = clientFormCompanions
+      .filter((c) => c.fullName.trim().length > 0)
+      .map((c) => ({
+        fullName: c.fullName.trim(),
+        relationship: c.relationship,
+        notes: c.notes?.trim() || null,
+      }));
+
+    const tagsToSubmit = clientFormSelectedTags.map((t) => {
+      let category: "dietary" | "pace" | "accommodation" | "comfort" | "general" = "pace";
+      const lower = t.toLowerCase();
+      if (lower.includes("veg") || lower.includes("jain") || lower.includes("dining")) {
+        category = "dietary";
+      } else if (lower.includes("heritage") || lower.includes("hotel") || lower.includes("suite")) {
+        category = "accommodation";
+      } else if (lower.includes("transfer") || lower.includes("comfort") || lower.includes("private")) {
+        category = "comfort";
+      }
+      return { category, tagValue: t };
+    });
+
+    try {
+      const res = await fetch("/api/portal/crm/clients", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: clientFormName.trim(),
+          email: clientFormEmail.trim() || null,
+          phone: clientFormPhone.trim() || null,
+          nationality: clientFormCity.trim() || null,
+          leadSource: clientFormLeadSource,
+          isVip: clientFormIsVip,
+          companions: companionsToSubmit,
+          tags: tagsToSubmit,
+          initialActivityNote: clientFormInitialNote.trim() || undefined,
+          authorId: session?.email,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        setClientSubmitError(data.message || "Failed to create client dossier.");
+        setClientSubmitLoading(false);
+        return;
+      }
+
+      setClientSubmitSuccess(data.message || `Client dossier for ${clientFormName} successfully created!`);
+      if (data.client) {
+        setClients((prev) => [data.client, ...prev.filter((c) => c.id !== data.client.id)]);
+      }
+
+      // Reset form
+      setClientFormName("");
+      setClientFormEmail("");
+      setClientFormPhone("+91 ");
+      setClientFormCity("");
+      setClientFormLeadSource("instagram");
+      setClientFormIsVip(false);
+      setClientFormSelectedTags(["Family Comfort", "Slow Travel", "Pure Vegetarian"]);
+      setClientFormCompanions([{ fullName: "", relationship: "spouse", notes: "" }]);
+      setClientFormInitialNote("");
+      setDuplicateWarning(null);
+
+      setTimeout(() => {
+        setShowAddClientModal(false);
+        setClientSubmitSuccess(null);
+      }, 1500);
+    } catch (err: any) {
+      setClientSubmitError(err.message || "Network error. Please try again.");
+    } finally {
+      setClientSubmitLoading(false);
+    }
+  }
+
+  function handleLinkToItineraryStudio(client: ClientProfileItem) {
+    setActiveTab("itinerary");
+    setClaudeBriefLocation(`${client.fullName} Circuit (${client.nationality || "Bespoke Journey"})`);
+    const tagSummary = client.tags.map((t) => t.tagValue).join(", ");
+    const companionsSummary = client.companions.map((c) => `${c.fullName} (${c.relationship})`).join(", ");
+    setClaudeBriefAsks(
+      `Preferences: ${tagSummary || "Family comfort"}. Companions: ${companionsSummary || "None specified"}. ${client.initialActivityNote || "Bespoke pacing required."}`
+    );
+    setDirectoryNotice(`Loaded ${client.fullName}'s preferences into Itinerary Studio.`);
     setTimeout(() => setDirectoryNotice(null), 4000);
   }
 
@@ -720,57 +972,263 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
         {/* TAB 2: CLIENT CRM & BRIEFING (US-004, US-005, US-006, GAP-04) */}
         {activeTab === "crm" && (
           <div className="space-y-6">
-            <div className="flex justify-between items-center">
+            {/* Header & Primary Action */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
-                <h2 className="text-xl font-bold tracking-tight text-white">Master Client Directory</h2>
-                <p className="text-xs text-white/60">Decoupled CRM profiles, preference tags & communication timeline</p>
+                <h2 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                  <span>👥</span> Master Client Directory & CRM
+                </h2>
+                <p className="text-xs text-white/60">
+                  Decoupled client profiles, mandatory lead attribution, preference tags & family travel companions
+                </p>
+              </div>
+              <button
+                onClick={() => {
+                  setShowAddClientModal(true);
+                  setClientSubmitError(null);
+                  setClientSubmitSuccess(null);
+                  setDuplicateWarning(null);
+                }}
+                className="rounded-xl bg-[#F5951C] px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#2A211C] hover:bg-[#e08515] transition flex items-center gap-2 shadow-md"
+              >
+                <span>➕</span>
+                <span>Add Client / Customer</span>
+              </button>
+            </div>
+
+            {/* Filter & Search Bar */}
+            <div className="p-4 rounded-2xl border border-white/10 bg-[#362B25] flex flex-col md:flex-row gap-3 justify-between items-stretch md:items-center">
+              <div className="relative flex-1">
+                <input
+                  type="text"
+                  value={crmSearchQuery}
+                  onChange={(e) => setCrmSearchQuery(e.target.value)}
+                  placeholder="Search clients by name, email, phone, city..."
+                  className="w-full rounded-xl border border-white/10 bg-[#2A211C] px-3.5 py-2 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                />
+                {crmSearchQuery && (
+                  <button
+                    onClick={() => setCrmSearchQuery("")}
+                    className="absolute right-3 top-2.5 text-xs text-white/40 hover:text-white"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+
+              {/* Tag Filters */}
+              <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">
+                {[
+                  { id: "all", label: `All (${clients.length})` },
+                  { id: "vip", label: "⭐ VIP Only" },
+                  { id: "family", label: "Family Comfort" },
+                  { id: "slow", label: "Slow Travel" },
+                  { id: "veg", label: "Pure Vegetarian" },
+                ].map((filter) => (
+                  <button
+                    key={filter.id}
+                    onClick={() => setCrmTagFilter(filter.id)}
+                    className={`whitespace-nowrap px-3 py-1.5 rounded-lg text-[11px] font-semibold transition ${
+                      crmTagFilter === filter.id
+                        ? "bg-[#F5951C] text-[#2A211C]"
+                        : "bg-white/5 text-white/70 hover:bg-white/10 hover:text-white"
+                    }`}
+                  >
+                    {filter.label}
+                  </button>
+                ))}
               </div>
             </div>
 
-            <div className="rounded-2xl border border-white/10 bg-[#362B25] overflow-hidden">
-              <div className="p-4 border-b border-white/10 flex justify-between items-center bg-[#2E241F]">
-                <span className="text-xs font-bold uppercase tracking-wider text-white/80">Client Dossier</span>
-                <span className="text-xs text-white/50">Mandatory Lead Source: Instagram Campaign</span>
+            {/* Client Cards List */}
+            {crmLoading ? (
+              <div className="p-12 text-center text-white/50 text-xs">
+                Loading client profiles...
               </div>
-              <div className="p-6 space-y-4">
-                <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 pb-4 border-b border-white/5">
-                  <div>
-                    <h3 className="text-lg font-bold text-white">Ananya Sharma</h3>
-                    <p className="text-xs text-white/60">ananya.sharma@example.com • +91 98401 12233 • Bengaluru</p>
-                  </div>
-                  <div className="flex flex-wrap gap-1.5">
-                    <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[#F5951C]/20 text-[#F5951C] border border-[#F5951C]/30">Family Comfort</span>
-                    <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30">Slow Travel</span>
-                    <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Vegetarian Focus</span>
-                  </div>
-                </div>
-
-                {/* Companions */}
-                <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-white/70 mb-2">Linked Companions (2)</h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                    <div className="p-3 rounded-xl bg-[#2A211C] border border-white/5">
-                      <p className="font-semibold text-white">Rohan Sharma (Spouse)</p>
-                      <p className="text-[11px] text-white/50">Adult • Pure Veg</p>
-                    </div>
-                    <div className="p-3 rounded-xl bg-[#2A211C] border border-white/5">
-                      <p className="font-semibold text-white">Aarav Sharma (Child)</p>
-                      <p className="text-[11px] text-white/50">Age 7 • Kid-Easy Pace Required</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Activity Log */}
-                <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-white/70 mb-2">Chronological Activity Feed (US-006)</h4>
-                  <div className="p-3 rounded-xl bg-[#2A211C] border border-white/5 text-xs space-y-1">
-                    <p className="text-[#F5951C] font-semibold">📞 Discovery Call Completed (Sri)</p>
-                    <p className="text-white/70">Aligned on 8-day slow-travel Kashmir autumn circuit. Client requested interconnected suites.</p>
-                    <p className="text-[10px] text-white/40">Today at 14:30 • Verified zero external API cost</p>
-                  </div>
-                </div>
+            ) : clients.length === 0 ? (
+              <div className="p-12 text-center rounded-2xl border border-dashed border-white/15 bg-[#362B25] space-y-3">
+                <div className="text-3xl">👥</div>
+                <h3 className="text-sm font-bold text-white">No Client Dossiers Yet</h3>
+                <p className="text-xs text-white/50 max-w-md mx-auto">
+                  Create your first client profile to manage preference tags, family companions, and launch bespoke itineraries.
+                </p>
+                <button
+                  onClick={() => setShowAddClientModal(true)}
+                  className="rounded-xl bg-[#F5951C] px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#2A211C] hover:bg-[#e08515] transition"
+                >
+                  ➕ Add First Client
+                </button>
               </div>
-            </div>
+            ) : (
+              <div className="space-y-4">
+                {clients
+                  .filter((c) => {
+                    const q = crmSearchQuery.toLowerCase().trim();
+                    const matchesSearch =
+                      !q ||
+                      c.fullName.toLowerCase().includes(q) ||
+                      (c.email && c.email.toLowerCase().includes(q)) ||
+                      (c.phone && c.phone.toLowerCase().includes(q)) ||
+                      (c.phoneE164 && c.phoneE164.includes(q)) ||
+                      (c.nationality && c.nationality.toLowerCase().includes(q));
+
+                    if (!matchesSearch) return false;
+
+                    if (crmTagFilter === "vip") return c.isVip;
+                    if (crmTagFilter === "family")
+                      return c.tags?.some((t) => t.tagValue.toLowerCase().includes("family"));
+                    if (crmTagFilter === "slow")
+                      return c.tags?.some((t) => t.tagValue.toLowerCase().includes("slow"));
+                    if (crmTagFilter === "veg")
+                      return c.tags?.some((t) => t.tagValue.toLowerCase().includes("veg"));
+                    return true;
+                  })
+                  .map((client) => {
+                    const leadSourceLabel =
+                      client.leadSource === "instagram"
+                        ? "Instagram Campaign"
+                        : client.leadSource === "client_referral"
+                        ? "Client Referral"
+                        : client.leadSource === "founder_network"
+                        ? "Founder Network"
+                        : client.leadSource === "website"
+                        ? "Website Inbound"
+                        : client.leadSource === "concierge_partner"
+                        ? "Concierge Partner"
+                        : "Direct Inbound";
+
+                    return (
+                      <div
+                        key={client.id}
+                        className="rounded-2xl border border-white/10 bg-[#362B25] overflow-hidden shadow-lg transition hover:border-white/20"
+                      >
+                        {/* Dossier Header */}
+                        <div className="p-4 border-b border-white/10 flex flex-wrap justify-between items-center gap-2 bg-[#2E241F]">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-bold uppercase tracking-wider text-white/80">
+                              Client Dossier
+                            </span>
+                            <span className="text-[11px] px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-white/70">
+                              Source: {leadSourceLabel}
+                            </span>
+                            {client.isVip && (
+                              <span className="text-[11px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-semibold flex items-center gap-1">
+                                <span>⭐</span> VIP Client
+                              </span>
+                            )}
+                          </div>
+                          <span className="text-[11px] text-white/40">
+                            ID: {client.id.slice(0, 14)} • Added {client.createdAt.split("T")[0]}
+                          </span>
+                        </div>
+
+                        {/* Dossier Body */}
+                        <div className="p-6 space-y-4">
+                          <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 pb-4 border-b border-white/5">
+                            <div>
+                              <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                                {client.fullName}
+                              </h3>
+                              <p className="text-xs text-white/60 mt-0.5">
+                                {client.email || "No email"} • {client.phoneE164 || client.phone || "No phone"} •{" "}
+                                {client.nationality || "India"}
+                              </p>
+                            </div>
+                            {/* Preference Tags */}
+                            <div className="flex flex-wrap gap-1.5">
+                              {(client.tags || []).map((t, idx) => {
+                                const isDietary =
+                                  t.category === "dietary" ||
+                                  t.tagValue.toLowerCase().includes("veg") ||
+                                  t.tagValue.toLowerCase().includes("jain");
+                                const isPace =
+                                  t.category === "pace" ||
+                                  t.tagValue.toLowerCase().includes("slow") ||
+                                  t.tagValue.toLowerCase().includes("pacing");
+
+                                const badgeColor = isDietary
+                                  ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
+                                  : isPace
+                                  ? "bg-blue-500/20 text-blue-300 border-blue-500/30"
+                                  : "bg-[#F5951C]/20 text-[#F5951C] border-[#F5951C]/30";
+
+                                return (
+                                  <span
+                                    key={idx}
+                                    className={`text-[10px] font-semibold px-2.5 py-1 rounded-full border ${badgeColor}`}
+                                  >
+                                    {t.tagValue}
+                                  </span>
+                                );
+                              })}
+                            </div>
+                          </div>
+
+                          {/* Linked Companions */}
+                          {client.companions && client.companions.length > 0 && (
+                            <div>
+                              <h4 className="text-xs font-bold uppercase tracking-wider text-white/70 mb-2">
+                                Linked Companions ({client.companions.length})
+                              </h4>
+                              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-xs">
+                                {client.companions.map((comp, cIdx) => (
+                                  <div
+                                    key={cIdx}
+                                    className="p-3 rounded-xl bg-[#2A211C] border border-white/5 space-y-0.5"
+                                  >
+                                    <div className="flex justify-between items-center">
+                                      <p className="font-semibold text-white">{comp.fullName}</p>
+                                      <span className="text-[10px] capitalize text-[#F5951C] bg-[#F5951C]/10 px-1.5 py-0.5 rounded">
+                                        {comp.relationship}
+                                      </span>
+                                    </div>
+                                    <p className="text-[11px] text-white/50">
+                                      {comp.notes || "No dietary/pacing constraints specified"}
+                                    </p>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Activity / Discovery Log */}
+                          <div>
+                            <h4 className="text-xs font-bold uppercase tracking-wider text-white/70 mb-2">
+                              Chronological Activity Feed (US-006)
+                            </h4>
+                            <div className="p-3.5 rounded-xl bg-[#2A211C] border border-white/5 text-xs space-y-1">
+                              <p className="text-[#F5951C] font-semibold flex items-center gap-1.5">
+                                <span>📞</span> Initial Discovery Brief Aligned
+                              </p>
+                              <p className="text-white/70">
+                                {client.initialActivityNote ||
+                                  "Client profile established. Ready for bespoke itinerary architecture and DMC contracting."}
+                              </p>
+                              <p className="text-[10px] text-white/40">
+                                Intake logged on {client.createdAt.split("T")[0]} • Verified zero external API cost
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Dossier Actions */}
+                          <div className="pt-2 flex flex-wrap justify-between items-center gap-2 border-t border-white/5">
+                            <button
+                              onClick={() => handleLinkToItineraryStudio(client)}
+                              className="rounded-xl bg-[#F5951C] px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-[#2A211C] hover:bg-[#e08515] transition flex items-center gap-1.5 shadow"
+                            >
+                              <span>🗺️</span>
+                              <span>Generate Bespoke Itinerary</span>
+                            </button>
+                            <span className="text-[11px] text-white/50">
+                              Advisor Portal CRM • Decoupled from public passenger auth
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+            )}
           </div>
         )}
 
@@ -1517,6 +1975,331 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                 </div>
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* MODAL 3: ADD NEW CLIENT DOSSIER (US-004, US-005, US-006) */}
+      {/* ========================================================================= */}
+      {showAddClientModal && (
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[#362B25] border border-white/20 rounded-2xl max-w-2xl w-full p-6 text-white shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            {/* Modal Header */}
+            <div className="flex justify-between items-start mb-5 pb-3 border-b border-white/10">
+              <div>
+                <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                  <span>➕</span> Add New Client Dossier
+                </h3>
+                <p className="text-xs text-white/60">
+                  Decoupled Master Client Profile with mandatory lead source attribution, preference tags & family companions
+                </p>
+              </div>
+              <button
+                onClick={() => setShowAddClientModal(false)}
+                className="text-white/40 hover:text-white text-lg p-1"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Notification Messages */}
+            {clientSubmitSuccess && (
+              <div className="mb-4 p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs flex items-center gap-2">
+                <span>✓</span>
+                <span>{clientSubmitSuccess}</span>
+              </div>
+            )}
+            {clientSubmitError && (
+              <div className="mb-4 p-3.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-300 text-xs flex items-center gap-2">
+                <span>⚠️</span>
+                <span>{clientSubmitError}</span>
+              </div>
+            )}
+            {duplicateWarning && (
+              <div className="mb-4 p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs space-y-1">
+                <p className="font-bold flex items-center gap-1.5">
+                  <span>⚠️</span> Existing Client Match Detected
+                </p>
+                <p>{duplicateWarning}</p>
+              </div>
+            )}
+
+            {/* Form */}
+            <form onSubmit={handleCreateClientSubmit} className="space-y-5">
+              {/* SECTION 1: PRIMARY IDENTIFICATION */}
+              <div className="space-y-3">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-[#F5951C]">
+                  1. Client Identification (US-004)
+                </h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-white/80 mb-1">
+                      Full Name <span className="text-[#F5951C]">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={clientFormName}
+                      onChange={(e) => setClientFormName(e.target.value)}
+                      placeholder="e.g. Ananya Sharma"
+                      className="w-full rounded-xl border border-white/10 bg-[#2A211C] px-3.5 py-2 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-white/80 mb-1">
+                      Primary Email <span className="text-[#F5951C]">*</span>
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      value={clientFormEmail}
+                      onChange={(e) => setClientFormEmail(e.target.value)}
+                      onBlur={handleBlurDuplicateCheck}
+                      placeholder="e.g. ananya.sharma@example.com"
+                      className="w-full rounded-xl border border-white/10 bg-[#2A211C] px-3.5 py-2 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-white/80 mb-1">
+                      Registered Mobile (E.164) <span className="text-[#F5951C]">*</span>
+                    </label>
+                    <input
+                      type="tel"
+                      required
+                      value={clientFormPhone}
+                      onChange={(e) => setClientFormPhone(e.target.value)}
+                      onBlur={handleBlurDuplicateCheck}
+                      placeholder="+91 98401 12233"
+                      className="w-full rounded-xl border border-white/10 bg-[#2A211C] px-3.5 py-2 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-white/80 mb-1">
+                      City / Nationality
+                    </label>
+                    <input
+                      type="text"
+                      value={clientFormCity}
+                      onChange={(e) => setClientFormCity(e.target.value)}
+                      placeholder="e.g. Bengaluru, India"
+                      className="w-full rounded-xl border border-white/10 bg-[#2A211C] px-3.5 py-2 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                  <div>
+                    <label className="block text-xs font-semibold text-white/80 mb-1">
+                      Mandatory Lead Source <span className="text-[#F5951C]">*</span>
+                    </label>
+                    <select
+                      value={clientFormLeadSource}
+                      onChange={(e) => setClientFormLeadSource(e.target.value)}
+                      className="w-full rounded-xl border border-white/10 bg-[#2A211C] px-3.5 py-2 text-xs text-white focus:border-[#F5951C] focus:outline-none"
+                    >
+                      <option value="instagram">Instagram Campaign</option>
+                      <option value="client_referral">Client Referral</option>
+                      <option value="founder_network">Founder Network</option>
+                      <option value="website">Website Inbound</option>
+                      <option value="concierge_partner">Concierge Partner</option>
+                      <option value="other">Other Direct Channel</option>
+                    </select>
+                  </div>
+                  <div className="flex items-center pt-5">
+                    <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-white/90">
+                      <input
+                        type="checkbox"
+                        checked={clientFormIsVip}
+                        onChange={(e) => setClientFormIsVip(e.target.checked)}
+                        className="rounded border-white/20 bg-[#2A211C] text-[#F5951C] focus:ring-[#F5951C] h-4 w-4"
+                      />
+                      <span className="flex items-center gap-1">
+                        <span>⭐</span> Mark as High-Touch VIP Client
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              {/* SECTION 2: PREFERENCE & DIETARY TAGGING */}
+              <div className="space-y-2 pt-2 border-t border-white/10">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-[#F5951C]">
+                  2. Travel Style & Preference Tagging (US-005)
+                </h4>
+                <p className="text-[11px] text-white/50">
+                  Select key travel, dietary, and accommodation preferences for this client:
+                </p>
+                <div className="flex flex-wrap gap-1.5 pt-1">
+                  {[
+                    "Family Comfort",
+                    "Slow Travel",
+                    "Pure Vegetarian",
+                    "Jain Dining",
+                    "Boutique Heritage",
+                    "Private Transfers",
+                    "Photography Focused",
+                    "High Pacing",
+                  ].map((tag) => {
+                    const isSelected = clientFormSelectedTags.includes(tag);
+                    return (
+                      <button
+                        type="button"
+                        key={tag}
+                        onClick={() => handleToggleTag(tag)}
+                        className={`text-xs px-3 py-1.5 rounded-lg border transition ${
+                          isSelected
+                            ? "bg-[#F5951C] text-[#2A211C] border-[#F5951C] font-bold"
+                            : "bg-[#2A211C] text-white/70 border-white/10 hover:border-white/30"
+                        }`}
+                      >
+                        {isSelected ? "✓ " : "+ "}
+                        {tag}
+                      </button>
+                    );
+                  })}
+                </div>
+                <div className="flex gap-2 pt-2">
+                  <input
+                    type="text"
+                    value={clientFormCustomTag}
+                    onChange={(e) => setClientFormCustomTag(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        handleAddCustomTag();
+                      }
+                    }}
+                    placeholder="Add custom tag (e.g. Interconnecting Rooms)..."
+                    className="flex-1 rounded-xl border border-white/10 bg-[#2A211C] px-3.5 py-1.5 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleAddCustomTag}
+                    className="px-3.5 py-1.5 rounded-xl border border-white/20 bg-white/5 text-xs font-semibold text-white hover:bg-white/10"
+                  >
+                    Add
+                  </button>
+                </div>
+              </div>
+
+              {/* SECTION 3: LINKED COMPANIONS */}
+              <div className="space-y-3 pt-2 border-t border-white/10">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-[#F5951C]">
+                      3. Family & Travel Companions (US-004)
+                    </h4>
+                    <p className="text-[11px] text-white/50">
+                      Link spouses, children, or travelling party members
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleAddCompanionRow}
+                    className="text-xs px-2.5 py-1 rounded-lg border border-[#F5951C]/40 text-[#F5951C] hover:bg-[#F5951C]/10 transition"
+                  >
+                    + Add Companion
+                  </button>
+                </div>
+
+                <div className="space-y-2">
+                  {clientFormCompanions.map((comp, idx) => (
+                    <div
+                      key={idx}
+                      className="p-3 rounded-xl bg-[#2A211C] border border-white/5 grid grid-cols-1 sm:grid-cols-12 gap-2 items-center text-xs"
+                    >
+                      <div className="sm:col-span-4">
+                        <input
+                          type="text"
+                          value={comp.fullName}
+                          onChange={(e) => handleUpdateCompanion(idx, "fullName", e.target.value)}
+                          placeholder="Companion Name"
+                          className="w-full rounded-lg border border-white/10 bg-[#362B25] px-2.5 py-1.5 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                        />
+                      </div>
+                      <div className="sm:col-span-3">
+                        <select
+                          value={comp.relationship}
+                          onChange={(e) => handleUpdateCompanion(idx, "relationship", e.target.value)}
+                          className="w-full rounded-lg border border-white/10 bg-[#362B25] px-2.5 py-1.5 text-xs text-white focus:border-[#F5951C] focus:outline-none"
+                        >
+                          <option value="spouse">Spouse</option>
+                          <option value="child">Child</option>
+                          <option value="parent">Parent</option>
+                          <option value="friend">Friend</option>
+                          <option value="other">Other</option>
+                        </select>
+                      </div>
+                      <div className="sm:col-span-4">
+                        <input
+                          type="text"
+                          value={comp.notes}
+                          onChange={(e) => handleUpdateCompanion(idx, "notes", e.target.value)}
+                          placeholder="Notes (e.g. Age 7, Pure Veg)"
+                          className="w-full rounded-lg border border-white/10 bg-[#362B25] px-2.5 py-1.5 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                        />
+                      </div>
+                      <div className="sm:col-span-1 text-center">
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveCompanionRow(idx)}
+                          className="text-white/40 hover:text-red-400 text-sm p-1"
+                          title="Remove companion"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* SECTION 4: INITIAL DISCOVERY NOTE */}
+              <div className="space-y-2 pt-2 border-t border-white/10">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-[#F5951C]">
+                  4. Initial Discovery & Trip Briefing (US-006)
+                </h4>
+                <textarea
+                  rows={3}
+                  value={clientFormInitialNote}
+                  onChange={(e) => setClientFormInitialNote(e.target.value)}
+                  placeholder="e.g. Discovery call completed. Client requested 8-day slow-travel Kashmir autumn circuit, interconnected rooms, pure vegetarian dining."
+                  className="w-full rounded-xl border border-white/10 bg-[#2A211C] p-3 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                />
+              </div>
+
+              {/* Modal Actions */}
+              <div className="flex justify-end items-center gap-3 pt-3 border-t border-white/10">
+                <button
+                  type="button"
+                  onClick={() => setShowAddClientModal(false)}
+                  className="px-4 py-2 rounded-xl border border-white/20 text-xs font-semibold text-white/80 hover:bg-white/5"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={clientSubmitLoading}
+                  className="px-5 py-2 rounded-xl bg-[#F5951C] text-[#2A211C] text-xs font-bold uppercase tracking-wider hover:bg-[#e08515] transition disabled:opacity-50 flex items-center gap-2 shadow-md"
+                >
+                  {clientSubmitLoading ? (
+                    <>
+                      <span className="animate-spin">⏳</span>
+                      <span>Saving Dossier...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>💾</span>
+                      <span>Save Client Dossier</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

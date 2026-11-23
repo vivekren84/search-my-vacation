@@ -8,7 +8,7 @@
  * - Structured Journey Designer Handoff Briefing View (GAP-04)
  */
 
-import { normalizeE164 } from "../../phone/phone-normalization.js";
+import { normalizeE164 } from "../../phone/phone-normalization";
 import type {
   ActivityType,
   ClientActivityRecord,
@@ -374,6 +374,17 @@ export class ClientCrmService {
     }
 
     return result;
+  }
+
+  /**
+   * List client profiles (alias to searchClients)
+   */
+  async listClientProfiles(params?: {
+    query?: string;
+    leadSource?: LeadSource;
+    tagValue?: string;
+  }): Promise<MasterClientProfile[]> {
+    return Array.from(await this.searchClients(params));
   }
 
   clearAllForTesting(): void {
