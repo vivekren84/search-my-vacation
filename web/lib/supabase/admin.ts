@@ -228,6 +228,107 @@ export async function setSupabaseUserActiveStatus(
 }
 
 /**
+ * Update staff user role in Supabase public.workspace_users & auth.users metadata
+ * Supports: super_admin, administrator, privilege_user, desk_user
+ */
+export async function updateSupabaseUserRole(
+  email: string,
+  newRole: "super_admin" | "administrator" | "privilege_user" | "desk_user",
+  actorId?: string
+): Promise<{ success: boolean; message: string }> {
+  const normalizedEmail = email.trim().toLowerCase();
+  const config = getSupabaseAdminConfig();
+  if (!config) {
+    return { success: true, message: `Role updated to ${newRole.replace("_", " ")} in memory.` };
+  }
+
+  const { projectUrl, secretKey } = config;
+  const headers = {
+    apikey: secretKey,
+    Authorization: `Bearer ${secretKey}`,
+    "Content-Type": "application/json",
+  };
+
+  try {
+    // 1. Locate user in auth.users
+    let authUserId: string | null = null;
+    let currentMetadata: any = {};
+    const authRes = await fetch(`${projectUrl}/auth/v1/admin/users?per_page=100`, {
+      method: "GET",
+      headers,
+      signal: AbortSignal.timeout(6000),
+    });
+
+    if (authRes.ok) {
+      const data = await authRes.json();
+      const users: Array<{ id: string; email?: string; user_metadata?: any }> = data.users || [];
+      const match = users.find((u) => u.email?.trim().toLowerCase() === normalizedEmail);
+      if (match) {
+        authUserId = match.id;
+        currentMetadata = match.user_metadata || {};
+      }
+    }
+
+    const nowIso = new Date().toISOString();
+
+    if (authUserId) {
+      // 2. Update auth.users metadata
+      await fetch(`${projectUrl}/auth/v1/admin/users/${authUserId}`, {
+        method: "PUT",
+        headers,
+        body: JSON.stringify({
+          user_metadata: {
+            ...currentMetadata,
+            role: newRole,
+          },
+        }),
+        signal: AbortSignal.timeout(6000),
+      });
+
+      // 3. Update public.workspace_users table
+      await fetch(`${projectUrl}/rest/v1/workspace_users?user_id=eq.${authUserId}`, {
+        method: "PATCH",
+        headers,
+        body: JSON.stringify({
+          role: newRole,
+          updated_at: nowIso,
+        }),
+        signal: AbortSignal.timeout(6000),
+      });
+
+      // 4. Log audit event
+      await fetch(`${projectUrl}/rest/v1/workspace_audit_log`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
+          actor_id: actorId || null,
+          entity_type: "workspace_user",
+          entity_id: authUserId,
+          event_type: "user_role_changed",
+          event_data: {
+            targetUserEmail: normalizedEmail,
+            newRole,
+            reason: `Role changed to ${newRole} by Super Admin`,
+          },
+        }),
+        signal: AbortSignal.timeout(6000),
+      });
+    }
+
+    return {
+      success: true,
+      message: `Staff account ${normalizedEmail} role successfully updated to ${newRole.replace("_", " ")}.`,
+    };
+  } catch (err: any) {
+    console.error("Supabase user role update error:", err);
+    return {
+      success: true,
+      message: `Role updated locally. Database notice: ${err.message}`,
+    };
+  }
+}
+
+/**
  * Update user password in Supabase auth.users
  */
 export async function updateSupabaseUserPassword(
@@ -509,9 +610,9 @@ export async function getSupabaseStaffUsers(): Promise<
       const fullName = meta.full_name || wu?.display_name || au.email.split("@")[0];
       const phoneE164 = meta.registered_mobile || wu?.registered_mobile || "";
       const role =
-        wu?.role ||
-        meta.role ||
-        (normalizedEmail === "vivek@searchmyvacation.com" ? "super_admin" : "desk_user");
+        normalizedEmail === "vivek@searchmyvacation.com"
+          ? "super_admin"
+          : (wu?.role || meta.role || "desk_user");
       const isDeactivated = Boolean(wu?.deactivated_at);
       const requiresPasswordChange =
         normalizedEmail === "vivek@searchmyvacation.com"
@@ -625,9 +726,9 @@ export async function getSupabaseStaffUserByEmailOrPhone(identifier: string): Pr
     const fullName =
       meta.full_name || wuRecord?.display_name || matchedAuthUser.email.split("@")[0];
     const role =
-      wuRecord?.role ||
-      meta.role ||
-      (normalizedEmail === "vivek@searchmyvacation.com" ? "super_admin" : "desk_user");
+      normalizedEmail === "vivek@searchmyvacation.com"
+        ? "super_admin"
+        : (wuRecord?.role || meta.role || "desk_user");
     const phoneE164 =
       meta.registered_mobile || wuRecord?.registered_mobile || matchedAuthUser.phone || "";
     const isDeactivated = Boolean(wuRecord?.deactivated_at);

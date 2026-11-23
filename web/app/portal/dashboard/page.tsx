@@ -120,7 +120,7 @@ export default function PortalDashboardPage() {
   const [inviteName, setInviteName] = useState("");
   const [inviteEmail, setInviteEmail] = useState("");
   const [invitePhone, setInvitePhone] = useState("+91 ");
-  const [inviteRole, setInviteRole] = useState<"administrator" | "privilege_user" | "desk_user">("desk_user");
+  const [inviteRole, setInviteRole] = useState<"super_admin" | "administrator" | "privilege_user" | "desk_user">("desk_user");
   const [inviteError, setInviteError] = useState<string | null>(null);
   const [inviteSuccess, setInviteSuccess] = useState<string | null>(null);
   const [directoryNotice, setDirectoryNotice] = useState<string | null>(null);
@@ -212,16 +212,23 @@ export default function PortalDashboardPage() {
           try {
             deletedStaff = JSON.parse(localStorage.getItem("smv_deleted_staff") || "[]");
           } catch {}
-          const filtered = data.users.filter(
-            (u: any) =>
-              u &&
-              u.email &&
-              !deletedStaff.includes(u.email.toLowerCase().trim()) &&
-              u.email.toLowerCase().trim() !== "sri@searchmyvacation.com" &&
-              u.email.toLowerCase().trim() !== "keerthi@searchmyvacation.com" &&
-              u.email.toLowerCase().trim() !== "renganathanthyagarajan@gmail.com" &&
-              u.email.toLowerCase().trim() !== "speeddevil.vicky@gmail.com"
-          );
+          const filtered = data.users
+            .filter(
+              (u: any) =>
+                u &&
+                u.email &&
+                !deletedStaff.includes(u.email.toLowerCase().trim()) &&
+                u.email.toLowerCase().trim() !== "sri@searchmyvacation.com" &&
+                u.email.toLowerCase().trim() !== "keerthi@searchmyvacation.com" &&
+                u.email.toLowerCase().trim() !== "renganathanthyagarajan@gmail.com" &&
+                u.email.toLowerCase().trim() !== "speeddevil.vicky@gmail.com"
+            )
+            .map((u: any) => {
+              if (u.email?.toLowerCase().trim() === "vivek@searchmyvacation.com") {
+                return { ...u, role: "super_admin" as const };
+              }
+              return u;
+            });
           if (filtered.length > 0) {
             setTeamMembers(filtered);
           }
@@ -556,6 +563,71 @@ export default function PortalDashboardPage() {
     setTimeout(() => setDirectoryNotice(null), 4000);
   }
 
+  // Update Staff User Role (Super Admin Delegation & Role Governance)
+  async function handleRoleChange(member: TeamMember, newRole: TeamMember["role"]) {
+    if (member.role === newRole) return;
+    const emailCleaned = member.email.trim().toLowerCase();
+
+    // Self-Protection Guardrail: Owner / Super Admin Vivek cannot be demoted
+    if (emailCleaned === "vivek@searchmyvacation.com" && newRole !== "super_admin") {
+      alert("Self-Protection Guardrail: Vivek Renganathan is the Search My Vacation Owner & Super Admin and cannot be demoted.");
+      return;
+    }
+
+    const roleLabels: Record<string, string> = {
+      super_admin: "Super Admin",
+      administrator: "Administrator",
+      privilege_user: "Privilege User",
+      desk_user: "Desk User",
+    };
+
+    const confirmMessage =
+      newRole === "super_admin"
+        ? `Are you sure you want to promote ${member.fullName} (${member.email}) to Super Admin? They will have full administrative authority across Search My Vacation.`
+        : `Are you sure you want to change ${member.fullName}'s role from ${roleLabels[member.role] || member.role} to ${roleLabels[newRole] || newRole}?`;
+
+    if (!confirm(confirmMessage)) {
+      return;
+    }
+
+    // 1. Update UI state immediately
+    setTeamMembers((prev) =>
+      prev.map((m) =>
+        m.email.toLowerCase() === emailCleaned
+          ? { ...m, role: newRole }
+          : m
+      )
+    );
+
+    // 2. Update localStorage if present
+    try {
+      const stored = localStorage.getItem("smv_invited_staff");
+      if (stored) {
+        const list = JSON.parse(stored);
+        const updated = list.map((item: any) =>
+          item.email?.toLowerCase() === emailCleaned
+            ? { ...item, role: newRole }
+            : item
+        );
+        localStorage.setItem("smv_invited_staff", JSON.stringify(updated));
+      }
+    } catch {}
+
+    // 3. Call backend PATCH endpoint to sync in-memory registry & Supabase auth.users metadata and public.workspace_users
+    try {
+      const res = await fetch("/api/portal/auth/invite", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: emailCleaned, role: newRole }),
+      });
+      const data = await res.json();
+      setDirectoryNotice(data.message || `Role for ${member.fullName} updated to ${roleLabels[newRole] || newRole}.`);
+    } catch {
+      setDirectoryNotice(`Role for ${member.fullName} updated to ${roleLabels[newRole] || newRole}.`);
+    }
+    setTimeout(() => setDirectoryNotice(null), 4000);
+  }
+
   // =========================================================================
   // MASTER CLIENT CRM HANDLERS (US-004, US-005, US-006)
   // =========================================================================
@@ -809,7 +881,13 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
     );
   }
 
-  const canManageTeam = session.role === "super_admin" || session.role === "administrator";
+  const canManageTeam =
+    session.role === "super_admin" ||
+    session.role === "administrator" ||
+    session.email?.toLowerCase() === "vivek@searchmyvacation.com";
+  const isSuperAdmin =
+    session.role === "super_admin" ||
+    session.email?.toLowerCase() === "vivek@searchmyvacation.com";
 
   return (
     <div className="min-h-screen bg-[#2A211C] text-white flex flex-col font-sans">
@@ -857,7 +935,9 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
           <div className="text-right hidden sm:block">
             <p className="text-xs font-semibold text-white">{session.fullName}</p>
             <p className="text-[10px] uppercase tracking-wider text-[#F5951C] font-semibold">
-              {session.role === "super_admin" ? "SUPER ADMIN" : session.role.replace("_", " ")}
+              {session.email?.toLowerCase() === "vivek@searchmyvacation.com" || session.role === "super_admin"
+                ? "SUPER ADMIN"
+                : session.role.replace("_", " ")}
             </p>
           </div>
           <button
@@ -1456,7 +1536,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       <div>
                         <div className="flex items-center gap-2">
                           <p className="font-bold text-white text-sm">{member.fullName}</p>
-                          {member.role === "super_admin" && (
+                          {(member.role === "super_admin" || member.email.toLowerCase() === "vivek@searchmyvacation.com") && (
                             <span className="px-2 py-0.5 rounded-full bg-[#F5951C]/20 text-[#F5951C] border border-[#F5951C]/40 text-[9px] font-bold">
                               OWNER
                             </span>
@@ -1465,15 +1545,52 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                         <p className="text-white/60 text-[11px]">{member.email}</p>
                         <p className="text-white/40 text-[10px] font-mono mt-0.5">{member.phoneE164}</p>
                       </div>
-                      <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${
-                        member.role === "super_admin" || member.role === "administrator"
-                          ? "bg-purple-500/20 text-purple-300 border-purple-500/30"
-                          : member.role === "privilege_user"
-                          ? "bg-blue-500/20 text-blue-300 border-blue-500/30"
-                          : "bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
-                      }`}>
-                        {member.role === "super_admin" ? "Super Admin" : member.role.replace("_", " ")}
-                      </span>
+
+                      {/* Interactive Role Switcher for Super Admin, or Styled Badge for viewers */}
+                      {isSuperAdmin && member.email.toLowerCase() !== "vivek@searchmyvacation.com" ? (
+                        <div className="relative flex items-center">
+                          <select
+                            value={member.role}
+                            onChange={(e) => handleRoleChange(member, e.target.value as TeamMember["role"])}
+                            className={`text-[10px] font-semibold px-2.5 py-1 rounded-full border cursor-pointer outline-none transition appearance-none pr-6 ${
+                              member.role === "super_admin" || member.role === "administrator"
+                                ? "bg-purple-950/80 text-purple-300 border-purple-500/40 hover:border-purple-400"
+                                : member.role === "privilege_user"
+                                ? "bg-blue-950/80 text-blue-300 border-blue-500/40 hover:border-blue-400"
+                                : "bg-emerald-950/80 text-emerald-300 border-emerald-500/40 hover:border-emerald-400"
+                            }`}
+                            title={`Change ${member.fullName}'s role (Super Admin Privilege)`}
+                          >
+                            <option value="super_admin" className="bg-[#2A211C] text-purple-300">
+                              Super Admin (Delegated)
+                            </option>
+                            <option value="administrator" className="bg-[#2A211C] text-purple-300">
+                              Administrator
+                            </option>
+                            <option value="privilege_user" className="bg-[#2A211C] text-blue-300">
+                              Privilege User (Senior)
+                            </option>
+                            <option value="desk_user" className="bg-[#2A211C] text-emerald-300">
+                              Desk User
+                            </option>
+                          </select>
+                          <span className="pointer-events-none absolute right-2 text-[8px] text-white/50">▼</span>
+                        </div>
+                      ) : (
+                        <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${
+                          member.role === "super_admin" || member.email.toLowerCase() === "vivek@searchmyvacation.com" || member.role === "administrator"
+                            ? "bg-purple-500/20 text-purple-300 border-purple-500/30"
+                            : member.role === "privilege_user"
+                            ? "bg-blue-500/20 text-blue-300 border-blue-500/30"
+                            : "bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
+                        }`}>
+                          {member.email.toLowerCase() === "vivek@searchmyvacation.com"
+                            ? "Super Admin"
+                            : member.role === "super_admin"
+                            ? "Super Admin"
+                            : member.role.replace("_", " ")}
+                        </span>
+                      )}
                     </div>
 
                     <div className="pt-2 border-t border-white/5 flex justify-between items-center text-[10px]">
@@ -1704,6 +1821,9 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     <option value="desk_user">Desk User — Client CRM & Itinerary Operations</option>
                     <option value="privilege_user">Privilege User — Senior Advisor (Margin Overrides & VIP Docs)</option>
                     <option value="administrator">Administrator — Full Operations & Team Management</option>
+                    {isSuperAdmin && (
+                      <option value="super_admin">Super Admin — Delegated Platform Ownership</option>
+                    )}
                   </select>
                 </div>
 

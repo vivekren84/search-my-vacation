@@ -35,12 +35,19 @@ export async function GET() {
     userMap.set(dbu.email.toLowerCase(), dbu);
   }
 
-  // Always ensure Super Admin Vivek is at the top
-  const users = Array.from(userMap.values()).sort((a, b) => {
-    if (a.email.toLowerCase() === "vivek@searchmyvacation.com") return -1;
-    if (b.email.toLowerCase() === "vivek@searchmyvacation.com") return 1;
-    return a.fullName.localeCompare(b.fullName);
-  });
+  // Always ensure Super Admin Vivek is at the top with super_admin role
+  const users = Array.from(userMap.values())
+    .map((u) => {
+      if (u.email.toLowerCase() === "vivek@searchmyvacation.com") {
+        return { ...u, role: "super_admin" };
+      }
+      return u;
+    })
+    .sort((a, b) => {
+      if (a.email.toLowerCase() === "vivek@searchmyvacation.com") return -1;
+      if (b.email.toLowerCase() === "vivek@searchmyvacation.com") return 1;
+      return a.fullName.localeCompare(b.fullName);
+    });
 
   return NextResponse.json({ ok: true, users });
 }

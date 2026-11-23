@@ -5,6 +5,7 @@ import {
   deleteSupabaseUserByEmail,
   setSupabaseUserActiveStatus,
   createOrSyncSupabaseStaffUser,
+  updateSupabaseUserRole,
 } from "@/lib/supabase/admin";
 
 export const runtime = "nodejs";
@@ -145,7 +146,7 @@ export async function POST(request: Request) {
 export async function PATCH(request: Request) {
   try {
     const body = await request.json();
-    const { email, status, action } = body;
+    const { email, status, action, role } = body;
 
     if (!email || typeof email !== "string") {
       return NextResponse.json({ ok: false, message: "Valid email is required." }, { status: 400 });
@@ -153,25 +154,55 @@ export async function PATCH(request: Request) {
 
     const emailCleaned = email.trim().toLowerCase();
 
+    // 1. Role Change Delegation (Super Admin, Administrator, Privilege User, Desk User)
+    if (role && typeof role === "string") {
+      const validRoles = ["super_admin", "administrator", "privilege_user", "desk_user"];
+      if (!validRoles.includes(role)) {
+        return NextResponse.json(
+          { ok: false, message: `Invalid role specified. Must be one of: ${validRoles.join(", ")}` },
+          { status: 400 }
+        );
+      }
+
+      // Update in-memory authorized staff registry
+      const account = AUTHORIZED_STAFF_ACCOUNTS[emailCleaned];
+      if (account) {
+        account.role = role;
+      }
+
+      // Update Supabase public.workspace_users & auth.users metadata
+      const roleResult = await updateSupabaseUserRole(emailCleaned, role as any);
+
+      return NextResponse.json({
+        ok: true,
+        role,
+        message:
+          roleResult.message ||
+          `Staff account ${emailCleaned} role successfully updated to ${role.replace("_", " ")}.`,
+      });
+    }
+
+    // 2. Active / Inactive Status Toggle
+    const shouldDeactivate = status === "Inactive" || action === "deactivate";
+
     // Self-Protection Guardrail: Super Admin cannot be deactivated
-    if (emailCleaned === "vivek@searchmyvacation.com") {
+    if (shouldDeactivate && emailCleaned === "vivek@searchmyvacation.com") {
       return NextResponse.json(
         { ok: false, message: "Super Admin account cannot be deactivated." },
         { status: 403 }
       );
     }
 
-    const shouldDeactivate = status === "Inactive" || action === "deactivate";
     const nowIso = new Date().toISOString();
 
-    // 1. Update in-memory authorized staff registry
+    // Update in-memory authorized staff registry
     const account = AUTHORIZED_STAFF_ACCOUNTS[emailCleaned];
     if (account) {
       account.status = shouldDeactivate ? "Inactive" : "Active";
       account.deactivatedAt = shouldDeactivate ? nowIso : null;
     }
 
-    // 2. Sync with staffAuthService
+    // Sync with staffAuthService
     try {
       const authUser = await staffAuthService.getUserByEmail(emailCleaned);
       if (authUser) {
@@ -195,7 +226,7 @@ export async function PATCH(request: Request) {
       console.warn("staffAuthService status sync warning:", e.message);
     }
 
-    // 3. Sync with Supabase database (public.workspace_users & public.workspace_audit_log)
+    // Sync with Supabase database (public.workspace_users & public.workspace_audit_log)
     await setSupabaseUserActiveStatus(emailCleaned, !shouldDeactivate);
 
     return NextResponse.json({
