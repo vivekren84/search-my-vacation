@@ -1,8 +1,9 @@
-# Release 1.5 — Luxury Travel Staff Portal & Advisor Workspace
+# Release 1.5 — High-Touch Travel Staff Portal & Advisor Workspace
 
 **Release Theme:** Empower internal Journey Designers, operations desk, and administrators with authenticated access, single-channel Smart OTP, decoupled master client profiles, visual trip lifecycle pipeline, bespoke itinerary/quote builder, and authentic brand storytelling on the site.  
 **Total Backlog Items:** 22 (18 Travel Staff Portal User Stories + 4 Public Brand, Growth & Governance Deliverables)  
-**Status:** Approved (Expanded Baseline)  
+**Status:** **SIGNED OFF & PRODUCTION VERIFIED (100% COMPLETE)**  
+**Sign-Off Stakeholder:** Vivek Renganathan (`super_admin` / Owner) — November 23, 2026  
 **Document Reference:** Agile Product Backlog v1.1 & SMV Master Release Charter  
 
 ---

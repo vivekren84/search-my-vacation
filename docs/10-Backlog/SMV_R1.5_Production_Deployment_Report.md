@@ -158,3 +158,19 @@ psql -f supabase/migrations/20261123000000_client_crm_m2.rollback.sql
 psql -f supabase/migrations/20261122000000_staff_auth_rbac_m1.rollback.sql
 ```
 * **Data Safety Note:** Because Release 1.5 tables are strictly internal `workspace_*` tables and the public customer database was completely decoupled (`BOUND-01`), rolling back Release 1.5 schemas has **zero impact** on public customer leads, passport submissions, or traveller callbacks.
+
+---
+
+## 7. Stakeholder Sign-Off & Release Closure
+
+* **Sign-Off Date:** November 23, 2026
+* **Signed Off By:** Vivek Renganathan (`super_admin` / Owner)
+* **Status:** **R1.5 OFFICIALLY SIGNED OFF & CLOSED (100% PRODUCTION READY)**
+* **Production Status:** Verified Live across `https://www.searchmyvacation.com` and `https://searchmyvacation.com`
+* **Verified Key Capabilities:**
+  1. Internal Staff Directory & Multi-Role Governance (`super_admin`, `administrator`, `privilege_user`, `desk_user`) with immediate database synchronization.
+  2. Single-Channel Smart OTP and Password Authentication with temporary password forced first-login rotation.
+  3. Master Client CRM with duplicate detection and family companion linking.
+  4. Day-by-Day Itinerary & Margin Engine with 1-click Claude Project Pop-Up Artifact Launcher ($0.00 headless API cost).
+  5. Operations & Booking Command Center with visual Kanban pipeline and Concierge Radar dock.
+* **Next Release Scope:** Transitioning to **Release 1.5.1** (`feature/release-1.5.1-team-profile-crm`) covering Client Intake Identifier assignment (`DDSMV-YY-XXX` / `VDSMV-YY-XXX`), Google Sheets historical data ingestion & test data purge, Internal Team Profile page, and Golden Sunset portal aesthetic refresh.
