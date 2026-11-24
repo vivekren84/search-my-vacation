@@ -2,7 +2,16 @@
 
 **Release Theme:** Decouple CRM complexity from website releases. Validate existing Zoho/Supabase setup first, then build lead continuity, quote tracking, and repeat-traveller intelligence.  
 **Total Backlog Items:** 11  
-**Status:** Approved (Baseline)
+**Status:** In Active Execution (Phase 1 & Phase 2 Core Accelerated via Release 1.5.1)
+
+---
+
+## 0. Release 1.5.1 Delivery Acceleration Notice
+*As approved by Vivek Renganathan on November 23, 2026, core deliverables from Phase 1 and Phase 2 are implemented in **Release 1.5.1 (`feature/release-1.5.1-team-profile-crm`)**:*
+- **`CRM-01` & `CRM-04`:** Normalized two-tier Customer Master (`CUST-XXXXX`) $\rightarrow$ Many Trips (`DDSMV-YY-XXX`/`VDSMV-YY-XXX`) relational schema.
+- **`CRM-06`:** Repeat-traveller deduplication and multi-year journey history linking.
+- **`CRM-03`:** Direct Deal and Vendor Deal commercial quotation tracking with RLS financial controls.
+- **`CRM-02`:** Smart returning-customer lookup in the staff portal intake flow.
 
 ---
 

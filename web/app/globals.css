@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@variant dark (&:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *));
+
 /* ==========================================================
    Search My Vacation - Global Design Tokens
    ========================================================== */
@@ -94,6 +96,37 @@
   --surface-inspiration-gold: rgba(245, 149, 28, .18);
   --surface-inspiration-champagne: rgba(42, 33, 28, .06);
 
+  /* ----------------------------------------------------------
+     Release 1.5.1 Portal Theme Tokens:
+     Light Mode: Dusk Horizon Editorial Split
+     ---------------------------------------------------------- */
+  --portal-canvas: #FAF8F5; /* Warm Alabaster */
+  --portal-header: #0E0D0C; /* Anchored Sunset Horizon Dark */
+  --portal-card: #FFFFFF; /* Pure Crisp Ivory */
+  --portal-card-subtle: #F5F2EB;
+  --portal-border: #E6E1D8; /* Stone hairline */
+  --portal-border-subtle: #EDE8E1;
+  --portal-ink: #181614; /* Deep Charcoal ink */
+  --portal-ink-muted: #66615A;
+  --portal-ink-faint: #9E988F;
+  --portal-amber: #F5951C;
+}
+
+/* ----------------------------------------------------------
+   Release 1.5.1 Portal Theme Tokens:
+   Dark Mode: Sunset Horizon Obsidian
+   ---------------------------------------------------------- */
+[data-theme="dark"] {
+  --portal-canvas: #0D0C0B; /* Carbon Obsidian */
+  --portal-header: #09090B; /* Deep Obsidian */
+  --portal-card: rgba(22, 21, 20, 0.82); /* Frosted Charcoal */
+  --portal-card-subtle: #161514;
+  --portal-border: rgba(255, 255, 255, 0.08); /* Dark hairline */
+  --portal-border-subtle: rgba(255, 255, 255, 0.04);
+  --portal-ink: #F5F2EB; /* Warm Ivory */
+  --portal-ink-muted: #A19D95;
+  --portal-ink-faint: #6B665E;
+  --portal-amber: #F5951C;
 }
 
 @theme inline {

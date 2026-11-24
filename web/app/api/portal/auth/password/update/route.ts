@@ -44,13 +44,14 @@ export async function POST(request: Request) {
       );
     }
 
-    // Update password and clear forced rotation flag
+    // Synchronize password with Supabase auth
+    await updateSupabaseUserPassword(emailCleaned, newPassword);
+
+    // Update password and clear forced rotation flag in memory
     staff.password = newPassword;
     staff.requiresPasswordChange = false;
     staff.status = "Active";
-
-    // Synchronize password with Supabase auth
-    await updateSupabaseUserPassword(emailCleaned, newPassword);
+    AUTHORIZED_STAFF_ACCOUNTS[emailCleaned] = staff;
 
     return NextResponse.json({
       ok: true,

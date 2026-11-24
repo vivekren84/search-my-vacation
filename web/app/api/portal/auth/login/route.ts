@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { AUTHORIZED_STAFF_ACCOUNTS, findStaffByEmailOrPhone } from "../otp/store";
-import { getSupabaseStaffUserByEmailOrPhone } from "@/lib/supabase/admin";
+import {
+  getSupabaseStaffUserByEmailOrPhone,
+  verifySupabaseUserPassword,
+} from "@/lib/supabase/admin";
 
 export const runtime = "nodejs";
 
@@ -50,13 +53,41 @@ export async function POST(request: Request) {
     }
 
     const inputPass = password.trim();
-    const expectedPass = staff.password || "TemporaryDefaultPass#2026";
 
-    // Verify password match
-    const isPasswordValid =
-      inputPass === expectedPass ||
-      inputPass === "TemporaryDefaultPass#2026" ||
-      (process.env.NODE_ENV !== "production" && inputPass === "admin123");
+    // 1. Attempt live cryptographic password verification via Supabase GoTrue Auth
+    const authVerify = await verifySupabaseUserPassword(staff.email, inputPass);
+
+    let isPasswordValid = false;
+    let requiresPasswordChange = false;
+
+    if (authVerify.success) {
+      isPasswordValid = true;
+      if (inputPass === "TemporaryDefaultPass#2026") {
+        requiresPasswordChange = true;
+      } else {
+        requiresPasswordChange =
+          authVerify.user?.user_metadata?.requires_password_change === true ||
+          Boolean(staff.requiresPasswordChange);
+      }
+    } else {
+      // 2. Fallback check for newly provisioned temporary password or dev bypass
+      const expectedPass = staff.password || "TemporaryDefaultPass#2026";
+      const isFallbackMatch =
+        inputPass === expectedPass ||
+        inputPass === "TemporaryDefaultPass#2026" ||
+        (process.env.NODE_ENV !== "production" && inputPass === "admin123");
+
+      if (isFallbackMatch) {
+        isPasswordValid = true;
+        requiresPasswordChange =
+          inputPass === "TemporaryDefaultPass#2026" || Boolean(staff.requiresPasswordChange);
+      }
+    }
+
+    // Super Admin exemption from forced password rotation
+    if (staff.email.toLowerCase() === "vivek@searchmyvacation.com") {
+      requiresPasswordChange = false;
+    }
 
     if (!isPasswordValid) {
       return NextResponse.json(
@@ -65,9 +96,15 @@ export async function POST(request: Request) {
       );
     }
 
-    // Determine if first-time password rotation is required
-    const requiresPasswordChange =
-      staff.requiresPasswordChange || inputPass === "TemporaryDefaultPass#2026";
+    // Keep in-memory directory synchronized with current state
+    if (AUTHORIZED_STAFF_ACCOUNTS[staff.email.toLowerCase()]) {
+      AUTHORIZED_STAFF_ACCOUNTS[staff.email.toLowerCase()].requiresPasswordChange =
+        requiresPasswordChange;
+      AUTHORIZED_STAFF_ACCOUNTS[staff.email.toLowerCase()].password = inputPass;
+      if (!requiresPasswordChange) {
+        AUTHORIZED_STAFF_ACCOUNTS[staff.email.toLowerCase()].status = "Active";
+      }
+    }
 
     return NextResponse.json({
       ok: true,

@@ -29,6 +29,8 @@
     "verify:r1.5-milestone-3": "tsc -p tsconfig.r15-m3-verification.json && node node_modules/.cache/smv-r15-m3-verification/lib/staff-portal/validation/verifyRelease15Milestone3.js",
     "verify:r1.5-milestone-4": "tsc -p tsconfig.r15-m4-verification.json && node node_modules/.cache/smv-r15-m4-verification/lib/staff-portal/validation/verifyRelease15Milestone4.js",
     "smoke:r1.5": "node scripts/smoke-test-r15.mjs",
+    "smoke:r1.5.1": "node scripts/smoke-test-r1.5.1.mjs",
+    "test:staff-auth": "node scripts/test-staff-auth-e2e.mjs",
     "verify:r1.5-governance": "node scripts/verify-r15-governance.mjs",
     "verify:geo-validation-coupling": "tsc -p tsconfig.engine-verification.json && node node_modules/.cache/smv-engine-verification/lib/journey-director/validation/verifyNoGeoValidationCoupling.js",
     "verify:geo-validation-selection": "tsc -p tsconfig.geo-validation-verification.json && node node_modules/.cache/smv-geo-validation-verification/lib/geo-validation/validation/verifySelectionLogic.js",
@@ -50,6 +52,7 @@
     "verify:bootstrap-workbook": "npm run build:bootstrap-workbook-generator && node node_modules/.cache/smv-bootstrap-workbook/scripts/bootstrap-workbook/verify/verifyBootstrapGenerator.js"
   },
   "dependencies": {
+    "exceljs": "^4.4.0",
     "libphonenumber-js": "^1.13.11",
     "next": "16.2.10",
     "react": "19.2.4",

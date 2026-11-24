@@ -5,6 +5,7 @@ import Script from "next/script";
 
 import { siteBrand } from "@/config/brand.config";
 import { siteContact } from "@/config/contact.config";
+import { ThemeProvider } from "@/context/ThemeContext";
 import { JourneySessionProvider } from "@/context/JourneySessionContext";
 import { AmbientAudioProvider } from "@/context/AmbientAudioContext";
 import { AmbientAudioPlayer } from "@/components/media/AmbientAudioPlayer";
@@ -99,6 +100,13 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 
   return (
     <html lang="en" data-scroll-behavior="smooth" className={`${inter.variable} ${poppins.variable} ${editorial.variable} h-full antialiased`}>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var p=localStorage.getItem('smv_theme_preference')||'system';var t=p;if(p==='system'){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.dataset.theme=t;if(t==='dark'){document.documentElement.classList.add('dark');}else{document.documentElement.classList.remove('dark');}}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body className="min-h-screen bg-background text-foreground">
         {googleAdsId ? (
           <>
@@ -122,12 +130,14 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           </>
         ) : null}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
-        <JourneySessionProvider>
-          <AmbientAudioProvider>
-            {children}
-            <AmbientAudioPlayer />
-          </AmbientAudioProvider>
-        </JourneySessionProvider>
+        <ThemeProvider>
+          <JourneySessionProvider>
+            <AmbientAudioProvider>
+              {children}
+              <AmbientAudioPlayer />
+            </AmbientAudioProvider>
+          </JourneySessionProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

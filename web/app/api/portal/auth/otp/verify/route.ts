@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { AUTHORIZED_STAFF_ACCOUNTS, portalOtpStore, findStaffByEmailOrPhone } from "../store";
+import { getSupabaseStaffUserByEmailOrPhone } from "@/lib/supabase/admin";
 
 export const runtime = "nodejs";
 
@@ -15,7 +16,17 @@ export async function POST(request: Request) {
       );
     }
 
-    const staff = findStaffByEmailOrPhone(identifier);
+    let staff = findStaffByEmailOrPhone(identifier);
+
+    // Fallback lookup in Supabase auth.users & workspace_users
+    if (!staff) {
+      const dbStaff = await getSupabaseStaffUserByEmailOrPhone(identifier);
+      if (dbStaff) {
+        AUTHORIZED_STAFF_ACCOUNTS[dbStaff.email.toLowerCase()] = dbStaff;
+        staff = dbStaff;
+      }
+    }
+
     if (!staff) {
       return NextResponse.json(
         { ok: false, message: "Account not recognized. Traveller accounts opening soon" },
