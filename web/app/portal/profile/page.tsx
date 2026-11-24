@@ -334,10 +334,10 @@ export default function StaffProfilePage() {
 
   if (isLoading || !profile) {
     return (
-      <div className="min-h-screen bg-[#FAF8F5] dark:bg-[#0D0C0B] flex items-center justify-center text-[#181614] dark:text-[#F5F2EB] text-sm">
+      <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#09090B] flex items-center justify-center text-[#0F172A] dark:text-[#F4F4F5] text-sm">
         <div className="flex items-center gap-3">
           <div className="w-5 h-5 border-2 border-[#F5951C] border-t-transparent rounded-full animate-spin" />
-          <span className="font-medium text-[#66615A] dark:text-[#A19D95]">
+          <span className="font-medium text-[#475569] dark:text-[#94A3B8]">
             Loading Atelier Advisor Profile...
           </span>
         </div>
@@ -355,9 +355,9 @@ export default function StaffProfilePage() {
       : "Travel Atelier Advisor";
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] dark:bg-[#0D0C0B] text-[#181614] dark:text-[#F5F2EB] flex flex-col font-sans transition-colors duration-200">
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#09090B] text-[#0F172A] dark:text-[#F4F4F5] flex flex-col font-sans transition-colors duration-200">
       {/* Anchored Top Header: Dusk Horizon Split */}
-      <header className="border-b border-white/10 bg-[#0E0D0C] dark:bg-[#09090B] px-4 sm:px-8 py-3.5 flex items-center justify-between sticky top-0 z-40 shadow-md transition-colors">
+      <header className="border-b border-white/10 bg-[#0F172A] dark:bg-[#09090B] px-4 sm:px-8 py-3.5 flex items-center justify-between sticky top-0 z-40 shadow-md transition-colors">
         <div className="flex items-center gap-4">
           <Link href="/portal/dashboard" className="inline-block">
             <SiteBrand variant="header" surface="dark" className="w-32 sm:w-36 text-white" />
@@ -376,9 +376,9 @@ export default function StaffProfilePage() {
           <ThemeToggle variant="compact" />
           <Link
             href="/portal/dashboard"
-            className="flex items-center gap-1.5 rounded-full border border-white/20 bg-white/5 px-3 py-1.5 text-xs font-semibold text-white/90 hover:bg-white/10 hover:border-[#F5951C] transition"
+            className="flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-xs font-bold text-white hover:bg-white/20 hover:border-[#F5951C] transition shadow-sm"
           >
-            ← Dashboard
+            ← Back to Dashboard
           </Link>
         </div>
       </header>
@@ -386,12 +386,12 @@ export default function StaffProfilePage() {
       {/* Main Content Area */}
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-8 py-8 space-y-8">
         {/* Page Heading & Status Banner */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E6E1D8] dark:border-white/10 pb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E2E8F0] dark:border-white/10 pb-6">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold font-serif text-[#181614] dark:text-white">
+            <h1 className="text-2xl sm:text-3xl font-bold font-serif text-[#0F172A] dark:text-white">
               Advisor Workspace Profile
             </h1>
-            <p className="mt-1 text-xs sm:text-sm text-[#66615A] dark:text-[#A19D95]">
+            <p className="mt-1 text-xs sm:text-sm text-[#475569] dark:text-[#94A3B8]">
               Manage your Slow-Travel Atelier credentials, signature archetypes, executive visuals,
               and security settings.
             </p>
@@ -402,7 +402,7 @@ export default function StaffProfilePage() {
               type="button"
               onClick={handleSaveProfile}
               disabled={isSaving}
-              className="flex items-center gap-2 rounded-xl bg-[#F5951C] px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-[#0E0D0C] hover:bg-[#e08515] transition shadow-md disabled:opacity-50"
+              className="flex items-center gap-2 rounded-xl bg-[#F5951C] px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-[#0F172A] hover:bg-[#e08515] transition shadow-md disabled:opacity-50"
             >
               {isSaving ? "Saving..." : "Save Profile Changes"}
             </button>
@@ -432,16 +432,16 @@ export default function StaffProfilePage() {
           {/* LEFT COLUMN: Visual Avatar Suite & Locked Governance */}
           <div className="space-y-6">
             {/* Visual Studio Card */}
-            <div className="rounded-2xl border border-[#E6E1D8] dark:border-white/10 bg-white dark:bg-[#161514] p-6 shadow-sm space-y-6">
+            <div className="rounded-2xl border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] p-6 shadow-sm space-y-6">
               <div className="flex items-center justify-between">
-                <h2 className="text-sm font-bold uppercase tracking-wider text-[#181614] dark:text-white">
+                <h2 className="text-sm font-bold uppercase tracking-wider text-[#0F172A] dark:text-white">
                   Executive Avatar
                 </h2>
                 <span className="text-[11px] font-semibold text-[#F5951C]">Studio Suite</span>
               </div>
 
               {/* Active Avatar Display */}
-              <div className="flex flex-col items-center justify-center p-4 bg-[#FAF8F5] dark:bg-[#0D0C0B] rounded-2xl border border-[#E6E1D8] dark:border-white/5 space-y-3">
+              <div className="flex flex-col items-center justify-center p-4 bg-[#F8FAFC] dark:bg-[#09090B] rounded-2xl border border-[#E2E8F0] dark:border-white/5 space-y-3">
                 <StaffAvatar
                   avatarUrl={profile.avatarImageUrl}
                   presetId={profile.avatarPresetId}
@@ -450,10 +450,10 @@ export default function StaffProfilePage() {
                   className="shadow-xl"
                 />
                 <div className="text-center">
-                  <p className="font-bold text-sm text-[#181614] dark:text-white">
+                  <p className="font-bold text-sm text-[#0F172A] dark:text-white">
                     {profile.fullName}
                   </p>
-                  <p className="text-xs text-[#66615A] dark:text-[#A19D95]">
+                  <p className="text-xs text-[#475569] dark:text-[#94A3B8]">
                     {profile.professionalTitle}
                   </p>
                   <span className="mt-1 inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#F5951C]/15 text-[#F5951C]">
@@ -465,7 +465,7 @@ export default function StaffProfilePage() {
               {/* Custom Studio Portrait Upload */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-semibold text-[#181614] dark:text-white">
+                  <label className="text-xs font-semibold text-[#0F172A] dark:text-white">
                     Upload Studio Portrait
                   </label>
                   {profile.avatarImageUrl && (
@@ -489,26 +489,26 @@ export default function StaffProfilePage() {
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isUploadingAvatar}
-                  className="w-full flex items-center justify-center gap-2 rounded-xl border border-dashed border-[#E6E1D8] dark:border-white/20 bg-[#FAF8F5] dark:bg-[#0D0C0B] px-4 py-3 text-xs font-semibold text-[#181614] dark:text-white hover:border-[#F5951C] hover:text-[#F5951C] transition"
+                  className="w-full flex items-center justify-center gap-2 rounded-xl border border-dashed border-[#E2E8F0] dark:border-white/20 bg-[#F8FAFC] dark:bg-[#09090B] px-4 py-3 text-xs font-semibold text-[#0F172A] dark:text-white hover:border-[#F5951C] hover:text-[#F5951C] transition"
                 >
                   {isUploadingAvatar ? (
                     <span>Cropping & Uploading (400×400 WebP)...</span>
                   ) : (
                     <>
                       <span>📷 Select Photo (WebP, PNG, JPG)</span>
-                      <span className="text-[10px] text-[#66615A] dark:text-white/50">• Max 500 KB</span>
+                      <span className="text-[10px] text-[#475569] dark:text-white/50">• Max 500 KB</span>
                     </>
                   )}
                 </button>
-                <p className="text-[11px] text-[#66615A] dark:text-[#A19D95] text-center">
+                <p className="text-[11px] text-[#475569] dark:text-[#94A3B8] text-center">
                   Photos are cropped client-side to 1:1 WebP (EXIF stripped) into the{" "}
                   <code className="text-[#F5951C]">staff-avatars</code> bucket.
                 </p>
               </div>
 
               {/* Curated 4 Executive Presets */}
-              <div className="space-y-2.5 pt-4 border-t border-[#E6E1D8] dark:border-white/10">
-                <label className="text-xs font-semibold text-[#181614] dark:text-white">
+              <div className="space-y-2.5 pt-4 border-t border-[#E2E8F0] dark:border-white/10">
+                <label className="text-xs font-semibold text-[#0F172A] dark:text-white">
                   Curated Executive SVG Presets
                 </label>
                 <div className="grid grid-cols-2 gap-2.5">
@@ -528,8 +528,8 @@ export default function StaffProfilePage() {
                         }
                         className={`p-2.5 rounded-xl border flex flex-col items-center gap-2 text-center transition ${
                           isSelected
-                            ? "border-[#F5951C] bg-[#F5951C]/10 text-[#181614] dark:text-white font-bold ring-1 ring-[#F5951C]"
-                            : "border-[#E6E1D8] dark:border-white/10 bg-[#FAF8F5] dark:bg-[#0D0C0B] text-[#66615A] dark:text-white/70 hover:border-white/30"
+                            ? "border-[#F5951C] bg-[#F5951C]/10 text-[#0F172A] dark:text-white font-bold ring-1 ring-[#F5951C]"
+                            : "border-[#E2E8F0] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] text-[#475569] dark:text-white/70 hover:border-white/30"
                         }`}
                       >
                         <StaffAvatar
@@ -546,19 +546,19 @@ export default function StaffProfilePage() {
             </div>
 
             {/* Locked Governance Card */}
-            <div className="rounded-2xl border border-[#E6E1D8] dark:border-white/10 bg-white dark:bg-[#161514] p-6 shadow-sm space-y-4">
+            <div className="rounded-2xl border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] p-6 shadow-sm space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="text-amber-500 font-bold">🔒</span>
-                  <h2 className="text-sm font-bold uppercase tracking-wider text-[#181614] dark:text-white">
+                  <h2 className="text-sm font-bold uppercase tracking-wider text-[#0F172A] dark:text-white">
                     Governance Locks
                   </h2>
                 </div>
-                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-black/5 dark:bg-white/10 text-[#66615A] dark:text-white/60">
+                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-black/5 dark:bg-white/10 text-[#475569] dark:text-white/60">
                   Read Only
                 </span>
               </div>
-              <p className="text-xs text-[#66615A] dark:text-[#A19D95] leading-relaxed">
+              <p className="text-xs text-[#475569] dark:text-[#94A3B8] leading-relaxed">
                 Core identity and authorization fields are locked at the database layer to ensure
                 compliance and OTP verification integrity.
               </p>
@@ -566,15 +566,15 @@ export default function StaffProfilePage() {
               {/* Locked Field 1: Company Email */}
               <div
                 onClick={() => triggerLockedNotice("Company Email")}
-                className="p-3 rounded-xl border border-[#E6E1D8] dark:border-white/10 bg-[#FAF8F5] dark:bg-[#0D0C0B] cursor-pointer hover:border-amber-500/50 transition group space-y-1"
+                className="p-3 rounded-xl border border-[#E2E8F0] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] cursor-pointer hover:border-amber-500/50 transition group space-y-1"
               >
-                <div className="flex justify-between items-center text-[10px] uppercase font-bold tracking-wider text-[#66615A] dark:text-white/50">
+                <div className="flex justify-between items-center text-[10px] uppercase font-bold tracking-wider text-[#475569] dark:text-white/50">
                   <span>Company Email</span>
                   <span className="opacity-0 group-hover:opacity-100 text-[#F5951C] transition">
                     Locked 🔒
                   </span>
                 </div>
-                <p className="text-xs font-mono font-bold text-[#181614] dark:text-white truncate">
+                <p className="text-xs font-mono font-bold text-[#0F172A] dark:text-white truncate">
                   {profile.email}
                 </p>
               </div>
@@ -582,15 +582,15 @@ export default function StaffProfilePage() {
               {/* Locked Field 2: Registered Mobile */}
               <div
                 onClick={() => triggerLockedNotice("Registered Mobile")}
-                className="p-3 rounded-xl border border-[#E6E1D8] dark:border-white/10 bg-[#FAF8F5] dark:bg-[#0D0C0B] cursor-pointer hover:border-amber-500/50 transition group space-y-1"
+                className="p-3 rounded-xl border border-[#E2E8F0] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] cursor-pointer hover:border-amber-500/50 transition group space-y-1"
               >
-                <div className="flex justify-between items-center text-[10px] uppercase font-bold tracking-wider text-[#66615A] dark:text-white/50">
+                <div className="flex justify-between items-center text-[10px] uppercase font-bold tracking-wider text-[#475569] dark:text-white/50">
                   <span>Registered Mobile (OTP Challenge Target)</span>
                   <span className="opacity-0 group-hover:opacity-100 text-[#F5951C] transition">
                     Locked 🔒
                   </span>
                 </div>
-                <p className="text-xs font-mono font-bold text-[#181614] dark:text-white">
+                <p className="text-xs font-mono font-bold text-[#0F172A] dark:text-white">
                   {profile.phoneE164 || "Not Registered"}
                 </p>
               </div>
@@ -598,16 +598,16 @@ export default function StaffProfilePage() {
               {/* Locked Field 3: Permission Role Tier */}
               <div
                 onClick={() => triggerLockedNotice("Permission Role Tier")}
-                className="p-3 rounded-xl border border-[#E6E1D8] dark:border-white/10 bg-[#FAF8F5] dark:bg-[#0D0C0B] cursor-pointer hover:border-amber-500/50 transition group space-y-1"
+                className="p-3 rounded-xl border border-[#E2E8F0] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] cursor-pointer hover:border-amber-500/50 transition group space-y-1"
               >
-                <div className="flex justify-between items-center text-[10px] uppercase font-bold tracking-wider text-[#66615A] dark:text-white/50">
+                <div className="flex justify-between items-center text-[10px] uppercase font-bold tracking-wider text-[#475569] dark:text-white/50">
                   <span>Permission Role Tier</span>
                   <span className="opacity-0 group-hover:opacity-100 text-[#F5951C] transition">
                     Locked 🔒
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-[#181614] dark:text-white">
+                  <span className="text-xs font-bold text-[#0F172A] dark:text-white">
                     {roleLabel}
                   </span>
                   <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#F5951C]/15 text-[#F5951C] font-semibold">
@@ -618,16 +618,16 @@ export default function StaffProfilePage() {
             </div>
 
             {/* Workspace Theme Preference Card */}
-            <div className="rounded-2xl border border-[#E6E1D8] dark:border-white/10 bg-white dark:bg-[#161514] p-6 shadow-sm space-y-3">
+            <div className="rounded-2xl border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] p-6 shadow-sm space-y-3">
               <div className="flex items-center justify-between">
-                <h2 className="text-sm font-bold uppercase tracking-wider text-[#181614] dark:text-white">
+                <h2 className="text-sm font-bold uppercase tracking-wider text-[#0F172A] dark:text-white">
                   Workspace Theme
                 </h2>
-                <span className="text-xs text-[#66615A] dark:text-[#A19D95]">
+                <span className="text-xs text-[#475569] dark:text-[#94A3B8]">
                   Active: <strong className="capitalize text-[#F5951C]">{themePreference}</strong>
                 </span>
               </div>
-              <p className="text-xs text-[#66615A] dark:text-[#A19D95]">
+              <p className="text-xs text-[#475569] dark:text-[#94A3B8]">
                 Switch between Dusk Horizon Editorial Split (Light) and Sunset Horizon Obsidian (Dark).
               </p>
               <div className="pt-2">
@@ -641,14 +641,14 @@ export default function StaffProfilePage() {
             {/* Atelier Fields Form */}
             <form
               onSubmit={handleSaveProfile}
-              className="rounded-2xl border border-[#E6E1D8] dark:border-white/10 bg-white dark:bg-[#161514] p-6 sm:p-8 shadow-sm space-y-6"
+              className="rounded-2xl border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] p-6 sm:p-8 shadow-sm space-y-6"
             >
-              <div className="flex items-center justify-between border-b border-[#E6E1D8] dark:border-white/10 pb-4">
+              <div className="flex items-center justify-between border-b border-[#E2E8F0] dark:border-white/10 pb-4">
                 <div>
-                  <h2 className="text-base font-bold text-[#181614] dark:text-white">
+                  <h2 className="text-base font-bold text-[#0F172A] dark:text-white">
                     Atelier Professional Details
                   </h2>
-                  <p className="text-xs text-[#66615A] dark:text-[#A19D95]">
+                  <p className="text-xs text-[#475569] dark:text-[#94A3B8]">
                     These details curate your advisor signature on client proposals, journey itineraries,
                     and communications.
                   </p>
@@ -658,21 +658,21 @@ export default function StaffProfilePage() {
               {/* Row 1: Full Name & Professional Title */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#66615A] dark:text-white/80 mb-1.5">
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#475569] dark:text-white/80 mb-1.5">
                     Full Name
                   </label>
                   <input
                     type="text"
                     value={profile.fullName}
                     onChange={(e) => setProfile({ ...profile, fullName: e.target.value })}
-                    className="w-full rounded-xl border border-[#E6E1D8] dark:border-white/15 bg-white dark:bg-[#09090B] px-3.5 py-2.5 text-xs sm:text-sm text-[#181614] dark:text-white focus:border-[#F5951C] focus:outline-none"
+                    className="w-full rounded-xl border border-[#E2E8F0] dark:border-white/15 bg-white dark:bg-[#09090B] px-3.5 py-2.5 text-xs sm:text-sm text-[#0F172A] dark:text-white focus:border-[#F5951C] focus:outline-none"
                     placeholder="e.g. Vivek Renganathan"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#66615A] dark:text-white/80 mb-1.5">
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#475569] dark:text-white/80 mb-1.5">
                     Advisor Professional Title
                   </label>
                   <input
@@ -681,7 +681,7 @@ export default function StaffProfilePage() {
                     onChange={(e) =>
                       setProfile({ ...profile, professionalTitle: e.target.value })
                     }
-                    className="w-full rounded-xl border border-[#E6E1D8] dark:border-white/15 bg-white dark:bg-[#09090B] px-3.5 py-2.5 text-xs sm:text-sm text-[#181614] dark:text-white focus:border-[#F5951C] focus:outline-none"
+                    className="w-full rounded-xl border border-[#E2E8F0] dark:border-white/15 bg-white dark:bg-[#09090B] px-3.5 py-2.5 text-xs sm:text-sm text-[#0F172A] dark:text-white focus:border-[#F5951C] focus:outline-none"
                     placeholder="e.g. Senior Slow-Travel Atelier Curator"
                   />
                 </div>
@@ -690,20 +690,20 @@ export default function StaffProfilePage() {
               {/* Row 2: Department & Signature Archetype */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#66615A] dark:text-white/80 mb-1.5">
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#475569] dark:text-white/80 mb-1.5">
                     Department / Atelier Desk
                   </label>
                   <input
                     type="text"
                     value={profile.department}
                     onChange={(e) => setProfile({ ...profile, department: e.target.value })}
-                    className="w-full rounded-xl border border-[#E6E1D8] dark:border-white/15 bg-white dark:bg-[#09090B] px-3.5 py-2.5 text-xs sm:text-sm text-[#181614] dark:text-white focus:border-[#F5951C] focus:outline-none"
+                    className="w-full rounded-xl border border-[#E2E8F0] dark:border-white/15 bg-white dark:bg-[#09090B] px-3.5 py-2.5 text-xs sm:text-sm text-[#0F172A] dark:text-white focus:border-[#F5951C] focus:outline-none"
                     placeholder="e.g. Bespoke Slow-Travel Atelier"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#66615A] dark:text-white/80 mb-1.5">
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#475569] dark:text-white/80 mb-1.5">
                     Signature Journey Archetype
                   </label>
                   <input
@@ -712,7 +712,7 @@ export default function StaffProfilePage() {
                     onChange={(e) =>
                       setProfile({ ...profile, signatureArchetype: e.target.value })
                     }
-                    className="w-full rounded-xl border border-[#E6E1D8] dark:border-white/15 bg-white dark:bg-[#09090B] px-3.5 py-2.5 text-xs sm:text-sm text-[#181614] dark:text-white focus:border-[#F5951C] focus:outline-none"
+                    className="w-full rounded-xl border border-[#E2E8F0] dark:border-white/15 bg-white dark:bg-[#09090B] px-3.5 py-2.5 text-xs sm:text-sm text-[#0F172A] dark:text-white focus:border-[#F5951C] focus:outline-none"
                     placeholder="e.g. Slow-Paced Cultural Immersion & Heritage"
                   />
                 </div>
@@ -720,10 +720,10 @@ export default function StaffProfilePage() {
 
               {/* Destination Specializations (Interactive Tags) */}
               <div className="space-y-2">
-                <label className="block text-xs font-semibold uppercase tracking-wider text-[#66615A] dark:text-white/80">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-[#475569] dark:text-white/80">
                   Regional Destination Specializations
                 </label>
-                <div className="flex flex-wrap gap-2 items-center p-3 rounded-xl border border-[#E6E1D8] dark:border-white/15 bg-white dark:bg-[#09090B]">
+                <div className="flex flex-wrap gap-2 items-center p-3 rounded-xl border border-[#E2E8F0] dark:border-white/15 bg-white dark:bg-[#09090B]">
                   {profile.destinationSpecializations.map((tag) => (
                     <span
                       key={tag}
@@ -747,13 +747,13 @@ export default function StaffProfilePage() {
                       onChange={(e) => setNewDestinationTag(e.target.value)}
                       onKeyDown={handleAddDestinationTag}
                       placeholder="+ Add region and press Enter"
-                      className="w-full text-xs bg-transparent text-[#181614] dark:text-white placeholder-[#9E988F] dark:placeholder-white/40 focus:outline-none"
+                      className="w-full text-xs bg-transparent text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/40 focus:outline-none"
                     />
                     {newDestinationTag.trim() && (
                       <button
                         type="button"
                         onClick={handleAddDestinationTag}
-                        className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#F5951C] text-[#0E0D0C]"
+                        className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#F5951C] text-[#0F172A]"
                       >
                         Add
                       </button>
@@ -764,14 +764,14 @@ export default function StaffProfilePage() {
 
               {/* Spoken Languages (Interactive Tags) */}
               <div className="space-y-2">
-                <label className="block text-xs font-semibold uppercase tracking-wider text-[#66615A] dark:text-white/80">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-[#475569] dark:text-white/80">
                   Spoken Languages
                 </label>
-                <div className="flex flex-wrap gap-2 items-center p-3 rounded-xl border border-[#E6E1D8] dark:border-white/15 bg-white dark:bg-[#09090B]">
+                <div className="flex flex-wrap gap-2 items-center p-3 rounded-xl border border-[#E2E8F0] dark:border-white/15 bg-white dark:bg-[#09090B]">
                   {profile.spokenLanguages.map((lang) => (
                     <span
                       key={lang}
-                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-black/5 dark:bg-white/10 text-[#181614] dark:text-white border border-[#E6E1D8] dark:border-white/10"
+                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-black/5 dark:bg-white/10 text-[#0F172A] dark:text-white border border-[#E2E8F0] dark:border-white/10"
                     >
                       {lang}
                       <button
@@ -791,13 +791,13 @@ export default function StaffProfilePage() {
                       onChange={(e) => setNewLanguageTag(e.target.value)}
                       onKeyDown={handleAddLanguageTag}
                       placeholder="+ Add language and press Enter"
-                      className="w-full text-xs bg-transparent text-[#181614] dark:text-white placeholder-[#9E988F] dark:placeholder-white/40 focus:outline-none"
+                      className="w-full text-xs bg-transparent text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/40 focus:outline-none"
                     />
                     {newLanguageTag.trim() && (
                       <button
                         type="button"
                         onClick={handleAddLanguageTag}
-                        className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#F5951C] text-[#0E0D0C]"
+                        className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#F5951C] text-[#0F172A]"
                       >
                         Add
                       </button>
@@ -808,14 +808,14 @@ export default function StaffProfilePage() {
 
               {/* Client-Facing Bio / Quote */}
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-[#66615A] dark:text-white/80 mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-[#475569] dark:text-white/80 mb-1.5">
                   Client-Facing Atelier Bio / Quote
                 </label>
                 <textarea
                   rows={3}
                   value={profile.clientBio}
                   onChange={(e) => setProfile({ ...profile, clientBio: e.target.value })}
-                  className="w-full rounded-xl border border-[#E6E1D8] dark:border-white/15 bg-white dark:bg-[#09090B] p-3 text-xs sm:text-sm text-[#181614] dark:text-white placeholder-[#9E988F] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                  className="w-full rounded-xl border border-[#E2E8F0] dark:border-white/15 bg-white dark:bg-[#09090B] p-3 text-xs sm:text-sm text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
                   placeholder="Share a short slow-travel philosophy or personal introduction shown to travellers on journey documents..."
                 />
               </div>
@@ -823,7 +823,7 @@ export default function StaffProfilePage() {
               {/* Row 3: Timezone & Emergency Standby */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#66615A] dark:text-white/80 mb-1.5">
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#475569] dark:text-white/80 mb-1.5">
                     Timezone & Working Hours
                   </label>
                   <input
@@ -832,13 +832,13 @@ export default function StaffProfilePage() {
                     onChange={(e) =>
                       setProfile({ ...profile, timezoneWorkingHours: e.target.value })
                     }
-                    className="w-full rounded-xl border border-[#E6E1D8] dark:border-white/15 bg-white dark:bg-[#09090B] px-3.5 py-2.5 text-xs sm:text-sm text-[#181614] dark:text-white focus:border-[#F5951C] focus:outline-none"
+                    className="w-full rounded-xl border border-[#E2E8F0] dark:border-white/15 bg-white dark:bg-[#09090B] px-3.5 py-2.5 text-xs sm:text-sm text-[#0F172A] dark:text-white focus:border-[#F5951C] focus:outline-none"
                     placeholder="Asia/Kolkata (09:30 - 18:30)"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#66615A] dark:text-white/80 mb-1.5">
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#475569] dark:text-white/80 mb-1.5">
                     Secondary / Emergency Standby Contact
                   </label>
                   <input
@@ -847,18 +847,18 @@ export default function StaffProfilePage() {
                     onChange={(e) =>
                       setProfile({ ...profile, emergencyStandbyContact: e.target.value })
                     }
-                    className="w-full rounded-xl border border-[#E6E1D8] dark:border-white/15 bg-white dark:bg-[#09090B] px-3.5 py-2.5 text-xs sm:text-sm text-[#181614] dark:text-white focus:border-[#F5951C] focus:outline-none"
+                    className="w-full rounded-xl border border-[#E2E8F0] dark:border-white/15 bg-white dark:bg-[#09090B] px-3.5 py-2.5 text-xs sm:text-sm text-[#0F172A] dark:text-white focus:border-[#F5951C] focus:outline-none"
                     placeholder="e.g. +91 98401 22334 (Operations Duty Desk)"
                   />
                 </div>
               </div>
 
               {/* Submit Button */}
-              <div className="flex justify-end pt-4 border-t border-[#E6E1D8] dark:border-white/10">
+              <div className="flex justify-end pt-4 border-t border-[#E2E8F0] dark:border-white/10">
                 <button
                   type="submit"
                   disabled={isSaving}
-                  className="rounded-xl bg-[#F5951C] px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-[#0E0D0C] hover:bg-[#e08515] transition shadow-md disabled:opacity-50"
+                  className="rounded-xl bg-[#F5951C] px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-[#0F172A] hover:bg-[#e08515] transition shadow-md disabled:opacity-50"
                 >
                   {isSaving ? "Saving Atelier Profile..." : "Update Atelier Profile"}
                 </button>
@@ -866,17 +866,17 @@ export default function StaffProfilePage() {
             </form>
 
             {/* In-Place Password Rotation Security Card */}
-            <div className="rounded-2xl border border-[#E6E1D8] dark:border-white/10 bg-white dark:bg-[#161514] p-6 sm:p-8 shadow-sm space-y-6">
-              <div className="flex items-center justify-between border-b border-[#E6E1D8] dark:border-white/10 pb-4">
+            <div className="rounded-2xl border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] p-6 sm:p-8 shadow-sm space-y-6">
+              <div className="flex items-center justify-between border-b border-[#E2E8F0] dark:border-white/10 pb-4">
                 <div className="flex items-center gap-2.5">
                   <span className="p-2 rounded-xl bg-[#F5951C]/15 text-[#F5951C] text-sm">
                     🔐
                   </span>
                   <div>
-                    <h2 className="text-base font-bold text-[#181614] dark:text-white">
+                    <h2 className="text-base font-bold text-[#0F172A] dark:text-white">
                       Security & Password Rotation
                     </h2>
-                    <p className="text-xs text-[#66615A] dark:text-[#A19D95]">
+                    <p className="text-xs text-[#475569] dark:text-[#94A3B8]">
                       Rotate your permanent account password with verified session authorization.
                     </p>
                   </div>
@@ -897,7 +897,7 @@ export default function StaffProfilePage() {
 
               <form onSubmit={handleChangePassword} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#66615A] dark:text-white/80 mb-1">
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#475569] dark:text-white/80 mb-1">
                     Current Active Password
                   </label>
                   <input
@@ -905,14 +905,14 @@ export default function StaffProfilePage() {
                     value={currentPassword}
                     onChange={(e) => setCurrentPassword(e.target.value)}
                     placeholder="Enter your current password"
-                    className="w-full rounded-xl border border-[#E6E1D8] dark:border-white/15 bg-white dark:bg-[#09090B] px-3.5 py-2 text-xs sm:text-sm text-[#181614] dark:text-white focus:border-[#F5951C] focus:outline-none"
+                    className="w-full rounded-xl border border-[#E2E8F0] dark:border-white/15 bg-white dark:bg-[#09090B] px-3.5 py-2 text-xs sm:text-sm text-[#0F172A] dark:text-white focus:border-[#F5951C] focus:outline-none"
                     required
                   />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-[#66615A] dark:text-white/80 mb-1">
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-[#475569] dark:text-white/80 mb-1">
                       New Permanent Password
                     </label>
                     <input
@@ -920,13 +920,13 @@ export default function StaffProfilePage() {
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
                       placeholder="Min 8 chars, 1 uppercase, 1 symbol"
-                      className="w-full rounded-xl border border-[#E6E1D8] dark:border-white/15 bg-white dark:bg-[#09090B] px-3.5 py-2 text-xs sm:text-sm text-[#181614] dark:text-white focus:border-[#F5951C] focus:outline-none"
+                      className="w-full rounded-xl border border-[#E2E8F0] dark:border-white/15 bg-white dark:bg-[#09090B] px-3.5 py-2 text-xs sm:text-sm text-[#0F172A] dark:text-white focus:border-[#F5951C] focus:outline-none"
                       required
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-[#66615A] dark:text-white/80 mb-1">
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-[#475569] dark:text-white/80 mb-1">
                       Confirm New Password
                     </label>
                     <input
@@ -934,15 +934,15 @@ export default function StaffProfilePage() {
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       placeholder="Repeat new password"
-                      className="w-full rounded-xl border border-[#E6E1D8] dark:border-white/15 bg-white dark:bg-[#09090B] px-3.5 py-2 text-xs sm:text-sm text-[#181614] dark:text-white focus:border-[#F5951C] focus:outline-none"
+                      className="w-full rounded-xl border border-[#E2E8F0] dark:border-white/15 bg-white dark:bg-[#09090B] px-3.5 py-2 text-xs sm:text-sm text-[#0F172A] dark:text-white focus:border-[#F5951C] focus:outline-none"
                       required
                     />
                   </div>
                 </div>
 
                 {/* Password Policy Checklist */}
-                <div className="p-3.5 rounded-xl border border-[#E6E1D8] dark:border-white/10 bg-[#FAF8F5] dark:bg-[#0D0C0B] text-xs space-y-1.5">
-                  <p className="font-semibold text-[#181614] dark:text-white">
+                <div className="p-3.5 rounded-xl border border-[#E2E8F0] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] text-xs space-y-1.5">
+                  <p className="font-semibold text-[#0F172A] dark:text-white">
                     Password Security Policy:
                   </p>
                   <ul className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px]">
@@ -950,7 +950,7 @@ export default function StaffProfilePage() {
                       className={
                         newPassword.length >= 8
                           ? "text-emerald-600 font-semibold"
-                          : "text-[#66615A] dark:text-white/50"
+                          : "text-[#475569] dark:text-white/50"
                       }
                     >
                       {newPassword.length >= 8 ? "✓" : "○"} 8+ Characters
@@ -959,7 +959,7 @@ export default function StaffProfilePage() {
                       className={
                         /[A-Z]/.test(newPassword)
                           ? "text-emerald-600 font-semibold"
-                          : "text-[#66615A] dark:text-white/50"
+                          : "text-[#475569] dark:text-white/50"
                       }
                     >
                       {/[A-Z]/.test(newPassword) ? "✓" : "○"} Uppercase (A-Z)
@@ -968,7 +968,7 @@ export default function StaffProfilePage() {
                       className={
                         /[0-9]/.test(newPassword)
                           ? "text-emerald-600 font-semibold"
-                          : "text-[#66615A] dark:text-white/50"
+                          : "text-[#475569] dark:text-white/50"
                       }
                     >
                       {/[0-9]/.test(newPassword) ? "✓" : "○"} Number (0-9)
@@ -977,7 +977,7 @@ export default function StaffProfilePage() {
                       className={
                         /[^A-Za-z0-9]/.test(newPassword)
                           ? "text-emerald-600 font-semibold"
-                          : "text-[#66615A] dark:text-white/50"
+                          : "text-[#475569] dark:text-white/50"
                       }
                     >
                       {/[^A-Za-z0-9]/.test(newPassword) ? "✓" : "○"} Symbol (!@#$)
@@ -989,7 +989,7 @@ export default function StaffProfilePage() {
                   <button
                     type="submit"
                     disabled={isChangingPassword || !newPassword}
-                    className="rounded-xl border border-[#F5951C] bg-[#F5951C]/15 px-5 py-2 text-xs font-bold uppercase tracking-wider text-[#F5951C] hover:bg-[#F5951C] hover:text-[#0E0D0C] transition disabled:opacity-50"
+                    className="rounded-xl border border-[#F5951C] bg-[#F5951C]/15 px-5 py-2 text-xs font-bold uppercase tracking-wider text-[#F5951C] hover:bg-[#F5951C] hover:text-[#0F172A] transition disabled:opacity-50"
                   >
                     {isChangingPassword ? "Verifying..." : "Update Password"}
                   </button>
@@ -1003,29 +1003,29 @@ export default function StaffProfilePage() {
       {/* Locked Governance Notice Modal */}
       {showGovernanceNotice && (
         <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="max-w-md w-full bg-white dark:bg-[#161514] border border-[#E6E1D8] dark:border-white/15 rounded-2xl p-6 shadow-2xl space-y-4">
+          <div className="max-w-md w-full bg-white dark:bg-[#121215] border border-[#E2E8F0] dark:border-white/15 rounded-2xl p-6 shadow-2xl space-y-4">
             <div className="flex items-center gap-3">
               <span className="p-2.5 rounded-full bg-amber-500/20 text-[#F5951C] text-xl">
                 🔒
               </span>
               <div>
-                <h3 className="text-base font-bold text-[#181614] dark:text-white">
+                <h3 className="text-base font-bold text-[#0F172A] dark:text-white">
                   Governance Policy Lock
                 </h3>
-                <p className="text-xs text-[#66615A] dark:text-[#A19D95]">
+                <p className="text-xs text-[#475569] dark:text-[#94A3B8]">
                   Field: <strong className="text-[#F5951C]">{governanceFieldClicked}</strong>
                 </p>
               </div>
             </div>
 
-            <p className="text-xs sm:text-sm text-[#66615A] dark:text-white/80 leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#475569] dark:text-white/80 leading-relaxed">
               To prevent authorization drift and protect OTP authentication channels,{" "}
               <strong>Company Email</strong>, <strong>Registered Mobile</strong>, and{" "}
               <strong>Permission Role Tiers</strong> are locked against direct staff modification.
             </p>
 
-            <div className="p-3 rounded-xl bg-[#FAF8F5] dark:bg-[#0D0C0B] border border-[#E6E1D8] dark:border-white/10 text-xs text-[#66615A] dark:text-[#A19D95] space-y-1">
-              <p className="font-semibold text-[#181614] dark:text-white">
+            <div className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/10 text-xs text-[#475569] dark:text-[#94A3B8] space-y-1">
+              <p className="font-semibold text-[#0F172A] dark:text-white">
                 Authorized Governance Desk:
               </p>
               <p>
@@ -1040,7 +1040,7 @@ export default function StaffProfilePage() {
               <button
                 type="button"
                 onClick={() => setShowGovernanceNotice(false)}
-                className="rounded-xl bg-[#F5951C] px-5 py-2 text-xs font-bold uppercase tracking-wider text-[#0E0D0C] hover:bg-[#e08515] transition"
+                className="rounded-xl bg-[#F5951C] px-5 py-2 text-xs font-bold uppercase tracking-wider text-[#0F172A] hover:bg-[#e08515] transition"
               >
                 Understood
               </button>

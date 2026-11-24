@@ -97,35 +97,35 @@
   --surface-inspiration-champagne: rgba(42, 33, 28, .06);
 
   /* ----------------------------------------------------------
-     Release 1.5.1 Portal Theme Tokens:
-     Light Mode: Dusk Horizon Editorial Split
+     Release 1.5.2 Portal Theme Tokens:
+     Light Mode: Clean Editorial Atelier (Slate & Zinc Neutral)
      ---------------------------------------------------------- */
-  --portal-canvas: #FAF8F5; /* Warm Alabaster */
-  --portal-header: #0E0D0C; /* Anchored Sunset Horizon Dark */
-  --portal-card: #FFFFFF; /* Pure Crisp Ivory */
-  --portal-card-subtle: #F5F2EB;
-  --portal-border: #E6E1D8; /* Stone hairline */
-  --portal-border-subtle: #EDE8E1;
-  --portal-ink: #181614; /* Deep Charcoal ink */
-  --portal-ink-muted: #66615A;
-  --portal-ink-faint: #9E988F;
+  --portal-canvas: #F8FAFC; /* Slate 50 Neutral */
+  --portal-header: #0F172A; /* Slate 900 Dark */
+  --portal-card: #FFFFFF; /* Pure Crisp White */
+  --portal-card-subtle: #F1F5F9; /* Slate 100 */
+  --portal-border: #E2E8F0; /* Slate 200 Hairline */
+  --portal-border-subtle: #F1F5F9;
+  --portal-ink: #0F172A; /* Slate 900 Ink */
+  --portal-ink-muted: #475569; /* Slate 600 */
+  --portal-ink-faint: #94A3B8; /* Slate 400 */
   --portal-amber: #F5951C;
 }
 
 /* ----------------------------------------------------------
-   Release 1.5.1 Portal Theme Tokens:
-   Dark Mode: Sunset Horizon Obsidian
+   Release 1.5.2 Portal Theme Tokens:
+   Dark Mode: True Obsidian & Charcoal (Neutral Dark)
    ---------------------------------------------------------- */
 [data-theme="dark"] {
-  --portal-canvas: #0D0C0B; /* Carbon Obsidian */
-  --portal-header: #09090B; /* Deep Obsidian */
-  --portal-card: rgba(22, 21, 20, 0.82); /* Frosted Charcoal */
-  --portal-card-subtle: #161514;
-  --portal-border: rgba(255, 255, 255, 0.08); /* Dark hairline */
+  --portal-canvas: #09090B; /* Deep Obsidian Zinc 950 */
+  --portal-header: #000000; /* Pure Black */
+  --portal-card: #121215; /* Midnight Charcoal Zinc 900 */
+  --portal-card-subtle: #18181B; /* Zinc 900 */
+  --portal-border: rgba(255, 255, 255, 0.08); /* Crisp Hairline */
   --portal-border-subtle: rgba(255, 255, 255, 0.04);
-  --portal-ink: #F5F2EB; /* Warm Ivory */
-  --portal-ink-muted: #A19D95;
-  --portal-ink-faint: #6B665E;
+  --portal-ink: #F4F4F5; /* Crisp White Zinc 100 */
+  --portal-ink-muted: #A1A1AA; /* Zinc 400 */
+  --portal-ink-faint: #71717A; /* Zinc 500 */
   --portal-amber: #F5951C;
 }
 
