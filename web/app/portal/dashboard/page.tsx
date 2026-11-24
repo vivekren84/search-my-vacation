@@ -168,7 +168,37 @@ Day 8: Departure from Srinagar
 export default function PortalDashboardPage() {
   const router = useRouter();
   const [session, setSession] = useState<StaffSession | null>(null);
-  const [activeTab, setActiveTab] = useState<"operations" | "crm" | "itinerary" | "governance">("operations");
+  const [activeTab, setActiveTab] = useState<"operations" | "crm" | "itinerary" | "governance" | "vendors">("operations");
+
+  // Release 1.5.2 Client CRM Active Filter
+  const [crmFilterMode, setCrmFilterMode] = useState<"active" | "all" | "booked" | "lost">("active");
+
+  // Release 1.5.2 Vendors Directory State
+  const [vendors, setVendors] = useState<any[]>([]);
+  const [vendorsLoading, setVendorsLoading] = useState(false);
+  const [vendorCategoryFilter, setVendorCategoryFilter] = useState("all");
+  const [vendorSearchQuery, setVendorSearchQuery] = useState("");
+  const [showAddVendorModal, setShowAddVendorModal] = useState(false);
+  const [editingVendor, setEditingVendor] = useState<any | null>(null);
+
+  // Add Vendor Form State
+  const [vendorFormName, setVendorFormName] = useState("");
+  const [vendorFormCategory, setVendorFormCategory] = useState<"property" | "cab" | "dmc" | "agency" | "activity" | "other">("property");
+  const [vendorFormDestination, setVendorFormDestination] = useState("");
+  const [vendorFormRegion, setVendorFormRegion] = useState("");
+  const [vendorFormStarRating, setVendorFormStarRating] = useState("4-Star Boutique");
+  const [vendorFormPocName, setVendorFormPocName] = useState("");
+  const [vendorFormPocMobile, setVendorFormPocMobile] = useState("");
+  const [vendorFormOfficePhone, setVendorFormOfficePhone] = useState("");
+  const [vendorFormEmail, setVendorFormEmail] = useState("");
+  const [vendorFormWebsite, setVendorFormWebsite] = useState("");
+  const [vendorFormAddress, setVendorFormAddress] = useState("");
+  const [vendorFormRateCardLink, setVendorFormRateCardLink] = useState("");
+  const [vendorFormB2bRates, setVendorFormB2bRates] = useState("");
+  const [vendorFormComments, setVendorFormComments] = useState("");
+  const [vendorSubmitLoading, setVendorSubmitLoading] = useState(false);
+  const [vendorSubmitError, setVendorSubmitError] = useState<string | null>(null);
+  const [vendorSubmitSuccess, setVendorSubmitSuccess] = useState<string | null>(null);
 
   // Team Provisioning State (US-001)
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>(DEFAULT_TEAM_MEMBERS);
@@ -305,6 +335,174 @@ export default function PortalDashboardPage() {
       .finally(() => setCrmLoading(false));
   }
 
+  function refreshVendorsData() {
+    setVendorsLoading(true);
+    fetch("/api/portal/crm/vendors")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.ok && Array.isArray(data.vendors)) {
+          setVendors(data.vendors);
+        }
+      })
+      .catch(() => {})
+      .finally(() => setVendorsLoading(false));
+  }
+
+  function openAddVendorModal() {
+    setEditingVendor(null);
+    setVendorFormName("");
+    setVendorFormCategory("property");
+    setVendorFormDestination("");
+    setVendorFormRegion("");
+    setVendorFormStarRating("4-Star Boutique");
+    setVendorFormPocName("");
+    setVendorFormPocMobile("");
+    setVendorFormOfficePhone("");
+    setVendorFormEmail("");
+    setVendorFormWebsite("");
+    setVendorFormAddress("");
+    setVendorFormRateCardLink("");
+    setVendorFormB2bRates("");
+    setVendorFormComments("");
+    setVendorSubmitError(null);
+    setVendorSubmitSuccess(null);
+    setShowAddVendorModal(true);
+  }
+
+  function openEditVendorModal(v: any) {
+    setEditingVendor(v);
+    setVendorFormName(v.name || "");
+    setVendorFormCategory(v.category || "property");
+    setVendorFormDestination(v.destination || "");
+    setVendorFormRegion(v.region || "");
+    setVendorFormStarRating(v.star_rating || "4-Star Boutique");
+    setVendorFormPocName(v.poc_name || "");
+    setVendorFormPocMobile(v.poc_mobile || "");
+    setVendorFormOfficePhone(v.office_phone || "");
+    setVendorFormEmail(v.email || "");
+    setVendorFormWebsite(v.website || "");
+    setVendorFormAddress(v.address || "");
+    setVendorFormRateCardLink(v.rate_card_link || "");
+    setVendorFormB2bRates(v.b2b_rates || "");
+    setVendorFormComments(v.comments || "");
+    setVendorSubmitError(null);
+    setVendorSubmitSuccess(null);
+    setShowAddVendorModal(true);
+  }
+
+  async function handleDeleteVendor(id: string, name: string) {
+    if (!isSuperAdmin) {
+      alert("Permission Denied: Permanent deletion of vendor records is strictly restricted to Super Admin (Vivek Renganathan).");
+      return;
+    }
+    if (!window.confirm(`Are you sure you want to permanently delete vendor partner "${name}"? This action cannot be undone.`)) {
+      return;
+    }
+    try {
+      const res = await fetch(`/api/portal/crm/vendors?id=${encodeURIComponent(id)}`, {
+        method: "DELETE",
+        headers: {
+          "x-staff-role": session?.role || "super_admin",
+          "x-staff-email": session?.email || "",
+        },
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        alert(data.message || "Failed to delete vendor partner.");
+        return;
+      }
+      setVendors((prev) => prev.filter((v) => v.id !== id));
+    } catch (err: any) {
+      alert(err?.message || "An unexpected error occurred while deleting the vendor.");
+    }
+  }
+
+  async function handleAddVendorSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setVendorSubmitError(null);
+    setVendorSubmitSuccess(null);
+
+    if (!vendorFormName.trim()) {
+      setVendorSubmitError("Vendor name is required.");
+      return;
+    }
+
+    setVendorSubmitLoading(true);
+    try {
+      const isEdit = !!editingVendor;
+      const url = "/api/portal/crm/vendors";
+      const method = isEdit ? "PATCH" : "POST";
+      const payload: any = {
+        name: vendorFormName.trim(),
+        category: vendorFormCategory,
+        destination: vendorFormDestination.trim() || null,
+        region: vendorFormRegion.trim() || null,
+        star_rating: vendorFormStarRating.trim() || null,
+        poc_name: vendorFormPocName.trim() || null,
+        poc_mobile: vendorFormPocMobile.trim() || null,
+        office_phone: vendorFormOfficePhone.trim() || null,
+        email: vendorFormEmail.trim() || null,
+        website: vendorFormWebsite.trim() || null,
+        address: vendorFormAddress.trim() || null,
+        rate_card_link: vendorFormRateCardLink.trim() || null,
+        b2b_rates: vendorFormB2bRates.trim() || null,
+        comments: vendorFormComments.trim() || null,
+        callerRole: session?.role || "desk_user",
+        callerEmail: session?.email || "",
+      };
+      if (isEdit) {
+        payload.id = editingVendor.id;
+      }
+
+      const res = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          "x-staff-role": session?.role || "desk_user",
+          "x-staff-email": session?.email || "",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        setVendorSubmitError(data.message || "Failed to process vendor partner.");
+        return;
+      }
+
+      setVendorSubmitSuccess(
+        isEdit
+          ? `Vendor ${data.vendor?.name || vendorFormName} successfully updated.`
+          : `Vendor ${data.vendor?.name} (${data.vendor?.vendor_code}) successfully registered.`
+      );
+      refreshVendorsData();
+
+      // Reset form
+      setEditingVendor(null);
+      setVendorFormName("");
+      setVendorFormDestination("");
+      setVendorFormRegion("");
+      setVendorFormPocName("");
+      setVendorFormPocMobile("");
+      setVendorFormOfficePhone("");
+      setVendorFormEmail("");
+      setVendorFormWebsite("");
+      setVendorFormAddress("");
+      setVendorFormRateCardLink("");
+      setVendorFormB2bRates("");
+      setVendorFormComments("");
+
+      setTimeout(() => {
+        setShowAddVendorModal(false);
+        setVendorSubmitSuccess(null);
+      }, 1800);
+    } catch (err: any) {
+      setVendorSubmitError(err?.message || "An unexpected error occurred.");
+    } finally {
+      setVendorSubmitLoading(false);
+    }
+  }
+
   useEffect(() => {
     // Check staff session
     const raw = typeof window !== "undefined" ? localStorage.getItem("smv_staff_session") : null;
@@ -398,6 +596,9 @@ export default function PortalDashboardPage() {
 
     // 2. Fetch live CRM trips, customers, and client profiles (Pillar A)
     refreshCrmData(parsedRole);
+
+    // 3. Fetch live Vetted Vendors directory (Release 1.5.2)
+    refreshVendorsData();
 
     // Inactivity event listeners
     const handleActivity = () => {
@@ -1032,7 +1233,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
 
   if (!session) {
     return (
-      <div className="min-h-screen bg-[#FAF8F5] dark:bg-[#0D0C0B] flex items-center justify-center text-[#181614] dark:text-[#F5F2EB] text-sm">
+      <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#09090B] flex items-center justify-center text-[#0F172A] dark:text-[#F5F2EB] text-sm">
         Authenticating session...
       </div>
     );
@@ -1045,11 +1246,15 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
   const isSuperAdmin =
     session.role === "super_admin" ||
     session.email?.toLowerCase() === "vivek@searchmyvacation.com";
+  const canManageVendors =
+    isSuperAdmin ||
+    session.role === "administrator" ||
+    session.role === "privilege_user";
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] dark:bg-[#0D0C0B] text-[#181614] dark:text-[#F5F2EB] flex flex-col font-sans transition-colors duration-200">
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#09090B] text-[#0F172A] dark:text-white flex flex-col font-sans transition-colors duration-200">
       {/* Top Staff Navbar — Fully Unified with Search My Vacation */}
-      <header className="border-b border-[#E6E1D8] dark:border-white/10 bg-[#0E0D0C] dark:bg-[#09090B] px-4 sm:px-8 py-3 flex items-center justify-between sticky top-0 z-40 shadow-md transition-colors">
+      <header className="border-b border-[#E2E8F0] dark:border-white/10 bg-[#0F172A] dark:bg-[#09090B] px-4 sm:px-8 py-3 flex items-center justify-between sticky top-0 z-40 shadow-md transition-colors">
         <div className="flex items-center gap-3 sm:gap-6">
           <Link href="/" title="Go to Search My Vacation Home (Session Persists)">
             <SiteBrand variant="header" surface="dark" className="w-32 sm:w-36 text-white" />
@@ -1081,7 +1286,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                 setInviteSuccess(null);
                 setInviteError(null);
               }}
-              className="flex items-center gap-1.5 rounded-full bg-[#F5951C] px-3 sm:px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-[#0E0D0C] hover:bg-[#e08515] transition shadow-md"
+              className="flex items-center gap-1.5 rounded-full bg-[#F5951C] px-3 sm:px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-[#0F172A] hover:bg-[#e08515] transition shadow-md"
             >
               <span>➕</span>
               <span className="hidden sm:inline">Invite Team</span>
@@ -1091,15 +1296,18 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
 
           <ThemeToggle variant="compact" />
 
-          {/* Profile link with StaffAvatar */}
+          {/* Prominent Profile Access (Punch-List Item 2) */}
           <Link
             href="/portal/profile"
-            className="flex items-center gap-2 rounded-full border border-white/20 bg-white/5 hover:bg-white/10 px-2.5 py-1 text-xs text-white transition hover:border-[#F5951C]"
+            className="flex items-center gap-2 rounded-full border border-white/20 bg-white/10 hover:bg-white/15 px-3 py-1.5 text-xs text-white transition hover:border-[#F5951C] shadow-sm"
             title="View / Edit Advisor Workspace Profile"
           >
             <StaffAvatar name={session.fullName} size="xs" />
             <div className="text-left hidden md:block">
-              <p className="text-[11px] font-bold leading-tight text-white">{session.fullName.split(" ")[0]}</p>
+              <p className="text-[11px] font-bold leading-tight text-white flex items-center gap-1">
+                <span>{session.fullName.split(" ")[0]}</span>
+                <span className="text-[10px] text-white/50">⚙️</span>
+              </p>
               <p className="text-[9px] uppercase tracking-wider text-[#F5951C] font-semibold leading-tight">
                 {isSuperAdmin ? "Super Admin" : session.role.replace("_", " ")}
               </p>
@@ -1116,20 +1324,21 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
       </header>
 
       {/* Main Workspace Navigation */}
-      <div className="border-b border-[#E6E1D8] dark:border-white/10 bg-[#2E241F] px-4 sm:px-8">
-        <nav className="flex space-x-1 sm:space-x-4 overflow-x-auto py-2.5">
+      <div className="border-b border-[#E2E8F0] dark:border-white/10 bg-[#0F172A] px-4 sm:px-8">
+        <nav className="flex space-x-1 sm:space-x-4 overflow-x-auto py-2.5 items-center">
           {[
             { id: "operations", label: "Operations & Kanban", icon: "📋" },
             { id: "crm", label: "Master Client CRM", icon: "👥" },
+            { id: "vendors", label: `Vetted Vendors (${vendors.length > 0 ? vendors.length : "430+"})`, icon: "🏢" },
             { id: "itinerary", label: "Itinerary & Margin Engine", icon: "🗺️" },
-            { id: "governance", label: "Vendors & Team Governance", icon: "💼" },
+            { id: "governance", label: "Team Governance", icon: "💼" },
           ].map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
               className={`flex items-center gap-2 whitespace-nowrap rounded-xl px-4 py-2 text-xs font-bold uppercase tracking-wider transition ${
                 activeTab === tab.id
-                  ? "bg-[#F5951C] text-[#0E0D0C] shadow"
+                  ? "bg-[#F5951C] text-[#0F172A] shadow"
                   : "text-white/60 hover:bg-white/5 hover:text-white"
               }`}
             >
@@ -1137,6 +1346,14 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
               <span>{tab.label}</span>
             </button>
           ))}
+          <Link
+            href="/portal/profile"
+            className="flex items-center gap-2 whitespace-nowrap rounded-xl px-4 py-2 text-xs font-bold uppercase tracking-wider text-white/70 hover:bg-white/10 hover:text-white transition ml-auto"
+            title="Manage your advisor workspace profile & security settings"
+          >
+            <span>👤</span>
+            <span>My Profile</span>
+          </Link>
         </nav>
       </div>
 
@@ -1145,87 +1362,249 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
         {/* TAB 1: OPERATIONS & KANBAN (US-011, US-012, US-013) */}
         {activeTab === "operations" && (
           <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <div>
-                <h2 className="text-xl font-bold tracking-tight text-white">Trip Lifecycle Pipeline</h2>
-                <p className="text-xs text-white/60">Manage bookings through verified operational stages</p>
-              </div>
-              <div className="flex gap-2 text-xs">
-                <span className="px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">
-                  Active Departures: 4
-                </span>
-                <span className="px-3 py-1.5 rounded-lg bg-amber-500/10 text-amber-300 border border-amber-500/20">
-                  SLA Alerts: 2
-                </span>
-              </div>
-            </div>
+            {(() => {
+              // Group crmTrips dynamically into 5 operational pipeline stages
+              const stages = [
+                {
+                  id: "enquiries",
+                  title: "1. Enquiries & Discovery",
+                  badgeColor: "bg-blue-500/15 text-blue-700 dark:text-blue-300 border-blue-500/30",
+                  trips: crmTrips.filter((t) => {
+                    const s = (t.dealStage || "").toLowerCase();
+                    const ts = (t.tripStatus || "").toLowerCase();
+                    return s.includes("enquiry") || s.includes("lead") || s.includes("discovery") || ts.includes("draft") || ts.includes("to start");
+                  }),
+                },
+                {
+                  id: "planning",
+                  title: "2. Curation & Quotes",
+                  badgeColor: "bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/30",
+                  trips: crmTrips.filter((t) => {
+                    const s = (t.dealStage || "").toLowerCase();
+                    return s.includes("proposal") || s.includes("quote") || s.includes("plan") || s.includes("discussion");
+                  }),
+                },
+                {
+                  id: "confirmed",
+                  title: "3. Confirmed & Booked",
+                  badgeColor: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30",
+                  trips: crmTrips.filter((t) => {
+                    const s = (t.dealStage || "").toLowerCase();
+                    const p = (t.paymentStatus || "").toLowerCase();
+                    return s.includes("book") || s.includes("deposit") || s.includes("advance") || p.includes("advance") || p.includes("paid");
+                  }),
+                },
+                {
+                  id: "travel",
+                  title: "4. In Travel / Active",
+                  badgeColor: "bg-purple-500/15 text-purple-700 dark:text-purple-300 border-purple-500/30",
+                  trips: crmTrips.filter((t) => {
+                    const s = (t.dealStage || "").toLowerCase();
+                    const ts = (t.tripStatus || "").toLowerCase();
+                    return s.includes("travel") || ts.includes("travel") || ts.includes("active") || ts.includes("on tour");
+                  }),
+                },
+                {
+                  id: "completed",
+                  title: "5. Completed Journeys",
+                  badgeColor: "bg-zinc-500/15 text-zinc-700 dark:text-zinc-300 border-zinc-500/30",
+                  trips: crmTrips.filter((t) => {
+                    const s = (t.dealStage || "").toLowerCase();
+                    const ts = (t.tripStatus || "").toLowerCase();
+                    return s.includes("complete") || s.includes("closed") || ts.includes("complete") || ts.includes("returned");
+                  }),
+                },
+              ];
 
-            {/* Kanban Columns */}
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-3.5">
-              {[
-                { stage: "Proposal Sent", count: 1, value: "₹380,000", client: "Ananya Sharma", trip: "Kashmir Serenity" },
-                { stage: "Deposit Received", count: 2, value: "₹720,000", client: "Rajesh Singhania", trip: "Rajasthan Heritage" },
-                { stage: "Booked Confirmed", count: 1, value: "₹450,000", client: "Vikram Malhotra", trip: "Kerala Backwaters" },
-                { stage: "In Travel", count: 1, value: "₹650,000", client: "Sunita Roy", trip: "Himachal High Passes" },
-                { stage: "Returned Closed", count: 12, value: "₹4.8M", client: "Deepak Verma", trip: "Golden Triangle" },
-              ].map((col, idx) => (
-                <div key={idx} className="rounded-2xl border border-[#E6E1D8] dark:border-white/10 bg-white dark:bg-[#161514] p-3.5 flex flex-col justify-between min-h-[220px]">
-                  <div>
-                    <div className="flex justify-between items-center mb-3">
-                      <span className="text-[11px] font-bold uppercase tracking-wider text-white/70">{col.stage}</span>
-                      <span className="text-[10px] bg-white/10 px-2 py-0.5 rounded-full text-white/80">{col.count}</span>
-                    </div>
-                    <div className="rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] p-3 border border-[#E6E1D8] dark:border-white/5 space-y-1.5">
-                      <p className="text-xs font-bold text-[#F5951C]">{col.client}</p>
-                      <p className="text-[11px] text-white/70">{col.trip}</p>
-                      <p className="text-[10px] font-mono text-emerald-400">{col.value}</p>
-                    </div>
-                  </div>
-                  <div className="pt-3 border-t border-[#E6E1D8] dark:border-white/5 text-[10px] text-white/40 text-center">
-                    Auto-synced with vouchers
-                  </div>
-                </div>
-              ))}
-            </div>
+              const totalValuation = crmTrips.reduce((acc, t) => acc + (Number(t.quotePrice) || 0), 0);
+              const activeCount = crmTrips.filter(
+                (t) => !["completed", "closed won", "lost"].includes((t.dealStage || "").toLowerCase())
+              ).length;
 
-            {/* Vouchers & Emergency Hub */}
-            <div className="rounded-2xl border border-[#E6E1D8] dark:border-white/10 bg-white dark:bg-[#161514] p-5">
-              <h3 className="text-sm font-bold uppercase tracking-wider text-white mb-3 flex items-center gap-2">
-                <span>🎫</span> Segment Voucher Vault & Emergency Contacts (US-012)
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <div className="p-3 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/5 space-y-1">
-                  <div className="flex justify-between font-bold text-white">
-                    <span>VOUCH-SRI-001 (Nigeen Houseboat)</span>
-                    <span className="text-emerald-400">Confirmed</span>
+              const confirmedTrips = crmTrips
+                .filter((t) => {
+                  const s = (t.dealStage || "").toLowerCase();
+                  const ts = (t.tripStatus || "").toLowerCase();
+                  const p = (t.paymentStatus || "").toLowerCase();
+                  return s.includes("book") || s.includes("deposit") || ts.includes("travel") || p.includes("paid");
+                })
+                .slice(0, 6);
+
+              return (
+                <div className="space-y-6">
+                  {/* Pipeline Header */}
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                      <h2 className="text-xl font-bold tracking-tight text-[#0F172A] dark:text-white flex items-center gap-2">
+                        <span>📋</span> Trip Operations Pipeline
+                      </h2>
+                      <p className="text-xs text-[#475569] dark:text-zinc-400">
+                        Live dynamic Kanban synchronized with customer master records ({crmTrips.length} Total Journeys)
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap gap-2 text-xs">
+                      <span className="px-3 py-1.5 rounded-xl bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 font-semibold">
+                        ● Active Pipeline: {activeCount} Journeys
+                      </span>
+                      <span className="px-3 py-1.5 rounded-xl bg-[#F5951C]/15 text-[#F5951C] border border-[#F5951C]/30 font-bold font-mono">
+                        Pipeline Value: ₹{(totalValuation / 100000).toFixed(1)} Lakhs
+                      </span>
+                    </div>
                   </div>
-                  <p className="text-white/60">Duty Manager: Tariq Butt • 24x7: +91 94190 12345</p>
-                  <p className="text-[11px] text-white/40">VIP Pier transfer meeting at Srinagar Gate 2</p>
-                </div>
-                <div className="p-3 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/5 space-y-1">
-                  <div className="flex justify-between font-bold text-white">
-                    <span>VOUCH-UDR-002 (Taj Lake Palace)</span>
-                    <span className="text-emerald-400">Confirmed</span>
+
+                  {/* 5-Column Live Kanban Board */}
+                  <div className="grid grid-cols-1 md:grid-cols-5 gap-3.5">
+                    {stages.map((col) => {
+                      const colValue = col.trips.reduce((acc, t) => acc + (Number(t.quotePrice) || 0), 0);
+                      return (
+                        <div
+                          key={col.id}
+                          className="rounded-2xl border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] p-3 flex flex-col justify-between min-h-[380px] shadow-sm"
+                        >
+                          <div>
+                            {/* Column Header */}
+                            <div className="flex justify-between items-center mb-2 pb-2 border-b border-[#E2E8F0] dark:border-white/5">
+                              <div>
+                                <h3 className="text-[11px] font-bold uppercase tracking-wider text-[#0F172A] dark:text-white">
+                                  {col.title}
+                                </h3>
+                                <p className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400">
+                                  ₹{(colValue / 100000).toFixed(1)}L
+                                </p>
+                              </div>
+                              <span
+                                className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${col.badgeColor}`}
+                              >
+                                {col.trips.length}
+                              </span>
+                            </div>
+
+                            {/* Cards in Column */}
+                            <div className="space-y-2 max-h-[500px] overflow-y-auto pr-1">
+                              {col.trips.length === 0 ? (
+                                <div className="p-4 text-center border border-dashed border-[#E2E8F0] dark:border-white/10 rounded-xl text-[11px] text-[#94A3B8] dark:text-zinc-500">
+                                  No journeys in this stage
+                                </div>
+                              ) : (
+                                col.trips.slice(0, 10).map((trip) => (
+                                  <div
+                                    key={trip.id}
+                                    onClick={() => {
+                                      setActiveTab("crm");
+                                      setCrmSearchQuery(trip.dealReferenceId);
+                                    }}
+                                    className="rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] p-2.5 border border-[#E2E8F0] dark:border-white/5 space-y-1 hover:border-[#F5951C]/50 cursor-pointer transition"
+                                  >
+                                    <div className="flex justify-between items-start gap-1">
+                                      <span className="font-mono text-[9px] font-bold text-[#F5951C]">
+                                        {trip.dealReferenceId}
+                                      </span>
+                                      <span className="text-[9px] font-semibold text-[#475569] dark:text-zinc-400 truncate max-w-[80px]">
+                                        {trip.leadOwnerName || "Vivek"}
+                                      </span>
+                                    </div>
+                                    <p className="text-xs font-bold text-[#0F172A] dark:text-white truncate">
+                                      {trip.customerName}
+                                    </p>
+                                    <p className="text-[11px] text-[#475569] dark:text-zinc-400 truncate">
+                                      📍 {trip.destination || "Bespoke Circuit"}
+                                    </p>
+                                    <div className="flex justify-between items-center text-[10px] pt-1 border-t border-[#E2E8F0] dark:border-white/5">
+                                      <span className="text-[#64748B] dark:text-zinc-500">
+                                        {trip.paxAdults}A{trip.paxChildren > 0 ? `+${trip.paxChildren}C` : ""} • {trip.durationLabel || "6N/7D"}
+                                      </span>
+                                      <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400">
+                                        ₹{Number(trip.quotePrice || 0).toLocaleString("en-IN")}
+                                      </span>
+                                    </div>
+                                  </div>
+                                ))
+                              )}
+                              {col.trips.length > 10 && (
+                                <button
+                                  onClick={() => {
+                                    setActiveTab("crm");
+                                    setCrmSearchQuery(col.title.split(".")[1]?.trim() || "");
+                                  }}
+                                  className="w-full py-1 text-[10px] text-[#F5951C] hover:underline font-semibold text-center"
+                                >
+                                  + View {col.trips.length - 10} more in CRM →
+                                </button>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="pt-2 border-t border-[#E2E8F0] dark:border-white/5 text-[10px] text-[#94A3B8] dark:text-zinc-500 text-center">
+                            Synchronized with Supabase
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
-                  <p className="text-white/60">Duty Manager: Vikram Rathore • 24x7: +91 98290 11223</p>
-                  <p className="text-[11px] text-white/40">Private boat transfer included upon jetty arrival</p>
+
+                  {/* Operational Vouchers & Emergency Hub (Live Confirmed Bookings) */}
+                  <div className="rounded-2xl border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] p-5 shadow-sm space-y-3">
+                    <div className="flex justify-between items-center">
+                      <h3 className="text-sm font-bold uppercase tracking-wider text-[#0F172A] dark:text-white flex items-center gap-2">
+                        <span>🎫</span> Confirmed Booking Logistics & Vouchers (US-012)
+                      </h3>
+                      <span className="text-xs text-[#F5951C] font-semibold">
+                        {confirmedTrips.length} Active Bookings
+                      </span>
+                    </div>
+
+                    {confirmedTrips.length === 0 ? (
+                      <div className="p-6 text-center border border-dashed border-[#E2E8F0] dark:border-white/10 rounded-xl text-xs text-[#475569] dark:text-zinc-400">
+                        No active confirmed bookings currently in pipeline. Add or confirm client journeys to populate logistics vouchers.
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
+                        {confirmedTrips.map((trip) => (
+                          <div
+                            key={trip.id}
+                            className="p-3.5 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5 space-y-1.5"
+                          >
+                            <div className="flex justify-between font-bold text-[#0F172A] dark:text-white">
+                              <span className="font-mono text-[11px] text-[#F5951C]">{trip.dealReferenceId}</span>
+                              <span className="text-emerald-600 dark:text-emerald-400 text-[10px]">● {trip.paymentStatus}</span>
+                            </div>
+                            <p className="font-bold text-xs text-[#0F172A] dark:text-white">{trip.customerName}</p>
+                            <p className="text-[11px] text-[#475569] dark:text-zinc-400">
+                              📍 {trip.destination} • {trip.travelMonth} {trip.travelYear} ({trip.durationLabel})
+                            </p>
+                            {(trip.bookedProperties || trip.bookedTransport) && (
+                              <p className="text-[10px] text-[#64748B] dark:text-zinc-400 italic pt-1 border-t border-[#E2E8F0] dark:border-white/5 line-clamp-1">
+                                {trip.bookedProperties || trip.bookedTransport}
+                              </p>
+                            )}
+                            <div className="flex justify-between items-center text-[10px] text-[#475569] dark:text-zinc-500 pt-1">
+                              <span>Advisor: {trip.leadOwnerName || "Vivek"}</span>
+                              <span className="font-mono font-semibold text-[#0F172A] dark:text-white">
+                                {trip.customerMobile || "—"}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </div>
+              );
+            })()}
           </div>
         )}
 
-        {/* TAB 2: RELATIONAL CLIENT & TRIP CRM (Pillar A) */}
+        {/* TAB 2: RELATIONAL CLIENT & TRIP CRM (Pillar A & Release 1.5.2 Item 4) */}
         {activeTab === "crm" && (
           <div className="space-y-6">
             {/* Header & Primary Action */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
-                <h2 className="text-xl font-bold tracking-tight text-[#181614] dark:text-white flex items-center gap-2">
-                  <span>🗺️</span> Relational Client Atelier CRM
+                <h2 className="text-xl font-bold tracking-tight text-[#0F172A] dark:text-white flex items-center gap-2">
+                  <span>🗺️</span> Master Client Atelier CRM
                 </h2>
-                <p className="text-xs text-[#66615A] dark:text-[#A19D95]">
-                  1 Customer (CUST-XXXXX) → Many Trips (DDSMV/VDSMV) architecture with atomic concurrency sequences and lead attribution
+                <p className="text-xs text-[#475569] dark:text-zinc-400">
+                  1 Customer Master (CUST-XXXXX) → Many Trips (DDSMV/VDSMV) architecture with lead attribution
                 </p>
               </div>
               <button
@@ -1235,55 +1614,80 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   setClientSubmitSuccess(null);
                   setDuplicateWarning(null);
                 }}
-                className="rounded-xl bg-[#F5951C] px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#0E0D0C] hover:bg-[#e08515] transition flex items-center gap-2 shadow-md"
+                className="rounded-xl bg-[#F5951C] px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#0F172A] hover:bg-[#e08515] transition flex items-center gap-2 shadow-md"
               >
                 <span>➕</span>
                 <span>Add Client / Customer</span>
               </button>
             </div>
 
-            {/* View Mode Switcher: Trips vs Customers (Pillar A) */}
-            <div className="flex items-center gap-3 border-b border-[#E6E1D8] dark:border-white/10 pb-3">
-              <button
-                type="button"
-                onClick={() => setCrmViewMode("trips")}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition ${
-                  crmViewMode === "trips"
-                    ? "bg-[#F5951C] text-[#0E0D0C] shadow-md"
-                    : "bg-black/5 dark:bg-white/5 text-[#66615A] dark:text-white/70 hover:bg-black/10 dark:hover:bg-white/10"
-                }`}
-              >
-                <span>✈️</span>
-                <span>Trips & Deals ({crmTrips.length})</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setCrmViewMode("customers")}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition ${
-                  crmViewMode === "customers"
-                    ? "bg-[#F5951C] text-[#0E0D0C] shadow-md"
-                    : "bg-black/5 dark:bg-white/5 text-[#66615A] dark:text-white/70 hover:bg-black/10 dark:hover:bg-white/10"
-                }`}
-              >
-                <span>👥</span>
-                <span>Customer Master ({crmCustomers.length})</span>
-              </button>
+            {/* View Mode Switcher & Item 4 Filter Mode Pills */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#E2E8F0] dark:border-white/10 pb-3">
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setCrmViewMode("trips")}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition ${
+                    crmViewMode === "trips"
+                      ? "bg-[#F5951C] text-[#0F172A] shadow-md"
+                      : "bg-black/5 dark:bg-white/5 text-[#475569] dark:text-zinc-400 hover:bg-black/10 dark:hover:bg-white/10"
+                  }`}
+                >
+                  <span>✈️</span>
+                  <span>Trips & Deals ({crmTrips.length})</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setCrmViewMode("customers")}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition ${
+                    crmViewMode === "customers"
+                      ? "bg-[#F5951C] text-[#0F172A] shadow-md"
+                      : "bg-black/5 dark:bg-white/5 text-[#475569] dark:text-zinc-400 hover:bg-black/10 dark:hover:bg-white/10"
+                  }`}
+                >
+                  <span>👥</span>
+                  <span>Customer Master ({crmCustomers.length})</span>
+                </button>
+              </div>
+
+              {/* Release 1.5.2 Punch-List Item 4: Curated View Filters */}
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <span className="text-[11px] font-semibold text-[#64748B] dark:text-zinc-400 mr-1">Filter:</span>
+                {[
+                  { id: "active", label: "⚡ Active & Enquiry (Top 10)" },
+                  { id: "all", label: `View All (${crmViewMode === "trips" ? crmTrips.length : crmCustomers.length})` },
+                  { id: "booked", label: "Booked Only" },
+                ].map((f) => (
+                  <button
+                    key={f.id}
+                    type="button"
+                    onClick={() => setCrmFilterMode(f.id as any)}
+                    className={`px-3 py-1 rounded-lg text-[11px] font-bold uppercase tracking-wider transition ${
+                      crmFilterMode === f.id
+                        ? "bg-[#0F172A] text-white dark:bg-white dark:text-[#0F172A] shadow-sm"
+                        : "bg-black/5 dark:bg-white/5 text-[#64748B] dark:text-zinc-400 hover:text-[#0F172A] dark:hover:text-white"
+                    }`}
+                  >
+                    {f.label}
+                  </button>
+                ))}
+              </div>
             </div>
 
-            {/* Filter & Search Bar */}
-            <div className="p-4 rounded-2xl border border-[#E6E1D8] dark:border-white/10 bg-white dark:bg-[#161514] flex flex-col md:flex-row gap-3 justify-between items-stretch md:items-center">
+            {/* Filter & Global Search Bar */}
+            <div className="p-4 rounded-2xl border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] flex flex-col md:flex-row gap-3 justify-between items-stretch md:items-center">
               <div className="relative flex-1">
                 <input
                   type="text"
                   value={crmSearchQuery}
                   onChange={(e) => setCrmSearchQuery(e.target.value)}
-                  placeholder="Search clients by name, email, phone, city..."
-                  className="w-full rounded-xl border border-[#E6E1D8] dark:border-white/10 bg-[#FAF8F5] dark:bg-[#09090B] px-3.5 py-2 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                  placeholder="Global search by client name, mobile, reference (DDSMV/CUST), destination, city..."
+                  className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
                 />
                 {crmSearchQuery && (
                   <button
                     onClick={() => setCrmSearchQuery("")}
-                    className="absolute right-3 top-2.5 text-xs text-white/40 hover:text-white"
+                    className="absolute right-3 top-2.5 text-xs text-[#64748B] dark:text-zinc-400 hover:text-[#0F172A] dark:hover:text-white"
                   >
                     ✕
                   </button>
@@ -1293,7 +1697,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
               {/* Tag Filters */}
               <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">
                 {[
-                  { id: "all", label: `All (${clients.length})` },
+                  { id: "all", label: `All Tags` },
                   { id: "vip", label: "⭐ VIP Only" },
                   { id: "family", label: "Family Comfort" },
                   { id: "slow", label: "Slow Travel" },
@@ -1304,8 +1708,8 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     onClick={() => setCrmTagFilter(filter.id)}
                     className={`whitespace-nowrap px-3 py-1.5 rounded-lg text-[11px] font-semibold transition ${
                       crmTagFilter === filter.id
-                        ? "bg-[#F5951C] text-[#0E0D0C]"
-                        : "bg-white/5 text-white/70 hover:bg-white/10 hover:text-white"
+                        ? "bg-[#F5951C] text-[#0F172A]"
+                        : "bg-black/5 dark:bg-white/5 text-[#475569] dark:text-zinc-400 hover:bg-black/10 dark:hover:bg-white/10"
                     }`}
                   >
                     {filter.label}
@@ -1316,29 +1720,47 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
 
             {/* Client Cards List & Relational Lists (Pillar A) */}
             {crmLoading ? (
-              <div className="p-12 text-center text-[#66615A] dark:text-white/50 text-xs">
+              <div className="p-12 text-center text-[#475569] dark:text-zinc-400 text-xs">
                 Loading client profiles and trip deals...
               </div>
             ) : crmViewMode === "trips" ? (
               crmTrips.length === 0 ? (
-                <div className="p-12 text-center rounded-2xl border border-dashed border-[#E6E1D8] dark:border-white/15 bg-white dark:bg-[#161514] space-y-3">
+                <div className="p-12 text-center rounded-2xl border border-dashed border-[#E2E8F0] dark:border-white/15 bg-white dark:bg-[#121215] space-y-3">
                   <div className="text-3xl">✈️</div>
-                  <h3 className="text-sm font-bold text-[#181614] dark:text-white">No Trip Deals Found</h3>
-                  <p className="text-xs text-[#66615A] dark:text-[#A19D95] max-w-md mx-auto">
+                  <h3 className="text-sm font-bold text-[#0F172A] dark:text-white">No Trip Deals Found</h3>
+                  <p className="text-xs text-[#475569] dark:text-zinc-400 max-w-md mx-auto">
                     Create your first trip deal linked to a customer profile. Deal references (DDSMV/VDSMV) are auto-generated.
                   </p>
                   <button
                     onClick={() => setShowAddClientModal(true)}
-                    className="rounded-xl bg-[#F5951C] px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#0E0D0C] hover:bg-[#e08515] transition"
+                    className="rounded-xl bg-[#F5951C] px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#0F172A] hover:bg-[#e08515] transition"
                   >
                     ➕ Add First Trip Deal
                   </button>
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {crmTrips
-                    .filter((t) => {
-                      const q = crmSearchQuery.toLowerCase().trim();
+                  {/* Punch-List Item 4 Focused View Notification Banner */}
+                  {crmFilterMode === "active" && !crmSearchQuery && (
+                    <div className="p-3.5 rounded-xl bg-blue-500/10 border border-blue-500/20 text-xs text-blue-700 dark:text-blue-300 flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+                      <div className="flex items-center gap-2">
+                        <span>⚡</span>
+                        <span>
+                          <strong>Focused View (Item 4):</strong> Showing top 10 active & enquiry journeys to maintain lightweight performance. ({crmTrips.length} total historical trips in database).
+                        </span>
+                      </div>
+                      <button
+                        onClick={() => setCrmFilterMode("all")}
+                        className="px-3 py-1 rounded-lg bg-blue-600 text-white font-bold text-[10px] uppercase tracking-wider hover:bg-blue-700 transition w-fit"
+                      >
+                        View All {crmTrips.length} Journeys →
+                      </button>
+                    </div>
+                  )}
+
+                  {(() => {
+                    const q = crmSearchQuery.toLowerCase().trim();
+                    let list = crmTrips.filter((t) => {
                       if (!q) return true;
                       return (
                         t.dealReferenceId.toLowerCase().includes(q) ||
@@ -1347,14 +1769,47 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                         t.customerCode.toLowerCase().includes(q) ||
                         t.customerMobile.includes(q)
                       );
-                    })
-                    .map((trip) => (
+                    });
+
+                    if (!q && crmFilterMode === "active") {
+                      list = list
+                        .filter((t) => {
+                          const s = (t.dealStage || "").toLowerCase();
+                          const ts = (t.tripStatus || "").toLowerCase();
+                          return (
+                            !["completed", "closed won", "lost", "archived"].includes(s) &&
+                            !["completed", "returned"].includes(ts)
+                          );
+                        })
+                        .slice(0, 10);
+                    } else if (!q && crmFilterMode === "booked") {
+                      list = list.filter((t) => {
+                        const s = (t.dealStage || "").toLowerCase();
+                        const p = (t.paymentStatus || "").toLowerCase();
+                        return (
+                          s.includes("book") ||
+                          s.includes("deposit") ||
+                          p.includes("paid") ||
+                          p.includes("advance")
+                        );
+                      });
+                    }
+
+                    if (list.length === 0) {
+                      return (
+                        <div className="p-8 text-center rounded-2xl border border-dashed border-[#E2E8F0] dark:border-white/10 text-xs text-[#475569] dark:text-zinc-400">
+                          No trip deals matched the selected filter or search term.
+                        </div>
+                      );
+                    }
+
+                    return list.map((trip) => (
                       <div
                         key={trip.id}
-                        className="rounded-2xl border border-[#E6E1D8] dark:border-white/10 bg-white dark:bg-[#161514] p-5 shadow-sm space-y-4 hover:border-[#F5951C]/40 transition"
+                        className="rounded-2xl border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] p-5 shadow-sm space-y-4 hover:border-[#F5951C]/40 transition"
                       >
                         {/* Top Bar: Deal Ref, Channel, Customer */}
-                        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b border-[#E6E1D8] dark:border-white/10 pb-3">
+                        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b border-[#E2E8F0] dark:border-white/10 pb-3">
                           <div className="flex items-center gap-2.5 flex-wrap">
                             <span className="font-mono text-xs font-bold px-2.5 py-1 rounded-lg bg-[#F5951C]/15 text-[#F5951C] border border-[#F5951C]/30">
                               {trip.dealReferenceId}
@@ -1368,70 +1823,70 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                             >
                               {trip.dealChannel} DEAL
                             </span>
-                            <span className="text-xs font-bold text-[#181614] dark:text-white">
+                            <span className="text-xs font-bold text-[#0F172A] dark:text-white">
                               {trip.customerName}
                             </span>
-                            <span className="text-[11px] font-mono text-[#66615A] dark:text-white/50">
+                            <span className="text-[11px] font-mono text-[#475569] dark:text-zinc-400">
                               ({trip.customerCode})
                             </span>
                           </div>
 
                           <div className="flex items-center gap-2 text-xs">
-                            <span className="text-[#66615A] dark:text-[#A19D95]">Lead:</span>
-                            <span className="font-semibold text-[#181614] dark:text-white">
-                              {trip.leadOwnerName}
+                            <span className="text-[#475569] dark:text-zinc-400">Lead:</span>
+                            <span className="font-semibold text-[#0F172A] dark:text-white">
+                              {trip.leadOwnerName || "Vivek"}
                             </span>
                           </div>
                         </div>
 
                         {/* Middle Grid: Destination, Dates, Pax, Statuses */}
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                          <div className="p-3 rounded-xl bg-[#FAF8F5] dark:bg-[#0D0C0B] border border-[#E6E1D8] dark:border-white/5">
-                            <span className="text-[10px] uppercase tracking-wider text-[#66615A] dark:text-white/50 block font-semibold">
+                          <div className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5">
+                            <span className="text-[10px] uppercase tracking-wider text-[#475569] dark:text-zinc-400 block font-semibold">
                               Destination & Period
                             </span>
-                            <p className="font-bold text-[#181614] dark:text-white mt-0.5">
+                            <p className="font-bold text-[#0F172A] dark:text-white mt-0.5">
                               {trip.destination}
                             </p>
-                            <p className="text-[11px] text-[#66615A] dark:text-[#A19D95]">
+                            <p className="text-[11px] text-[#475569] dark:text-zinc-400">
                               {trip.travelMonth} {trip.travelYear} • {trip.durationLabel}
                             </p>
                           </div>
 
-                          <div className="p-3 rounded-xl bg-[#FAF8F5] dark:bg-[#0D0C0B] border border-[#E6E1D8] dark:border-white/5">
-                            <span className="text-[10px] uppercase tracking-wider text-[#66615A] dark:text-white/50 block font-semibold">
+                          <div className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5">
+                            <span className="text-[10px] uppercase tracking-wider text-[#475569] dark:text-zinc-400 block font-semibold">
                               Travel Party & Pax
                             </span>
-                            <p className="font-bold text-[#181614] dark:text-white mt-0.5">
+                            <p className="font-bold text-[#0F172A] dark:text-white mt-0.5">
                               {trip.travelPartyType}
                             </p>
-                            <p className="text-[11px] text-[#66615A] dark:text-[#A19D95]">
+                            <p className="text-[11px] text-[#475569] dark:text-zinc-400">
                               {trip.paxAdults} Adults
                               {trip.paxChildren > 0 ? `, ${trip.paxChildren} Children` : ""}
                             </p>
                           </div>
 
-                          <div className="p-3 rounded-xl bg-[#FAF8F5] dark:bg-[#0D0C0B] border border-[#E6E1D8] dark:border-white/5">
-                            <span className="text-[10px] uppercase tracking-wider text-[#66615A] dark:text-white/50 block font-semibold">
+                          <div className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5">
+                            <span className="text-[10px] uppercase tracking-wider text-[#475569] dark:text-zinc-400 block font-semibold">
                               Status Pipeline
                             </span>
-                            <p className="font-bold text-[#181614] dark:text-white mt-0.5">
+                            <p className="font-bold text-[#0F172A] dark:text-white mt-0.5">
                               {trip.dealStage}
                             </p>
-                            <p className="text-[11px] text-[#66615A] dark:text-[#A19D95]">
+                            <p className="text-[11px] text-[#475569] dark:text-zinc-400">
                               Pay: {trip.paymentStatus} • Trip: {trip.tripStatus}
                             </p>
                           </div>
 
-                          <div className="p-3 rounded-xl bg-[#FAF8F5] dark:bg-[#0D0C0B] border border-[#E6E1D8] dark:border-white/5">
-                            <span className="text-[10px] uppercase tracking-wider text-[#66615A] dark:text-white/50 block font-semibold">
+                          <div className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5">
+                            <span className="text-[10px] uppercase tracking-wider text-[#475569] dark:text-zinc-400 block font-semibold">
                               Financials
                             </span>
                             <p className="font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">
                               ₹{Number(trip.quotePrice || 0).toLocaleString("en-IN")}
                             </p>
                             {!trip.isFinancialRestricted ? (
-                              <p className="text-[10px] text-[#66615A] dark:text-[#A19D95]">
+                              <p className="text-[10px] text-[#475569] dark:text-zinc-400">
                                 Cost: ₹{Number(trip.actualCost || 0).toLocaleString("en-IN")} •
                                 Profit: ₹{Number(trip.profit || 0).toLocaleString("en-IN")}
                               </p>
@@ -1445,10 +1900,10 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
 
                         {/* Logistics & Notes */}
                         {(trip.bookedProperties || trip.bookedTransport || trip.notes) && (
-                          <div className="p-3 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/5 text-xs text-[#66615A] dark:text-[#A19D95] space-y-1">
+                          <div className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5 text-xs text-[#475569] dark:text-zinc-400 space-y-1">
                             {trip.bookedProperties && (
                               <p>
-                                <strong className="text-[#181614] dark:text-white">
+                                <strong className="text-[#0F172A] dark:text-white">
                                   Booked Properties:
                                 </strong>{" "}
                                 {trip.bookedProperties}
@@ -1456,134 +1911,436 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                             )}
                             {trip.bookedTransport && (
                               <p>
-                                <strong className="text-[#181614] dark:text-white">
+                                <strong className="text-[#0F172A] dark:text-white">
                                   Transport:
                                 </strong>{" "}
                                 {trip.bookedTransport}
                               </p>
                             )}
-                            {trip.notes && <p className="italic">"{trip.notes}"</p>}
+                            {trip.notes && <p className="italic">&quot;{trip.notes}&quot;</p>}
                           </div>
                         )}
                       </div>
-                    ))}
+                    ));
+                  })()}
                 </div>
               )
             ) : (
               crmCustomers.length === 0 ? (
-                <div className="p-12 text-center rounded-2xl border border-dashed border-[#E6E1D8] dark:border-white/15 bg-white dark:bg-[#161514] space-y-3">
+                <div className="p-12 text-center rounded-2xl border border-dashed border-[#E2E8F0] dark:border-white/15 bg-white dark:bg-[#121215] space-y-3">
                   <div className="text-3xl">👥</div>
-                  <h3 className="text-sm font-bold text-[#181614] dark:text-white">
+                  <h3 className="text-sm font-bold text-[#0F172A] dark:text-white">
                     No Customers Master Records Yet
                   </h3>
-                  <p className="text-xs text-[#66615A] dark:text-[#A19D95] max-w-md mx-auto">
-                    Customers are unique traveller profiles (CUST-XXXXX) holding multiple journey
-                    dossiers.
+                  <p className="text-xs text-[#475569] dark:text-zinc-400 max-w-md mx-auto">
+                    Customers are unique traveller profiles (CUST-XXXXX) holding multiple journey dossiers.
                   </p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {crmCustomers
-                    .filter((c) => {
-                      const q = crmSearchQuery.toLowerCase().trim();
-                      if (!q) return true;
-                      return (
-                        c.primaryName.toLowerCase().includes(q) ||
-                        c.customerCode.toLowerCase().includes(q) ||
-                        (c.primaryMobile && c.primaryMobile.includes(q)) ||
-                        (c.secondaryMobile && c.secondaryMobile.includes(q)) ||
-                        (c.primaryEmail && c.primaryEmail.toLowerCase().includes(q))
-                      );
-                    })
-                    .map((cust) => (
-                      <div
-                        key={cust.id}
-                        className="rounded-2xl border border-[#E6E1D8] dark:border-white/10 bg-white dark:bg-[#161514] p-5 shadow-sm space-y-3 flex flex-col justify-between hover:border-[#F5951C]/40 transition"
+                <div className="space-y-4">
+                  {/* Punch-List Item 4 Focused View Notification Banner for Customers */}
+                  {crmFilterMode === "active" && !crmSearchQuery && (
+                    <div className="p-3.5 rounded-xl bg-blue-500/10 border border-blue-500/20 text-xs text-blue-700 dark:text-blue-300 flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+                      <div className="flex items-center gap-2">
+                        <span>⚡</span>
+                        <span>
+                          <strong>Focused View (Item 4):</strong> Showing top 10 active customer master dossiers ({crmCustomers.length} total customer master profiles in database).
+                        </span>
+                      </div>
+                      <button
+                        onClick={() => setCrmFilterMode("all")}
+                        className="px-3 py-1 rounded-lg bg-blue-600 text-white font-bold text-[10px] uppercase tracking-wider hover:bg-blue-700 transition w-fit"
                       >
-                        <div className="space-y-2">
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-[#F5951C]/15 text-[#F5951C] border border-[#F5951C]/30">
-                                {cust.customerCode}
-                              </span>
-                              <h3 className="font-bold text-sm text-[#181614] dark:text-white mt-1.5">
-                                {cust.primaryName}
-                              </h3>
-                            </div>
-                            <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-black/5 dark:bg-white/10 text-[#66615A] dark:text-white/70">
-                              {cust.tripsCount} {cust.tripsCount === 1 ? "Trip" : "Trips"}
-                            </span>
-                          </div>
+                        View All {crmCustomers.length} Customers →
+                      </button>
+                    </div>
+                  )}
 
-                          <div className="text-xs text-[#66615A] dark:text-[#A19D95] space-y-0.5">
-                            <p>
-                              📱 Mobile:{" "}
-                              <span className="font-mono font-semibold text-[#181614] dark:text-white">
-                                {cust.primaryMobile || "—"}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {(() => {
+                      const q = crmSearchQuery.toLowerCase().trim();
+                      let list = crmCustomers.filter((c) => {
+                        if (!q) return true;
+                        return (
+                          c.primaryName.toLowerCase().includes(q) ||
+                          c.customerCode.toLowerCase().includes(q) ||
+                          (c.primaryMobile && c.primaryMobile.includes(q)) ||
+                          (c.secondaryMobile && c.secondaryMobile.includes(q)) ||
+                          (c.primaryEmail && c.primaryEmail.toLowerCase().includes(q))
+                        );
+                      });
+
+                      if (!q && crmFilterMode === "active") {
+                        list = list.slice(0, 10);
+                      }
+
+                      return list.map((cust) => (
+                        <div
+                          key={cust.id}
+                          className="rounded-2xl border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] p-5 shadow-sm space-y-3 flex flex-col justify-between hover:border-[#F5951C]/40 transition"
+                        >
+                          <div className="space-y-2">
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-[#F5951C]/15 text-[#F5951C] border border-[#F5951C]/30">
+                                  {cust.customerCode}
+                                </span>
+                                <h3 className="font-bold text-sm text-[#0F172A] dark:text-white mt-1.5">
+                                  {cust.primaryName}
+                                </h3>
+                              </div>
+                              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-black/5 dark:bg-white/10 text-[#475569] dark:text-zinc-400">
+                                {cust.tripsCount} {cust.tripsCount === 1 ? "Trip" : "Trips"}
                               </span>
-                              {cust.secondaryMobile && (
-                                <span className="font-mono text-[11px] text-[#66615A] dark:text-white/50">
-                                  {" "}
-                                  / {cust.secondaryMobile}
-                                </span>
-                              )}
-                            </p>
-                            {cust.primaryEmail && (
+                            </div>
+
+                            <div className="text-xs text-[#475569] dark:text-zinc-400 space-y-0.5">
                               <p>
-                                ✉️ Email:{" "}
-                                <span className="text-[#181614] dark:text-white">
-                                  {cust.primaryEmail}
+                                📱 Mobile:{" "}
+                                <span className="font-mono font-semibold text-[#0F172A] dark:text-white">
+                                  {cust.primaryMobile || "—"}
                                 </span>
+                                {cust.secondaryMobile && (
+                                  <span className="font-mono text-[11px] text-[#475569] dark:text-zinc-400">
+                                    {" "}
+                                    / {cust.secondaryMobile}
+                                  </span>
+                                )}
                               </p>
+                              {cust.primaryEmail && (
+                                <p>
+                                  ✉️ Email:{" "}
+                                  <span className="text-[#0F172A] dark:text-white">
+                                    {cust.primaryEmail}
+                                  </span>
+                                </p>
+                              )}
+                            </div>
+
+                            {cust.recentTrips && cust.recentTrips.length > 0 && (
+                              <div className="pt-2 border-t border-[#E2E8F0] dark:border-white/5">
+                                <span className="text-[10px] uppercase font-bold tracking-wider text-[#475569] dark:text-zinc-400 block mb-1">
+                                  Linked Journeys:
+                                </span>
+                                <div className="flex flex-wrap gap-1.5">
+                                  {cust.recentTrips.map((rt) => (
+                                    <span
+                                      key={rt.dealReferenceId}
+                                      className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/10 text-[#0F172A] dark:text-white"
+                                    >
+                                      {rt.dealReferenceId}: {rt.destination} ({rt.travelYear})
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
                             )}
                           </div>
 
-                          {cust.recentTrips && cust.recentTrips.length > 0 && (
-                            <div className="pt-2 border-t border-[#E6E1D8] dark:border-white/5">
-                              <span className="text-[10px] uppercase font-bold tracking-wider text-[#66615A] dark:text-white/50 block mb-1">
-                                Linked Journeys:
-                              </span>
-                              <div className="flex flex-wrap gap-1.5">
-                                {cust.recentTrips.map((rt) => (
-                                  <span
-                                    key={rt.dealReferenceId}
-                                    className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#FAF8F5] dark:bg-[#0D0C0B] border border-[#E6E1D8] dark:border-white/10 text-[#181614] dark:text-white"
-                                  >
-                                    {rt.dealReferenceId}: {rt.destination} ({rt.travelYear})
-                                  </span>
-                                ))}
-                              </div>
-                            </div>
-                          )}
+                          <div className="pt-3 border-t border-[#E2E8F0] dark:border-white/10 flex justify-end">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setMatchedCustomer({
+                                  id: cust.id,
+                                  customerCode: cust.customerCode,
+                                  primaryName: cust.primaryName,
+                                  primaryMobile: cust.primaryMobile || "",
+                                  pastTripsCount: cust.tripsCount,
+                                });
+                                setIsLinkedToExisting(true);
+                                setClientFormName(cust.primaryName);
+                                setClientFormPhone(cust.primaryMobile || "+91 ");
+                                setClientFormEmail(cust.primaryEmail || "");
+                                setShowAddClientModal(true);
+                              }}
+                              className="text-xs px-3 py-1.5 rounded-lg bg-[#F5951C] text-[#0F172A] font-bold uppercase tracking-wider hover:bg-[#e08515] transition shadow-sm"
+                            >
+                              + Add Journey
+                            </button>
+                          </div>
                         </div>
-
-                        <div className="pt-3 border-t border-[#E6E1D8] dark:border-white/10 flex justify-end">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setMatchedCustomer({
-                                id: cust.id,
-                                customerCode: cust.customerCode,
-                                primaryName: cust.primaryName,
-                                primaryMobile: cust.primaryMobile || "",
-                                pastTripsCount: cust.tripsCount,
-                              });
-                              setIsLinkedToExisting(true);
-                              setClientFormName(cust.primaryName);
-                              setClientFormPhone(cust.primaryMobile || "+91 ");
-                              setClientFormEmail(cust.primaryEmail || "");
-                              setShowAddClientModal(true);
-                            }}
-                            className="text-xs px-3 py-1.5 rounded-lg bg-[#F5951C] text-[#0E0D0C] font-bold uppercase tracking-wider hover:bg-[#e08515] transition shadow-sm"
-                          >
-                            + Add Journey
-                          </button>
-                        </div>
-                      </div>
-                    ))}
+                      ));
+                    })()}
+                  </div>
                 </div>
               )
             )}
+          </div>
+        )}
+
+        {/* TAB 3: VETTED VENDORS DIRECTORY (Release 1.5.2 Item 5) */}
+        {activeTab === "vendors" && (
+          <div className="space-y-6">
+            {/* Header & Primary Actions */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight text-[#0F172A] dark:text-white flex items-center gap-2">
+                  <span>🏢</span> Vetted Vendor Atelier Directory
+                </h2>
+                <p className="text-xs text-[#475569] dark:text-zinc-400">
+                  Curated boutique slow-travel properties, verified fleet operators, DMCs & partner agencies ({vendors.length} Total Registered Partners)
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                {canManageVendors ? (
+                  <button
+                    onClick={openAddVendorModal}
+                    className="rounded-xl bg-[#F5951C] px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#0F172A] hover:bg-[#e08515] transition flex items-center gap-2 shadow-md"
+                  >
+                    <span>➕</span>
+                    <span>Register Vendor Partner</span>
+                  </button>
+                ) : (
+                  <span className="rounded-xl border border-blue-500/20 bg-blue-500/10 px-3.5 py-2 text-xs font-semibold text-blue-700 dark:text-blue-300 flex items-center gap-1.5 shadow-sm">
+                    <span>🔒</span>
+                    <span>Directory View (Read-Only)</span>
+                  </span>
+                )}
+                <button
+                  onClick={refreshVendorsData}
+                  disabled={vendorsLoading}
+                  className="rounded-xl border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] px-3 py-2 text-xs font-semibold text-[#0F172A] dark:text-white hover:border-[#F5951C] transition"
+                  title="Reload live vendor directory from database"
+                >
+                  {vendorsLoading ? "Refreshing..." : "↻ Refresh"}
+                </button>
+              </div>
+            </div>
+
+            {/* Filter & Search Bar */}
+            <div className="p-4 rounded-2xl border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] flex flex-col md:flex-row gap-3 justify-between items-stretch md:items-center">
+              <div className="relative flex-1">
+                <input
+                  type="text"
+                  value={vendorSearchQuery}
+                  onChange={(e) => setVendorSearchQuery(e.target.value)}
+                  placeholder="Search vendors by name, code (VND-XXXX), destination, POC name, mobile..."
+                  className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                />
+                {vendorSearchQuery && (
+                  <button
+                    onClick={() => setVendorSearchQuery("")}
+                    className="absolute right-3 top-2.5 text-xs text-[#64748B] dark:text-zinc-400 hover:text-[#0F172A] dark:hover:text-white"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+
+              {/* Category Pills */}
+              <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">
+                {[
+                  { id: "all", label: `All (${vendors.length})` },
+                  { id: "property", label: "Properties & Stays" },
+                  { id: "cab", label: "Cab Fleets" },
+                  { id: "dmc", label: "DMCs" },
+                  { id: "agency", label: "Partner Agencies" },
+                ].map((cat) => (
+                  <button
+                    key={cat.id}
+                    onClick={() => setVendorCategoryFilter(cat.id)}
+                    className={`whitespace-nowrap px-3 py-1.5 rounded-lg text-[11px] font-semibold transition ${
+                      vendorCategoryFilter === cat.id
+                        ? "bg-[#F5951C] text-[#0F172A] font-bold"
+                        : "bg-black/5 dark:bg-white/5 text-[#475569] dark:text-zinc-400 hover:bg-black/10 dark:hover:bg-white/10"
+                    }`}
+                  >
+                    {cat.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Vendor Cards Grid */}
+            {(() => {
+              if (vendorsLoading && vendors.length === 0) {
+                return (
+                  <div className="p-12 text-center text-[#475569] dark:text-zinc-400 text-xs">
+                    Loading verified partner directory...
+                  </div>
+                );
+              }
+
+              const filtered = vendors.filter((v) => {
+                if (vendorCategoryFilter !== "all" && v.category !== vendorCategoryFilter) {
+                  return false;
+                }
+                const q = vendorSearchQuery.toLowerCase().trim();
+                if (!q) return true;
+                return (
+                  (v.name && v.name.toLowerCase().includes(q)) ||
+                  (v.vendor_code && v.vendor_code.toLowerCase().includes(q)) ||
+                  (v.destination && v.destination.toLowerCase().includes(q)) ||
+                  (v.region && v.region.toLowerCase().includes(q)) ||
+                  (v.poc_name && v.poc_name.toLowerCase().includes(q)) ||
+                  (v.poc_mobile && v.poc_mobile.includes(q)) ||
+                  (v.email && v.email.toLowerCase().includes(q))
+                );
+              });
+
+              if (filtered.length === 0) {
+                return (
+                  <div className="p-12 text-center rounded-2xl border border-dashed border-[#E2E8F0] dark:border-white/15 bg-white dark:bg-[#121215] space-y-3">
+                    <div className="text-3xl">🏢</div>
+                    <h3 className="text-sm font-bold text-[#0F172A] dark:text-white">No Vendors Found</h3>
+                    <p className="text-xs text-[#475569] dark:text-zinc-400 max-w-md mx-auto">
+                      {vendorSearchQuery || vendorCategoryFilter !== "all"
+                        ? "No vendor records matched your active filter or search query."
+                        : "Register your first slow-travel property, fleet cab operator, or contracted DMC partner."}
+                    </p>
+                    <button
+                      onClick={() => {
+                        setShowAddVendorModal(true);
+                        setVendorSubmitError(null);
+                        setVendorSubmitSuccess(null);
+                      }}
+                      className="rounded-xl bg-[#F5951C] px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#0F172A] hover:bg-[#e08515] transition"
+                    >
+                      ➕ Add First Vendor Partner
+                    </button>
+                  </div>
+                );
+              }
+
+              return (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {filtered.map((v) => (
+                    <div
+                      key={v.id}
+                      className="rounded-2xl border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] p-5 shadow-sm space-y-3 flex flex-col justify-between hover:border-[#F5951C]/40 transition"
+                    >
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-start gap-2">
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-[#F5951C]/15 text-[#F5951C]">
+                              {v.vendor_code}
+                            </span>
+                            <span className="text-[9px] font-bold uppercase px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-700 dark:text-blue-300 border border-blue-500/20">
+                              {v.category}
+                            </span>
+                            {v.star_rating && (
+                              <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-black/5 dark:bg-white/10 text-[#475569] dark:text-zinc-300">
+                                {v.star_rating}
+                              </span>
+                            )}
+                          </div>
+                          {v.is_active ? (
+                            <span className="text-[10px] font-semibold text-emerald-500 flex items-center gap-1">
+                              ● Active
+                            </span>
+                          ) : (
+                            <span className="text-[10px] font-semibold text-rose-500 flex items-center gap-1">
+                              ● Inactive
+                            </span>
+                          )}
+                        </div>
+
+                        <div>
+                          <h3 className="font-bold text-sm text-[#0F172A] dark:text-white line-clamp-1">
+                            {v.name}
+                          </h3>
+                          <p className="text-xs text-[#475569] dark:text-zinc-400 mt-0.5">
+                            📍 {v.destination || "Pan India"}
+                            {v.region ? ` (${v.region})` : ""}
+                          </p>
+                        </div>
+
+                        {/* Contact details */}
+                        <div className="text-xs text-[#475569] dark:text-zinc-400 space-y-1 pt-1 border-t border-[#E2E8F0] dark:border-white/5">
+                          {v.poc_name && (
+                            <p className="truncate">
+                              👤 <strong>POC:</strong> {v.poc_name}
+                            </p>
+                          )}
+                          {(v.poc_mobile || v.office_phone) && (
+                            <p className="font-mono text-[11px] truncate">
+                              📱 {v.poc_mobile || v.office_phone}
+                            </p>
+                          )}
+                          {v.email && (
+                            <p className="truncate">
+                              ✉️{" "}
+                              <a
+                                href={`mailto:${v.email}`}
+                                className="text-[#0F172A] dark:text-white hover:text-[#F5951C] underline decoration-[#F5951C]/50"
+                              >
+                                {v.email}
+                              </a>
+                            </p>
+                          )}
+                          {v.website && (
+                            <p className="truncate text-[11px]">
+                              🌐{" "}
+                              <a
+                                href={v.website.startsWith("http") ? v.website : `https://${v.website}`}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-[#F5951C] hover:underline"
+                              >
+                                {v.website.replace(/^https?:\/\//, "")}
+                              </a>
+                            </p>
+                          )}
+                        </div>
+
+                        {/* Commercials / B2B Rates */}
+                        {(v.rate_card_link || v.b2b_rates) && (
+                          <div className="pt-2 border-t border-[#E2E8F0] dark:border-white/5 space-y-1 text-xs">
+                            {v.b2b_rates && (
+                              <p className="text-[11px] font-mono text-emerald-600 dark:text-emerald-400">
+                                <strong>Negotiated:</strong> {v.b2b_rates}
+                              </p>
+                            )}
+                            {v.rate_card_link && (
+                              <a
+                                href={v.rate_card_link}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#F5951C] hover:underline"
+                              >
+                                <span>📄</span> View Contracted Rate Card →
+                              </a>
+                            )}
+                          </div>
+                        )}
+
+                        {v.comments && (
+                          <p className="text-[10px] text-[#475569] dark:text-zinc-400 italic pt-1 border-t border-[#E2E8F0] dark:border-white/5 line-clamp-2">
+                            &quot;{v.comments}&quot;
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Vendor Card Actions (RBAC: Edit for Privilege/Admin/Super Admin, Delete for Super Admin ONLY) */}
+                      {(canManageVendors || isSuperAdmin) && (
+                        <div className="pt-2 border-t border-[#E2E8F0] dark:border-white/5 flex items-center justify-end gap-2">
+                          {canManageVendors && (
+                            <button
+                              type="button"
+                              onClick={() => openEditVendorModal(v)}
+                              className="px-2.5 py-1 rounded-lg border border-[#CBD5E1] dark:border-white/10 text-[11px] font-semibold text-[#0F172A] dark:text-white hover:border-[#F5951C] hover:text-[#F5951C] transition flex items-center gap-1"
+                              title="Edit vendor details, rates, and POC"
+                            >
+                              <span>✏️</span> Edit
+                            </button>
+                          )}
+                          {isSuperAdmin && (
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteVendor(v.id, v.name)}
+                              className="px-2.5 py-1 rounded-lg border border-rose-500/20 bg-rose-500/10 text-rose-600 dark:text-rose-400 text-[11px] font-semibold hover:bg-rose-500/20 transition flex items-center gap-1"
+                              title="Permanently remove vendor partner (Super Admin Only)"
+                            >
+                              <span>🗑️</span> Delete
+                            </button>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              );
+            })()}
           </div>
         )}
 
@@ -1598,7 +2355,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
               <div className="flex items-center gap-2">
                 <button
                   onClick={handleLaunchClaudePopup}
-                  className="rounded-xl bg-[#F5951C] px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-[#0E0D0C] hover:bg-[#e08515] transition flex items-center gap-1.5 shadow-md"
+                  className="rounded-xl bg-[#F5951C] px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-[#0F172A] hover:bg-[#e08515] transition flex items-center gap-1.5 shadow-md"
                   title="Copy client brief and open your Claude Project in pop-up window ($0.00 extra cost)"
                 >
                   <span>🚀</span>
@@ -1618,7 +2375,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
             </div>
 
             {/* AI Itinerary Generator / Claude Project Integration Bridge Card */}
-            <div className="rounded-2xl border border-[#E6E1D8] dark:border-white/10 bg-gradient-to-r from-white to-[#FAF8F5] dark:from-[#161514] dark:to-[#0D0C0B] p-5">
+            <div className="rounded-2xl border border-[#E2E8F0] dark:border-white/10 bg-gradient-to-r from-white to-[#F8FAFC] dark:from-[#121215] dark:to-[#09090B] p-5">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                 <div className="flex items-center gap-3">
                   <div className="h-10 w-10 rounded-xl bg-[#F5951C]/20 border border-[#F5951C]/30 flex items-center justify-center text-lg">
@@ -1640,7 +2397,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                 <div className="flex items-center gap-2 text-xs">
                   <button
                     onClick={handleLaunchClaudePopup}
-                    className="px-3.5 py-1.5 rounded-lg bg-[#F5951C] text-[#0E0D0C] font-bold text-xs uppercase tracking-wider hover:bg-[#e08515] transition flex items-center gap-1.5 shadow-sm"
+                    className="px-3.5 py-1.5 rounded-lg bg-[#F5951C] text-[#0F172A] font-bold text-xs uppercase tracking-wider hover:bg-[#e08515] transition flex items-center gap-1.5 shadow-sm"
                   >
                     <span>🚀</span>
                     <span>{copiedPrompt ? "✓ Copied! Launching..." : "Launch Claude Project Pop-Up"}</span>
@@ -1658,7 +2415,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
               </div>
 
               {/* Headless API Evaluation Context */}
-              <div className="mt-4 p-3.5 rounded-xl bg-black/30 border border-[#E6E1D8] dark:border-white/10 text-xs space-y-1.5">
+              <div className="mt-4 p-3.5 rounded-xl bg-black/30 border border-[#E2E8F0] dark:border-white/10 text-xs space-y-1.5">
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-white flex items-center gap-1.5">
                     <span>💡</span> Zero-Cost Pop-Up vs Headless API Cost Benchmark
@@ -1680,7 +2437,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
             </div>
 
             {/* Current Itinerary Dossier & Pricing */}
-            <div className="rounded-2xl border border-[#E6E1D8] dark:border-white/10 bg-white dark:bg-[#161514] p-6 space-y-5">
+            <div className="rounded-2xl border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] p-6 space-y-5">
               <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
                 <div>
                   <h3 className="text-base font-bold text-white">8-Day Kashmir Autumn Serenity Circuit</h3>
@@ -1690,7 +2447,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-semibold">
                     🟢 Margin Healthy (18.2%)
                   </span>
-                  <button className="rounded-xl bg-[#F5951C] px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-[#0E0D0C]">
+                  <button className="rounded-xl bg-[#F5951C] px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-[#0F172A]">
                     Export Proposal (v1.0)
                   </button>
                 </div>
@@ -1698,19 +2455,19 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
 
               {/* Pricing breakdown */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
-                <div className="p-3 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/5">
+                <div className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5">
                   <p className="text-[10px] uppercase tracking-wider text-white/50">Net Supplier Cost</p>
                   <p className="text-sm font-bold font-mono text-white mt-1">₹312,000</p>
                 </div>
-                <div className="p-3 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/5">
+                <div className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5">
                   <p className="text-[10px] uppercase tracking-wider text-white/50">Agency Markup</p>
                   <p className="text-sm font-bold font-mono text-[#F5951C] mt-1">₹69,500</p>
                 </div>
-                <div className="p-3 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/5">
+                <div className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5">
                   <p className="text-[10px] uppercase tracking-wider text-white/50">Estimated GST</p>
                   <p className="text-sm font-bold font-mono text-white/70 mt-1">₹12,510</p>
                 </div>
-                <div className="p-3 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/5">
+                <div className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5">
                   <p className="text-[10px] uppercase tracking-wider text-white/50">Gross Selling Price</p>
                   <p className="text-sm font-bold font-mono text-emerald-400 mt-1">₹394,010</p>
                 </div>
@@ -1732,7 +2489,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     { day: "Day 7", title: "Return to Srinagar, Pashmina Artisans & Farewell Dinner", stay: "Nigeen Heritage Floats" },
                     { day: "Day 8", title: "Sheikh ul-Alam Airport Escort & Departure", stay: "Return Flight (DEL)" },
                   ].map((d, i) => (
-                    <div key={i} className="p-3 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/5 flex flex-col sm:flex-row justify-between sm:items-center gap-1 sm:gap-4">
+                    <div key={i} className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5 flex flex-col sm:flex-row justify-between sm:items-center gap-1 sm:gap-4">
                       <div>
                         <span className="text-[11px] font-bold text-[#F5951C] mr-2">{d.day}:</span>
                         <span className="font-semibold text-white">{d.title}</span>
@@ -1743,7 +2500,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                 </div>
               </div>
 
-              <div className="p-3.5 rounded-xl border border-[#E6E1D8] dark:border-white/10 bg-[#FAF8F5] dark:bg-[#09090B] text-xs text-white/60">
+              <div className="p-3.5 rounded-xl border border-[#E2E8F0] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] text-xs text-white/60">
                 🔒 <strong className="text-white">Commercial Privacy Guardrail (US-010):</strong> White-label client exports automatically strip all supplier vendor names, net costs, and markup percentages.
               </div>
             </div>
@@ -1766,7 +2523,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       setInviteSuccess(null);
                       setInviteError(null);
                     }}
-                    className="rounded-xl bg-[#F5951C] px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-[#0E0D0C] hover:bg-[#e08515] transition flex items-center gap-1.5"
+                    className="rounded-xl bg-[#F5951C] px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-[#0F172A] hover:bg-[#e08515] transition flex items-center gap-1.5"
                   >
                     <span>➕</span>
                     <span>Invite Team Member</span>
@@ -1779,7 +2536,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
             </div>
 
             {/* Section 1: Staff Directory & Security Governance (US-001) */}
-            <div className="rounded-2xl border border-[#E6E1D8] dark:border-white/10 bg-white dark:bg-[#161514] p-5 space-y-4">
+            <div className="rounded-2xl border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] p-5 space-y-4">
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
                   <span className="text-lg">👥</span>
@@ -1806,7 +2563,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
                 {teamMembers.map((member, idx) => (
-                  <div key={idx} className="p-3.5 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/5 flex flex-col justify-between space-y-2">
+                  <div key={idx} className="p-3.5 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5 flex flex-col justify-between space-y-2">
                     <div className="flex justify-between items-start">
                       <div>
                         <div className="flex items-center gap-2">
@@ -1836,16 +2593,16 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                             }`}
                             title={`Change ${member.fullName}'s role (Super Admin Privilege)`}
                           >
-                            <option value="super_admin" className="bg-[#FAF8F5] dark:bg-[#09090B] text-purple-300">
+                            <option value="super_admin" className="bg-[#F8FAFC] dark:bg-[#09090B] text-purple-300">
                               Super Admin (Delegated)
                             </option>
-                            <option value="administrator" className="bg-[#FAF8F5] dark:bg-[#09090B] text-purple-300">
+                            <option value="administrator" className="bg-[#F8FAFC] dark:bg-[#09090B] text-purple-300">
                               Administrator
                             </option>
-                            <option value="privilege_user" className="bg-[#FAF8F5] dark:bg-[#09090B] text-blue-300">
+                            <option value="privilege_user" className="bg-[#F8FAFC] dark:bg-[#09090B] text-blue-300">
                               Privilege User (Senior)
                             </option>
-                            <option value="desk_user" className="bg-[#FAF8F5] dark:bg-[#09090B] text-emerald-300">
+                            <option value="desk_user" className="bg-[#F8FAFC] dark:bg-[#09090B] text-emerald-300">
                               Desk User
                             </option>
                           </select>
@@ -1868,7 +2625,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       )}
                     </div>
 
-                    <div className="pt-2 border-t border-[#E6E1D8] dark:border-white/5 flex justify-between items-center text-[10px]">
+                    <div className="pt-2 border-t border-[#E2E8F0] dark:border-white/5 flex justify-between items-center text-[10px]">
                       <span className="text-white/40">Provisioned: {member.invitedAt}</span>
                       <div className="flex items-center gap-2">
                         <span
@@ -1911,7 +2668,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                             </button>
                           </div>
                         ) : (
-                          <span className="px-2 py-0.5 rounded bg-white/5 text-white/50 border border-[#E6E1D8] dark:border-white/10 text-[9px] font-semibold flex items-center gap-1">
+                          <span className="px-2 py-0.5 rounded bg-white/5 text-white/50 border border-[#E2E8F0] dark:border-white/10 text-[9px] font-semibold flex items-center gap-1">
                             <span>🔒</span> Protected Super Admin
                           </span>
                         )}
@@ -1924,39 +2681,52 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
 
             {/* Section 2: Vendors & Document Vault */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="rounded-2xl border border-[#E6E1D8] dark:border-white/10 bg-white dark:bg-[#161514] p-5 space-y-3">
-                <h3 className="text-sm font-bold uppercase tracking-wider text-white flex items-center gap-2">
-                  <span>🏢</span> Vetted Vendor Directory (RBAC)
-                </h3>
-                <div className="space-y-2 text-xs">
-                  <div className="p-3 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/5 flex justify-between items-center">
-                    <div>
-                      <p className="font-bold text-white">Nigeen Heritage Floats (DMC)</p>
-                      <p className="text-white/50">Kashmir • Net Contract Active</p>
-                    </div>
-                    <span className="text-[11px] font-mono text-emerald-400">-20% Negotiated</span>
-                  </div>
-                  <div className="p-3 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/5 flex justify-between items-center">
-                    <div>
-                      <p className="font-bold text-white">Himalayan Passes Aviation</p>
-                      <p className="text-white/50">Charter • Contract Net 30</p>
-                    </div>
-                    <span className="text-[11px] font-mono text-emerald-400">-15% Negotiated</span>
-                  </div>
+              <div className="rounded-2xl border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] p-5 space-y-3">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-[#0F172A] dark:text-white flex items-center gap-2">
+                    <span>🏢</span> Vetted Vendor Directory (RBAC)
+                  </h3>
+                  <button
+                    onClick={() => setActiveTab("vendors")}
+                    className="text-xs font-semibold text-[#F5951C] hover:underline flex items-center gap-1"
+                  >
+                    Manage Directory ({vendors.length > 0 ? vendors.length : "430+"}) →
+                  </button>
+                </div>
+                <p className="text-xs text-[#475569] dark:text-zinc-400">
+                  Curated registry of boutique slow-travel properties, verified fleet operators, and contracted destination management companies (DMCs).
+                </p>
+                <div className="flex items-center gap-2 pt-1">
+                  <button
+                    onClick={() => setActiveTab("vendors")}
+                    className="px-3.5 py-1.5 rounded-xl bg-[#F5951C] text-[#0F172A] font-bold text-xs uppercase tracking-wider hover:bg-[#e08515] transition"
+                  >
+                    View Vendor Directory
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowAddVendorModal(true);
+                      setVendorSubmitError(null);
+                      setVendorSubmitSuccess(null);
+                    }}
+                    className="px-3.5 py-1.5 rounded-xl border border-[#CBD5E1] dark:border-white/15 text-xs font-semibold text-[#0F172A] dark:text-white hover:border-[#F5951C] transition"
+                  >
+                    + Add New Vendor
+                  </button>
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-[#E6E1D8] dark:border-white/10 bg-white dark:bg-[#161514] p-5 space-y-3">
+              <div className="rounded-2xl border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] p-5 space-y-3">
                 <h3 className="text-sm font-bold uppercase tracking-wider text-white flex items-center gap-2">
                   <span>🔐</span> Encrypted Document Vault & Step-Up (US-016)
                 </h3>
-                <div className="p-3 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/5 text-xs space-y-2">
+                <div className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5 text-xs space-y-2">
                   <div className="flex justify-between items-center">
                     <span className="font-bold text-white">Ananya Sharma (Passport)</span>
                     <span className="text-white/50 font-mono">XXXX-4567</span>
                   </div>
                   <p className="text-[11px] text-white/50">Auto-masked by default. Step-Up OTP authorization required for unmasked view.</p>
-                  <button className="w-full py-1.5 rounded-lg border border-[#E6E1D8] dark:border-white/15 text-[11px] font-semibold text-[#F5951C] hover:bg-white/5">
+                  <button className="w-full py-1.5 rounded-lg border border-[#E2E8F0] dark:border-white/15 text-[11px] font-semibold text-[#F5951C] hover:bg-white/5">
                     Request Step-Up Unmasking (5-Min Window)
                   </button>
                 </div>
@@ -1971,7 +2741,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
       {/* ========================================================================= */}
       {showInviteModal && (
         <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-[#161514] border border-white/20 rounded-2xl max-w-lg w-full p-6 text-white shadow-2xl relative">
+          <div className="bg-white dark:bg-[#121215] border border-white/20 rounded-2xl max-w-lg w-full p-6 text-white shadow-2xl relative">
             <div className="flex justify-between items-start mb-4">
               <div>
                 <h3 className="text-lg font-bold text-white flex items-center gap-2">
@@ -1998,7 +2768,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   <p>{inviteSuccess}</p>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/10 space-y-2 text-xs">
+                <div className="p-3.5 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/10 space-y-2 text-xs">
                   <p className="text-white/60 text-[11px] uppercase tracking-wider font-semibold">
                     Temporary Default Password:
                   </p>
@@ -2027,7 +2797,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       setShowInviteModal(false);
                       setInviteSuccess(null);
                     }}
-                    className="px-4 py-2 rounded-xl bg-[#F5951C] text-[#0E0D0C] text-xs font-bold uppercase tracking-wider hover:bg-[#e08515]"
+                    className="px-4 py-2 rounded-xl bg-[#F5951C] text-[#0F172A] text-xs font-bold uppercase tracking-wider hover:bg-[#e08515]"
                   >
                     Done
                   </button>
@@ -2051,7 +2821,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     value={inviteName}
                     onChange={(e) => setInviteName(e.target.value)}
                     placeholder="e.g. Ramesh Chandra"
-                    className="w-full rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/10 px-3.5 py-2.5 text-white placeholder-white/30 focus:border-[#F5951C] focus:outline-none"
+                    className="w-full rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/10 px-3.5 py-2.5 text-white placeholder-white/30 focus:border-[#F5951C] focus:outline-none"
                   />
                 </div>
 
@@ -2065,7 +2835,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     value={inviteEmail}
                     onChange={(e) => setInviteEmail(e.target.value)}
                     placeholder="e.g. ramesh@searchmyvacation.com"
-                    className="w-full rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/10 px-3.5 py-2.5 text-white placeholder-white/30 focus:border-[#F5951C] focus:outline-none"
+                    className="w-full rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/10 px-3.5 py-2.5 text-white placeholder-white/30 focus:border-[#F5951C] focus:outline-none"
                   />
                 </div>
 
@@ -2079,7 +2849,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     value={invitePhone}
                     onChange={(e) => setInvitePhone(e.target.value)}
                     placeholder="+91 98401 23456"
-                    className="w-full rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/10 px-3.5 py-2.5 text-white placeholder-white/30 focus:border-[#F5951C] focus:outline-none"
+                    className="w-full rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/10 px-3.5 py-2.5 text-white placeholder-white/30 focus:border-[#F5951C] focus:outline-none"
                   />
                   <p className="text-[10px] text-white/40 mt-1">Used for single-channel SMS OTP login challenges.</p>
                 </div>
@@ -2091,7 +2861,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   <select
                     value={inviteRole}
                     onChange={(e) => setInviteRole(e.target.value as any)}
-                    className="w-full rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/10 px-3.5 py-2.5 text-white focus:border-[#F5951C] focus:outline-none"
+                    className="w-full rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/10 px-3.5 py-2.5 text-white focus:border-[#F5951C] focus:outline-none"
                   >
                     <option value="desk_user">Desk User — Client CRM & Itinerary Operations</option>
                     <option value="privilege_user">Privilege User — Senior Advisor (Margin Overrides & VIP Docs)</option>
@@ -2102,7 +2872,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   </select>
                 </div>
 
-                <div className="p-3 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/10 space-y-1">
+                <div className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/10 space-y-1">
                   <div className="flex justify-between items-center text-[11px]">
                     <span className="text-white/60">Temporary Default Password:</span>
                     <span className="font-mono text-[#F5951C] font-semibold">TemporaryDefaultPass#2026</span>
@@ -2116,13 +2886,13 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   <button
                     type="button"
                     onClick={() => setShowInviteModal(false)}
-                    className="px-4 py-2 rounded-xl border border-[#E6E1D8] dark:border-white/15 text-white/70 hover:text-white"
+                    className="px-4 py-2 rounded-xl border border-[#E2E8F0] dark:border-white/15 text-white/70 hover:text-white"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-2 rounded-xl bg-[#F5951C] text-[#0E0D0C] font-bold uppercase tracking-wider hover:bg-[#e08515] transition"
+                    className="px-4 py-2 rounded-xl bg-[#F5951C] text-[#0F172A] font-bold uppercase tracking-wider hover:bg-[#e08515] transition"
                   >
                     Send Invitation
                   </button>
@@ -2138,7 +2908,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
       {/* ========================================================================= */}
       {showClaudeModal && (
         <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-[#161514] border border-white/20 rounded-2xl max-w-2xl w-full p-6 text-white shadow-2xl relative max-h-[90vh] overflow-y-auto">
+          <div className="bg-white dark:bg-[#121215] border border-white/20 rounded-2xl max-w-2xl w-full p-6 text-white shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-start mb-4">
               <div>
                 <h3 className="text-lg font-bold text-white flex items-center gap-2">
@@ -2165,7 +2935,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   <p>{claudeImportSuccess}</p>
                 </div>
 
-                <div className="p-4 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/10 space-y-3 text-xs">
+                <div className="p-4 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/10 space-y-3 text-xs">
                   <div className="flex justify-between items-center">
                     <span className="font-bold text-white">Proposal PDF Ready for Download:</span>
                     <span className="text-emerald-400 font-mono text-[11px]">Format: Official Client PDF</span>
@@ -2177,7 +2947,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     </div>
                     <button
                       onClick={() => window.print()}
-                      className="px-3 py-1.5 rounded-lg bg-[#F5951C] text-[#0E0D0C] font-bold text-xs uppercase tracking-wider hover:bg-[#e08515]"
+                      className="px-3 py-1.5 rounded-lg bg-[#F5951C] text-[#0F172A] font-bold text-xs uppercase tracking-wider hover:bg-[#e08515]"
                     >
                       Download PDF
                     </button>
@@ -2199,7 +2969,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
             ) : (
               <div className="space-y-4 text-xs">
                 {/* 0. Claude Project URL Configuration */}
-                <div className="p-3.5 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#F5951C]/30 space-y-2">
+                <div className="p-3.5 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#F5951C]/30 space-y-2">
                   <div className="flex justify-between items-center">
                     <label className="text-white font-bold text-xs flex items-center gap-1.5">
                       <span>🔗</span> Your Custom Claude Project URL:
@@ -2216,7 +2986,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       } catch {}
                     }}
                     placeholder="e.g. https://claude.ai/project/... or https://claude.ai"
-                    className="w-full rounded-xl bg-black/40 border border-[#E6E1D8] dark:border-white/15 px-3 py-2 text-white text-xs font-mono focus:border-[#F5951C] focus:outline-none"
+                    className="w-full rounded-xl bg-black/40 border border-[#E2E8F0] dark:border-white/15 px-3 py-2 text-white text-xs font-mono focus:border-[#F5951C] focus:outline-none"
                   />
                   <p className="text-[10px] text-white/50">
                     Enter the URL of your existing Claude project. Clicking &quot;Launch Pop-Up&quot; will copy your client dossier and open this exact Claude project in a dedicated window.
@@ -2233,7 +3003,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       type="text"
                       value={claudeBriefLocation}
                       onChange={(e) => setClaudeBriefLocation(e.target.value)}
-                      className="w-full rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/10 px-3 py-2 text-white text-xs focus:border-[#F5951C] focus:outline-none"
+                      className="w-full rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/10 px-3 py-2 text-white text-xs focus:border-[#F5951C] focus:outline-none"
                     />
                   </div>
                   <div>
@@ -2244,7 +3014,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       type="text"
                       value={claudeBriefDuration}
                       onChange={(e) => setClaudeBriefDuration(e.target.value)}
-                      className="w-full rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/10 px-3 py-2 text-white text-xs focus:border-[#F5951C] focus:outline-none"
+                      className="w-full rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/10 px-3 py-2 text-white text-xs focus:border-[#F5951C] focus:outline-none"
                     />
                   </div>
                 </div>
@@ -2257,7 +3027,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     rows={2}
                     value={claudeBriefAsks}
                     onChange={(e) => setClaudeBriefAsks(e.target.value)}
-                    className="w-full rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/10 p-2.5 text-white text-xs focus:border-[#F5951C] focus:outline-none"
+                    className="w-full rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/10 p-2.5 text-white text-xs focus:border-[#F5951C] focus:outline-none"
                   />
                 </div>
 
@@ -2284,7 +3054,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     {attachedFiles.map((file, idx) => (
                       <span
                         key={idx}
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/10 text-[11px] text-white/80"
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/10 text-[11px] text-white/80"
                       >
                         <span>📎</span>
                         <span>{file.name}</span>
@@ -2295,7 +3065,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                 </div>
 
                 {/* Action Bar: Copy Prompt & Launch Pop-Up */}
-                <div className="p-3 rounded-xl bg-gradient-to-r from-[#FAF8F5] to-white dark:from-[#09090B] dark:to-[#161514] border border-[#E6E1D8] dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-2">
+                <div className="p-3 rounded-xl bg-gradient-to-r from-[#F8FAFC] to-white dark:from-[#09090B] dark:to-[#121215] border border-[#E2E8F0] dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-2">
                   <span className="text-[11px] text-white/70">
                     {copiedPrompt ? "✓ Client dossier copied to clipboard!" : "Copy briefing dossier & launch in dedicated pop-up:"}
                   </span>
@@ -2311,7 +3081,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     <button
                       type="button"
                       onClick={handleLaunchClaudePopup}
-                      className="px-4 py-1.5 rounded-lg bg-[#F5951C] text-[#0E0D0C] font-bold uppercase tracking-wider hover:bg-[#e08515] transition flex items-center gap-1.5 text-xs shadow-md"
+                      className="px-4 py-1.5 rounded-lg bg-[#F5951C] text-[#0F172A] font-bold uppercase tracking-wider hover:bg-[#e08515] transition flex items-center gap-1.5 text-xs shadow-md"
                     >
                       <span>🚀</span>
                       <span>{copiedPrompt ? "✓ Copied! Launching..." : "Launch Claude Project Pop-Up"}</span>
@@ -2337,7 +3107,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     value={claudeInputText}
                     onChange={(e) => setClaudeInputText(e.target.value)}
                     placeholder="Paste the output generated by your Claude project here..."
-                    className="w-full rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/10 p-3 text-white placeholder-white/30 font-mono text-[11px] focus:border-[#F5951C] focus:outline-none"
+                    className="w-full rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/10 p-3 text-white placeholder-white/30 font-mono text-[11px] focus:border-[#F5951C] focus:outline-none"
                   />
                 </div>
 
@@ -2356,14 +3126,14 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   <button
                     type="button"
                     onClick={() => setShowClaudeModal(false)}
-                    className="px-4 py-2 rounded-xl border border-[#E6E1D8] dark:border-white/15 text-white/70 hover:text-white"
+                    className="px-4 py-2 rounded-xl border border-[#E2E8F0] dark:border-white/15 text-white/70 hover:text-white"
                   >
                     Cancel
                   </button>
                   <button
                     type="button"
                     onClick={handleParseClaudeInput}
-                    className="px-4 py-2 rounded-xl bg-[#F5951C] text-[#0E0D0C] font-bold uppercase tracking-wider hover:bg-[#e08515] transition"
+                    className="px-4 py-2 rounded-xl bg-[#F5951C] text-[#0F172A] font-bold uppercase tracking-wider hover:bg-[#e08515] transition"
                   >
                     Parse & Generate PDF
                   </button>
@@ -2379,9 +3149,9 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
       {/* ========================================================================= */}
       {showAddClientModal && (
         <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-[#161514] border border-white/20 rounded-2xl max-w-2xl w-full p-6 text-white shadow-2xl relative max-h-[90vh] overflow-y-auto">
+          <div className="bg-white dark:bg-[#121215] border border-white/20 rounded-2xl max-w-2xl w-full p-6 text-white shadow-2xl relative max-h-[90vh] overflow-y-auto">
             {/* Modal Header */}
-            <div className="flex justify-between items-start mb-5 pb-3 border-b border-[#E6E1D8] dark:border-white/10">
+            <div className="flex justify-between items-start mb-5 pb-3 border-b border-[#E2E8F0] dark:border-white/10">
               <div>
                 <h3 className="text-lg font-bold text-white flex items-center gap-2">
                   <span>➕</span> Add New Client Dossier
@@ -2441,7 +3211,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       setClientFormName(matchedCustomer.primaryName);
                       if (matchedCustomer.primaryMobile) setClientFormPhone(matchedCustomer.primaryMobile);
                     }}
-                    className="px-3.5 py-1.5 rounded-lg bg-[#F5951C] text-[#0E0D0C] font-bold text-xs uppercase tracking-wider hover:bg-[#e08515] transition shadow-sm"
+                    className="px-3.5 py-1.5 rounded-lg bg-[#F5951C] text-[#0F172A] font-bold text-xs uppercase tracking-wider hover:bg-[#e08515] transition shadow-sm"
                   >
                     Link New Journey to {matchedCustomer.primaryName} ({matchedCustomer.customerCode})
                   </button>
@@ -2478,7 +3248,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       value={clientFormName}
                       onChange={(e) => setClientFormName(e.target.value)}
                       placeholder="e.g. Ananya Sharma"
-                      className="w-full rounded-xl border border-[#E6E1D8] dark:border-white/10 bg-[#FAF8F5] dark:bg-[#09090B] px-3.5 py-2 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                      className="w-full rounded-xl border border-[#E2E8F0] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
                     />
                   </div>
                   <div>
@@ -2491,7 +3261,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       onChange={(e) => setClientFormEmail(e.target.value)}
                       onBlur={handleBlurDuplicateCheck}
                       placeholder="e.g. ananya.sharma@example.com"
-                      className="w-full rounded-xl border border-[#E6E1D8] dark:border-white/10 bg-[#FAF8F5] dark:bg-[#09090B] px-3.5 py-2 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                      className="w-full rounded-xl border border-[#E2E8F0] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
                     />
                   </div>
                 </div>
@@ -2508,7 +3278,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       onChange={(e) => setClientFormPhone(e.target.value)}
                       onBlur={handleBlurDuplicateCheck}
                       placeholder="+91 98401 12233"
-                      className="w-full rounded-xl border border-[#E6E1D8] dark:border-white/10 bg-[#FAF8F5] dark:bg-[#09090B] px-3.5 py-2 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                      className="w-full rounded-xl border border-[#E2E8F0] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
                     />
                   </div>
                   <div>
@@ -2520,7 +3290,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       value={clientFormCity}
                       onChange={(e) => setClientFormCity(e.target.value)}
                       placeholder="e.g. Bengaluru, India"
-                      className="w-full rounded-xl border border-[#E6E1D8] dark:border-white/10 bg-[#FAF8F5] dark:bg-[#09090B] px-3.5 py-2 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                      className="w-full rounded-xl border border-[#E2E8F0] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
                     />
                   </div>
                 </div>
@@ -2533,7 +3303,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     <select
                       value={clientFormLeadSource}
                       onChange={(e) => setClientFormLeadSource(e.target.value)}
-                      className="w-full rounded-xl border border-[#E6E1D8] dark:border-white/10 bg-[#FAF8F5] dark:bg-[#09090B] px-3.5 py-2 text-xs text-white focus:border-[#F5951C] focus:outline-none"
+                      className="w-full rounded-xl border border-[#E2E8F0] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-white focus:border-[#F5951C] focus:outline-none"
                     >
                       <option value="instagram">Instagram Campaign</option>
                       <option value="client_referral">Client Referral</option>
@@ -2549,7 +3319,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                         type="checkbox"
                         checked={clientFormIsVip}
                         onChange={(e) => setClientFormIsVip(e.target.checked)}
-                        className="rounded border-white/20 bg-[#FAF8F5] dark:bg-[#09090B] text-[#F5951C] focus:ring-[#F5951C] h-4 w-4"
+                        className="rounded border-white/20 bg-[#F8FAFC] dark:bg-[#09090B] text-[#F5951C] focus:ring-[#F5951C] h-4 w-4"
                       />
                       <span className="flex items-center gap-1">
                         <span>⭐</span> Mark as High-Touch VIP Client
@@ -2560,7 +3330,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
               </div>
 
               {/* SECTION 2: PREFERENCE & DIETARY TAGGING */}
-              <div className="space-y-2 pt-2 border-t border-[#E6E1D8] dark:border-white/10">
+              <div className="space-y-2 pt-2 border-t border-[#E2E8F0] dark:border-white/10">
                 <h4 className="text-xs font-bold uppercase tracking-wider text-[#F5951C]">
                   2. Travel Style & Preference Tagging (US-005)
                 </h4>
@@ -2586,8 +3356,8 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                         onClick={() => handleToggleTag(tag)}
                         className={`text-xs px-3 py-1.5 rounded-lg border transition ${
                           isSelected
-                            ? "bg-[#F5951C] text-[#0E0D0C] border-[#F5951C] font-bold"
-                            : "bg-[#FAF8F5] dark:bg-[#09090B] text-white/70 border-[#E6E1D8] dark:border-white/10 hover:border-white/30"
+                            ? "bg-[#F5951C] text-[#0F172A] border-[#F5951C] font-bold"
+                            : "bg-[#F8FAFC] dark:bg-[#09090B] text-white/70 border-[#E2E8F0] dark:border-white/10 hover:border-white/30"
                         }`}
                       >
                         {isSelected ? "✓ " : "+ "}
@@ -2608,7 +3378,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       }
                     }}
                     placeholder="Add custom tag (e.g. Interconnecting Rooms)..."
-                    className="flex-1 rounded-xl border border-[#E6E1D8] dark:border-white/10 bg-[#FAF8F5] dark:bg-[#09090B] px-3.5 py-1.5 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                    className="flex-1 rounded-xl border border-[#E2E8F0] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-1.5 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
                   />
                   <button
                     type="button"
@@ -2621,7 +3391,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
               </div>
 
               {/* SECTION 3: LINKED COMPANIONS */}
-              <div className="space-y-3 pt-2 border-t border-[#E6E1D8] dark:border-white/10">
+              <div className="space-y-3 pt-2 border-t border-[#E2E8F0] dark:border-white/10">
                 <div className="flex justify-between items-center">
                   <div>
                     <h4 className="text-xs font-bold uppercase tracking-wider text-[#F5951C]">
@@ -2644,7 +3414,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   {clientFormCompanions.map((comp, idx) => (
                     <div
                       key={idx}
-                      className="p-3 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/5 grid grid-cols-1 sm:grid-cols-12 gap-2 items-center text-xs"
+                      className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5 grid grid-cols-1 sm:grid-cols-12 gap-2 items-center text-xs"
                     >
                       <div className="sm:col-span-4">
                         <input
@@ -2652,14 +3422,14 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                           value={comp.fullName}
                           onChange={(e) => handleUpdateCompanion(idx, "fullName", e.target.value)}
                           placeholder="Companion Name"
-                          className="w-full rounded-lg border border-[#E6E1D8] dark:border-white/10 bg-white dark:bg-[#161514] px-2.5 py-1.5 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                          className="w-full rounded-lg border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] px-2.5 py-1.5 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
                         />
                       </div>
                       <div className="sm:col-span-3">
                         <select
                           value={comp.relationship}
                           onChange={(e) => handleUpdateCompanion(idx, "relationship", e.target.value)}
-                          className="w-full rounded-lg border border-[#E6E1D8] dark:border-white/10 bg-white dark:bg-[#161514] px-2.5 py-1.5 text-xs text-white focus:border-[#F5951C] focus:outline-none"
+                          className="w-full rounded-lg border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] px-2.5 py-1.5 text-xs text-white focus:border-[#F5951C] focus:outline-none"
                         >
                           <option value="spouse">Spouse</option>
                           <option value="child">Child</option>
@@ -2674,7 +3444,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                           value={comp.notes}
                           onChange={(e) => handleUpdateCompanion(idx, "notes", e.target.value)}
                           placeholder="Notes (e.g. Age 7, Pure Veg)"
-                          className="w-full rounded-lg border border-[#E6E1D8] dark:border-white/10 bg-white dark:bg-[#161514] px-2.5 py-1.5 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                          className="w-full rounded-lg border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] px-2.5 py-1.5 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
                         />
                       </div>
                       <div className="sm:col-span-1 text-center">
@@ -2693,7 +3463,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
               </div>
 
               {/* SECTION 4: INITIAL DISCOVERY NOTE */}
-              <div className="space-y-2 pt-2 border-t border-[#E6E1D8] dark:border-white/10">
+              <div className="space-y-2 pt-2 border-t border-[#E2E8F0] dark:border-white/10">
                 <h4 className="text-xs font-bold uppercase tracking-wider text-[#F5951C]">
                   4. Initial Discovery & Trip Briefing (US-006)
                 </h4>
@@ -2702,12 +3472,12 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   value={clientFormInitialNote}
                   onChange={(e) => setClientFormInitialNote(e.target.value)}
                   placeholder="e.g. Discovery call completed. Client requested 8-day slow-travel Kashmir autumn circuit, interconnected rooms, pure vegetarian dining."
-                  className="w-full rounded-xl border border-[#E6E1D8] dark:border-white/10 bg-[#FAF8F5] dark:bg-[#09090B] p-3 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                  className="w-full rounded-xl border border-[#E2E8F0] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] p-3 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
                 />
               </div>
 
               {/* Modal Actions */}
-              <div className="flex justify-end items-center gap-3 pt-3 border-t border-[#E6E1D8] dark:border-white/10">
+              <div className="flex justify-end items-center gap-3 pt-3 border-t border-[#E2E8F0] dark:border-white/10">
                 <button
                   type="button"
                   onClick={() => setShowAddClientModal(false)}
@@ -2718,7 +3488,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                 <button
                   type="submit"
                   disabled={clientSubmitLoading}
-                  className="px-5 py-2 rounded-xl bg-[#F5951C] text-[#0E0D0C] text-xs font-bold uppercase tracking-wider hover:bg-[#e08515] transition disabled:opacity-50 flex items-center gap-2 shadow-md"
+                  className="px-5 py-2 rounded-xl bg-[#F5951C] text-[#0F172A] text-xs font-bold uppercase tracking-wider hover:bg-[#e08515] transition disabled:opacity-50 flex items-center gap-2 shadow-md"
                 >
                   {clientSubmitLoading ? (
                     <>
@@ -2734,6 +3504,296 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* MODAL 4: ADD VETTED VENDOR MODAL (Release 1.5.2 Item 5) */}
+      {/* ========================================================================= */}
+      {showAddVendorModal && (
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-[#121215] border border-[#E2E8F0] dark:border-white/20 rounded-2xl max-w-2xl w-full p-6 text-[#0F172A] dark:text-white shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-start mb-4 border-b border-[#E2E8F0] dark:border-white/10 pb-3">
+              <div>
+                <h3 className="text-lg font-bold text-[#0F172A] dark:text-white flex items-center gap-2">
+                  <span>🏢</span> {editingVendor ? `Edit Partner: ${editingVendor.name}` : "Register Vetted Vendor Partner"}
+                </h3>
+                <p className="text-xs text-[#475569] dark:text-zinc-400">
+                  {editingVendor
+                    ? `Updating details for atelier vendor partner (${editingVendor.vendor_code})`
+                    : "Boutique slow-travel stays, fleet cab operators, DMCs & partner agencies"}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowAddVendorModal(false);
+                  setEditingVendor(null);
+                }}
+                className="text-[#475569] hover:text-[#0F172A] dark:text-zinc-400 dark:hover:text-white text-lg p-1"
+              >
+                ✕
+              </button>
+            </div>
+
+            {vendorSubmitSuccess ? (
+              <div className="space-y-4 py-4 text-center">
+                <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-300 text-sm font-semibold">
+                  <span>✓</span> {vendorSubmitSuccess}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowAddVendorModal(false);
+                    setVendorSubmitSuccess(null);
+                  }}
+                  className="px-5 py-2 rounded-xl bg-[#F5951C] text-[#0F172A] font-bold text-xs uppercase tracking-wider hover:bg-[#e08515] transition"
+                >
+                  Close & Refresh
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleAddVendorSubmit} className="space-y-4 text-xs">
+                {vendorSubmitError && (
+                  <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-700 dark:text-rose-300">
+                    {vendorSubmitError}
+                  </div>
+                )}
+
+                {/* 1. Classification */}
+                <div className="space-y-3">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-[#F5951C]">
+                    1. Partner Classification & Details
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="sm:col-span-2">
+                      <label className="block text-xs font-semibold text-[#0F172A] dark:text-white/80 mb-1">
+                        Vendor / Property / Fleet Name <span className="text-[#F5951C]">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={vendorFormName}
+                        onChange={(e) => setVendorFormName(e.target.value)}
+                        placeholder="e.g. Nigeen Heritage Floats / Taj Bekal Resort"
+                        className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-[#0F172A] dark:text-white/80 mb-1">
+                        Category <span className="text-[#F5951C]">*</span>
+                      </label>
+                      <select
+                        value={vendorFormCategory}
+                        onChange={(e) => setVendorFormCategory(e.target.value as any)}
+                        className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-[#0F172A] dark:text-white focus:border-[#F5951C] focus:outline-none"
+                      >
+                        <option value="property">Property / Resort / Boutique Hotel</option>
+                        <option value="cab">Cab / Fleet Transport Operator</option>
+                        <option value="dmc">Destination Management Company (DMC)</option>
+                        <option value="agency">Partner Travel Agency</option>
+                        <option value="activity">Activity / Experience Provider</option>
+                        <option value="other">Other Service Vendor</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-[#0F172A] dark:text-white/80 mb-1">
+                        Rating / Standard Tier
+                      </label>
+                      <input
+                        type="text"
+                        value={vendorFormStarRating}
+                        onChange={(e) => setVendorFormStarRating(e.target.value)}
+                        placeholder="e.g. 5-Star Premier, 4-Star Boutique, Heritage Estate"
+                        className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-[#0F172A] dark:text-white/80 mb-1">
+                        Destination / City
+                      </label>
+                      <input
+                        type="text"
+                        value={vendorFormDestination}
+                        onChange={(e) => setVendorFormDestination(e.target.value)}
+                        placeholder="e.g. Srinagar, Munnar, Bentota"
+                        className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-[#0F172A] dark:text-white/80 mb-1">
+                        Region / State
+                      </label>
+                      <input
+                        type="text"
+                        value={vendorFormRegion}
+                        onChange={(e) => setVendorFormRegion(e.target.value)}
+                        placeholder="e.g. Kashmir, Kerala, Sri Lanka"
+                        className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* 2. Contact Information */}
+                <div className="space-y-3 pt-2 border-t border-[#E2E8F0] dark:border-white/10">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-[#F5951C]">
+                    2. Key Contact & Communications
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-semibold text-[#0F172A] dark:text-white/80 mb-1">
+                        Point of Contact (POC) Name
+                      </label>
+                      <input
+                        type="text"
+                        value={vendorFormPocName}
+                        onChange={(e) => setVendorFormPocName(e.target.value)}
+                        placeholder="e.g. Rajesh Kumar"
+                        className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-[#0F172A] dark:text-white/80 mb-1">
+                        POC Direct Mobile
+                      </label>
+                      <input
+                        type="tel"
+                        value={vendorFormPocMobile}
+                        onChange={(e) => setVendorFormPocMobile(e.target.value)}
+                        placeholder="e.g. +91 98400 12345"
+                        className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-[#0F172A] dark:text-white/80 mb-1">
+                        Office / Landline Phone
+                      </label>
+                      <input
+                        type="tel"
+                        value={vendorFormOfficePhone}
+                        onChange={(e) => setVendorFormOfficePhone(e.target.value)}
+                        placeholder="e.g. 0484 2345678"
+                        className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-[#0F172A] dark:text-white/80 mb-1">
+                        Official Email
+                      </label>
+                      <input
+                        type="email"
+                        value={vendorFormEmail}
+                        onChange={(e) => setVendorFormEmail(e.target.value)}
+                        placeholder="e.g. reservations@hotel.com"
+                        className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-[#0F172A] dark:text-white/80 mb-1">
+                        Website Link
+                      </label>
+                      <input
+                        type="text"
+                        value={vendorFormWebsite}
+                        onChange={(e) => setVendorFormWebsite(e.target.value)}
+                        placeholder="e.g. https://www.resort.com"
+                        className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-[#0F172A] dark:text-white/80 mb-1">
+                        Physical Address
+                      </label>
+                      <input
+                        type="text"
+                        value={vendorFormAddress}
+                        onChange={(e) => setVendorFormAddress(e.target.value)}
+                        placeholder="e.g. Tea Estate Road, Munnar"
+                        className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* 3. Commercials & Contracting */}
+                <div className="space-y-3 pt-2 border-t border-[#E2E8F0] dark:border-white/10">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-[#F5951C]">
+                    3. Commercial Contracts & B2B Rates
+                  </h4>
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-xs font-semibold text-[#0F172A] dark:text-white/80 mb-1">
+                        Rate Card Link (Google Drive / PDF URL)
+                      </label>
+                      <input
+                        type="url"
+                        value={vendorFormRateCardLink}
+                        onChange={(e) => setVendorFormRateCardLink(e.target.value)}
+                        placeholder="e.g. https://drive.google.com/file/d/... or direct web link"
+                        className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-[#0F172A] dark:text-white/80 mb-1">
+                        Negotiated B2B Rates / Terms
+                      </label>
+                      <input
+                        type="text"
+                        value={vendorFormB2bRates}
+                        onChange={(e) => setVendorFormB2bRates(e.target.value)}
+                        placeholder="e.g. 20% off rack, CP plan included, Net 15 days payment"
+                        className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-[#0F172A] dark:text-white/80 mb-1">
+                        Internal Operational Notes & Quality Observations
+                      </label>
+                      <textarea
+                        rows={2}
+                        value={vendorFormComments}
+                        onChange={(e) => setVendorFormComments(e.target.value)}
+                        placeholder="e.g. Excellent mountain views, trusted driver fleet, pure vegetarian breakfast curated."
+                        className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] p-2.5 text-xs text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Modal Actions */}
+                <div className="flex justify-end items-center gap-3 pt-3 border-t border-[#E2E8F0] dark:border-white/10">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowAddVendorModal(false);
+                      setEditingVendor(null);
+                    }}
+                    className="px-4 py-2 rounded-xl border border-[#CBD5E1] dark:border-white/20 text-xs font-semibold text-[#475569] dark:text-white/80 hover:bg-black/5 dark:hover:bg-white/5"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={vendorSubmitLoading}
+                    className="px-5 py-2 rounded-xl bg-[#F5951C] text-[#0F172A] text-xs font-bold uppercase tracking-wider hover:bg-[#e08515] transition disabled:opacity-50 flex items-center gap-2 shadow-md"
+                  >
+                    {vendorSubmitLoading ? (
+                      <>
+                        <span className="animate-spin">⏳</span>
+                        <span>{editingVendor ? "Saving Changes..." : "Registering Partner..."}</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>💾</span>
+                        <span>{editingVendor ? "Update Vendor Partner" : "Register Vendor Partner"}</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         </div>
       )}
@@ -2758,7 +3818,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
         {radarMinimized ? (
           <div
             onMouseDown={startDragging}
-            className="cursor-move rounded-full bg-white dark:bg-[#161514] border-2 border-[#F5951C] px-4 py-2.5 shadow-2xl flex items-center gap-2.5 text-xs text-white hover:shadow-[#F5951C]/20 transition"
+            className="cursor-move rounded-full bg-white dark:bg-[#121215] border-2 border-[#F5951C] px-4 py-2.5 shadow-2xl flex items-center gap-2.5 text-xs text-white hover:shadow-[#F5951C]/20 transition"
             title="Drag anywhere on screen. Re-login resets to Bottom-Right."
           >
             <span className="relative flex h-2.5 w-2.5">
@@ -2778,9 +3838,9 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
           </div>
         ) : (
           /* State B: Expanded Dock */
-          <div className="w-80 sm:w-96 rounded-2xl bg-white dark:bg-[#161514] border border-[#E6E1D8] dark:border-white/15 shadow-2xl overflow-hidden backdrop-blur-md">
+          <div className="w-80 sm:w-96 rounded-2xl bg-white dark:bg-[#121215] border border-[#E2E8F0] dark:border-white/15 shadow-2xl overflow-hidden backdrop-blur-md">
             {/* Header */}
-            <div className="p-3.5 bg-[#2E241F] border-b border-[#E6E1D8] dark:border-white/10 flex justify-between items-center">
+            <div className="p-3.5 bg-[#0F172A] border-b border-[#E2E8F0] dark:border-white/10 flex justify-between items-center">
               <div className="flex items-center gap-2">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -2793,7 +3853,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setRadarMinimized(true)}
-                  className="text-xs text-white/60 hover:text-white px-2 py-0.5 rounded border border-[#E6E1D8] dark:border-white/10"
+                  className="text-xs text-white/60 hover:text-white px-2 py-0.5 rounded border border-[#E2E8F0] dark:border-white/10"
                 >
                   Minimize
                 </button>
@@ -2801,14 +3861,14 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
             </div>
 
             {/* Context Selector */}
-            <div className="p-3 bg-[#FAF8F5] dark:bg-[#09090B] border-b border-[#E6E1D8] dark:border-white/5 flex gap-2 overflow-x-auto text-xs">
+            <div className="p-3 bg-[#F8FAFC] dark:bg-[#09090B] border-b border-[#E2E8F0] dark:border-white/5 flex gap-2 overflow-x-auto text-xs">
               {["Kashmir", "Rajasthan", "Kerala", "Ladakh"].map((dest) => (
                 <button
                   key={dest}
                   onClick={() => setActiveDestination(dest)}
                   className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition ${
                     activeDestination === dest
-                      ? "bg-[#F5951C] text-[#0E0D0C]"
+                      ? "bg-[#F5951C] text-[#0F172A]"
                       : "text-white/60 hover:text-white"
                   }`}
                 >
@@ -2820,7 +3880,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
             {/* Live Context Cards */}
             <div className="p-4 space-y-3 text-xs max-h-72 overflow-y-auto">
               {/* Weather */}
-              <div className="p-2.5 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/5 flex justify-between items-center">
+              <div className="p-2.5 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5 flex justify-between items-center">
                 <div>
                   <p className="text-[11px] text-white/50 uppercase font-semibold">Live Weather</p>
                   <p className="font-bold text-white mt-0.5">14°C • Golden Autumn Skies</p>
@@ -2829,7 +3889,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
               </div>
 
               {/* Flights */}
-              <div className="p-2.5 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/5 space-y-1">
+              <div className="p-2.5 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5 space-y-1">
                 <p className="text-[11px] text-white/50 uppercase font-semibold">Flight Intelligence</p>
                 <div className="flex justify-between items-center text-white">
                   <span>DEL ➔ SXR (AI-825)</span>
@@ -2838,14 +3898,14 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
               </div>
 
               {/* Ground Notice */}
-              <div className="p-2.5 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/5 space-y-1">
+              <div className="p-2.5 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5 space-y-1">
                 <p className="text-[11px] text-white/50 uppercase font-semibold">Local Supplier Advisory</p>
                 <p className="text-white/80">Srinagar-Gulmarg Highway: Clear, private chauffeured escort confirmed.</p>
               </div>
             </div>
 
             {/* Inactivity Notice */}
-            <div className="p-2.5 bg-[#2E241F] border-t border-[#E6E1D8] dark:border-white/5 text-[10px] text-white/40 text-center">
+            <div className="p-2.5 bg-[#0F172A] border-t border-[#E2E8F0] dark:border-white/5 text-[10px] text-white/40 text-center">
               Permanent dock. 30-min idle watchdog resets position to Bottom-Right.
             </div>
           </div>

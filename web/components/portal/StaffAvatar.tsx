@@ -34,7 +34,7 @@ export function StaffAvatar({
   if (avatarUrl) {
     return (
       <div
-        className={`relative inline-flex items-center justify-center rounded-full overflow-hidden border border-[#F5951C]/40 bg-[#0E0D0C] shadow-sm shrink-0 ${sizeClasses} ${className}`}
+        className={`relative inline-flex items-center justify-center rounded-full overflow-hidden border border-[#F5951C]/40 bg-[#09090B] shadow-sm shrink-0 ${sizeClasses} ${className}`}
       >
         <img
           src={avatarUrl}
@@ -52,7 +52,7 @@ export function StaffAvatar({
   // Fallback to executive SVG avatar preset
   return (
     <div
-      className={`relative inline-flex items-center justify-center rounded-full overflow-hidden border border-[#F5951C]/40 bg-[#0E0D0C] text-white shadow-sm shrink-0 select-none ${sizeClasses} ${className}`}
+      className={`relative inline-flex items-center justify-center rounded-full overflow-hidden border border-[#F5951C]/40 bg-[#09090B] text-white shadow-sm shrink-0 select-none ${sizeClasses} ${className}`}
       title={`${name} (${presetId} avatar)`}
     >
       {renderPresetSvg(presetId, name)}
@@ -76,7 +76,7 @@ function renderPresetSvg(presetId: AvatarPresetId, name: string) {
       return (
         <svg viewBox="0 0 100 100" className="w-full h-full" fill="none">
           <circle cx="50" cy="50" r="46" fill="#141210" stroke="#F5951C" strokeWidth="1.5" strokeOpacity="0.4" />
-          <circle cx="50" cy="50" r="40" stroke="#FAF8F5" strokeWidth="0.75" strokeOpacity="0.2" strokeDasharray="2 3" />
+          <circle cx="50" cy="50" r="40" stroke="#FFFFFF" strokeWidth="0.75" strokeOpacity="0.2" strokeDasharray="2 3" />
           {/* Degree ticks */}
           <line x1="50" y1="6" x2="50" y2="10" stroke="#F5951C" strokeWidth="1.5" />
           <line x1="50" y1="90" x2="50" y2="94" stroke="#F5951C" strokeWidth="1.5" />
@@ -87,16 +87,16 @@ function renderPresetSvg(presetId: AvatarPresetId, name: string) {
           <polygon points="50,14 54,46 50,50" fill="#F5951C" />
           <polygon points="50,14 46,46 50,50" fill="#B72027" />
           {/* South */}
-          <polygon points="50,86 46,54 50,50" fill="#E6E1D8" />
-          <polygon points="50,86 54,54 50,50" fill="#9E988F" />
+          <polygon points="50,86 46,54 50,50" fill="#E2E8F0" />
+          <polygon points="50,86 54,54 50,50" fill="#94A3B8" />
           {/* East */}
           <polygon points="86,50 54,54 50,50" fill="#F5951C" />
           <polygon points="86,50 54,46 50,50" fill="#B72027" />
           {/* West */}
-          <polygon points="14,50 46,46 50,50" fill="#E6E1D8" />
-          <polygon points="14,50 46,54 50,50" fill="#9E988F" />
+          <polygon points="14,50 46,46 50,50" fill="#E2E8F0" />
+          <polygon points="14,50 46,54 50,50" fill="#94A3B8" />
           {/* Center Jewel */}
-          <circle cx="50" cy="50" r="3.5" fill="#FAF8F5" stroke="#F5951C" strokeWidth="1" />
+          <circle cx="50" cy="50" r="3.5" fill="#FFFFFF" stroke="#F5951C" strokeWidth="1" />
         </svg>
       );
 
@@ -114,13 +114,13 @@ function renderPresetSvg(presetId: AvatarPresetId, name: string) {
               strokeWidth="1.2"
             />
             {/* Vein lines */}
-            <line x1="50" y1="18" x2="50" y2="72" stroke="#FAF8F5" strokeWidth="1" strokeOpacity="0.6" />
-            <line x1="50" y1="36" x2="72" y2="28" stroke="#FAF8F5" strokeWidth="0.8" strokeOpacity="0.5" />
-            <line x1="50" y1="36" x2="28" y2="28" stroke="#FAF8F5" strokeWidth="0.8" strokeOpacity="0.5" />
-            <line x1="50" y1="48" x2="76" y2="44" stroke="#FAF8F5" strokeWidth="0.8" strokeOpacity="0.5" />
-            <line x1="50" y1="48" x2="24" y2="44" stroke="#FAF8F5" strokeWidth="0.8" strokeOpacity="0.5" />
-            <line x1="50" y1="60" x2="68" y2="62" stroke="#FAF8F5" strokeWidth="0.8" strokeOpacity="0.5" />
-            <line x1="50" y1="60" x2="32" y2="62" stroke="#FAF8F5" strokeWidth="0.8" strokeOpacity="0.5" />
+            <line x1="50" y1="18" x2="50" y2="72" stroke="#FFFFFF" strokeWidth="1" strokeOpacity="0.6" />
+            <line x1="50" y1="36" x2="72" y2="28" stroke="#FFFFFF" strokeWidth="0.8" strokeOpacity="0.5" />
+            <line x1="50" y1="36" x2="28" y2="28" stroke="#FFFFFF" strokeWidth="0.8" strokeOpacity="0.5" />
+            <line x1="50" y1="48" x2="76" y2="44" stroke="#FFFFFF" strokeWidth="0.8" strokeOpacity="0.5" />
+            <line x1="50" y1="48" x2="24" y2="44" stroke="#FFFFFF" strokeWidth="0.8" strokeOpacity="0.5" />
+            <line x1="50" y1="60" x2="68" y2="62" stroke="#FFFFFF" strokeWidth="0.8" strokeOpacity="0.5" />
+            <line x1="50" y1="60" x2="32" y2="62" stroke="#FFFFFF" strokeWidth="0.8" strokeOpacity="0.5" />
           </g>
           <defs>
             <linearGradient id="chinarGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -149,13 +149,13 @@ function renderPresetSvg(presetId: AvatarPresetId, name: string) {
           <path
             d="M8 80 Q 34 58, 62 70 T 92 78 L 92 92 L 8 92 Z"
             fill="#282420"
-            stroke="#FAF8F5"
+            stroke="#FFFFFF"
             strokeWidth="0.8"
             strokeOpacity="0.4"
           />
           <path
             d="M8 86 Q 42 74, 76 82 T 92 88 L 92 92 L 8 92 Z"
-            fill="#0E0D0C"
+            fill="#09090B"
             stroke="#F5951C"
             strokeWidth="0.6"
             strokeOpacity="0.3"
@@ -176,12 +176,12 @@ function renderPresetSvg(presetId: AvatarPresetId, name: string) {
       return (
         <svg viewBox="0 0 100 100" className="w-full h-full" fill="none">
           <circle cx="50" cy="50" r="46" fill="#141210" stroke="#F5951C" strokeWidth="1.5" strokeOpacity="0.5" />
-          <circle cx="50" cy="50" r="40" stroke="#FAF8F5" strokeWidth="0.75" strokeOpacity="0.25" strokeDasharray="3 2" />
+          <circle cx="50" cy="50" r="40" stroke="#FFFFFF" strokeWidth="0.75" strokeOpacity="0.25" strokeDasharray="3 2" />
           <text
             x="50"
             y="57"
             textAnchor="middle"
-            fill="#FAF8F5"
+            fill="#FFFFFF"
             fontFamily="var(--font-editorial), Georgia, serif"
             fontSize="32"
             fontWeight="bold"

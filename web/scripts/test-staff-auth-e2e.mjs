@@ -239,9 +239,9 @@ async function run() {
   assert(keerthi && keerthi.fullName === "Keerthi", "Keerthi account resolves correctly");
   assert(keerthi.requiresPasswordChange === true, "Keerthi correctly requires password change on first login");
 
-  // Verify Keerthi lookup by phone +919840222222
-  const keerthiByPhone = await lookupStaff("9840222222");
-  assert(keerthiByPhone && keerthiByPhone.email === "sathya@searchmyvacation.com", "Lookup by Keerthi raw phone 9840222222 resolves to sathya@searchmyvacation.com");
+  // Verify Keerthi lookup by updated phone +918925838544 (Release 1.5.2 Item 3)
+  const keerthiByPhone = await lookupStaff("8925838544");
+  assert(keerthiByPhone && keerthiByPhone.email === "sathya@searchmyvacation.com", "Lookup by Keerthi raw phone 8925838544 resolves to sathya@searchmyvacation.com");
 
   const keerthiGoTrue = await verifyPassword("sathya@searchmyvacation.com", "TemporaryDefaultPass#2026");
   assert(keerthiGoTrue.success, "GoTrue verifies Keerthi with TemporaryDefaultPass#2026");
