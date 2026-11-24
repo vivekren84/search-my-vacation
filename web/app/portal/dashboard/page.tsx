@@ -179,6 +179,7 @@ export default function PortalDashboardPage() {
   const [vendorCategoryFilter, setVendorCategoryFilter] = useState("all");
   const [vendorSearchQuery, setVendorSearchQuery] = useState("");
   const [showAddVendorModal, setShowAddVendorModal] = useState(false);
+  const [editingVendor, setEditingVendor] = useState<any | null>(null);
 
   // Add Vendor Form State
   const [vendorFormName, setVendorFormName] = useState("");
@@ -347,6 +348,75 @@ export default function PortalDashboardPage() {
       .finally(() => setVendorsLoading(false));
   }
 
+  function openAddVendorModal() {
+    setEditingVendor(null);
+    setVendorFormName("");
+    setVendorFormCategory("property");
+    setVendorFormDestination("");
+    setVendorFormRegion("");
+    setVendorFormStarRating("4-Star Boutique");
+    setVendorFormPocName("");
+    setVendorFormPocMobile("");
+    setVendorFormOfficePhone("");
+    setVendorFormEmail("");
+    setVendorFormWebsite("");
+    setVendorFormAddress("");
+    setVendorFormRateCardLink("");
+    setVendorFormB2bRates("");
+    setVendorFormComments("");
+    setVendorSubmitError(null);
+    setVendorSubmitSuccess(null);
+    setShowAddVendorModal(true);
+  }
+
+  function openEditVendorModal(v: any) {
+    setEditingVendor(v);
+    setVendorFormName(v.name || "");
+    setVendorFormCategory(v.category || "property");
+    setVendorFormDestination(v.destination || "");
+    setVendorFormRegion(v.region || "");
+    setVendorFormStarRating(v.star_rating || "4-Star Boutique");
+    setVendorFormPocName(v.poc_name || "");
+    setVendorFormPocMobile(v.poc_mobile || "");
+    setVendorFormOfficePhone(v.office_phone || "");
+    setVendorFormEmail(v.email || "");
+    setVendorFormWebsite(v.website || "");
+    setVendorFormAddress(v.address || "");
+    setVendorFormRateCardLink(v.rate_card_link || "");
+    setVendorFormB2bRates(v.b2b_rates || "");
+    setVendorFormComments(v.comments || "");
+    setVendorSubmitError(null);
+    setVendorSubmitSuccess(null);
+    setShowAddVendorModal(true);
+  }
+
+  async function handleDeleteVendor(id: string, name: string) {
+    if (!isSuperAdmin) {
+      alert("Permission Denied: Permanent deletion of vendor records is strictly restricted to Super Admin (Vivek Renganathan).");
+      return;
+    }
+    if (!window.confirm(`Are you sure you want to permanently delete vendor partner "${name}"? This action cannot be undone.`)) {
+      return;
+    }
+    try {
+      const res = await fetch(`/api/portal/crm/vendors?id=${encodeURIComponent(id)}`, {
+        method: "DELETE",
+        headers: {
+          "x-staff-role": session?.role || "super_admin",
+          "x-staff-email": session?.email || "",
+        },
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        alert(data.message || "Failed to delete vendor partner.");
+        return;
+      }
+      setVendors((prev) => prev.filter((v) => v.id !== id));
+    } catch (err: any) {
+      alert(err?.message || "An unexpected error occurred while deleting the vendor.");
+    }
+  }
+
   async function handleAddVendorSubmit(e: React.FormEvent) {
     e.preventDefault();
     setVendorSubmitError(null);
@@ -359,37 +429,56 @@ export default function PortalDashboardPage() {
 
     setVendorSubmitLoading(true);
     try {
-      const res = await fetch("/api/portal/crm/vendors", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: vendorFormName.trim(),
-          category: vendorFormCategory,
-          destination: vendorFormDestination.trim() || null,
-          region: vendorFormRegion.trim() || null,
-          star_rating: vendorFormStarRating.trim() || null,
-          poc_name: vendorFormPocName.trim() || null,
-          poc_mobile: vendorFormPocMobile.trim() || null,
-          office_phone: vendorFormOfficePhone.trim() || null,
-          email: vendorFormEmail.trim() || null,
-          website: vendorFormWebsite.trim() || null,
-          address: vendorFormAddress.trim() || null,
-          rate_card_link: vendorFormRateCardLink.trim() || null,
-          b2b_rates: vendorFormB2bRates.trim() || null,
-          comments: vendorFormComments.trim() || null,
-        }),
+      const isEdit = !!editingVendor;
+      const url = "/api/portal/crm/vendors";
+      const method = isEdit ? "PATCH" : "POST";
+      const payload: any = {
+        name: vendorFormName.trim(),
+        category: vendorFormCategory,
+        destination: vendorFormDestination.trim() || null,
+        region: vendorFormRegion.trim() || null,
+        star_rating: vendorFormStarRating.trim() || null,
+        poc_name: vendorFormPocName.trim() || null,
+        poc_mobile: vendorFormPocMobile.trim() || null,
+        office_phone: vendorFormOfficePhone.trim() || null,
+        email: vendorFormEmail.trim() || null,
+        website: vendorFormWebsite.trim() || null,
+        address: vendorFormAddress.trim() || null,
+        rate_card_link: vendorFormRateCardLink.trim() || null,
+        b2b_rates: vendorFormB2bRates.trim() || null,
+        comments: vendorFormComments.trim() || null,
+        callerRole: session?.role || "desk_user",
+        callerEmail: session?.email || "",
+      };
+      if (isEdit) {
+        payload.id = editingVendor.id;
+      }
+
+      const res = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          "x-staff-role": session?.role || "desk_user",
+          "x-staff-email": session?.email || "",
+        },
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
       if (!res.ok || !data.ok) {
-        setVendorSubmitError(data.message || "Failed to create vendor partner.");
+        setVendorSubmitError(data.message || "Failed to process vendor partner.");
         return;
       }
 
-      setVendorSubmitSuccess(`Vendor ${data.vendor?.name} (${data.vendor?.vendor_code}) successfully registered.`);
+      setVendorSubmitSuccess(
+        isEdit
+          ? `Vendor ${data.vendor?.name || vendorFormName} successfully updated.`
+          : `Vendor ${data.vendor?.name} (${data.vendor?.vendor_code}) successfully registered.`
+      );
       refreshVendorsData();
 
       // Reset form
+      setEditingVendor(null);
       setVendorFormName("");
       setVendorFormDestination("");
       setVendorFormRegion("");
@@ -1157,6 +1246,10 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
   const isSuperAdmin =
     session.role === "super_admin" ||
     session.email?.toLowerCase() === "vivek@searchmyvacation.com";
+  const canManageVendors =
+    isSuperAdmin ||
+    session.role === "administrator" ||
+    session.role === "privilege_user";
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#09090B] text-[#0F172A] dark:text-white flex flex-col font-sans transition-colors duration-200">
@@ -1989,17 +2082,20 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                 </p>
               </div>
               <div className="flex items-center gap-2">
-                <button
-                  onClick={() => {
-                    setShowAddVendorModal(true);
-                    setVendorSubmitError(null);
-                    setVendorSubmitSuccess(null);
-                  }}
-                  className="rounded-xl bg-[#F5951C] px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#0F172A] hover:bg-[#e08515] transition flex items-center gap-2 shadow-md"
-                >
-                  <span>➕</span>
-                  <span>Register Vendor Partner</span>
-                </button>
+                {canManageVendors ? (
+                  <button
+                    onClick={openAddVendorModal}
+                    className="rounded-xl bg-[#F5951C] px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#0F172A] hover:bg-[#e08515] transition flex items-center gap-2 shadow-md"
+                  >
+                    <span>➕</span>
+                    <span>Register Vendor Partner</span>
+                  </button>
+                ) : (
+                  <span className="rounded-xl border border-blue-500/20 bg-blue-500/10 px-3.5 py-2 text-xs font-semibold text-blue-700 dark:text-blue-300 flex items-center gap-1.5 shadow-sm">
+                    <span>🔒</span>
+                    <span>Directory View (Read-Only)</span>
+                  </span>
+                )}
                 <button
                   onClick={refreshVendorsData}
                   disabled={vendorsLoading}
@@ -2214,6 +2310,32 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                           </p>
                         )}
                       </div>
+
+                      {/* Vendor Card Actions (RBAC: Edit for Privilege/Admin/Super Admin, Delete for Super Admin ONLY) */}
+                      {(canManageVendors || isSuperAdmin) && (
+                        <div className="pt-2 border-t border-[#E2E8F0] dark:border-white/5 flex items-center justify-end gap-2">
+                          {canManageVendors && (
+                            <button
+                              type="button"
+                              onClick={() => openEditVendorModal(v)}
+                              className="px-2.5 py-1 rounded-lg border border-[#CBD5E1] dark:border-white/10 text-[11px] font-semibold text-[#0F172A] dark:text-white hover:border-[#F5951C] hover:text-[#F5951C] transition flex items-center gap-1"
+                              title="Edit vendor details, rates, and POC"
+                            >
+                              <span>✏️</span> Edit
+                            </button>
+                          )}
+                          {isSuperAdmin && (
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteVendor(v.id, v.name)}
+                              className="px-2.5 py-1 rounded-lg border border-rose-500/20 bg-rose-500/10 text-rose-600 dark:text-rose-400 text-[11px] font-semibold hover:bg-rose-500/20 transition flex items-center gap-1"
+                              title="Permanently remove vendor partner (Super Admin Only)"
+                            >
+                              <span>🗑️</span> Delete
+                            </button>
+                          )}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -3395,15 +3517,20 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
             <div className="flex justify-between items-start mb-4 border-b border-[#E2E8F0] dark:border-white/10 pb-3">
               <div>
                 <h3 className="text-lg font-bold text-[#0F172A] dark:text-white flex items-center gap-2">
-                  <span>🏢</span> Register Vetted Vendor Partner
+                  <span>🏢</span> {editingVendor ? `Edit Partner: ${editingVendor.name}` : "Register Vetted Vendor Partner"}
                 </h3>
                 <p className="text-xs text-[#475569] dark:text-zinc-400">
-                  Boutique slow-travel stays, fleet cab operators, DMCs & partner agencies
+                  {editingVendor
+                    ? `Updating details for atelier vendor partner (${editingVendor.vendor_code})`
+                    : "Boutique slow-travel stays, fleet cab operators, DMCs & partner agencies"}
                 </p>
               </div>
               <button
                 type="button"
-                onClick={() => setShowAddVendorModal(false)}
+                onClick={() => {
+                  setShowAddVendorModal(false);
+                  setEditingVendor(null);
+                }}
                 className="text-[#475569] hover:text-[#0F172A] dark:text-zinc-400 dark:hover:text-white text-lg p-1"
               >
                 ✕
@@ -3639,7 +3766,10 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                 <div className="flex justify-end items-center gap-3 pt-3 border-t border-[#E2E8F0] dark:border-white/10">
                   <button
                     type="button"
-                    onClick={() => setShowAddVendorModal(false)}
+                    onClick={() => {
+                      setShowAddVendorModal(false);
+                      setEditingVendor(null);
+                    }}
                     className="px-4 py-2 rounded-xl border border-[#CBD5E1] dark:border-white/20 text-xs font-semibold text-[#475569] dark:text-white/80 hover:bg-black/5 dark:hover:bg-white/5"
                   >
                     Cancel
@@ -3652,12 +3782,12 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     {vendorSubmitLoading ? (
                       <>
                         <span className="animate-spin">⏳</span>
-                        <span>Registering Partner...</span>
+                        <span>{editingVendor ? "Saving Changes..." : "Registering Partner..."}</span>
                       </>
                     ) : (
                       <>
                         <span>💾</span>
-                        <span>Register Vendor Partner</span>
+                        <span>{editingVendor ? "Update Vendor Partner" : "Register Vendor Partner"}</span>
                       </>
                     )}
                   </button>
