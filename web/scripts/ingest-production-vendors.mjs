@@ -49,8 +49,8 @@ function loadEnv() {
 
 loadEnv();
 
-const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.PROD_KEY;
+const supabaseUrl = process.env.PROD_URL || process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.PROD_KEY || process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (isLive && (!supabaseUrl || !supabaseKey)) {
   console.error("ERROR: SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY required for --live mode.");
