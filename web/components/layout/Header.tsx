@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import SiteBrand from "@/components/brand/SiteBrand";
 import { siteConfig } from "@/config/site.config";
 import Container from "./Container";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -32,7 +33,7 @@ export default function Header() {
 
   return (
     <header
-      className="sticky inset-x-0 top-0 z-50 border-b border-white/15 bg-[#2A211C]/95 shadow-[0_4px_18px_rgba(32,21,15,.12)] backdrop-blur-md"
+      className="sticky inset-x-0 top-0 z-50 border-b border-white/10 bg-[#0E0D0C]/95 dark:bg-[#09090B]/95 shadow-[0_4px_18px_rgba(0,0,0,.2)] backdrop-blur-md transition-colors duration-200"
     >
       <Container variant="wide" className="flex min-h-[5.5rem] items-center justify-between gap-4 py-3 xl:min-h-32 xl:py-2">
         <Link href="/" className="inline-block">
@@ -101,16 +102,18 @@ export default function Header() {
                 >
                   Sign Up
                 </button>
-                <span className="pointer-events-none absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-[#2A211C] px-2 py-1 text-[10px] font-medium text-[#F5951C] border border-white/10 opacity-0 shadow-lg transition-opacity duration-200 group-hover:opacity-100 z-50">
+                <span className="pointer-events-none absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-[#0E0D0C] dark:bg-[#09090B] px-2 py-1 text-[10px] font-medium text-[#F5951C] border border-white/10 opacity-0 shadow-lg transition-opacity duration-200 group-hover:opacity-100 z-50">
                   Coming Soon
                 </span>
               </div>
             </>
           )}
 
+          <ThemeToggle variant="compact" />
+
           <Link
             href="/journey-passport"
-            className="hidden shrink-0 whitespace-nowrap rounded-full bg-[#F5951C] px-4 py-2 text-xs font-bold uppercase tracking-[0.1em] text-[#2A211C] transition hover:bg-[#F5951C] lg:inline-flex"
+            className="hidden shrink-0 whitespace-nowrap rounded-full bg-[#F5951C] px-4 py-2 text-xs font-bold uppercase tracking-[0.1em] text-[#0E0D0C] transition hover:bg-[#F5951C]/90 lg:inline-flex"
           >
             Plan My Experience
           </Link>
@@ -131,7 +134,7 @@ export default function Header() {
               <nav
                 id="mobile-primary-navigation"
                 aria-label="Mobile primary navigation"
-                className="absolute right-0 top-[calc(100%+0.75rem)] w-64 rounded-2xl border border-white/15 bg-[#2A211C]/95 p-2 shadow-xl shadow-black/25 backdrop-blur-md"
+                className="absolute right-0 top-[calc(100%+0.75rem)] w-64 rounded-2xl border border-white/15 bg-[#0E0D0C]/98 dark:bg-[#09090B]/98 p-2 shadow-xl shadow-black/25 backdrop-blur-md"
               >
                 <ul>
                   {staffSession && (
@@ -141,7 +144,7 @@ export default function Header() {
                       <Link
                         href="/portal/dashboard"
                         onClick={() => setIsMenuOpen(false)}
-                        className="mt-2 block text-center rounded-lg bg-[#F5951C] py-1.5 text-[11px] font-bold uppercase tracking-wider text-[#2A211C]"
+                        className="mt-2 block text-center rounded-lg bg-[#F5951C] py-1.5 text-[11px] font-bold uppercase tracking-wider text-[#0E0D0C]"
                       >
                         Open Advisor Portal
                       </Link>
@@ -192,7 +195,7 @@ export default function Header() {
                     <Link
                       href="/journey-passport"
                       onClick={() => setIsMenuOpen(false)}
-                      className="mt-1 block rounded-xl bg-[#F5951C] px-4 py-3 text-center text-xs font-bold uppercase tracking-[0.1em] text-[#2A211C]"
+                      className="mt-1 block rounded-xl bg-[#F5951C] px-4 py-3 text-center text-xs font-bold uppercase tracking-[0.1em] text-[#0E0D0C]"
                     >
                       Plan My Experience
                     </Link>

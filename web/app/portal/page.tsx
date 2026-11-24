@@ -17,10 +17,10 @@ export default function PortalIndexPage() {
   }, [router]);
 
   return (
-    <div className="min-h-screen bg-[#2A211C] flex items-center justify-center text-white/70 text-sm">
+    <div className="min-h-screen bg-[#FAF8F5] dark:bg-[#0D0C0B] flex items-center justify-center text-[#181614] dark:text-[#F5F2EB] text-sm transition-colors duration-200">
       <div className="flex items-center gap-3">
         <div className="w-5 h-5 border-2 border-[#F5951C] border-t-transparent rounded-full animate-spin" />
-        <span>Loading Search My Vacation Workspace...</span>
+        <span className="font-medium text-[#66615A] dark:text-[#A19D95]">Loading Search My Vacation Workspace...</span>
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import SiteBrand from "@/components/brand/SiteBrand";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 // Authorized staff directory for internal portal authentication
 const KNOWN_STAFF_ACCOUNTS: Record<string, { fullName: string; role: string; email: string; phoneE164: string; requiresPasswordChange?: boolean }> = {
@@ -367,31 +368,34 @@ export default function PortalLoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#2A211C] text-white flex flex-col justify-between py-10 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#FAF8F5] dark:bg-[#0D0C0B] text-[#181614] dark:text-[#F5F2EB] flex flex-col justify-between py-10 px-4 sm:px-6 lg:px-8 transition-colors duration-200">
       {/* Top Header */}
       <div className="max-w-md w-full mx-auto flex justify-between items-center mb-6">
         <Link href="/" className="inline-block">
-          <SiteBrand variant="header" surface="dark" className="w-36 text-white" />
+          <SiteBrand variant="header" surface="dark" className="w-36 text-[#0E0D0C] dark:text-white" />
         </Link>
-        <Link
-          href="/"
-          className="text-xs uppercase tracking-wider text-white/60 hover:text-[#F5951C] transition-colors"
-        >
-          ← Back to Site
-        </Link>
+        <div className="flex items-center gap-3">
+          <ThemeToggle variant="compact" />
+          <Link
+            href="/"
+            className="text-xs uppercase tracking-wider text-[#66615A] dark:text-white/60 hover:text-[#F5951C] transition-colors"
+          >
+            ← Back to Site
+          </Link>
+        </div>
       </div>
 
       {/* Main Card */}
-      <div className="max-w-md w-full mx-auto bg-[#362B25] border border-white/10 rounded-2xl p-6 sm:p-8 shadow-2xl">
+      <div className="max-w-md w-full mx-auto bg-white dark:bg-[#161514] border border-[#E6E1D8] dark:border-white/10 rounded-2xl p-6 sm:p-8 shadow-xl dark:shadow-2xl">
         <div className="text-center mb-6">
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white">Sign In</h1>
-          <p className="mt-2 text-xs sm:text-sm text-white/70">
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#181614] dark:text-white">Sign In</h1>
+          <p className="mt-2 text-xs sm:text-sm text-[#66615A] dark:text-[#A19D95]">
             Access your Search My Vacation advisor workspace
           </p>
         </div>
 
         {/* Auth Method Selector */}
-        <div className="grid grid-cols-2 gap-2 bg-[#2A211C] p-1 rounded-xl mb-6 border border-white/5">
+        <div className="grid grid-cols-2 gap-2 bg-[#FAF8F5] dark:bg-[#09090B] p-1 rounded-xl mb-6 border border-[#E6E1D8] dark:border-white/10">
           <button
             type="button"
             onClick={() => {
@@ -400,8 +404,8 @@ export default function PortalLoginPage() {
             }}
             className={`py-2 text-xs font-semibold uppercase tracking-wider rounded-lg transition ${
               authMethod === "otp"
-                ? "bg-[#F5951C] text-[#2A211C] shadow"
-                : "text-white/60 hover:text-white"
+                ? "bg-[#F5951C] text-[#0E0D0C] shadow font-bold"
+                : "text-[#66615A] dark:text-white/60 hover:text-[#181614] dark:hover:text-white"
             }`}
           >
             Single-Channel OTP
@@ -414,8 +418,8 @@ export default function PortalLoginPage() {
             }}
             className={`py-2 text-xs font-semibold uppercase tracking-wider rounded-lg transition ${
               authMethod === "password"
-                ? "bg-[#F5951C] text-[#2A211C] shadow"
-                : "text-white/60 hover:text-white"
+                ? "bg-[#F5951C] text-[#0E0D0C] shadow font-bold"
+                : "text-[#66615A] dark:text-white/60 hover:text-[#181614] dark:hover:text-white"
             }`}
           >
             Password
@@ -424,13 +428,13 @@ export default function PortalLoginPage() {
 
         {/* Error Alert Box */}
         {errorMessage && (
-          <div className="mb-5 rounded-xl border border-amber-500/40 bg-amber-500/10 p-4 text-xs text-amber-200">
+          <div className="mb-5 rounded-xl border border-amber-500/40 bg-amber-500/10 p-4 text-xs text-amber-900 dark:text-amber-200">
             <div className="flex items-start gap-2.5">
-              <span className="text-amber-400 font-bold text-sm">ℹ</span>
+              <span className="text-[#F5951C] font-bold text-sm">ℹ</span>
               <div>
                 <p className="font-semibold">{errorMessage}</p>
                 {errorMessage.includes("Traveller accounts opening soon") && (
-                  <p className="mt-1.5 text-[11px] text-white/70 leading-relaxed">
+                  <p className="mt-1.5 text-[11px] text-[#66615A] dark:text-white/70 leading-relaxed">
                     Looking to plan a bespoke journey? You can submit your itinerary preferences
                     anytime without an account via our{" "}
                     <Link href="/journey-passport" className="text-[#F5951C] underline font-medium">
@@ -446,7 +450,7 @@ export default function PortalLoginPage() {
 
         {/* Info Alert Box */}
         {infoMessage && (
-          <div className="mb-5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3.5 text-xs text-emerald-200">
+          <div className="mb-5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3.5 text-xs text-emerald-900 dark:text-emerald-200">
             ✓ {infoMessage}
           </div>
         )}
@@ -457,7 +461,7 @@ export default function PortalLoginPage() {
             {!otpSent ? (
               <form onSubmit={handleSendOtp} className="space-y-4">
                 <div>
-                  <label htmlFor="identifier-otp" className="block text-xs font-medium uppercase tracking-wider text-white/80 mb-1.5">
+                  <label htmlFor="identifier-otp" className="block text-xs font-medium uppercase tracking-wider text-[#66615A] dark:text-white/80 mb-1.5">
                     Company Email or Registered Mobile
                   </label>
                   <input
@@ -466,16 +470,16 @@ export default function PortalLoginPage() {
                     value={identifier}
                     onChange={(e) => setIdentifier(e.target.value)}
                     placeholder="e.g. sri@searchmyvacation.com or +91 98401..."
-                    className="w-full rounded-xl border border-white/15 bg-[#2A211C] px-4 py-2.5 text-sm text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none focus:ring-1 focus:ring-[#F5951C]"
+                    className="w-full rounded-xl border border-[#E6E1D8] dark:border-white/15 bg-white dark:bg-[#09090B] px-4 py-2.5 text-sm text-[#181614] dark:text-white placeholder-[#9E988F] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none focus:ring-1 focus:ring-[#F5951C]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium uppercase tracking-wider text-white/80 mb-1.5">
+                  <label className="block text-xs font-medium uppercase tracking-wider text-[#66615A] dark:text-white/80 mb-1.5">
                     Preferred Dispatch Channel
                   </label>
                   <div className="grid grid-cols-2 gap-3">
-                    <label className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs cursor-pointer transition ${channel === "sms" ? "border-[#F5951C] bg-[#F5951C]/10 text-white" : "border-white/10 text-white/60"}`}>
+                    <label className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs cursor-pointer transition ${channel === "sms" ? "border-[#F5951C] bg-[#F5951C]/10 text-[#181614] dark:text-white font-semibold" : "border-[#E6E1D8] dark:border-white/10 text-[#66615A] dark:text-white/60"}`}>
                       <input
                         type="radio"
                         name="channel"
@@ -486,7 +490,7 @@ export default function PortalLoginPage() {
                       />
                       <span>SMS (Mobile)</span>
                     </label>
-                    <label className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs cursor-pointer transition ${channel === "email" ? "border-[#F5951C] bg-[#F5951C]/10 text-white" : "border-white/10 text-white/60"}`}>
+                    <label className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs cursor-pointer transition ${channel === "email" ? "border-[#F5951C] bg-[#F5951C]/10 text-[#181614] dark:text-white font-semibold" : "border-[#E6E1D8] dark:border-white/10 text-[#66615A] dark:text-white/60"}`}>
                       <input
                         type="radio"
                         name="channel"
@@ -503,7 +507,7 @@ export default function PortalLoginPage() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full mt-2 rounded-xl bg-[#F5951C] py-3 text-xs font-bold uppercase tracking-widest text-[#2A211C] transition hover:bg-[#F5951C]/90 disabled:opacity-50"
+                  className="w-full mt-2 rounded-xl bg-[#F5951C] py-3 text-xs font-bold uppercase tracking-widest text-[#0E0D0C] transition hover:bg-[#F5951C]/90 disabled:opacity-50 shadow-md"
                 >
                   {isLoading ? "Dispatching OTP..." : "Send Verification Code"}
                 </button>
@@ -511,7 +515,7 @@ export default function PortalLoginPage() {
             ) : (
               <form onSubmit={handleVerifyOtp} className="space-y-4">
                 <div>
-                  <label htmlFor="otpCode" className="block text-xs font-medium uppercase tracking-wider text-white/80 mb-1.5">
+                  <label htmlFor="otpCode" className="block text-xs font-medium uppercase tracking-wider text-[#66615A] dark:text-white/80 mb-1.5">
                     Enter 6-Digit Code
                   </label>
                   <input
@@ -521,18 +525,18 @@ export default function PortalLoginPage() {
                     value={otpCode}
                     onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ""))}
                     placeholder="123456"
-                    className="w-full text-center tracking-[0.4em] font-mono text-lg rounded-xl border border-white/15 bg-[#2A211C] px-4 py-2.5 text-white placeholder-white/30 focus:border-[#F5951C] focus:outline-none focus:ring-1 focus:ring-[#F5951C]"
+                    className="w-full text-center tracking-[0.4em] font-mono text-lg rounded-xl border border-[#E6E1D8] dark:border-white/15 bg-white dark:bg-[#09090B] px-4 py-2.5 text-[#181614] dark:text-white placeholder-[#9E988F] dark:placeholder-white/30 focus:border-[#F5951C] focus:outline-none focus:ring-1 focus:ring-[#F5951C]"
                   />
                 </div>
 
-                <div className="flex items-center justify-between text-xs text-white/60">
+                <div className="flex items-center justify-between text-xs text-[#66615A] dark:text-white/60">
                   <button
                     type="button"
                     onClick={() => {
                       setOtpSent(false);
                       setOtpCode("");
                     }}
-                    className="hover:text-white"
+                    className="hover:text-[#181614] dark:hover:text-white"
                   >
                     Change Destination
                   </button>
@@ -552,7 +556,7 @@ export default function PortalLoginPage() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full mt-2 rounded-xl bg-[#F5951C] py-3 text-xs font-bold uppercase tracking-widest text-[#2A211C] transition hover:bg-[#F5951C]/90 disabled:opacity-50"
+                  className="w-full mt-2 rounded-xl bg-[#F5951C] py-3 text-xs font-bold uppercase tracking-widest text-[#0E0D0C] transition hover:bg-[#F5951C]/90 disabled:opacity-50 shadow-md"
                 >
                   {isLoading ? "Verifying..." : "Verify & Sign In"}
                 </button>
@@ -565,7 +569,7 @@ export default function PortalLoginPage() {
         {authMethod === "password" && (
           <form onSubmit={handlePasswordSignIn} className="space-y-4">
             <div>
-              <label htmlFor="identifier-pass" className="block text-xs font-medium uppercase tracking-wider text-white/80 mb-1.5">
+              <label htmlFor="identifier-pass" className="block text-xs font-medium uppercase tracking-wider text-[#66615A] dark:text-white/80 mb-1.5">
                 Company Email or Registered Mobile
               </label>
               <input
@@ -574,13 +578,13 @@ export default function PortalLoginPage() {
                 value={identifier}
                 onChange={(e) => setIdentifier(e.target.value)}
                 placeholder="e.g. vivek@searchmyvacation.com"
-                className="w-full rounded-xl border border-white/15 bg-[#2A211C] px-4 py-2.5 text-sm text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none focus:ring-1 focus:ring-[#F5951C]"
+                className="w-full rounded-xl border border-[#E6E1D8] dark:border-white/15 bg-white dark:bg-[#09090B] px-4 py-2.5 text-sm text-[#181614] dark:text-white placeholder-[#9E988F] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none focus:ring-1 focus:ring-[#F5951C]"
               />
             </div>
 
             <div>
               <div className="flex justify-between items-center mb-1.5">
-                <label htmlFor="password" className="text-xs font-medium uppercase tracking-wider text-white/80">
+                <label htmlFor="password" className="text-xs font-medium uppercase tracking-wider text-[#66615A] dark:text-white/80">
                   Password
                 </label>
                 <button
@@ -600,14 +604,14 @@ export default function PortalLoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="w-full rounded-xl border border-white/15 bg-[#2A211C] px-4 py-2.5 text-sm text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none focus:ring-1 focus:ring-[#F5951C]"
+                className="w-full rounded-xl border border-[#E6E1D8] dark:border-white/15 bg-white dark:bg-[#09090B] px-4 py-2.5 text-sm text-[#181614] dark:text-white placeholder-[#9E988F] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none focus:ring-1 focus:ring-[#F5951C]"
               />
             </div>
 
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full mt-2 rounded-xl bg-[#F5951C] py-3 text-xs font-bold uppercase tracking-widest text-[#2A211C] transition hover:bg-[#F5951C]/90 disabled:opacity-50"
+              className="w-full mt-2 rounded-xl bg-[#F5951C] py-3 text-xs font-bold uppercase tracking-widest text-[#0E0D0C] transition hover:bg-[#F5951C]/90 disabled:opacity-50 shadow-md"
             >
               {isLoading ? "Authenticating..." : "Sign In with Password"}
             </button>
@@ -615,8 +619,8 @@ export default function PortalLoginPage() {
         )}
 
         {/* Footer Note */}
-        <div className="mt-6 pt-5 border-t border-white/10 text-center">
-          <p className="text-xs text-white/50">
+        <div className="mt-6 pt-5 border-t border-[#E6E1D8] dark:border-white/10 text-center">
+          <p className="text-xs text-[#66615A] dark:text-white/50">
             Traveller self-registration is launching in Release 1.6.
           </p>
         </div>
@@ -625,27 +629,27 @@ export default function PortalLoginPage() {
       {/* Forced Password Change Modal */}
       {showPasswordChangeModal && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="max-w-md w-full bg-[#362B25] border border-amber-500/40 rounded-2xl p-6 sm:p-8 shadow-2xl">
+          <div className="max-w-md w-full bg-white dark:bg-[#161514] border border-amber-500/40 rounded-2xl p-6 sm:p-8 shadow-2xl">
             <div className="text-center mb-5">
               <span className="inline-block p-2.5 rounded-full bg-amber-500/20 text-[#F5951C] text-xl mb-2">
                 🔒
               </span>
-              <h2 className="text-lg font-bold text-white">First-Time Sign In Detected - Set Permanent Password</h2>
-              <p className="mt-1 text-xs text-white/70">
+              <h2 className="text-lg font-bold text-[#181614] dark:text-white">First-Time Sign In Detected - Set Permanent Password</h2>
+              <p className="mt-1 text-xs text-[#66615A] dark:text-white/70">
                 As an internal staff member, you must replace your temporary default password before
                 accessing workspace data.
               </p>
             </div>
 
             {passwordChangeError && (
-              <div className="mb-4 rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-200">
+              <div className="mb-4 rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-700 dark:text-red-200">
                 {passwordChangeError}
               </div>
             )}
 
             <form onSubmit={handleCompletePasswordChange} className="space-y-4">
               <div>
-                <label className="block text-xs font-medium uppercase tracking-wider text-white/80 mb-1">
+                <label className="block text-xs font-medium uppercase tracking-wider text-[#66615A] dark:text-white/80 mb-1">
                   New Permanent Password
                 </label>
                 <input
@@ -653,12 +657,12 @@ export default function PortalLoginPage() {
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="Min 8 chars, 1 uppercase, 1 number"
-                  className="w-full rounded-xl border border-white/15 bg-[#2A211C] px-4 py-2.5 text-sm text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                  className="w-full rounded-xl border border-[#E6E1D8] dark:border-white/15 bg-white dark:bg-[#09090B] px-4 py-2.5 text-sm text-[#181614] dark:text-white placeholder-[#9E988F] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium uppercase tracking-wider text-white/80 mb-1">
+                <label className="block text-xs font-medium uppercase tracking-wider text-[#66615A] dark:text-white/80 mb-1">
                   Confirm New Password
                 </label>
                 <input
@@ -666,13 +670,13 @@ export default function PortalLoginPage() {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Repeat new password"
-                  className="w-full rounded-xl border border-white/15 bg-[#2A211C] px-4 py-2.5 text-sm text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                  className="w-full rounded-xl border border-[#E6E1D8] dark:border-white/15 bg-white dark:bg-[#09090B] px-4 py-2.5 text-sm text-[#181614] dark:text-white placeholder-[#9E988F] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full rounded-xl bg-[#F5951C] py-3 text-xs font-bold uppercase tracking-widest text-[#2A211C] transition hover:bg-[#F5951C]/90"
+                className="w-full rounded-xl bg-[#F5951C] py-3 text-xs font-bold uppercase tracking-widest text-[#0E0D0C] transition hover:bg-[#F5951C]/90 shadow-md"
               >
                 Set Password & Unlock Workspace
               </button>
@@ -683,7 +687,7 @@ export default function PortalLoginPage() {
 
       {/* Bottom Copyright */}
       <div className="max-w-md w-full mx-auto text-center mt-6">
-        <p className="text-xs text-white/40">
+        <p className="text-xs text-[#66615A] dark:text-white/40">
           © 2026 Search My Vacation. High-touch internal advisory workspace.
         </p>
       </div>

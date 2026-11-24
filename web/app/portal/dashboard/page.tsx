@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import SiteBrand from "@/components/brand/SiteBrand";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
+import { StaffAvatar } from "@/components/portal/StaffAvatar";
 
 interface StaffSession {
   fullName: string;
@@ -49,6 +51,60 @@ interface ClientProfileItem {
   initialActivityNote?: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface CrmTripItem {
+  id: string;
+  dealReferenceId: string;
+  dealChannel: "DIRECT" | "VENDOR";
+  customerId: string;
+  customerCode: string;
+  customerName: string;
+  customerMobile: string;
+  customerEmail: string;
+  leadOwnerName: string;
+  destination: string;
+  travelYear: number;
+  travelMonth: string;
+  durationLabel: string;
+  nights: number;
+  travelPartyType: string;
+  paxAdults: number;
+  paxChildren: number;
+  dealStage: string;
+  paymentStatus: string;
+  tripStatus: string;
+  bookedProperties: string;
+  bookedTransport: string;
+  notes: string;
+  quotePrice: number;
+  actualCost: number | null;
+  preTaxAmount: number | null;
+  gstAmount: number | null;
+  profit: number | null;
+  isFinancialRestricted: boolean;
+  createdAt: string;
+}
+
+export interface CrmCustomerItem {
+  id: string;
+  customerCode: string;
+  primaryName: string;
+  primaryMobile: string | null;
+  secondaryMobile: string | null;
+  primaryEmail: string | null;
+  zohoSynced: boolean;
+  needsContactEnrichment: boolean;
+  tripsCount: number;
+  recentTrips: Array<{
+    dealReferenceId: string;
+    destination: string;
+    travelYear: number;
+    dealStage: string;
+    paymentStatus: string;
+    tripStatus: string;
+  }>;
+  createdAt: string;
 }
 
 const DEFAULT_TEAM_MEMBERS: TeamMember[] = [
@@ -155,6 +211,35 @@ export default function PortalDashboardPage() {
   const [clientSubmitSuccess, setClientSubmitSuccess] = useState<string | null>(null);
   const [duplicateWarning, setDuplicateWarning] = useState<string | null>(null);
 
+  // Release 1.5.1 Relational CRM State (Pillar A)
+  const [crmTrips, setCrmTrips] = useState<CrmTripItem[]>([]);
+  const [crmCustomers, setCrmCustomers] = useState<CrmCustomerItem[]>([]);
+  const [crmViewMode, setCrmViewMode] = useState<"trips" | "customers">("trips");
+
+  // Smart Lookup in Add Client modal
+  const [matchedCustomer, setMatchedCustomer] = useState<{
+    id: string;
+    customerCode: string;
+    primaryName: string;
+    primaryMobile: string;
+    secondaryMobile?: string;
+    pastTripsCount: number;
+    pastTrips?: any[];
+  } | null>(null);
+  const [isLinkedToExisting, setIsLinkedToExisting] = useState(false);
+
+  // New Trip fields for Add Client modal
+  const [tripFormDestination, setTripFormDestination] = useState("");
+  const [tripFormChannel, setTripFormChannel] = useState<"DIRECT" | "VENDOR">("DIRECT");
+  const [tripFormYear, setTripFormYear] = useState(new Date().getFullYear());
+  const [tripFormMonth, setTripFormMonth] = useState("April");
+  const [tripFormDuration, setTripFormDuration] = useState("6N/7D");
+  const [tripFormAdults, setTripFormAdults] = useState(2);
+  const [tripFormChildren, setTripFormChildren] = useState(0);
+  const [tripFormStage, setTripFormStage] = useState("Enquiry");
+  const [tripFormQuotePrice, setTripFormQuotePrice] = useState("");
+  const [tripFormNotes, setTripFormNotes] = useState("");
+
   // Claude Itinerary & PDF Generator Studio State
   const [showClaudeModal, setShowClaudeModal] = useState(false);
   const [claudeProjectUrl, setClaudeProjectUrl] = useState("https://claude.ai");
@@ -184,6 +269,42 @@ export default function PortalDashboardPage() {
   // Inactivity Watchdog (30 Minutes)
   const lastActivityRef = useRef<number>(Date.now());
 
+  function refreshCrmData(role?: string) {
+    setCrmLoading(true);
+    const activeRole = role || session?.role || "desk_user";
+
+    // 1. Fetch Relational Trips (Pillar A)
+    fetch(`/api/portal/crm/trips?role=${encodeURIComponent(activeRole)}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.ok && Array.isArray(data.trips)) {
+          setCrmTrips(data.trips);
+        }
+      })
+      .catch(() => {});
+
+    // 2. Fetch Customer Master (Pillar A)
+    fetch("/api/portal/crm/customers")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.ok && Array.isArray(data.customers)) {
+          setCrmCustomers(data.customers);
+        }
+      })
+      .catch(() => {});
+
+    // 3. Backward-compatible clients view
+    fetch("/api/portal/crm/clients")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.ok && Array.isArray(data.clients)) {
+          setClients(data.clients);
+        }
+      })
+      .catch(() => {})
+      .finally(() => setCrmLoading(false));
+  }
+
   useEffect(() => {
     // Check staff session
     const raw = typeof window !== "undefined" ? localStorage.getItem("smv_staff_session") : null;
@@ -191,8 +312,11 @@ export default function PortalDashboardPage() {
       router.replace("/portal/login");
       return;
     }
+    let parsedRole = "desk_user";
     try {
-      setSession(JSON.parse(raw));
+      const parsed = JSON.parse(raw);
+      setSession(parsed);
+      parsedRole = parsed.role || "desk_user";
     } catch {
       router.replace("/portal/login");
     }
@@ -272,17 +396,8 @@ export default function PortalDashboardPage() {
         } catch {}
       });
 
-    // 2. Fetch live CRM client profiles
-    setCrmLoading(true);
-    fetch("/api/portal/crm/clients")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data && data.ok && Array.isArray(data.clients)) {
-          setClients(data.clients);
-        }
-      })
-      .catch(() => {})
-      .finally(() => setCrmLoading(false));
+    // 2. Fetch live CRM trips, customers, and client profiles (Pillar A)
+    refreshCrmData(parsedRole);
 
     // Inactivity event listeners
     const handleActivity = () => {
@@ -680,8 +795,21 @@ export default function PortalDashboardPage() {
       const data = await res.json();
       if (data && data.ok && data.duplicate?.hasDuplicate) {
         setDuplicateWarning(data.duplicate.warningMessage || "Existing client record found.");
+        if (data.duplicate.isDatabaseCustomer) {
+          setMatchedCustomer({
+            id: data.duplicate.matchedCustomerId,
+            customerCode: data.duplicate.matchedCustomerCode,
+            primaryName: data.duplicate.matchedCustomerName,
+            primaryMobile: data.duplicate.matchedMobile,
+            secondaryMobile: data.duplicate.secondaryMobile,
+            pastTripsCount: data.duplicate.pastTripsCount || 0,
+            pastTrips: data.duplicate.pastTrips || [],
+          });
+        }
       } else {
         setDuplicateWarning(null);
+        setMatchedCustomer(null);
+        setIsLinkedToExisting(false);
       }
     } catch {}
   }
@@ -724,6 +852,32 @@ export default function PortalDashboardPage() {
     });
 
     try {
+      // 1. Submit trip deal to relational CRM (Pillar A)
+      const tripPayload = {
+        customerId: isLinkedToExisting && matchedCustomer ? matchedCustomer.id : undefined,
+        primaryName: clientFormName.trim(),
+        primaryMobile: clientFormPhone.trim() || undefined,
+        primaryEmail: clientFormEmail.trim() || undefined,
+        dealChannel: tripFormChannel,
+        destination: tripFormDestination.trim() || "Bespoke Slow-Travel Journey",
+        travelYear: tripFormYear,
+        travelMonth: tripFormMonth,
+        durationLabel: tripFormDuration,
+        paxAdults: tripFormAdults,
+        paxChildren: tripFormChildren,
+        dealStage: tripFormStage,
+        quotePrice: Number(tripFormQuotePrice) || 0,
+        notes: tripFormNotes.trim() || clientFormInitialNote.trim() || undefined,
+      };
+
+      const tripRes = await fetch("/api/portal/crm/trips", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(tripPayload),
+      });
+      const tripData = await tripRes.json();
+
+      // 2. Also register in client CRM for backward compatibility
       const res = await fetch("/api/portal/crm/clients", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -742,22 +896,25 @@ export default function PortalDashboardPage() {
       });
 
       const data = await res.json();
-      if (!res.ok || !data.ok) {
-        setClientSubmitError(data.message || "Failed to create client dossier.");
-        setClientSubmitLoading(false);
-        return;
-      }
 
-      setClientSubmitSuccess(data.message || `Client dossier for ${clientFormName} successfully created!`);
-      if (data.client) {
-        setClients((prev) => [data.client, ...prev.filter((c) => c.id !== data.client.id)]);
-      }
+      const createdRef = tripData.dealReferenceId || "Deal";
+      setClientSubmitSuccess(
+        `Client and journey deal (${createdRef}) successfully cataloged and linked.`
+      );
+
+      // Refresh relational CRM lists
+      refreshCrmData();
 
       // Reset form
       setClientFormName("");
       setClientFormEmail("");
       setClientFormPhone("+91 ");
       setClientFormCity("");
+      setTripFormDestination("");
+      setTripFormQuotePrice("");
+      setTripFormNotes("");
+      setMatchedCustomer(null);
+      setIsLinkedToExisting(false);
       setClientFormLeadSource("instagram");
       setClientFormIsVip(false);
       setClientFormSelectedTags(["Family Comfort", "Slow Travel", "Pure Vegetarian"]);
@@ -875,7 +1032,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
 
   if (!session) {
     return (
-      <div className="min-h-screen bg-[#2A211C] flex items-center justify-center text-white/60 text-sm">
+      <div className="min-h-screen bg-[#FAF8F5] dark:bg-[#0D0C0B] flex items-center justify-center text-[#181614] dark:text-[#F5F2EB] text-sm">
         Authenticating session...
       </div>
     );
@@ -890,9 +1047,9 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
     session.email?.toLowerCase() === "vivek@searchmyvacation.com";
 
   return (
-    <div className="min-h-screen bg-[#2A211C] text-white flex flex-col font-sans">
+    <div className="min-h-screen bg-[#FAF8F5] dark:bg-[#0D0C0B] text-[#181614] dark:text-[#F5F2EB] flex flex-col font-sans transition-colors duration-200">
       {/* Top Staff Navbar — Fully Unified with Search My Vacation */}
-      <header className="border-b border-white/10 bg-[#362B25] px-4 sm:px-8 py-3 flex items-center justify-between sticky top-0 z-40 shadow-md">
+      <header className="border-b border-[#E6E1D8] dark:border-white/10 bg-[#0E0D0C] dark:bg-[#09090B] px-4 sm:px-8 py-3 flex items-center justify-between sticky top-0 z-40 shadow-md transition-colors">
         <div className="flex items-center gap-3 sm:gap-6">
           <Link href="/" title="Go to Search My Vacation Home (Session Persists)">
             <SiteBrand variant="header" surface="dark" className="w-32 sm:w-36 text-white" />
@@ -924,7 +1081,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                 setInviteSuccess(null);
                 setInviteError(null);
               }}
-              className="flex items-center gap-1.5 rounded-full bg-[#F5951C] px-3 sm:px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-[#2A211C] hover:bg-[#e08515] transition shadow-md"
+              className="flex items-center gap-1.5 rounded-full bg-[#F5951C] px-3 sm:px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-[#0E0D0C] hover:bg-[#e08515] transition shadow-md"
             >
               <span>➕</span>
               <span className="hidden sm:inline">Invite Team</span>
@@ -932,14 +1089,23 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
             </button>
           )}
 
-          <div className="text-right hidden sm:block">
-            <p className="text-xs font-semibold text-white">{session.fullName}</p>
-            <p className="text-[10px] uppercase tracking-wider text-[#F5951C] font-semibold">
-              {session.email?.toLowerCase() === "vivek@searchmyvacation.com" || session.role === "super_admin"
-                ? "SUPER ADMIN"
-                : session.role.replace("_", " ")}
-            </p>
-          </div>
+          <ThemeToggle variant="compact" />
+
+          {/* Profile link with StaffAvatar */}
+          <Link
+            href="/portal/profile"
+            className="flex items-center gap-2 rounded-full border border-white/20 bg-white/5 hover:bg-white/10 px-2.5 py-1 text-xs text-white transition hover:border-[#F5951C]"
+            title="View / Edit Advisor Workspace Profile"
+          >
+            <StaffAvatar name={session.fullName} size="xs" />
+            <div className="text-left hidden md:block">
+              <p className="text-[11px] font-bold leading-tight text-white">{session.fullName.split(" ")[0]}</p>
+              <p className="text-[9px] uppercase tracking-wider text-[#F5951C] font-semibold leading-tight">
+                {isSuperAdmin ? "Super Admin" : session.role.replace("_", " ")}
+              </p>
+            </div>
+          </Link>
+
           <button
             onClick={handleSignOut}
             className="rounded-full border border-white/20 px-3 sm:px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-white/80 hover:border-[#F5951C] hover:text-[#F5951C] transition"
@@ -950,7 +1116,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
       </header>
 
       {/* Main Workspace Navigation */}
-      <div className="border-b border-white/10 bg-[#2E241F] px-4 sm:px-8">
+      <div className="border-b border-[#E6E1D8] dark:border-white/10 bg-[#2E241F] px-4 sm:px-8">
         <nav className="flex space-x-1 sm:space-x-4 overflow-x-auto py-2.5">
           {[
             { id: "operations", label: "Operations & Kanban", icon: "📋" },
@@ -963,7 +1129,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
               onClick={() => setActiveTab(tab.id as any)}
               className={`flex items-center gap-2 whitespace-nowrap rounded-xl px-4 py-2 text-xs font-bold uppercase tracking-wider transition ${
                 activeTab === tab.id
-                  ? "bg-[#F5951C] text-[#2A211C] shadow"
+                  ? "bg-[#F5951C] text-[#0E0D0C] shadow"
                   : "text-white/60 hover:bg-white/5 hover:text-white"
               }`}
             >
@@ -1003,19 +1169,19 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                 { stage: "In Travel", count: 1, value: "₹650,000", client: "Sunita Roy", trip: "Himachal High Passes" },
                 { stage: "Returned Closed", count: 12, value: "₹4.8M", client: "Deepak Verma", trip: "Golden Triangle" },
               ].map((col, idx) => (
-                <div key={idx} className="rounded-2xl border border-white/10 bg-[#362B25] p-3.5 flex flex-col justify-between min-h-[220px]">
+                <div key={idx} className="rounded-2xl border border-[#E6E1D8] dark:border-white/10 bg-white dark:bg-[#161514] p-3.5 flex flex-col justify-between min-h-[220px]">
                   <div>
                     <div className="flex justify-between items-center mb-3">
                       <span className="text-[11px] font-bold uppercase tracking-wider text-white/70">{col.stage}</span>
                       <span className="text-[10px] bg-white/10 px-2 py-0.5 rounded-full text-white/80">{col.count}</span>
                     </div>
-                    <div className="rounded-xl bg-[#2A211C] p-3 border border-white/5 space-y-1.5">
+                    <div className="rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] p-3 border border-[#E6E1D8] dark:border-white/5 space-y-1.5">
                       <p className="text-xs font-bold text-[#F5951C]">{col.client}</p>
                       <p className="text-[11px] text-white/70">{col.trip}</p>
                       <p className="text-[10px] font-mono text-emerald-400">{col.value}</p>
                     </div>
                   </div>
-                  <div className="pt-3 border-t border-white/5 text-[10px] text-white/40 text-center">
+                  <div className="pt-3 border-t border-[#E6E1D8] dark:border-white/5 text-[10px] text-white/40 text-center">
                     Auto-synced with vouchers
                   </div>
                 </div>
@@ -1023,12 +1189,12 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
             </div>
 
             {/* Vouchers & Emergency Hub */}
-            <div className="rounded-2xl border border-white/10 bg-[#362B25] p-5">
+            <div className="rounded-2xl border border-[#E6E1D8] dark:border-white/10 bg-white dark:bg-[#161514] p-5">
               <h3 className="text-sm font-bold uppercase tracking-wider text-white mb-3 flex items-center gap-2">
                 <span>🎫</span> Segment Voucher Vault & Emergency Contacts (US-012)
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <div className="p-3 rounded-xl bg-[#2A211C] border border-white/5 space-y-1">
+                <div className="p-3 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/5 space-y-1">
                   <div className="flex justify-between font-bold text-white">
                     <span>VOUCH-SRI-001 (Nigeen Houseboat)</span>
                     <span className="text-emerald-400">Confirmed</span>
@@ -1036,7 +1202,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   <p className="text-white/60">Duty Manager: Tariq Butt • 24x7: +91 94190 12345</p>
                   <p className="text-[11px] text-white/40">VIP Pier transfer meeting at Srinagar Gate 2</p>
                 </div>
-                <div className="p-3 rounded-xl bg-[#2A211C] border border-white/5 space-y-1">
+                <div className="p-3 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/5 space-y-1">
                   <div className="flex justify-between font-bold text-white">
                     <span>VOUCH-UDR-002 (Taj Lake Palace)</span>
                     <span className="text-emerald-400">Confirmed</span>
@@ -1049,17 +1215,17 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
           </div>
         )}
 
-        {/* TAB 2: CLIENT CRM & BRIEFING (US-004, US-005, US-006, GAP-04) */}
+        {/* TAB 2: RELATIONAL CLIENT & TRIP CRM (Pillar A) */}
         {activeTab === "crm" && (
           <div className="space-y-6">
             {/* Header & Primary Action */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
-                <h2 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-                  <span>👥</span> Master Client Directory & CRM
+                <h2 className="text-xl font-bold tracking-tight text-[#181614] dark:text-white flex items-center gap-2">
+                  <span>🗺️</span> Relational Client Atelier CRM
                 </h2>
-                <p className="text-xs text-white/60">
-                  Decoupled client profiles, mandatory lead attribution, preference tags & family travel companions
+                <p className="text-xs text-[#66615A] dark:text-[#A19D95]">
+                  1 Customer (CUST-XXXXX) → Many Trips (DDSMV/VDSMV) architecture with atomic concurrency sequences and lead attribution
                 </p>
               </div>
               <button
@@ -1069,22 +1235,50 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   setClientSubmitSuccess(null);
                   setDuplicateWarning(null);
                 }}
-                className="rounded-xl bg-[#F5951C] px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#2A211C] hover:bg-[#e08515] transition flex items-center gap-2 shadow-md"
+                className="rounded-xl bg-[#F5951C] px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#0E0D0C] hover:bg-[#e08515] transition flex items-center gap-2 shadow-md"
               >
                 <span>➕</span>
                 <span>Add Client / Customer</span>
               </button>
             </div>
 
+            {/* View Mode Switcher: Trips vs Customers (Pillar A) */}
+            <div className="flex items-center gap-3 border-b border-[#E6E1D8] dark:border-white/10 pb-3">
+              <button
+                type="button"
+                onClick={() => setCrmViewMode("trips")}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition ${
+                  crmViewMode === "trips"
+                    ? "bg-[#F5951C] text-[#0E0D0C] shadow-md"
+                    : "bg-black/5 dark:bg-white/5 text-[#66615A] dark:text-white/70 hover:bg-black/10 dark:hover:bg-white/10"
+                }`}
+              >
+                <span>✈️</span>
+                <span>Trips & Deals ({crmTrips.length})</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setCrmViewMode("customers")}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition ${
+                  crmViewMode === "customers"
+                    ? "bg-[#F5951C] text-[#0E0D0C] shadow-md"
+                    : "bg-black/5 dark:bg-white/5 text-[#66615A] dark:text-white/70 hover:bg-black/10 dark:hover:bg-white/10"
+                }`}
+              >
+                <span>👥</span>
+                <span>Customer Master ({crmCustomers.length})</span>
+              </button>
+            </div>
+
             {/* Filter & Search Bar */}
-            <div className="p-4 rounded-2xl border border-white/10 bg-[#362B25] flex flex-col md:flex-row gap-3 justify-between items-stretch md:items-center">
+            <div className="p-4 rounded-2xl border border-[#E6E1D8] dark:border-white/10 bg-white dark:bg-[#161514] flex flex-col md:flex-row gap-3 justify-between items-stretch md:items-center">
               <div className="relative flex-1">
                 <input
                   type="text"
                   value={crmSearchQuery}
                   onChange={(e) => setCrmSearchQuery(e.target.value)}
                   placeholder="Search clients by name, email, phone, city..."
-                  className="w-full rounded-xl border border-white/10 bg-[#2A211C] px-3.5 py-2 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                  className="w-full rounded-xl border border-[#E6E1D8] dark:border-white/10 bg-[#FAF8F5] dark:bg-[#09090B] px-3.5 py-2 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
                 />
                 {crmSearchQuery && (
                   <button
@@ -1110,7 +1304,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     onClick={() => setCrmTagFilter(filter.id)}
                     className={`whitespace-nowrap px-3 py-1.5 rounded-lg text-[11px] font-semibold transition ${
                       crmTagFilter === filter.id
-                        ? "bg-[#F5951C] text-[#2A211C]"
+                        ? "bg-[#F5951C] text-[#0E0D0C]"
                         : "bg-white/5 text-white/70 hover:bg-white/10 hover:text-white"
                     }`}
                   >
@@ -1120,194 +1314,275 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
               </div>
             </div>
 
-            {/* Client Cards List */}
+            {/* Client Cards List & Relational Lists (Pillar A) */}
             {crmLoading ? (
-              <div className="p-12 text-center text-white/50 text-xs">
-                Loading client profiles...
+              <div className="p-12 text-center text-[#66615A] dark:text-white/50 text-xs">
+                Loading client profiles and trip deals...
               </div>
-            ) : clients.length === 0 ? (
-              <div className="p-12 text-center rounded-2xl border border-dashed border-white/15 bg-[#362B25] space-y-3">
-                <div className="text-3xl">👥</div>
-                <h3 className="text-sm font-bold text-white">No Client Dossiers Yet</h3>
-                <p className="text-xs text-white/50 max-w-md mx-auto">
-                  Create your first client profile to manage preference tags, family companions, and launch bespoke itineraries.
-                </p>
-                <button
-                  onClick={() => setShowAddClientModal(true)}
-                  className="rounded-xl bg-[#F5951C] px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#2A211C] hover:bg-[#e08515] transition"
-                >
-                  ➕ Add First Client
-                </button>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {clients
-                  .filter((c) => {
-                    const q = crmSearchQuery.toLowerCase().trim();
-                    const matchesSearch =
-                      !q ||
-                      c.fullName.toLowerCase().includes(q) ||
-                      (c.email && c.email.toLowerCase().includes(q)) ||
-                      (c.phone && c.phone.toLowerCase().includes(q)) ||
-                      (c.phoneE164 && c.phoneE164.includes(q)) ||
-                      (c.nationality && c.nationality.toLowerCase().includes(q));
-
-                    if (!matchesSearch) return false;
-
-                    if (crmTagFilter === "vip") return c.isVip;
-                    if (crmTagFilter === "family")
-                      return c.tags?.some((t) => t.tagValue.toLowerCase().includes("family"));
-                    if (crmTagFilter === "slow")
-                      return c.tags?.some((t) => t.tagValue.toLowerCase().includes("slow"));
-                    if (crmTagFilter === "veg")
-                      return c.tags?.some((t) => t.tagValue.toLowerCase().includes("veg"));
-                    return true;
-                  })
-                  .map((client) => {
-                    const leadSourceLabel =
-                      client.leadSource === "instagram"
-                        ? "Instagram Campaign"
-                        : client.leadSource === "client_referral"
-                        ? "Client Referral"
-                        : client.leadSource === "founder_network"
-                        ? "Founder Network"
-                        : client.leadSource === "website"
-                        ? "Website Inbound"
-                        : client.leadSource === "concierge_partner"
-                        ? "Concierge Partner"
-                        : "Direct Inbound";
-
-                    return (
+            ) : crmViewMode === "trips" ? (
+              crmTrips.length === 0 ? (
+                <div className="p-12 text-center rounded-2xl border border-dashed border-[#E6E1D8] dark:border-white/15 bg-white dark:bg-[#161514] space-y-3">
+                  <div className="text-3xl">✈️</div>
+                  <h3 className="text-sm font-bold text-[#181614] dark:text-white">No Trip Deals Found</h3>
+                  <p className="text-xs text-[#66615A] dark:text-[#A19D95] max-w-md mx-auto">
+                    Create your first trip deal linked to a customer profile. Deal references (DDSMV/VDSMV) are auto-generated.
+                  </p>
+                  <button
+                    onClick={() => setShowAddClientModal(true)}
+                    className="rounded-xl bg-[#F5951C] px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#0E0D0C] hover:bg-[#e08515] transition"
+                  >
+                    ➕ Add First Trip Deal
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {crmTrips
+                    .filter((t) => {
+                      const q = crmSearchQuery.toLowerCase().trim();
+                      if (!q) return true;
+                      return (
+                        t.dealReferenceId.toLowerCase().includes(q) ||
+                        t.destination.toLowerCase().includes(q) ||
+                        t.customerName.toLowerCase().includes(q) ||
+                        t.customerCode.toLowerCase().includes(q) ||
+                        t.customerMobile.includes(q)
+                      );
+                    })
+                    .map((trip) => (
                       <div
-                        key={client.id}
-                        className="rounded-2xl border border-white/10 bg-[#362B25] overflow-hidden shadow-lg transition hover:border-white/20"
+                        key={trip.id}
+                        className="rounded-2xl border border-[#E6E1D8] dark:border-white/10 bg-white dark:bg-[#161514] p-5 shadow-sm space-y-4 hover:border-[#F5951C]/40 transition"
                       >
-                        {/* Dossier Header */}
-                        <div className="p-4 border-b border-white/10 flex flex-wrap justify-between items-center gap-2 bg-[#2E241F]">
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs font-bold uppercase tracking-wider text-white/80">
-                              Client Dossier
+                        {/* Top Bar: Deal Ref, Channel, Customer */}
+                        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b border-[#E6E1D8] dark:border-white/10 pb-3">
+                          <div className="flex items-center gap-2.5 flex-wrap">
+                            <span className="font-mono text-xs font-bold px-2.5 py-1 rounded-lg bg-[#F5951C]/15 text-[#F5951C] border border-[#F5951C]/30">
+                              {trip.dealReferenceId}
                             </span>
-                            <span className="text-[11px] px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-white/70">
-                              Source: {leadSourceLabel}
+                            <span
+                              className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full ${
+                                trip.dealChannel === "VENDOR"
+                                  ? "bg-purple-500/15 text-purple-700 dark:text-purple-300 border border-purple-500/30"
+                                  : "bg-blue-500/15 text-blue-700 dark:text-blue-300 border border-blue-500/30"
+                              }`}
+                            >
+                              {trip.dealChannel} DEAL
                             </span>
-                            {client.isVip && (
-                              <span className="text-[11px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-semibold flex items-center gap-1">
-                                <span>⭐</span> VIP Client
-                              </span>
-                            )}
+                            <span className="text-xs font-bold text-[#181614] dark:text-white">
+                              {trip.customerName}
+                            </span>
+                            <span className="text-[11px] font-mono text-[#66615A] dark:text-white/50">
+                              ({trip.customerCode})
+                            </span>
                           </div>
-                          <span className="text-[11px] text-white/40">
-                            ID: {client.id.slice(0, 14)} • Added {client.createdAt.split("T")[0]}
-                          </span>
+
+                          <div className="flex items-center gap-2 text-xs">
+                            <span className="text-[#66615A] dark:text-[#A19D95]">Lead:</span>
+                            <span className="font-semibold text-[#181614] dark:text-white">
+                              {trip.leadOwnerName}
+                            </span>
+                          </div>
                         </div>
 
-                        {/* Dossier Body */}
-                        <div className="p-6 space-y-4">
-                          <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 pb-4 border-b border-white/5">
-                            <div>
-                              <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                                {client.fullName}
-                              </h3>
-                              <p className="text-xs text-white/60 mt-0.5">
-                                {client.email || "No email"} • {client.phoneE164 || client.phone || "No phone"} •{" "}
-                                {client.nationality || "India"}
-                              </p>
-                            </div>
-                            {/* Preference Tags */}
-                            <div className="flex flex-wrap gap-1.5">
-                              {(client.tags || []).map((t, idx) => {
-                                const isDietary =
-                                  t.category === "dietary" ||
-                                  t.tagValue.toLowerCase().includes("veg") ||
-                                  t.tagValue.toLowerCase().includes("jain");
-                                const isPace =
-                                  t.category === "pace" ||
-                                  t.tagValue.toLowerCase().includes("slow") ||
-                                  t.tagValue.toLowerCase().includes("pacing");
-
-                                const badgeColor = isDietary
-                                  ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
-                                  : isPace
-                                  ? "bg-blue-500/20 text-blue-300 border-blue-500/30"
-                                  : "bg-[#F5951C]/20 text-[#F5951C] border-[#F5951C]/30";
-
-                                return (
-                                  <span
-                                    key={idx}
-                                    className={`text-[10px] font-semibold px-2.5 py-1 rounded-full border ${badgeColor}`}
-                                  >
-                                    {t.tagValue}
-                                  </span>
-                                );
-                              })}
-                            </div>
+                        {/* Middle Grid: Destination, Dates, Pax, Statuses */}
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                          <div className="p-3 rounded-xl bg-[#FAF8F5] dark:bg-[#0D0C0B] border border-[#E6E1D8] dark:border-white/5">
+                            <span className="text-[10px] uppercase tracking-wider text-[#66615A] dark:text-white/50 block font-semibold">
+                              Destination & Period
+                            </span>
+                            <p className="font-bold text-[#181614] dark:text-white mt-0.5">
+                              {trip.destination}
+                            </p>
+                            <p className="text-[11px] text-[#66615A] dark:text-[#A19D95]">
+                              {trip.travelMonth} {trip.travelYear} • {trip.durationLabel}
+                            </p>
                           </div>
 
-                          {/* Linked Companions */}
-                          {client.companions && client.companions.length > 0 && (
+                          <div className="p-3 rounded-xl bg-[#FAF8F5] dark:bg-[#0D0C0B] border border-[#E6E1D8] dark:border-white/5">
+                            <span className="text-[10px] uppercase tracking-wider text-[#66615A] dark:text-white/50 block font-semibold">
+                              Travel Party & Pax
+                            </span>
+                            <p className="font-bold text-[#181614] dark:text-white mt-0.5">
+                              {trip.travelPartyType}
+                            </p>
+                            <p className="text-[11px] text-[#66615A] dark:text-[#A19D95]">
+                              {trip.paxAdults} Adults
+                              {trip.paxChildren > 0 ? `, ${trip.paxChildren} Children` : ""}
+                            </p>
+                          </div>
+
+                          <div className="p-3 rounded-xl bg-[#FAF8F5] dark:bg-[#0D0C0B] border border-[#E6E1D8] dark:border-white/5">
+                            <span className="text-[10px] uppercase tracking-wider text-[#66615A] dark:text-white/50 block font-semibold">
+                              Status Pipeline
+                            </span>
+                            <p className="font-bold text-[#181614] dark:text-white mt-0.5">
+                              {trip.dealStage}
+                            </p>
+                            <p className="text-[11px] text-[#66615A] dark:text-[#A19D95]">
+                              Pay: {trip.paymentStatus} • Trip: {trip.tripStatus}
+                            </p>
+                          </div>
+
+                          <div className="p-3 rounded-xl bg-[#FAF8F5] dark:bg-[#0D0C0B] border border-[#E6E1D8] dark:border-white/5">
+                            <span className="text-[10px] uppercase tracking-wider text-[#66615A] dark:text-white/50 block font-semibold">
+                              Financials
+                            </span>
+                            <p className="font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">
+                              ₹{Number(trip.quotePrice || 0).toLocaleString("en-IN")}
+                            </p>
+                            {!trip.isFinancialRestricted ? (
+                              <p className="text-[10px] text-[#66615A] dark:text-[#A19D95]">
+                                Cost: ₹{Number(trip.actualCost || 0).toLocaleString("en-IN")} •
+                                Profit: ₹{Number(trip.profit || 0).toLocaleString("en-IN")}
+                              </p>
+                            ) : (
+                              <p className="text-[10px] text-amber-600 dark:text-amber-400">
+                                🔒 Margin Restricted
+                              </p>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Logistics & Notes */}
+                        {(trip.bookedProperties || trip.bookedTransport || trip.notes) && (
+                          <div className="p-3 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/5 text-xs text-[#66615A] dark:text-[#A19D95] space-y-1">
+                            {trip.bookedProperties && (
+                              <p>
+                                <strong className="text-[#181614] dark:text-white">
+                                  Booked Properties:
+                                </strong>{" "}
+                                {trip.bookedProperties}
+                              </p>
+                            )}
+                            {trip.bookedTransport && (
+                              <p>
+                                <strong className="text-[#181614] dark:text-white">
+                                  Transport:
+                                </strong>{" "}
+                                {trip.bookedTransport}
+                              </p>
+                            )}
+                            {trip.notes && <p className="italic">"{trip.notes}"</p>}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                </div>
+              )
+            ) : (
+              crmCustomers.length === 0 ? (
+                <div className="p-12 text-center rounded-2xl border border-dashed border-[#E6E1D8] dark:border-white/15 bg-white dark:bg-[#161514] space-y-3">
+                  <div className="text-3xl">👥</div>
+                  <h3 className="text-sm font-bold text-[#181614] dark:text-white">
+                    No Customers Master Records Yet
+                  </h3>
+                  <p className="text-xs text-[#66615A] dark:text-[#A19D95] max-w-md mx-auto">
+                    Customers are unique traveller profiles (CUST-XXXXX) holding multiple journey
+                    dossiers.
+                  </p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {crmCustomers
+                    .filter((c) => {
+                      const q = crmSearchQuery.toLowerCase().trim();
+                      if (!q) return true;
+                      return (
+                        c.primaryName.toLowerCase().includes(q) ||
+                        c.customerCode.toLowerCase().includes(q) ||
+                        (c.primaryMobile && c.primaryMobile.includes(q)) ||
+                        (c.secondaryMobile && c.secondaryMobile.includes(q)) ||
+                        (c.primaryEmail && c.primaryEmail.toLowerCase().includes(q))
+                      );
+                    })
+                    .map((cust) => (
+                      <div
+                        key={cust.id}
+                        className="rounded-2xl border border-[#E6E1D8] dark:border-white/10 bg-white dark:bg-[#161514] p-5 shadow-sm space-y-3 flex flex-col justify-between hover:border-[#F5951C]/40 transition"
+                      >
+                        <div className="space-y-2">
+                          <div className="flex justify-between items-start">
                             <div>
-                              <h4 className="text-xs font-bold uppercase tracking-wider text-white/70 mb-2">
-                                Linked Companions ({client.companions.length})
-                              </h4>
-                              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-xs">
-                                {client.companions.map((comp, cIdx) => (
-                                  <div
-                                    key={cIdx}
-                                    className="p-3 rounded-xl bg-[#2A211C] border border-white/5 space-y-0.5"
+                              <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-[#F5951C]/15 text-[#F5951C] border border-[#F5951C]/30">
+                                {cust.customerCode}
+                              </span>
+                              <h3 className="font-bold text-sm text-[#181614] dark:text-white mt-1.5">
+                                {cust.primaryName}
+                              </h3>
+                            </div>
+                            <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-black/5 dark:bg-white/10 text-[#66615A] dark:text-white/70">
+                              {cust.tripsCount} {cust.tripsCount === 1 ? "Trip" : "Trips"}
+                            </span>
+                          </div>
+
+                          <div className="text-xs text-[#66615A] dark:text-[#A19D95] space-y-0.5">
+                            <p>
+                              📱 Mobile:{" "}
+                              <span className="font-mono font-semibold text-[#181614] dark:text-white">
+                                {cust.primaryMobile || "—"}
+                              </span>
+                              {cust.secondaryMobile && (
+                                <span className="font-mono text-[11px] text-[#66615A] dark:text-white/50">
+                                  {" "}
+                                  / {cust.secondaryMobile}
+                                </span>
+                              )}
+                            </p>
+                            {cust.primaryEmail && (
+                              <p>
+                                ✉️ Email:{" "}
+                                <span className="text-[#181614] dark:text-white">
+                                  {cust.primaryEmail}
+                                </span>
+                              </p>
+                            )}
+                          </div>
+
+                          {cust.recentTrips && cust.recentTrips.length > 0 && (
+                            <div className="pt-2 border-t border-[#E6E1D8] dark:border-white/5">
+                              <span className="text-[10px] uppercase font-bold tracking-wider text-[#66615A] dark:text-white/50 block mb-1">
+                                Linked Journeys:
+                              </span>
+                              <div className="flex flex-wrap gap-1.5">
+                                {cust.recentTrips.map((rt) => (
+                                  <span
+                                    key={rt.dealReferenceId}
+                                    className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#FAF8F5] dark:bg-[#0D0C0B] border border-[#E6E1D8] dark:border-white/10 text-[#181614] dark:text-white"
                                   >
-                                    <div className="flex justify-between items-center">
-                                      <p className="font-semibold text-white">{comp.fullName}</p>
-                                      <span className="text-[10px] capitalize text-[#F5951C] bg-[#F5951C]/10 px-1.5 py-0.5 rounded">
-                                        {comp.relationship}
-                                      </span>
-                                    </div>
-                                    <p className="text-[11px] text-white/50">
-                                      {comp.notes || "No dietary/pacing constraints specified"}
-                                    </p>
-                                  </div>
+                                    {rt.dealReferenceId}: {rt.destination} ({rt.travelYear})
+                                  </span>
                                 ))}
                               </div>
                             </div>
                           )}
+                        </div>
 
-                          {/* Activity / Discovery Log */}
-                          <div>
-                            <h4 className="text-xs font-bold uppercase tracking-wider text-white/70 mb-2">
-                              Chronological Activity Feed (US-006)
-                            </h4>
-                            <div className="p-3.5 rounded-xl bg-[#2A211C] border border-white/5 text-xs space-y-1">
-                              <p className="text-[#F5951C] font-semibold flex items-center gap-1.5">
-                                <span>📞</span> Initial Discovery Brief Aligned
-                              </p>
-                              <p className="text-white/70">
-                                {client.initialActivityNote ||
-                                  "Client profile established. Ready for bespoke itinerary architecture and DMC contracting."}
-                              </p>
-                              <p className="text-[10px] text-white/40">
-                                Intake logged on {client.createdAt.split("T")[0]} • Verified zero external API cost
-                              </p>
-                            </div>
-                          </div>
-
-                          {/* Dossier Actions */}
-                          <div className="pt-2 flex flex-wrap justify-between items-center gap-2 border-t border-white/5">
-                            <button
-                              onClick={() => handleLinkToItineraryStudio(client)}
-                              className="rounded-xl bg-[#F5951C] px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-[#2A211C] hover:bg-[#e08515] transition flex items-center gap-1.5 shadow"
-                            >
-                              <span>🗺️</span>
-                              <span>Generate Bespoke Itinerary</span>
-                            </button>
-                            <span className="text-[11px] text-white/50">
-                              Advisor Portal CRM • Decoupled from public passenger auth
-                            </span>
-                          </div>
+                        <div className="pt-3 border-t border-[#E6E1D8] dark:border-white/10 flex justify-end">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setMatchedCustomer({
+                                id: cust.id,
+                                customerCode: cust.customerCode,
+                                primaryName: cust.primaryName,
+                                primaryMobile: cust.primaryMobile || "",
+                                pastTripsCount: cust.tripsCount,
+                              });
+                              setIsLinkedToExisting(true);
+                              setClientFormName(cust.primaryName);
+                              setClientFormPhone(cust.primaryMobile || "+91 ");
+                              setClientFormEmail(cust.primaryEmail || "");
+                              setShowAddClientModal(true);
+                            }}
+                            className="text-xs px-3 py-1.5 rounded-lg bg-[#F5951C] text-[#0E0D0C] font-bold uppercase tracking-wider hover:bg-[#e08515] transition shadow-sm"
+                          >
+                            + Add Journey
+                          </button>
                         </div>
                       </div>
-                    );
-                  })}
-              </div>
+                    ))}
+                </div>
+              )
             )}
           </div>
         )}
@@ -1323,7 +1598,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
               <div className="flex items-center gap-2">
                 <button
                   onClick={handleLaunchClaudePopup}
-                  className="rounded-xl bg-[#F5951C] px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-[#2A211C] hover:bg-[#e08515] transition flex items-center gap-1.5 shadow-md"
+                  className="rounded-xl bg-[#F5951C] px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-[#0E0D0C] hover:bg-[#e08515] transition flex items-center gap-1.5 shadow-md"
                   title="Copy client brief and open your Claude Project in pop-up window ($0.00 extra cost)"
                 >
                   <span>🚀</span>
@@ -1343,7 +1618,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
             </div>
 
             {/* AI Itinerary Generator / Claude Project Integration Bridge Card */}
-            <div className="rounded-2xl border border-white/10 bg-gradient-to-r from-[#362B25] to-[#2E241F] p-5">
+            <div className="rounded-2xl border border-[#E6E1D8] dark:border-white/10 bg-gradient-to-r from-white to-[#FAF8F5] dark:from-[#161514] dark:to-[#0D0C0B] p-5">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                 <div className="flex items-center gap-3">
                   <div className="h-10 w-10 rounded-xl bg-[#F5951C]/20 border border-[#F5951C]/30 flex items-center justify-center text-lg">
@@ -1365,7 +1640,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                 <div className="flex items-center gap-2 text-xs">
                   <button
                     onClick={handleLaunchClaudePopup}
-                    className="px-3.5 py-1.5 rounded-lg bg-[#F5951C] text-[#2A211C] font-bold text-xs uppercase tracking-wider hover:bg-[#e08515] transition flex items-center gap-1.5 shadow-sm"
+                    className="px-3.5 py-1.5 rounded-lg bg-[#F5951C] text-[#0E0D0C] font-bold text-xs uppercase tracking-wider hover:bg-[#e08515] transition flex items-center gap-1.5 shadow-sm"
                   >
                     <span>🚀</span>
                     <span>{copiedPrompt ? "✓ Copied! Launching..." : "Launch Claude Project Pop-Up"}</span>
@@ -1383,7 +1658,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
               </div>
 
               {/* Headless API Evaluation Context */}
-              <div className="mt-4 p-3.5 rounded-xl bg-black/30 border border-white/10 text-xs space-y-1.5">
+              <div className="mt-4 p-3.5 rounded-xl bg-black/30 border border-[#E6E1D8] dark:border-white/10 text-xs space-y-1.5">
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-white flex items-center gap-1.5">
                     <span>💡</span> Zero-Cost Pop-Up vs Headless API Cost Benchmark
@@ -1405,7 +1680,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
             </div>
 
             {/* Current Itinerary Dossier & Pricing */}
-            <div className="rounded-2xl border border-white/10 bg-[#362B25] p-6 space-y-5">
+            <div className="rounded-2xl border border-[#E6E1D8] dark:border-white/10 bg-white dark:bg-[#161514] p-6 space-y-5">
               <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
                 <div>
                   <h3 className="text-base font-bold text-white">8-Day Kashmir Autumn Serenity Circuit</h3>
@@ -1415,7 +1690,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-semibold">
                     🟢 Margin Healthy (18.2%)
                   </span>
-                  <button className="rounded-xl bg-[#F5951C] px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-[#2A211C]">
+                  <button className="rounded-xl bg-[#F5951C] px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-[#0E0D0C]">
                     Export Proposal (v1.0)
                   </button>
                 </div>
@@ -1423,19 +1698,19 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
 
               {/* Pricing breakdown */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
-                <div className="p-3 rounded-xl bg-[#2A211C] border border-white/5">
+                <div className="p-3 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/5">
                   <p className="text-[10px] uppercase tracking-wider text-white/50">Net Supplier Cost</p>
                   <p className="text-sm font-bold font-mono text-white mt-1">₹312,000</p>
                 </div>
-                <div className="p-3 rounded-xl bg-[#2A211C] border border-white/5">
+                <div className="p-3 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/5">
                   <p className="text-[10px] uppercase tracking-wider text-white/50">Agency Markup</p>
                   <p className="text-sm font-bold font-mono text-[#F5951C] mt-1">₹69,500</p>
                 </div>
-                <div className="p-3 rounded-xl bg-[#2A211C] border border-white/5">
+                <div className="p-3 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/5">
                   <p className="text-[10px] uppercase tracking-wider text-white/50">Estimated GST</p>
                   <p className="text-sm font-bold font-mono text-white/70 mt-1">₹12,510</p>
                 </div>
-                <div className="p-3 rounded-xl bg-[#2A211C] border border-white/5">
+                <div className="p-3 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/5">
                   <p className="text-[10px] uppercase tracking-wider text-white/50">Gross Selling Price</p>
                   <p className="text-sm font-bold font-mono text-emerald-400 mt-1">₹394,010</p>
                 </div>
@@ -1457,7 +1732,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     { day: "Day 7", title: "Return to Srinagar, Pashmina Artisans & Farewell Dinner", stay: "Nigeen Heritage Floats" },
                     { day: "Day 8", title: "Sheikh ul-Alam Airport Escort & Departure", stay: "Return Flight (DEL)" },
                   ].map((d, i) => (
-                    <div key={i} className="p-3 rounded-xl bg-[#2A211C] border border-white/5 flex flex-col sm:flex-row justify-between sm:items-center gap-1 sm:gap-4">
+                    <div key={i} className="p-3 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/5 flex flex-col sm:flex-row justify-between sm:items-center gap-1 sm:gap-4">
                       <div>
                         <span className="text-[11px] font-bold text-[#F5951C] mr-2">{d.day}:</span>
                         <span className="font-semibold text-white">{d.title}</span>
@@ -1468,7 +1743,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                 </div>
               </div>
 
-              <div className="p-3.5 rounded-xl border border-white/10 bg-[#2A211C] text-xs text-white/60">
+              <div className="p-3.5 rounded-xl border border-[#E6E1D8] dark:border-white/10 bg-[#FAF8F5] dark:bg-[#09090B] text-xs text-white/60">
                 🔒 <strong className="text-white">Commercial Privacy Guardrail (US-010):</strong> White-label client exports automatically strip all supplier vendor names, net costs, and markup percentages.
               </div>
             </div>
@@ -1491,7 +1766,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       setInviteSuccess(null);
                       setInviteError(null);
                     }}
-                    className="rounded-xl bg-[#F5951C] px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-[#2A211C] hover:bg-[#e08515] transition flex items-center gap-1.5"
+                    className="rounded-xl bg-[#F5951C] px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-[#0E0D0C] hover:bg-[#e08515] transition flex items-center gap-1.5"
                   >
                     <span>➕</span>
                     <span>Invite Team Member</span>
@@ -1504,7 +1779,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
             </div>
 
             {/* Section 1: Staff Directory & Security Governance (US-001) */}
-            <div className="rounded-2xl border border-white/10 bg-[#362B25] p-5 space-y-4">
+            <div className="rounded-2xl border border-[#E6E1D8] dark:border-white/10 bg-white dark:bg-[#161514] p-5 space-y-4">
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
                   <span className="text-lg">👥</span>
@@ -1531,7 +1806,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
                 {teamMembers.map((member, idx) => (
-                  <div key={idx} className="p-3.5 rounded-xl bg-[#2A211C] border border-white/5 flex flex-col justify-between space-y-2">
+                  <div key={idx} className="p-3.5 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/5 flex flex-col justify-between space-y-2">
                     <div className="flex justify-between items-start">
                       <div>
                         <div className="flex items-center gap-2">
@@ -1561,16 +1836,16 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                             }`}
                             title={`Change ${member.fullName}'s role (Super Admin Privilege)`}
                           >
-                            <option value="super_admin" className="bg-[#2A211C] text-purple-300">
+                            <option value="super_admin" className="bg-[#FAF8F5] dark:bg-[#09090B] text-purple-300">
                               Super Admin (Delegated)
                             </option>
-                            <option value="administrator" className="bg-[#2A211C] text-purple-300">
+                            <option value="administrator" className="bg-[#FAF8F5] dark:bg-[#09090B] text-purple-300">
                               Administrator
                             </option>
-                            <option value="privilege_user" className="bg-[#2A211C] text-blue-300">
+                            <option value="privilege_user" className="bg-[#FAF8F5] dark:bg-[#09090B] text-blue-300">
                               Privilege User (Senior)
                             </option>
-                            <option value="desk_user" className="bg-[#2A211C] text-emerald-300">
+                            <option value="desk_user" className="bg-[#FAF8F5] dark:bg-[#09090B] text-emerald-300">
                               Desk User
                             </option>
                           </select>
@@ -1593,7 +1868,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       )}
                     </div>
 
-                    <div className="pt-2 border-t border-white/5 flex justify-between items-center text-[10px]">
+                    <div className="pt-2 border-t border-[#E6E1D8] dark:border-white/5 flex justify-between items-center text-[10px]">
                       <span className="text-white/40">Provisioned: {member.invitedAt}</span>
                       <div className="flex items-center gap-2">
                         <span
@@ -1636,7 +1911,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                             </button>
                           </div>
                         ) : (
-                          <span className="px-2 py-0.5 rounded bg-white/5 text-white/50 border border-white/10 text-[9px] font-semibold flex items-center gap-1">
+                          <span className="px-2 py-0.5 rounded bg-white/5 text-white/50 border border-[#E6E1D8] dark:border-white/10 text-[9px] font-semibold flex items-center gap-1">
                             <span>🔒</span> Protected Super Admin
                           </span>
                         )}
@@ -1649,19 +1924,19 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
 
             {/* Section 2: Vendors & Document Vault */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="rounded-2xl border border-white/10 bg-[#362B25] p-5 space-y-3">
+              <div className="rounded-2xl border border-[#E6E1D8] dark:border-white/10 bg-white dark:bg-[#161514] p-5 space-y-3">
                 <h3 className="text-sm font-bold uppercase tracking-wider text-white flex items-center gap-2">
                   <span>🏢</span> Vetted Vendor Directory (RBAC)
                 </h3>
                 <div className="space-y-2 text-xs">
-                  <div className="p-3 rounded-xl bg-[#2A211C] border border-white/5 flex justify-between items-center">
+                  <div className="p-3 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/5 flex justify-between items-center">
                     <div>
                       <p className="font-bold text-white">Nigeen Heritage Floats (DMC)</p>
                       <p className="text-white/50">Kashmir • Net Contract Active</p>
                     </div>
                     <span className="text-[11px] font-mono text-emerald-400">-20% Negotiated</span>
                   </div>
-                  <div className="p-3 rounded-xl bg-[#2A211C] border border-white/5 flex justify-between items-center">
+                  <div className="p-3 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/5 flex justify-between items-center">
                     <div>
                       <p className="font-bold text-white">Himalayan Passes Aviation</p>
                       <p className="text-white/50">Charter • Contract Net 30</p>
@@ -1671,17 +1946,17 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-white/10 bg-[#362B25] p-5 space-y-3">
+              <div className="rounded-2xl border border-[#E6E1D8] dark:border-white/10 bg-white dark:bg-[#161514] p-5 space-y-3">
                 <h3 className="text-sm font-bold uppercase tracking-wider text-white flex items-center gap-2">
                   <span>🔐</span> Encrypted Document Vault & Step-Up (US-016)
                 </h3>
-                <div className="p-3 rounded-xl bg-[#2A211C] border border-white/5 text-xs space-y-2">
+                <div className="p-3 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/5 text-xs space-y-2">
                   <div className="flex justify-between items-center">
                     <span className="font-bold text-white">Ananya Sharma (Passport)</span>
                     <span className="text-white/50 font-mono">XXXX-4567</span>
                   </div>
                   <p className="text-[11px] text-white/50">Auto-masked by default. Step-Up OTP authorization required for unmasked view.</p>
-                  <button className="w-full py-1.5 rounded-lg border border-white/15 text-[11px] font-semibold text-[#F5951C] hover:bg-white/5">
+                  <button className="w-full py-1.5 rounded-lg border border-[#E6E1D8] dark:border-white/15 text-[11px] font-semibold text-[#F5951C] hover:bg-white/5">
                     Request Step-Up Unmasking (5-Min Window)
                   </button>
                 </div>
@@ -1696,7 +1971,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
       {/* ========================================================================= */}
       {showInviteModal && (
         <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#362B25] border border-white/20 rounded-2xl max-w-lg w-full p-6 text-white shadow-2xl relative">
+          <div className="bg-white dark:bg-[#161514] border border-white/20 rounded-2xl max-w-lg w-full p-6 text-white shadow-2xl relative">
             <div className="flex justify-between items-start mb-4">
               <div>
                 <h3 className="text-lg font-bold text-white flex items-center gap-2">
@@ -1723,7 +1998,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   <p>{inviteSuccess}</p>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-[#2A211C] border border-white/10 space-y-2 text-xs">
+                <div className="p-3.5 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/10 space-y-2 text-xs">
                   <p className="text-white/60 text-[11px] uppercase tracking-wider font-semibold">
                     Temporary Default Password:
                   </p>
@@ -1752,7 +2027,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       setShowInviteModal(false);
                       setInviteSuccess(null);
                     }}
-                    className="px-4 py-2 rounded-xl bg-[#F5951C] text-[#2A211C] text-xs font-bold uppercase tracking-wider hover:bg-[#e08515]"
+                    className="px-4 py-2 rounded-xl bg-[#F5951C] text-[#0E0D0C] text-xs font-bold uppercase tracking-wider hover:bg-[#e08515]"
                   >
                     Done
                   </button>
@@ -1776,7 +2051,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     value={inviteName}
                     onChange={(e) => setInviteName(e.target.value)}
                     placeholder="e.g. Ramesh Chandra"
-                    className="w-full rounded-xl bg-[#2A211C] border border-white/10 px-3.5 py-2.5 text-white placeholder-white/30 focus:border-[#F5951C] focus:outline-none"
+                    className="w-full rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/10 px-3.5 py-2.5 text-white placeholder-white/30 focus:border-[#F5951C] focus:outline-none"
                   />
                 </div>
 
@@ -1790,7 +2065,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     value={inviteEmail}
                     onChange={(e) => setInviteEmail(e.target.value)}
                     placeholder="e.g. ramesh@searchmyvacation.com"
-                    className="w-full rounded-xl bg-[#2A211C] border border-white/10 px-3.5 py-2.5 text-white placeholder-white/30 focus:border-[#F5951C] focus:outline-none"
+                    className="w-full rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/10 px-3.5 py-2.5 text-white placeholder-white/30 focus:border-[#F5951C] focus:outline-none"
                   />
                 </div>
 
@@ -1804,7 +2079,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     value={invitePhone}
                     onChange={(e) => setInvitePhone(e.target.value)}
                     placeholder="+91 98401 23456"
-                    className="w-full rounded-xl bg-[#2A211C] border border-white/10 px-3.5 py-2.5 text-white placeholder-white/30 focus:border-[#F5951C] focus:outline-none"
+                    className="w-full rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/10 px-3.5 py-2.5 text-white placeholder-white/30 focus:border-[#F5951C] focus:outline-none"
                   />
                   <p className="text-[10px] text-white/40 mt-1">Used for single-channel SMS OTP login challenges.</p>
                 </div>
@@ -1816,7 +2091,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   <select
                     value={inviteRole}
                     onChange={(e) => setInviteRole(e.target.value as any)}
-                    className="w-full rounded-xl bg-[#2A211C] border border-white/10 px-3.5 py-2.5 text-white focus:border-[#F5951C] focus:outline-none"
+                    className="w-full rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/10 px-3.5 py-2.5 text-white focus:border-[#F5951C] focus:outline-none"
                   >
                     <option value="desk_user">Desk User — Client CRM & Itinerary Operations</option>
                     <option value="privilege_user">Privilege User — Senior Advisor (Margin Overrides & VIP Docs)</option>
@@ -1827,7 +2102,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   </select>
                 </div>
 
-                <div className="p-3 rounded-xl bg-[#2A211C] border border-white/10 space-y-1">
+                <div className="p-3 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/10 space-y-1">
                   <div className="flex justify-between items-center text-[11px]">
                     <span className="text-white/60">Temporary Default Password:</span>
                     <span className="font-mono text-[#F5951C] font-semibold">TemporaryDefaultPass#2026</span>
@@ -1841,13 +2116,13 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   <button
                     type="button"
                     onClick={() => setShowInviteModal(false)}
-                    className="px-4 py-2 rounded-xl border border-white/15 text-white/70 hover:text-white"
+                    className="px-4 py-2 rounded-xl border border-[#E6E1D8] dark:border-white/15 text-white/70 hover:text-white"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-2 rounded-xl bg-[#F5951C] text-[#2A211C] font-bold uppercase tracking-wider hover:bg-[#e08515] transition"
+                    className="px-4 py-2 rounded-xl bg-[#F5951C] text-[#0E0D0C] font-bold uppercase tracking-wider hover:bg-[#e08515] transition"
                   >
                     Send Invitation
                   </button>
@@ -1863,7 +2138,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
       {/* ========================================================================= */}
       {showClaudeModal && (
         <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#362B25] border border-white/20 rounded-2xl max-w-2xl w-full p-6 text-white shadow-2xl relative max-h-[90vh] overflow-y-auto">
+          <div className="bg-white dark:bg-[#161514] border border-white/20 rounded-2xl max-w-2xl w-full p-6 text-white shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-start mb-4">
               <div>
                 <h3 className="text-lg font-bold text-white flex items-center gap-2">
@@ -1890,7 +2165,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   <p>{claudeImportSuccess}</p>
                 </div>
 
-                <div className="p-4 rounded-xl bg-[#2A211C] border border-white/10 space-y-3 text-xs">
+                <div className="p-4 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/10 space-y-3 text-xs">
                   <div className="flex justify-between items-center">
                     <span className="font-bold text-white">Proposal PDF Ready for Download:</span>
                     <span className="text-emerald-400 font-mono text-[11px]">Format: Official Client PDF</span>
@@ -1902,7 +2177,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     </div>
                     <button
                       onClick={() => window.print()}
-                      className="px-3 py-1.5 rounded-lg bg-[#F5951C] text-[#2A211C] font-bold text-xs uppercase tracking-wider hover:bg-[#e08515]"
+                      className="px-3 py-1.5 rounded-lg bg-[#F5951C] text-[#0E0D0C] font-bold text-xs uppercase tracking-wider hover:bg-[#e08515]"
                     >
                       Download PDF
                     </button>
@@ -1924,7 +2199,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
             ) : (
               <div className="space-y-4 text-xs">
                 {/* 0. Claude Project URL Configuration */}
-                <div className="p-3.5 rounded-xl bg-[#2A211C] border border-[#F5951C]/30 space-y-2">
+                <div className="p-3.5 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#F5951C]/30 space-y-2">
                   <div className="flex justify-between items-center">
                     <label className="text-white font-bold text-xs flex items-center gap-1.5">
                       <span>🔗</span> Your Custom Claude Project URL:
@@ -1941,7 +2216,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       } catch {}
                     }}
                     placeholder="e.g. https://claude.ai/project/... or https://claude.ai"
-                    className="w-full rounded-xl bg-black/40 border border-white/15 px-3 py-2 text-white text-xs font-mono focus:border-[#F5951C] focus:outline-none"
+                    className="w-full rounded-xl bg-black/40 border border-[#E6E1D8] dark:border-white/15 px-3 py-2 text-white text-xs font-mono focus:border-[#F5951C] focus:outline-none"
                   />
                   <p className="text-[10px] text-white/50">
                     Enter the URL of your existing Claude project. Clicking &quot;Launch Pop-Up&quot; will copy your client dossier and open this exact Claude project in a dedicated window.
@@ -1958,7 +2233,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       type="text"
                       value={claudeBriefLocation}
                       onChange={(e) => setClaudeBriefLocation(e.target.value)}
-                      className="w-full rounded-xl bg-[#2A211C] border border-white/10 px-3 py-2 text-white text-xs focus:border-[#F5951C] focus:outline-none"
+                      className="w-full rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/10 px-3 py-2 text-white text-xs focus:border-[#F5951C] focus:outline-none"
                     />
                   </div>
                   <div>
@@ -1969,7 +2244,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       type="text"
                       value={claudeBriefDuration}
                       onChange={(e) => setClaudeBriefDuration(e.target.value)}
-                      className="w-full rounded-xl bg-[#2A211C] border border-white/10 px-3 py-2 text-white text-xs focus:border-[#F5951C] focus:outline-none"
+                      className="w-full rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/10 px-3 py-2 text-white text-xs focus:border-[#F5951C] focus:outline-none"
                     />
                   </div>
                 </div>
@@ -1982,7 +2257,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     rows={2}
                     value={claudeBriefAsks}
                     onChange={(e) => setClaudeBriefAsks(e.target.value)}
-                    className="w-full rounded-xl bg-[#2A211C] border border-white/10 p-2.5 text-white text-xs focus:border-[#F5951C] focus:outline-none"
+                    className="w-full rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/10 p-2.5 text-white text-xs focus:border-[#F5951C] focus:outline-none"
                   />
                 </div>
 
@@ -2009,7 +2284,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     {attachedFiles.map((file, idx) => (
                       <span
                         key={idx}
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#2A211C] border border-white/10 text-[11px] text-white/80"
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/10 text-[11px] text-white/80"
                       >
                         <span>📎</span>
                         <span>{file.name}</span>
@@ -2020,7 +2295,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                 </div>
 
                 {/* Action Bar: Copy Prompt & Launch Pop-Up */}
-                <div className="p-3 rounded-xl bg-gradient-to-r from-[#2A211C] to-[#1F1713] border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-2">
+                <div className="p-3 rounded-xl bg-gradient-to-r from-[#FAF8F5] to-white dark:from-[#09090B] dark:to-[#161514] border border-[#E6E1D8] dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-2">
                   <span className="text-[11px] text-white/70">
                     {copiedPrompt ? "✓ Client dossier copied to clipboard!" : "Copy briefing dossier & launch in dedicated pop-up:"}
                   </span>
@@ -2036,7 +2311,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     <button
                       type="button"
                       onClick={handleLaunchClaudePopup}
-                      className="px-4 py-1.5 rounded-lg bg-[#F5951C] text-[#2A211C] font-bold uppercase tracking-wider hover:bg-[#e08515] transition flex items-center gap-1.5 text-xs shadow-md"
+                      className="px-4 py-1.5 rounded-lg bg-[#F5951C] text-[#0E0D0C] font-bold uppercase tracking-wider hover:bg-[#e08515] transition flex items-center gap-1.5 text-xs shadow-md"
                     >
                       <span>🚀</span>
                       <span>{copiedPrompt ? "✓ Copied! Launching..." : "Launch Claude Project Pop-Up"}</span>
@@ -2062,7 +2337,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     value={claudeInputText}
                     onChange={(e) => setClaudeInputText(e.target.value)}
                     placeholder="Paste the output generated by your Claude project here..."
-                    className="w-full rounded-xl bg-[#2A211C] border border-white/10 p-3 text-white placeholder-white/30 font-mono text-[11px] focus:border-[#F5951C] focus:outline-none"
+                    className="w-full rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/10 p-3 text-white placeholder-white/30 font-mono text-[11px] focus:border-[#F5951C] focus:outline-none"
                   />
                 </div>
 
@@ -2081,14 +2356,14 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   <button
                     type="button"
                     onClick={() => setShowClaudeModal(false)}
-                    className="px-4 py-2 rounded-xl border border-white/15 text-white/70 hover:text-white"
+                    className="px-4 py-2 rounded-xl border border-[#E6E1D8] dark:border-white/15 text-white/70 hover:text-white"
                   >
                     Cancel
                   </button>
                   <button
                     type="button"
                     onClick={handleParseClaudeInput}
-                    className="px-4 py-2 rounded-xl bg-[#F5951C] text-[#2A211C] font-bold uppercase tracking-wider hover:bg-[#e08515] transition"
+                    className="px-4 py-2 rounded-xl bg-[#F5951C] text-[#0E0D0C] font-bold uppercase tracking-wider hover:bg-[#e08515] transition"
                   >
                     Parse & Generate PDF
                   </button>
@@ -2104,9 +2379,9 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
       {/* ========================================================================= */}
       {showAddClientModal && (
         <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#362B25] border border-white/20 rounded-2xl max-w-2xl w-full p-6 text-white shadow-2xl relative max-h-[90vh] overflow-y-auto">
+          <div className="bg-white dark:bg-[#161514] border border-white/20 rounded-2xl max-w-2xl w-full p-6 text-white shadow-2xl relative max-h-[90vh] overflow-y-auto">
             {/* Modal Header */}
-            <div className="flex justify-between items-start mb-5 pb-3 border-b border-white/10">
+            <div className="flex justify-between items-start mb-5 pb-3 border-b border-[#E6E1D8] dark:border-white/10">
               <div>
                 <h3 className="text-lg font-bold text-white flex items-center gap-2">
                   <span>➕</span> Add New Client Dossier
@@ -2145,6 +2420,46 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
               </div>
             )}
 
+            {matchedCustomer && (
+              <div className="mb-4 p-4 rounded-xl border border-amber-500/40 bg-amber-500/10 text-xs space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-amber-300 flex items-center gap-1.5">
+                    <span>⭐</span> Returning Customer Detected ({matchedCustomer.customerCode})
+                  </span>
+                  <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-amber-500/20 text-amber-200">
+                    {matchedCustomer.pastTripsCount} Previous Journeys
+                  </span>
+                </div>
+                <p className="text-amber-100">
+                  <strong>{matchedCustomer.primaryName}</strong> ({matchedCustomer.primaryMobile}) is already cataloged in our atelier.
+                </p>
+                {!isLinkedToExisting ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsLinkedToExisting(true);
+                      setClientFormName(matchedCustomer.primaryName);
+                      if (matchedCustomer.primaryMobile) setClientFormPhone(matchedCustomer.primaryMobile);
+                    }}
+                    className="px-3.5 py-1.5 rounded-lg bg-[#F5951C] text-[#0E0D0C] font-bold text-xs uppercase tracking-wider hover:bg-[#e08515] transition shadow-sm"
+                  >
+                    Link New Journey to {matchedCustomer.primaryName} ({matchedCustomer.customerCode})
+                  </button>
+                ) : (
+                  <div className="flex items-center justify-between bg-emerald-500/20 border border-emerald-500/40 p-2.5 rounded-lg text-emerald-200">
+                    <span className="font-semibold">✓ Linked to existing profile {matchedCustomer.customerCode}. New trip deal will be attached.</span>
+                    <button
+                      type="button"
+                      onClick={() => setIsLinkedToExisting(false)}
+                      className="text-[11px] underline text-red-400 hover:text-red-300"
+                    >
+                      Unlink
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
             {/* Form */}
             <form onSubmit={handleCreateClientSubmit} className="space-y-5">
               {/* SECTION 1: PRIMARY IDENTIFICATION */}
@@ -2163,21 +2478,20 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       value={clientFormName}
                       onChange={(e) => setClientFormName(e.target.value)}
                       placeholder="e.g. Ananya Sharma"
-                      className="w-full rounded-xl border border-white/10 bg-[#2A211C] px-3.5 py-2 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                      className="w-full rounded-xl border border-[#E6E1D8] dark:border-white/10 bg-[#FAF8F5] dark:bg-[#09090B] px-3.5 py-2 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
                     />
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-white/80 mb-1">
-                      Primary Email <span className="text-[#F5951C]">*</span>
+                      Primary Email <span className="text-white/40 text-[10px]">(Optional)</span>
                     </label>
                     <input
                       type="email"
-                      required
                       value={clientFormEmail}
                       onChange={(e) => setClientFormEmail(e.target.value)}
                       onBlur={handleBlurDuplicateCheck}
                       placeholder="e.g. ananya.sharma@example.com"
-                      className="w-full rounded-xl border border-white/10 bg-[#2A211C] px-3.5 py-2 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                      className="w-full rounded-xl border border-[#E6E1D8] dark:border-white/10 bg-[#FAF8F5] dark:bg-[#09090B] px-3.5 py-2 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
                     />
                   </div>
                 </div>
@@ -2194,7 +2508,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       onChange={(e) => setClientFormPhone(e.target.value)}
                       onBlur={handleBlurDuplicateCheck}
                       placeholder="+91 98401 12233"
-                      className="w-full rounded-xl border border-white/10 bg-[#2A211C] px-3.5 py-2 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                      className="w-full rounded-xl border border-[#E6E1D8] dark:border-white/10 bg-[#FAF8F5] dark:bg-[#09090B] px-3.5 py-2 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
                     />
                   </div>
                   <div>
@@ -2206,7 +2520,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       value={clientFormCity}
                       onChange={(e) => setClientFormCity(e.target.value)}
                       placeholder="e.g. Bengaluru, India"
-                      className="w-full rounded-xl border border-white/10 bg-[#2A211C] px-3.5 py-2 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                      className="w-full rounded-xl border border-[#E6E1D8] dark:border-white/10 bg-[#FAF8F5] dark:bg-[#09090B] px-3.5 py-2 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
                     />
                   </div>
                 </div>
@@ -2219,7 +2533,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     <select
                       value={clientFormLeadSource}
                       onChange={(e) => setClientFormLeadSource(e.target.value)}
-                      className="w-full rounded-xl border border-white/10 bg-[#2A211C] px-3.5 py-2 text-xs text-white focus:border-[#F5951C] focus:outline-none"
+                      className="w-full rounded-xl border border-[#E6E1D8] dark:border-white/10 bg-[#FAF8F5] dark:bg-[#09090B] px-3.5 py-2 text-xs text-white focus:border-[#F5951C] focus:outline-none"
                     >
                       <option value="instagram">Instagram Campaign</option>
                       <option value="client_referral">Client Referral</option>
@@ -2235,7 +2549,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                         type="checkbox"
                         checked={clientFormIsVip}
                         onChange={(e) => setClientFormIsVip(e.target.checked)}
-                        className="rounded border-white/20 bg-[#2A211C] text-[#F5951C] focus:ring-[#F5951C] h-4 w-4"
+                        className="rounded border-white/20 bg-[#FAF8F5] dark:bg-[#09090B] text-[#F5951C] focus:ring-[#F5951C] h-4 w-4"
                       />
                       <span className="flex items-center gap-1">
                         <span>⭐</span> Mark as High-Touch VIP Client
@@ -2246,7 +2560,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
               </div>
 
               {/* SECTION 2: PREFERENCE & DIETARY TAGGING */}
-              <div className="space-y-2 pt-2 border-t border-white/10">
+              <div className="space-y-2 pt-2 border-t border-[#E6E1D8] dark:border-white/10">
                 <h4 className="text-xs font-bold uppercase tracking-wider text-[#F5951C]">
                   2. Travel Style & Preference Tagging (US-005)
                 </h4>
@@ -2272,8 +2586,8 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                         onClick={() => handleToggleTag(tag)}
                         className={`text-xs px-3 py-1.5 rounded-lg border transition ${
                           isSelected
-                            ? "bg-[#F5951C] text-[#2A211C] border-[#F5951C] font-bold"
-                            : "bg-[#2A211C] text-white/70 border-white/10 hover:border-white/30"
+                            ? "bg-[#F5951C] text-[#0E0D0C] border-[#F5951C] font-bold"
+                            : "bg-[#FAF8F5] dark:bg-[#09090B] text-white/70 border-[#E6E1D8] dark:border-white/10 hover:border-white/30"
                         }`}
                       >
                         {isSelected ? "✓ " : "+ "}
@@ -2294,7 +2608,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       }
                     }}
                     placeholder="Add custom tag (e.g. Interconnecting Rooms)..."
-                    className="flex-1 rounded-xl border border-white/10 bg-[#2A211C] px-3.5 py-1.5 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                    className="flex-1 rounded-xl border border-[#E6E1D8] dark:border-white/10 bg-[#FAF8F5] dark:bg-[#09090B] px-3.5 py-1.5 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
                   />
                   <button
                     type="button"
@@ -2307,7 +2621,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
               </div>
 
               {/* SECTION 3: LINKED COMPANIONS */}
-              <div className="space-y-3 pt-2 border-t border-white/10">
+              <div className="space-y-3 pt-2 border-t border-[#E6E1D8] dark:border-white/10">
                 <div className="flex justify-between items-center">
                   <div>
                     <h4 className="text-xs font-bold uppercase tracking-wider text-[#F5951C]">
@@ -2330,7 +2644,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   {clientFormCompanions.map((comp, idx) => (
                     <div
                       key={idx}
-                      className="p-3 rounded-xl bg-[#2A211C] border border-white/5 grid grid-cols-1 sm:grid-cols-12 gap-2 items-center text-xs"
+                      className="p-3 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/5 grid grid-cols-1 sm:grid-cols-12 gap-2 items-center text-xs"
                     >
                       <div className="sm:col-span-4">
                         <input
@@ -2338,14 +2652,14 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                           value={comp.fullName}
                           onChange={(e) => handleUpdateCompanion(idx, "fullName", e.target.value)}
                           placeholder="Companion Name"
-                          className="w-full rounded-lg border border-white/10 bg-[#362B25] px-2.5 py-1.5 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                          className="w-full rounded-lg border border-[#E6E1D8] dark:border-white/10 bg-white dark:bg-[#161514] px-2.5 py-1.5 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
                         />
                       </div>
                       <div className="sm:col-span-3">
                         <select
                           value={comp.relationship}
                           onChange={(e) => handleUpdateCompanion(idx, "relationship", e.target.value)}
-                          className="w-full rounded-lg border border-white/10 bg-[#362B25] px-2.5 py-1.5 text-xs text-white focus:border-[#F5951C] focus:outline-none"
+                          className="w-full rounded-lg border border-[#E6E1D8] dark:border-white/10 bg-white dark:bg-[#161514] px-2.5 py-1.5 text-xs text-white focus:border-[#F5951C] focus:outline-none"
                         >
                           <option value="spouse">Spouse</option>
                           <option value="child">Child</option>
@@ -2360,7 +2674,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                           value={comp.notes}
                           onChange={(e) => handleUpdateCompanion(idx, "notes", e.target.value)}
                           placeholder="Notes (e.g. Age 7, Pure Veg)"
-                          className="w-full rounded-lg border border-white/10 bg-[#362B25] px-2.5 py-1.5 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                          className="w-full rounded-lg border border-[#E6E1D8] dark:border-white/10 bg-white dark:bg-[#161514] px-2.5 py-1.5 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
                         />
                       </div>
                       <div className="sm:col-span-1 text-center">
@@ -2379,7 +2693,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
               </div>
 
               {/* SECTION 4: INITIAL DISCOVERY NOTE */}
-              <div className="space-y-2 pt-2 border-t border-white/10">
+              <div className="space-y-2 pt-2 border-t border-[#E6E1D8] dark:border-white/10">
                 <h4 className="text-xs font-bold uppercase tracking-wider text-[#F5951C]">
                   4. Initial Discovery & Trip Briefing (US-006)
                 </h4>
@@ -2388,12 +2702,12 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   value={clientFormInitialNote}
                   onChange={(e) => setClientFormInitialNote(e.target.value)}
                   placeholder="e.g. Discovery call completed. Client requested 8-day slow-travel Kashmir autumn circuit, interconnected rooms, pure vegetarian dining."
-                  className="w-full rounded-xl border border-white/10 bg-[#2A211C] p-3 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                  className="w-full rounded-xl border border-[#E6E1D8] dark:border-white/10 bg-[#FAF8F5] dark:bg-[#09090B] p-3 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
                 />
               </div>
 
               {/* Modal Actions */}
-              <div className="flex justify-end items-center gap-3 pt-3 border-t border-white/10">
+              <div className="flex justify-end items-center gap-3 pt-3 border-t border-[#E6E1D8] dark:border-white/10">
                 <button
                   type="button"
                   onClick={() => setShowAddClientModal(false)}
@@ -2404,7 +2718,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                 <button
                   type="submit"
                   disabled={clientSubmitLoading}
-                  className="px-5 py-2 rounded-xl bg-[#F5951C] text-[#2A211C] text-xs font-bold uppercase tracking-wider hover:bg-[#e08515] transition disabled:opacity-50 flex items-center gap-2 shadow-md"
+                  className="px-5 py-2 rounded-xl bg-[#F5951C] text-[#0E0D0C] text-xs font-bold uppercase tracking-wider hover:bg-[#e08515] transition disabled:opacity-50 flex items-center gap-2 shadow-md"
                 >
                   {clientSubmitLoading ? (
                     <>
@@ -2444,7 +2758,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
         {radarMinimized ? (
           <div
             onMouseDown={startDragging}
-            className="cursor-move rounded-full bg-[#362B25] border-2 border-[#F5951C] px-4 py-2.5 shadow-2xl flex items-center gap-2.5 text-xs text-white hover:shadow-[#F5951C]/20 transition"
+            className="cursor-move rounded-full bg-white dark:bg-[#161514] border-2 border-[#F5951C] px-4 py-2.5 shadow-2xl flex items-center gap-2.5 text-xs text-white hover:shadow-[#F5951C]/20 transition"
             title="Drag anywhere on screen. Re-login resets to Bottom-Right."
           >
             <span className="relative flex h-2.5 w-2.5">
@@ -2464,9 +2778,9 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
           </div>
         ) : (
           /* State B: Expanded Dock */
-          <div className="w-80 sm:w-96 rounded-2xl bg-[#362B25] border border-white/15 shadow-2xl overflow-hidden backdrop-blur-md">
+          <div className="w-80 sm:w-96 rounded-2xl bg-white dark:bg-[#161514] border border-[#E6E1D8] dark:border-white/15 shadow-2xl overflow-hidden backdrop-blur-md">
             {/* Header */}
-            <div className="p-3.5 bg-[#2E241F] border-b border-white/10 flex justify-between items-center">
+            <div className="p-3.5 bg-[#2E241F] border-b border-[#E6E1D8] dark:border-white/10 flex justify-between items-center">
               <div className="flex items-center gap-2">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -2479,7 +2793,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setRadarMinimized(true)}
-                  className="text-xs text-white/60 hover:text-white px-2 py-0.5 rounded border border-white/10"
+                  className="text-xs text-white/60 hover:text-white px-2 py-0.5 rounded border border-[#E6E1D8] dark:border-white/10"
                 >
                   Minimize
                 </button>
@@ -2487,14 +2801,14 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
             </div>
 
             {/* Context Selector */}
-            <div className="p-3 bg-[#2A211C] border-b border-white/5 flex gap-2 overflow-x-auto text-xs">
+            <div className="p-3 bg-[#FAF8F5] dark:bg-[#09090B] border-b border-[#E6E1D8] dark:border-white/5 flex gap-2 overflow-x-auto text-xs">
               {["Kashmir", "Rajasthan", "Kerala", "Ladakh"].map((dest) => (
                 <button
                   key={dest}
                   onClick={() => setActiveDestination(dest)}
                   className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition ${
                     activeDestination === dest
-                      ? "bg-[#F5951C] text-[#2A211C]"
+                      ? "bg-[#F5951C] text-[#0E0D0C]"
                       : "text-white/60 hover:text-white"
                   }`}
                 >
@@ -2506,7 +2820,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
             {/* Live Context Cards */}
             <div className="p-4 space-y-3 text-xs max-h-72 overflow-y-auto">
               {/* Weather */}
-              <div className="p-2.5 rounded-xl bg-[#2A211C] border border-white/5 flex justify-between items-center">
+              <div className="p-2.5 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/5 flex justify-between items-center">
                 <div>
                   <p className="text-[11px] text-white/50 uppercase font-semibold">Live Weather</p>
                   <p className="font-bold text-white mt-0.5">14°C • Golden Autumn Skies</p>
@@ -2515,7 +2829,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
               </div>
 
               {/* Flights */}
-              <div className="p-2.5 rounded-xl bg-[#2A211C] border border-white/5 space-y-1">
+              <div className="p-2.5 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/5 space-y-1">
                 <p className="text-[11px] text-white/50 uppercase font-semibold">Flight Intelligence</p>
                 <div className="flex justify-between items-center text-white">
                   <span>DEL ➔ SXR (AI-825)</span>
@@ -2524,14 +2838,14 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
               </div>
 
               {/* Ground Notice */}
-              <div className="p-2.5 rounded-xl bg-[#2A211C] border border-white/5 space-y-1">
+              <div className="p-2.5 rounded-xl bg-[#FAF8F5] dark:bg-[#09090B] border border-[#E6E1D8] dark:border-white/5 space-y-1">
                 <p className="text-[11px] text-white/50 uppercase font-semibold">Local Supplier Advisory</p>
                 <p className="text-white/80">Srinagar-Gulmarg Highway: Clear, private chauffeured escort confirmed.</p>
               </div>
             </div>
 
             {/* Inactivity Notice */}
-            <div className="p-2.5 bg-[#2E241F] border-t border-white/5 text-[10px] text-white/40 text-center">
+            <div className="p-2.5 bg-[#2E241F] border-t border-[#E6E1D8] dark:border-white/5 text-[10px] text-white/40 text-center">
               Permanent dock. 30-min idle watchdog resets position to Bottom-Right.
             </div>
           </div>

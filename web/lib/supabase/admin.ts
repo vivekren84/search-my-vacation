@@ -329,6 +329,54 @@ export async function updateSupabaseUserRole(
 }
 
 /**
+ * Verify user password against Supabase GoTrue Auth
+ */
+export async function verifySupabaseUserPassword(
+  email: string,
+  password: string
+): Promise<{ success: boolean; user?: any; error?: string }> {
+  const config = getSupabaseAdminConfig();
+  if (!config) {
+    return { success: false, error: "Database configuration missing." };
+  }
+
+  const { projectUrl, secretKey } = config;
+  const anonKey =
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+    secretKey;
+
+  try {
+    const res = await fetch(`${projectUrl}/auth/v1/token?grant_type=password`, {
+      method: "POST",
+      headers: {
+        apikey: anonKey,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: email.trim().toLowerCase(),
+        password: password.trim(),
+      }),
+      signal: AbortSignal.timeout(6000),
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      return { success: true, user: data.user };
+    }
+
+    const errData = await res.json().catch(() => ({}));
+    return {
+      success: false,
+      error: errData.error_description || errData.msg || "Invalid credentials",
+    };
+  } catch (e: any) {
+    console.warn("Supabase password verification warning:", e.message);
+    return { success: false, error: e.message };
+  }
+}
+
+/**
  * Update user password in Supabase auth.users
  */
 export async function updateSupabaseUserPassword(
@@ -351,6 +399,7 @@ export async function updateSupabaseUserPassword(
 
     // 1. Locate user in auth.users
     let authUserId: string | null = null;
+    let existingMeta: Record<string, any> = {};
     const authRes = await fetch(`${projectUrl}/auth/v1/admin/users?per_page=100`, {
       method: "GET",
       headers,
@@ -359,23 +408,33 @@ export async function updateSupabaseUserPassword(
 
     if (authRes.ok) {
       const data = await authRes.json();
-      const users: Array<{ id: string; email?: string }> = data.users || [];
+      const users: Array<{ id: string; email?: string; user_metadata?: Record<string, any> }> =
+        data.users || [];
       const match = users.find((u) => u.email?.trim().toLowerCase() === normalizedEmail);
       if (match) {
         authUserId = match.id;
+        existingMeta = match.user_metadata || {};
       }
     }
 
     if (authUserId) {
-      await fetch(`${projectUrl}/auth/v1/admin/users/${authUserId}`, {
+      const updateRes = await fetch(`${projectUrl}/auth/v1/admin/users/${authUserId}`, {
         method: "PUT",
         headers,
         body: JSON.stringify({
           password: newPassword,
-          user_metadata: { requires_password_change: false },
+          user_metadata: {
+            ...existingMeta,
+            requires_password_change: false,
+          },
         }),
         signal: AbortSignal.timeout(6000),
       });
+
+      if (!updateRes.ok) {
+        const errJson = await updateRes.json().catch(() => ({}));
+        console.warn("Supabase user password PUT warning:", errJson);
+      }
 
       const nowIso = new Date().toISOString();
       await fetch(`${projectUrl}/rest/v1/workspace_users?user_id=eq.${authUserId}`, {
@@ -617,7 +676,7 @@ export async function getSupabaseStaffUsers(): Promise<
       const requiresPasswordChange =
         normalizedEmail === "vivek@searchmyvacation.com"
           ? false
-          : meta.requires_password_change !== false;
+          : meta.requires_password_change === true;
 
       let status: "Active" | "Pending First Login" | "Inactive" = "Active";
       if (isDeactivated) {
@@ -735,7 +794,7 @@ export async function getSupabaseStaffUserByEmailOrPhone(identifier: string): Pr
     const requiresPasswordChange =
       normalizedEmail === "vivek@searchmyvacation.com"
         ? false
-        : meta.requires_password_change !== false;
+        : meta.requires_password_change === true;
 
     let status: "Active" | "Pending First Login" | "Inactive" = "Active";
     if (isDeactivated) {
