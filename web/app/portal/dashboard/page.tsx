@@ -1363,72 +1363,108 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
         {activeTab === "operations" && (
           <div className="space-y-6">
             {(() => {
-              // Group crmTrips dynamically into 5 operational pipeline stages
+              // Helper to assign each journey to EXACTLY ONE mutually exclusive stage
+              function getKanbanStage(trip: CrmTripItem): "enquiries" | "planning" | "confirmed" | "travel" | "completed" {
+                const ts = (trip.tripStatus || "").toLowerCase();
+                const ds = (trip.dealStage || "").toLowerCase();
+                const ps = (trip.paymentStatus || "").toLowerCase();
+                const notes = (trip.notes || "").toLowerCase();
+
+                // 1. Completed Journeys (Final state — strictly exclusive, takes highest precedence)
+                if (
+                  ts.includes("complete") ||
+                  ts.includes("returned") ||
+                  notes.includes("trip complete") ||
+                  ds === "completed"
+                ) {
+                  return "completed";
+                }
+
+                // 2. In Travel / Active (In-flight journeys on tour)
+                if (
+                  ts.includes("in travel") ||
+                  ts.includes("travel") ||
+                  ts.includes("active") ||
+                  ts.includes("on tour") ||
+                  ds.includes("in travel")
+                ) {
+                  return "travel";
+                }
+
+                // 3. Confirmed & Booked (Booked upcoming journeys yet to travel)
+                if (
+                  ds.includes("book") ||
+                  ds.includes("won") ||
+                  ds.includes("deposit") ||
+                  ps.includes("advance") ||
+                  ps.includes("paid") ||
+                  ps.includes("won") ||
+                  ts.includes("confirmed") ||
+                  ts.includes("booked")
+                ) {
+                  return "confirmed";
+                }
+
+                // 4. Curation & Quotes (Proposals and customized itineraries under discussion)
+                if (
+                  ds.includes("proposal") ||
+                  ds.includes("quote") ||
+                  ds.includes("plan") ||
+                  ds.includes("discussion") ||
+                  ts.includes("quote")
+                ) {
+                  return "planning";
+                }
+
+                // 5. Enquiries & Discovery (New leads / discovery stage)
+                return "enquiries";
+              }
+
+              // Group crmTrips dynamically into 5 mutually exclusive operational pipeline stages
               const stages = [
                 {
                   id: "enquiries",
                   title: "1. Enquiries & Discovery",
                   badgeColor: "bg-blue-500/15 text-blue-700 dark:text-blue-300 border-blue-500/30",
-                  trips: crmTrips.filter((t) => {
-                    const s = (t.dealStage || "").toLowerCase();
-                    const ts = (t.tripStatus || "").toLowerCase();
-                    return s.includes("enquiry") || s.includes("lead") || s.includes("discovery") || ts.includes("draft") || ts.includes("to start");
-                  }),
+                  trips: crmTrips.filter((t) => getKanbanStage(t) === "enquiries"),
                 },
                 {
                   id: "planning",
                   title: "2. Curation & Quotes",
                   badgeColor: "bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/30",
-                  trips: crmTrips.filter((t) => {
-                    const s = (t.dealStage || "").toLowerCase();
-                    return s.includes("proposal") || s.includes("quote") || s.includes("plan") || s.includes("discussion");
-                  }),
+                  trips: crmTrips.filter((t) => getKanbanStage(t) === "planning"),
                 },
                 {
                   id: "confirmed",
                   title: "3. Confirmed & Booked",
                   badgeColor: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30",
-                  trips: crmTrips.filter((t) => {
-                    const s = (t.dealStage || "").toLowerCase();
-                    const p = (t.paymentStatus || "").toLowerCase();
-                    return s.includes("book") || s.includes("deposit") || s.includes("advance") || p.includes("advance") || p.includes("paid");
-                  }),
+                  trips: crmTrips.filter((t) => getKanbanStage(t) === "confirmed"),
                 },
                 {
                   id: "travel",
                   title: "4. In Travel / Active",
                   badgeColor: "bg-purple-500/15 text-purple-700 dark:text-purple-300 border-purple-500/30",
-                  trips: crmTrips.filter((t) => {
-                    const s = (t.dealStage || "").toLowerCase();
-                    const ts = (t.tripStatus || "").toLowerCase();
-                    return s.includes("travel") || ts.includes("travel") || ts.includes("active") || ts.includes("on tour");
-                  }),
+                  trips: crmTrips.filter((t) => getKanbanStage(t) === "travel"),
                 },
                 {
                   id: "completed",
                   title: "5. Completed Journeys",
                   badgeColor: "bg-zinc-500/15 text-zinc-700 dark:text-zinc-300 border-zinc-500/30",
-                  trips: crmTrips.filter((t) => {
-                    const s = (t.dealStage || "").toLowerCase();
-                    const ts = (t.tripStatus || "").toLowerCase();
-                    return s.includes("complete") || s.includes("closed") || ts.includes("complete") || ts.includes("returned");
-                  }),
+                  trips: crmTrips.filter((t) => getKanbanStage(t) === "completed"),
                 },
               ];
 
               const totalValuation = crmTrips.reduce((acc, t) => acc + (Number(t.quotePrice) || 0), 0);
-              const activeCount = crmTrips.filter(
-                (t) => !["completed", "closed won", "lost"].includes((t.dealStage || "").toLowerCase())
-              ).length;
+              const activeTrips = crmTrips.filter((t) => getKanbanStage(t) !== "completed");
+              const activeCount = activeTrips.length;
+              const activeValuation = activeTrips.reduce((acc, t) => acc + (Number(t.quotePrice) || 0), 0);
 
-              const confirmedTrips = crmTrips
+              // Operational Vouchers & Emergency Hub (US-012): strictly for upcoming booked or currently in-flight active journeys (never completed)
+              const voucherTrips = crmTrips
                 .filter((t) => {
-                  const s = (t.dealStage || "").toLowerCase();
-                  const ts = (t.tripStatus || "").toLowerCase();
-                  const p = (t.paymentStatus || "").toLowerCase();
-                  return s.includes("book") || s.includes("deposit") || ts.includes("travel") || p.includes("paid");
-                })
-                .slice(0, 6);
+                  const stage = getKanbanStage(t);
+                  return stage === "confirmed" || stage === "travel";
+                });
 
               return (
                 <div className="space-y-6">
@@ -1447,7 +1483,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                         ● Active Pipeline: {activeCount} Journeys
                       </span>
                       <span className="px-3 py-1.5 rounded-xl bg-[#F5951C]/15 text-[#F5951C] border border-[#F5951C]/30 font-bold font-mono">
-                        Pipeline Value: ₹{(totalValuation / 100000).toFixed(1)} Lakhs
+                        Active Value: ₹{(activeValuation / 100000).toFixed(1)} Lakhs
                       </span>
                     </div>
                   </div>
@@ -1542,24 +1578,24 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     })}
                   </div>
 
-                  {/* Operational Vouchers & Emergency Hub (Live Confirmed Bookings) */}
+                  {/* Operational Vouchers & Emergency Hub (Upcoming & In-Flight Journeys ONLY — US-012) */}
                   <div className="rounded-2xl border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] p-5 shadow-sm space-y-3">
                     <div className="flex justify-between items-center">
                       <h3 className="text-sm font-bold uppercase tracking-wider text-[#0F172A] dark:text-white flex items-center gap-2">
                         <span>🎫</span> Confirmed Booking Logistics & Vouchers (US-012)
                       </h3>
                       <span className="text-xs text-[#F5951C] font-semibold">
-                        {confirmedTrips.length} Active Bookings
+                        {voucherTrips.length} Upcoming & In-Flight Bookings
                       </span>
                     </div>
 
-                    {confirmedTrips.length === 0 ? (
+                    {voucherTrips.length === 0 ? (
                       <div className="p-6 text-center border border-dashed border-[#E2E8F0] dark:border-white/10 rounded-xl text-xs text-[#475569] dark:text-zinc-400">
-                        No active confirmed bookings currently in pipeline. Add or confirm client journeys to populate logistics vouchers.
+                        No upcoming or in-flight bookings currently active in pipeline. Completed journeys are safely archived in stage 5.
                       </div>
                     ) : (
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
-                        {confirmedTrips.map((trip) => (
+                        {voucherTrips.map((trip) => (
                           <div
                             key={trip.id}
                             className="p-3.5 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5 space-y-1.5"
