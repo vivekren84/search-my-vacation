@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { AUTHORIZED_STAFF_ACCOUNTS, findStaffByEmailOrPhone } from "../otp/store";
 import {
+  getSupabaseAdminConfig,
   getSupabaseStaffUserByEmailOrPhone,
   verifySupabaseUserPassword,
 } from "@/lib/supabase/admin";
@@ -53,6 +54,7 @@ export async function POST(request: Request) {
     }
 
     const inputPass = password.trim();
+    const hasSupabaseConfig = Boolean(getSupabaseAdminConfig());
 
     // 1. Attempt live cryptographic password verification via Supabase GoTrue Auth
     const authVerify = await verifySupabaseUserPassword(staff.email, inputPass);
@@ -69,8 +71,8 @@ export async function POST(request: Request) {
           authVerify.user?.user_metadata?.requires_password_change === true ||
           Boolean(staff.requiresPasswordChange);
       }
-    } else {
-      // 2. Fallback check for newly provisioned temporary password or dev bypass
+    } else if (!hasSupabaseConfig) {
+      // 2. Offline/local fallback ONLY when Supabase is not configured
       const expectedPass = staff.password || "TemporaryDefaultPass#2026";
       const isFallbackMatch =
         inputPass === expectedPass ||

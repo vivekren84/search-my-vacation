@@ -83,7 +83,6 @@ export async function POST(request: Request) {
 
     const isCurrentPasswordValid =
       verifyRes.ok ||
-      currentPassword === "TemporaryDefaultPass#2026" ||
       (process.env.NODE_ENV !== "production" && currentPassword === "admin123");
 
     if (!isCurrentPasswordValid) {
