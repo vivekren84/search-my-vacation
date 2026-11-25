@@ -1,15 +1,15 @@
 # Release 1.6 — Customer Accounts, Family Trip Board & Advanced Intelligence
 
 **Release Theme:** Enable optional traveller accounts, collaborative family trip shortlists, and deeper multi-destination & seasonal intelligence.  
-**Total Backlog Items:** 12  
-**Status:** Approved (Baseline)
+**Total Backlog Items:** 13  
+**Status:** Approved (Expanded Baseline)
 
 ---
 
 ## 1. Release Summary & Priority Breakdown
 
-- **Priority Mix:** High: 4 | Medium: 6 | Low: 2
-- **Source Mix:** Existing Backlog: 11 | New PO / Website Gap Additions: 1
+- **Priority Mix:** High: 4 | Medium: 7 | Low: 2
+- **Source Mix:** Existing Backlog: 11 | New PO / Website Gap Additions: 2
 
 ---
 
@@ -29,6 +29,7 @@
 | **V-04** | Destination intelligence | Journey feasibility intelligence | Keep | Medium | Approved (Baseline) | Existing Backlog (Moved from R1.3) |
 | **AI-04** | Recommendations / AI | Consented traveller preference learning | Keep | Low | Approved (Baseline) | Existing Backlog |
 | **G-04** | Governance | OAuth / Third-party sign-in operational playbook | Keep | Medium | Approved (Baseline) | Existing Backlog (Moved from R1.8) |
+| **THEME-01** | Customer & Public UX | Customer Portal & Public Website Light/Dark Mode Theme Support | New (PO) | Medium | Approved (Baseline) | Added Nov 2026: Align logged-in Customer Portal & public editorial site with accessible Light/Dark mode |
 
 ---
 
@@ -120,3 +121,10 @@
 - **Dependencies & Guardrails:** Write prior to production launch of OAuth sign-in.
 - **Acceptance Criteria:** OAuth security and operations runbook approved before release.
 - **PO Notes:** Existing Backlog (Moved from R1.8)
+
+### THEME-01 — Customer Portal & Public Website Light/Dark Mode Theme Support
+- **Area / Phase:** Customer & Public UX | **Disposition:** `New (PO)` | **Priority:** `Medium` | **PO Approval Status:** `Approved (Baseline)`
+- **Scope & Functional Intent:** Extend accessible Light/Dark/System theme support to the logged-in Customer Portal (`AUTH-02`/`AUTH-03` views) and optionally adapt the public editorial website (`searchmyvacation.com`) while preserving brand warmth and high contrast across all photography, gradients, and cards.
+- **Dependencies & Guardrails:** Must preserve the editorial Cream/Espresso/Aubergine brand identity in Light Mode and maintain WCAG AA contrast in Dark Mode. Until R1.6 ships, the public site remains locked to its fixed editorial palette regardless of OS theme.
+- **Acceptance Criteria:** Logged-in customers can toggle Light/Dark/System mode seamlessly across their portal views with zero contrast defects.
+- **PO Notes:** Added Nov 2026 (consolidated into R1.6 instead of standalone R1.5.4).
