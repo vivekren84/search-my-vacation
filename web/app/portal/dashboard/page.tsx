@@ -10,6 +10,7 @@ import { SessionIdleGuard } from "@/components/portal/SessionIdleGuard";
 import { EditTripModal, EditableTrip, StaffOption } from "@/components/portal/EditTripModal";
 import { EditCustomerModal, EditableCustomer } from "@/components/portal/EditCustomerModal";
 import { EditStaffModal, EditableStaffMember } from "@/components/portal/EditStaffModal";
+import { ItineraryBuilderPanel } from "@/components/portal/ItineraryBuilderPanel";
 
 interface StaffSession {
   fullName: string;
@@ -306,6 +307,7 @@ export default function PortalDashboardPage() {
   const [editingTrip, setEditingTrip] = useState<EditableTrip | null>(null);
   const [editingCustomer, setEditingCustomer] = useState<EditableCustomer | null>(null);
   const [editingStaff, setEditingStaff] = useState<EditableStaffMember | null>(null);
+  const [importedClaudeForBuilder, setImportedClaudeForBuilder] = useState<string | null>(null);
   const [pendingApprovals, setPendingApprovals] = useState<any[]>([]);
   const [approvalActionId, setApprovalActionId] = useState<string | null>(null);
   const [crmNotice, setCrmNotice] = useState<string | null>(null);
@@ -1259,9 +1261,10 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
     if (!claudeInputText.trim()) return;
     const matches = claudeInputText.match(/Day \d+:[^\n]+/g) || [];
     const count = matches.length || 8;
+    setImportedClaudeForBuilder(claudeInputText);
     setItineraryUpdatedFromClaude(true);
     setClaudeImportSuccess(
-      `Successfully parsed ${count} days from your Claude Project. Day schedule, boutique properties, and slow-travel timings have been updated in the SMV Itinerary Engine!`
+      `Successfully parsed ${count} days from your Claude Project. Day schedule, boutique properties, and slow-travel timings have been loaded into the SMV Itinerary Builder!`
     );
   }
 
@@ -2621,74 +2624,22 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
               )}
             </div>
 
-            {/* Current Itinerary Dossier & Pricing */}
-            <div className="rounded-2xl border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] p-6 space-y-5 shadow-sm">
-              <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
-                <div>
-                  <h3 className="text-base font-bold text-[#0F172A] dark:text-white">8-Day Kashmir Autumn Serenity Circuit</h3>
-                  <p className="text-xs text-[#475569] dark:text-zinc-400">Client: Ananya Sharma • Oct 10 - Oct 17, 2026</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 text-xs font-semibold">
-                    🟢 Margin Healthy (18.2%)
-                  </span>
-                  <button className="rounded-xl bg-[#F5951C] px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-[#0F172A]">
-                    Export Proposal (v1.0)
-                  </button>
-                </div>
-              </div>
-
-              {/* Pricing breakdown */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
-                <div className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5">
-                  <p className="text-[10px] uppercase tracking-wider text-[#475569] dark:text-white/50 font-semibold">Net Supplier Cost</p>
-                  <p className="text-sm font-bold font-mono text-[#0F172A] dark:text-white mt-1">₹312,000</p>
-                </div>
-                <div className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5">
-                  <p className="text-[10px] uppercase tracking-wider text-[#475569] dark:text-white/50 font-semibold">Agency Markup</p>
-                  <p className="text-sm font-bold font-mono text-[#F5951C] mt-1">₹69,500</p>
-                </div>
-                <div className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5">
-                  <p className="text-[10px] uppercase tracking-wider text-[#475569] dark:text-white/50 font-semibold">Estimated GST</p>
-                  <p className="text-sm font-bold font-mono text-[#334155] dark:text-white/70 mt-1">₹12,510</p>
-                </div>
-                <div className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5">
-                  <p className="text-[10px] uppercase tracking-wider text-[#475569] dark:text-white/50 font-semibold">Gross Selling Price</p>
-                  <p className="text-sm font-bold font-mono text-emerald-600 dark:text-emerald-400 mt-1">₹394,010</p>
-                </div>
-              </div>
-
-              {/* Day-by-day Itinerary Schedule */}
-              <div className="pt-2 space-y-2.5">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-[#475569] dark:text-white/70">
-                  Day-by-Day Itinerary Schedule (8 Days)
-                </h4>
-                <div className="space-y-2 text-xs">
-                  {[
-                    { day: "Day 1", title: "Arrival in Srinagar & Nigeen Lake Shikara Sunset", stay: "Nigeen Heritage Floats (Interconnected Suite)" },
-                    { day: "Day 2", title: "Mughal Heritage (Nishat & Shalimar) & Old City Walk", stay: "Nigeen Heritage Floats" },
-                    { day: "Day 3", title: "Scenic Transfer to Gulmarg & Affarwat Gondola Phase 1", stay: "Khyber Mountain Resort (Heated Suite)" },
-                    { day: "Day 4", title: "Gulmarg Alpine Leisure & Strawberry Valley Pony Trail", stay: "Khyber Mountain Resort" },
-                    { day: "Day 5", title: "Drive to Pahalgam (Valley of Shepherds) via Saffron Fields", stay: "Pahalgam Pine Cottages" },
-                    { day: "Day 6", title: "Aru Valley & Betaab Valley Family Leisure Circuit", stay: "Pahalgam Pine Cottages" },
-                    { day: "Day 7", title: "Return to Srinagar, Pashmina Artisans & Farewell Dinner", stay: "Nigeen Heritage Floats" },
-                    { day: "Day 8", title: "Sheikh ul-Alam Airport Escort & Departure", stay: "Return Flight (DEL)" },
-                  ].map((d, i) => (
-                    <div key={i} className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5 flex flex-col sm:flex-row justify-between sm:items-center gap-1 sm:gap-4">
-                      <div>
-                        <span className="text-[11px] font-bold text-[#F5951C] mr-2">{d.day}:</span>
-                        <span className="font-semibold text-[#0F172A] dark:text-white">{d.title}</span>
-                      </div>
-                      <span className="text-[11px] text-[#475569] dark:text-white/50 font-mono">{d.stay}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="p-3.5 rounded-xl border border-[#E2E8F0] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] text-xs text-[#475569] dark:text-white/60">
-                🔒 <strong className="text-[#0F172A] dark:text-white">Commercial Privacy Guardrail (US-010):</strong> White-label client exports automatically strip all supplier vendor names, net costs, and markup percentages.
-              </div>
-            </div>
+            {/* Live Persisted Itinerary Builder & Margin Engine (R1.5.3 M2) */}
+            <ItineraryBuilderPanel
+              customers={crmCustomers.map((c) => ({
+                id: c.id,
+                customerCode: c.customerCode,
+                primaryName: c.primaryName,
+              }))}
+              trips={crmTrips.map((t) => ({
+                id: t.id,
+                dealReferenceId: t.dealReferenceId,
+                customerId: t.customerId,
+                destination: t.destination,
+              }))}
+              importedClaudeText={importedClaudeForBuilder}
+              onClearImportedClaude={() => setImportedClaudeForBuilder(null)}
+            />
           </div>
         )}
 
