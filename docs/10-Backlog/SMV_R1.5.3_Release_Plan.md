@@ -35,6 +35,7 @@ Release 1.5.3 closes every remaining UI contrast and CRUD/lifecycle gap identifi
 | **US-153-04** | M1: Financial RBAC & Queue | Privilege User Financial Access + Desk User Financial Proposal & Single-Approval Queue | New (PO) | High | PostgreSQL + Next.js |
 | **US-153-05** | M1: Customer Master CRUD | Edit Customer Master Modal & `PATCH /api/portal/crm/customers` | New (PO) | High | Next.js Client + API |
 | **US-153-06** | M1: Team Governance CRUD | Edit Staff Member Details (`display_name` & `registered_mobile`) | New (PO) | Medium | Next.js Client + Auth API |
+| **US-153-08** | M1: Session Governance | 30-Min Inactivity Prompt + 2-Min Grace Countdown (`SessionIdleGuard`) | New (PO) | Medium | Next.js Shared Component |
 | **US-153-07** | M2: Itinerary Builder Persistence | Bespoke Itinerary Builder, Day/Segment Pricing, Margin Overrides & Proposal Export DB Wiring | New (PO) | Medium | PostgreSQL + Next.js |
 
 ---
@@ -92,6 +93,10 @@ Release 1.5.3 closes every remaining UI contrast and CRUD/lifecycle gap identifi
 #### `US-153-06`: Edit Staff Member Details in Team Governance
 - **Scope & Functional Intent:** Allow `super_admin` and `administrator` to edit an existing staff member's `display_name` and `registered_mobile` via an Edit button on Team Governance cards, backed by `PATCH /api/portal/auth/invite` (syncing `workspace_users` and `auth.users`).
 - **Acceptance Criteria:** Staff display name and registered E.164 mobile update cleanly without requiring manual SQL migrations.
+
+#### `US-153-08`: 30-Min Inactivity Prompt + 2-Min Grace Countdown (`SessionIdleGuard`)
+- **Scope & Functional Intent:** Replace immediate logout after 30 minutes of inactivity with an accessible Light/Dark modal warning: *"Your session has been inactive for the last 30 minutes. It will end in the next 2 minutes. Please confirm if you would like to stay on."*
+- **Acceptance Criteria:** Clicking **Stay On** resets the 30-minute timer; clicking **Log Out** or letting the `02:00` countdown expire clears `smv_staff_session` and routes to `/portal/login`. Passive mouse/scroll events do not auto-dismiss the prompt.
 
 ---
 

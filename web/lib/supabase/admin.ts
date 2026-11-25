@@ -329,6 +329,87 @@ export async function updateSupabaseUserRole(
 }
 
 /**
+ * Update staff member display name and registered mobile across auth.users & public.workspace_users
+ */
+export async function updateSupabaseUserDetails(
+  email: string,
+  updates: { fullName?: string; phoneE164?: string }
+): Promise<{ success: boolean; message: string }> {
+  const normalizedEmail = email.trim().toLowerCase();
+  const config = getSupabaseAdminConfig();
+  if (!config) {
+    return { success: true, message: `Staff details updated locally for ${normalizedEmail}.` };
+  }
+
+  const { projectUrl, secretKey } = config;
+  const headers = {
+    apikey: secretKey,
+    Authorization: `Bearer ${secretKey}`,
+    "Content-Type": "application/json",
+  };
+
+  try {
+    let authUserId: string | null = null;
+    let currentMetadata: Record<string, any> = {};
+    const authRes = await fetch(`${projectUrl}/auth/v1/admin/users?per_page=100`, {
+      method: "GET",
+      headers,
+      signal: AbortSignal.timeout(6000),
+    });
+
+    if (authRes.ok) {
+      const data = await authRes.json();
+      const users: Array<{ id: string; email?: string; user_metadata?: any }> = data.users || [];
+      const match = users.find((u) => u.email?.trim().toLowerCase() === normalizedEmail);
+      if (match) {
+        authUserId = match.id;
+        currentMetadata = match.user_metadata || {};
+      }
+    }
+
+    if (authUserId) {
+      const nextMetadata = { ...currentMetadata };
+      if (updates.fullName) nextMetadata.full_name = updates.fullName.trim();
+      if (updates.phoneE164) nextMetadata.registered_mobile = updates.phoneE164.trim();
+
+      await fetch(`${projectUrl}/auth/v1/admin/users/${authUserId}`, {
+        method: "PUT",
+        headers,
+        body: JSON.stringify({ user_metadata: nextMetadata }),
+        signal: AbortSignal.timeout(6000),
+      });
+
+      const wuPatch: Record<string, any> = { updated_at: new Date().toISOString() };
+      if (updates.fullName) wuPatch.display_name = updates.fullName.trim();
+      if (updates.phoneE164) wuPatch.registered_mobile = updates.phoneE164.trim();
+
+      const wuRes = await fetch(`${projectUrl}/rest/v1/workspace_users?user_id=eq.${authUserId}`, {
+        method: "PATCH",
+        headers,
+        body: JSON.stringify(wuPatch),
+        signal: AbortSignal.timeout(6000),
+      });
+
+      if (!wuRes.ok) {
+        const errText = await wuRes.text();
+        return { success: false, message: `Database update failed: ${errText}` };
+      }
+    }
+
+    return {
+      success: true,
+      message: `Staff details updated for ${normalizedEmail}.`,
+    };
+  } catch (err: any) {
+    console.error("Supabase user details update error:", err);
+    return {
+      success: false,
+      message: err.message || "Failed to update staff details.",
+    };
+  }
+}
+
+/**
  * Verify user password against Supabase GoTrue Auth
  */
 export async function verifySupabaseUserPassword(

@@ -6,6 +6,7 @@ import {
   setSupabaseUserActiveStatus,
   createOrSyncSupabaseStaffUser,
   updateSupabaseUserRole,
+  updateSupabaseUserDetails,
 } from "@/lib/supabase/admin";
 
 export const runtime = "nodejs";
@@ -146,13 +147,44 @@ export async function POST(request: Request) {
 export async function PATCH(request: Request) {
   try {
     const body = await request.json();
-    const { email, status, action, role } = body;
+    const { email, status, action, role, fullName, phoneE164 } = body;
 
     if (!email || typeof email !== "string") {
       return NextResponse.json({ ok: false, message: "Valid email is required." }, { status: 400 });
     }
 
     const emailCleaned = email.trim().toLowerCase();
+
+    // 0. Staff Details Edit (Display Name & Registered Mobile)
+    if (fullName !== undefined || phoneE164 !== undefined) {
+      const callerEmail = (request.headers.get("x-staff-email") || body.callerEmail || "").toLowerCase().trim();
+      if (emailCleaned === "vivek@searchmyvacation.com" && callerEmail && callerEmail !== "vivek@searchmyvacation.com") {
+        return NextResponse.json(
+          { ok: false, message: "Super Admin details can only be modified by the Super Admin." },
+          { status: 403 }
+        );
+      }
+
+      const account = AUTHORIZED_STAFF_ACCOUNTS[emailCleaned];
+      if (account) {
+        if (typeof fullName === "string" && fullName.trim()) account.fullName = fullName.trim();
+        if (typeof phoneE164 === "string" && phoneE164.trim()) account.phoneE164 = phoneE164.trim();
+      }
+
+      const detailResult = await updateSupabaseUserDetails(emailCleaned, {
+        fullName: typeof fullName === "string" ? fullName : undefined,
+        phoneE164: typeof phoneE164 === "string" ? phoneE164 : undefined,
+      });
+
+      if (!detailResult.success) {
+        return NextResponse.json({ ok: false, message: detailResult.message }, { status: 500 });
+      }
+
+      return NextResponse.json({
+        ok: true,
+        message: detailResult.message,
+      });
+    }
 
     // 1. Role Change Delegation (Super Admin, Administrator, Privilege User, Desk User)
     if (role && typeof role === "string") {

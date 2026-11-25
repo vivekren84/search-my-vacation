@@ -106,3 +106,121 @@ export async function GET(request: Request) {
     );
   }
 }
+
+/**
+ * PATCH /api/portal/crm/customers
+ * Updates customer master contact details (primary_name, primary_mobile, secondary_mobile, primary_email).
+ */
+export async function PATCH(request: Request) {
+  try {
+    const body = await request.json();
+    const {
+      id,
+      primaryName,
+      primaryMobile,
+      secondaryMobile,
+      primaryEmail,
+      needsContactEnrichment,
+    } = body;
+
+    if (!id || typeof id !== "string") {
+      return NextResponse.json(
+        { ok: false, message: "Customer ID is required for updates." },
+        { status: 400 }
+      );
+    }
+
+    if (!primaryName || typeof primaryName !== "string" || !primaryName.trim()) {
+      return NextResponse.json(
+        { ok: false, message: "Customer primary name is required." },
+        { status: 400 }
+      );
+    }
+
+    const payloadStr = JSON.stringify(body).toLowerCase();
+    if (/\bluxury\b/.test(payloadStr)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message:
+            "Brand Tone Guardrail: Prohibited terminology detected. Use terms like premier, artisanal, bespoke, or high-touch.",
+        },
+        { status: 400 }
+      );
+    }
+
+    const config = getSupabaseAdminConfig();
+    if (!config) {
+      return NextResponse.json(
+        { ok: false, message: "Database configuration missing." },
+        { status: 500 }
+      );
+    }
+
+    const { projectUrl, secretKey } = config;
+    const headers = {
+      apikey: secretKey,
+      Authorization: `Bearer ${secretKey}`,
+      "Content-Type": "application/json",
+      Prefer: "return=representation",
+    };
+
+    const cleanedPrimaryMobile = primaryMobile?.trim() || null;
+    const cleanedSecondaryMobile = secondaryMobile?.trim() || null;
+    const cleanedEmail = primaryEmail?.trim() || null;
+
+    const patchPayload: Record<string, any> = {
+      primary_name: primaryName.trim(),
+      primary_mobile: cleanedPrimaryMobile,
+      secondary_mobile: cleanedSecondaryMobile,
+      primary_email: cleanedEmail,
+      updated_at: new Date().toISOString(),
+    };
+
+    if (typeof needsContactEnrichment === "boolean") {
+      patchPayload.needs_contact_enrichment = needsContactEnrichment;
+    } else if (cleanedPrimaryMobile || cleanedEmail) {
+      patchPayload.needs_contact_enrichment = false;
+    }
+
+    const res = await fetch(
+      `${projectUrl}/rest/v1/workspace_customers?id=eq.${encodeURIComponent(id)}`,
+      {
+        method: "PATCH",
+        headers,
+        body: JSON.stringify(patchPayload),
+        signal: AbortSignal.timeout(6000),
+      }
+    );
+
+    if (!res.ok) {
+      const errText = await res.text();
+      if (res.status === 409 || errText.includes("23505") || errText.includes("idx_workspace_customers_primary_mobile")) {
+        return NextResponse.json(
+          {
+            ok: false,
+            message: "Another customer profile already uses this primary mobile number.",
+          },
+          { status: 409 }
+        );
+      }
+      return NextResponse.json(
+        { ok: false, message: `Failed to update customer: ${errText}` },
+        { status: 502 }
+      );
+    }
+
+    const updated = await res.json();
+    return NextResponse.json({
+      ok: true,
+      customer: updated[0] || null,
+      message: "Customer master dossier updated successfully.",
+    });
+  } catch (err: any) {
+    console.error("Customers PATCH error:", err);
+    return NextResponse.json(
+      { ok: false, message: err.message || "Failed to update customer." },
+      { status: 500 }
+    );
+  }
+}
