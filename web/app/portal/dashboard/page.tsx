@@ -6,6 +6,11 @@ import { useState, useEffect, useRef } from "react";
 import SiteBrand from "@/components/brand/SiteBrand";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { StaffAvatar } from "@/components/portal/StaffAvatar";
+import { SessionIdleGuard } from "@/components/portal/SessionIdleGuard";
+import { EditTripModal, EditableTrip, StaffOption } from "@/components/portal/EditTripModal";
+import { EditCustomerModal, EditableCustomer } from "@/components/portal/EditCustomerModal";
+import { EditStaffModal, EditableStaffMember } from "@/components/portal/EditStaffModal";
+import { ItineraryBuilderPanel } from "@/components/portal/ItineraryBuilderPanel";
 
 interface StaffSession {
   fullName: string;
@@ -62,6 +67,7 @@ export interface CrmTripItem {
   customerName: string;
   customerMobile: string;
   customerEmail: string;
+  leadOwnerId?: string | null;
   leadOwnerName: string;
   destination: string;
   travelYear: number;
@@ -296,8 +302,57 @@ export default function PortalDashboardPage() {
   const isDraggingRef = useRef(false);
   const dragStartRef = useRef({ mouseX: 0, mouseY: 0, elemX: 0, elemY: 0 });
 
-  // Inactivity Watchdog (30 Minutes)
-  const lastActivityRef = useRef<number>(Date.now());
+  // Milestone 1 Edit Modals & Financial Approval Queue
+  const [staffOptions, setStaffOptions] = useState<StaffOption[]>([]);
+  const [editingTrip, setEditingTrip] = useState<EditableTrip | null>(null);
+  const [editingCustomer, setEditingCustomer] = useState<EditableCustomer | null>(null);
+  const [editingStaff, setEditingStaff] = useState<EditableStaffMember | null>(null);
+  const [importedClaudeForBuilder, setImportedClaudeForBuilder] = useState<string | null>(null);
+  const [pendingApprovals, setPendingApprovals] = useState<any[]>([]);
+  const [approvalActionId, setApprovalActionId] = useState<string | null>(null);
+  const [crmNotice, setCrmNotice] = useState<string | null>(null);
+
+  function refreshApprovalsData() {
+    fetch("/api/portal/crm/trips/approvals?status=pending")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.ok && Array.isArray(data.approvals)) {
+          setPendingApprovals(data.approvals);
+        }
+      })
+      .catch(() => {});
+  }
+
+  async function handleApprovalDecision(approvalId: string, decision: "approved" | "rejected") {
+    setApprovalActionId(approvalId);
+    try {
+      const res = await fetch("/api/portal/crm/trips/approvals", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "x-staff-email": session?.email || "",
+          "x-staff-role": session?.role || "",
+        },
+        body: JSON.stringify({
+          id: approvalId,
+          decision,
+          callerEmail: session?.email || "",
+          callerRole: session?.role || "",
+        }),
+      });
+      const data = await res.json();
+      if (data?.message) {
+        setCrmNotice(data.message);
+        setTimeout(() => setCrmNotice(null), 5000);
+      }
+      refreshApprovalsData();
+      refreshCrmData();
+    } catch {
+      setCrmNotice("Network error while processing approval.");
+    } finally {
+      setApprovalActionId(null);
+    }
+  }
 
   function refreshCrmData(role?: string) {
     setCrmLoading(true);
@@ -310,8 +365,19 @@ export default function PortalDashboardPage() {
         if (data && data.ok && Array.isArray(data.trips)) {
           setCrmTrips(data.trips);
         }
+        if (data && data.ok && Array.isArray(data.staffOptions)) {
+          setStaffOptions(data.staffOptions);
+        }
       })
       .catch(() => {});
+
+    if (
+      activeRole === "super_admin" ||
+      activeRole === "administrator" ||
+      activeRole === "privilege_user"
+    ) {
+      refreshApprovalsData();
+    }
 
     // 2. Fetch Customer Master (Pillar A)
     fetch("/api/portal/crm/customers")
@@ -599,36 +665,6 @@ export default function PortalDashboardPage() {
 
     // 3. Fetch live Vetted Vendors directory (Release 1.5.2)
     refreshVendorsData();
-
-    // Inactivity event listeners
-    const handleActivity = () => {
-      lastActivityRef.current = Date.now();
-    };
-    window.addEventListener("mousemove", handleActivity);
-    window.addEventListener("keydown", handleActivity);
-    window.addEventListener("click", handleActivity);
-    window.addEventListener("scroll", handleActivity);
-
-    // Watchdog interval: check every 15s for 30m idle (1800000ms)
-    const watchdogTimer = setInterval(() => {
-      const idleTimeMs = Date.now() - lastActivityRef.current;
-      if (idleTimeMs >= 30 * 60 * 1000) {
-        // Forced logout after 30 mins
-        localStorage.removeItem("smv_staff_session");
-        // Reset radar back to bottom-right origin
-        setRadarPos({ x: 0, y: 0, isCustom: false });
-        alert("Session terminated: You have been logged out due to 30 minutes of inactivity.");
-        router.replace("/portal/login");
-      }
-    }, 15000);
-
-    return () => {
-      window.removeEventListener("mousemove", handleActivity);
-      window.removeEventListener("keydown", handleActivity);
-      window.removeEventListener("click", handleActivity);
-      window.removeEventListener("scroll", handleActivity);
-      clearInterval(watchdogTimer);
-    };
   }, [router]);
 
   function handleSignOut() {
@@ -1225,9 +1261,10 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
     if (!claudeInputText.trim()) return;
     const matches = claudeInputText.match(/Day \d+:[^\n]+/g) || [];
     const count = matches.length || 8;
+    setImportedClaudeForBuilder(claudeInputText);
     setItineraryUpdatedFromClaude(true);
     setClaudeImportSuccess(
-      `Successfully parsed ${count} days from your Claude Project. Day schedule, boutique properties, and slow-travel timings have been updated in the SMV Itinerary Engine!`
+      `Successfully parsed ${count} days from your Claude Project. Day schedule, boutique properties, and slow-travel timings have been loaded into the SMV Itinerary Builder!`
     );
   }
 
@@ -1535,9 +1572,22 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                                       <span className="font-mono text-[9px] font-bold text-[#F5951C]">
                                         {trip.dealReferenceId}
                                       </span>
-                                      <span className="text-[9px] font-semibold text-[#475569] dark:text-zinc-400 truncate max-w-[80px]">
-                                        {trip.leadOwnerName || "Vivek"}
-                                      </span>
+                                      <div className="flex items-center gap-1">
+                                        <span className="text-[9px] font-semibold text-[#475569] dark:text-zinc-400 truncate max-w-[70px]">
+                                          {trip.leadOwnerName || "Vivek"}
+                                        </span>
+                                        <button
+                                          type="button"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            setEditingTrip(trip);
+                                          }}
+                                          title={`Edit ${trip.dealReferenceId}`}
+                                          className="text-[10px] px-1 rounded hover:bg-[#F5951C]/20 text-[#475569] dark:text-zinc-400 hover:text-[#F5951C] transition"
+                                        >
+                                          ✏️
+                                        </button>
+                                      </div>
                                     </div>
                                     <p className="text-xs font-bold text-[#0F172A] dark:text-white truncate">
                                       {trip.customerName}
@@ -1600,9 +1650,19 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                             key={trip.id}
                             className="p-3.5 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5 space-y-1.5"
                           >
-                            <div className="flex justify-between font-bold text-[#0F172A] dark:text-white">
+                            <div className="flex justify-between items-center font-bold text-[#0F172A] dark:text-white">
                               <span className="font-mono text-[11px] text-[#F5951C]">{trip.dealReferenceId}</span>
-                              <span className="text-emerald-600 dark:text-emerald-400 text-[10px]">● {trip.paymentStatus}</span>
+                              <div className="flex items-center gap-2">
+                                <span className="text-emerald-600 dark:text-emerald-400 text-[10px]">● {trip.paymentStatus}</span>
+                                <button
+                                  type="button"
+                                  onClick={() => setEditingTrip(trip)}
+                                  title={`Edit ${trip.dealReferenceId}`}
+                                  className="text-[10px] px-1.5 py-0.5 rounded border border-[#CBD5E1] dark:border-white/10 hover:border-[#F5951C] text-[#475569] dark:text-zinc-300 hover:text-[#F5951C] transition"
+                                >
+                                  ✏️ Edit
+                                </button>
+                              </div>
                             </div>
                             <p className="font-bold text-xs text-[#0F172A] dark:text-white">{trip.customerName}</p>
                             <p className="text-[11px] text-[#475569] dark:text-zinc-400">
@@ -1709,6 +1769,71 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                 ))}
               </div>
             </div>
+
+            {/* CRM Update Notice & Pending Financial Approval Queue (R1.5.3 M1) */}
+            {crmNotice && (
+              <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 text-xs flex justify-between items-center">
+                <span>✓ {crmNotice}</span>
+                <button onClick={() => setCrmNotice(null)} className="hover:opacity-75">✕</button>
+              </div>
+            )}
+
+            {canManageVendors && pendingApprovals.length > 0 && (
+              <div className="rounded-2xl border border-amber-500/40 bg-amber-500/10 p-4 space-y-3">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-amber-300 flex items-center gap-1.5">
+                      <span>⏳</span> Pending Financial Approval Queue ({pendingApprovals.length})
+                    </h3>
+                    <p className="text-[11px] text-[#475569] dark:text-zinc-300">
+                      Single-concurrence review: approval by any one Privilege User, Administrator, or Super Admin applies the update and clears the queue.
+                    </p>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  {pendingApprovals.map((pa) => (
+                    <div
+                      key={pa.id}
+                      className="p-3 rounded-xl bg-white dark:bg-[#121215] border border-[#E2E8F0] dark:border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
+                    >
+                      <div className="space-y-0.5">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-mono font-bold text-[#F5951C]">{pa.deal_reference_id}</span>
+                          <span className="font-bold text-[#0F172A] dark:text-white">{pa.customerName}</span>
+                          <span className="text-[#475569] dark:text-zinc-400">• {pa.destination}</span>
+                        </div>
+                        <p className="text-[11px] text-[#475569] dark:text-zinc-400">
+                          Proposed by <strong>{pa.requested_by_name || pa.requested_by_email}</strong>: Quote ₹{Number(pa.proposed_quote_price || 0).toLocaleString("en-IN")} • Cost ₹{Number(pa.proposed_actual_cost || 0).toLocaleString("en-IN")} • GST ₹{Number(pa.proposed_gst_amount || 0).toLocaleString("en-IN")} • Net Profit ₹{Number(pa.proposed_profit || 0).toLocaleString("en-IN")}
+                        </p>
+                        {pa.justification && (
+                          <p className="text-[10px] italic text-[#64748B] dark:text-zinc-500">
+                            &quot;{pa.justification}&quot;
+                          </p>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <button
+                          type="button"
+                          disabled={approvalActionId === pa.id}
+                          onClick={() => handleApprovalDecision(pa.id, "rejected")}
+                          className="px-3 py-1.5 rounded-lg border border-rose-500/30 bg-rose-500/10 text-rose-700 dark:text-rose-300 text-[11px] font-semibold hover:bg-rose-500/20 transition disabled:opacity-50"
+                        >
+                          Reject
+                        </button>
+                        <button
+                          type="button"
+                          disabled={approvalActionId === pa.id}
+                          onClick={() => handleApprovalDecision(pa.id, "approved")}
+                          className="px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-[11px] font-bold hover:bg-emerald-700 transition disabled:opacity-50"
+                        >
+                          ✓ Approve &amp; Apply
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Filter & Global Search Bar */}
             <div className="p-4 rounded-2xl border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] flex flex-col md:flex-row gap-3 justify-between items-stretch md:items-center">
@@ -1867,11 +1992,21 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                             </span>
                           </div>
 
-                          <div className="flex items-center gap-2 text-xs">
-                            <span className="text-[#475569] dark:text-zinc-400">Lead:</span>
-                            <span className="font-semibold text-[#0F172A] dark:text-white">
-                              {trip.leadOwnerName || "Vivek"}
+                          <div className="flex items-center gap-3 text-xs">
+                            <span className="text-[#475569] dark:text-zinc-400">
+                              Lead:{" "}
+                              <strong className="text-[#0F172A] dark:text-white">
+                                {trip.leadOwnerName || "Vivek"}
+                              </strong>
                             </span>
+                            <button
+                              type="button"
+                              onClick={() => setEditingTrip(trip)}
+                              className="px-2.5 py-1 rounded-lg border border-[#CBD5E1] dark:border-white/15 text-[11px] font-semibold text-[#0F172A] dark:text-white hover:border-[#F5951C] hover:text-[#F5951C] transition flex items-center gap-1"
+                              title={`Edit ${trip.dealReferenceId} financials, status, or logistics`}
+                            >
+                              <span>✏️</span> Edit Trip
+                            </button>
                           </div>
                         </div>
 
@@ -2072,7 +2207,24 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                             )}
                           </div>
 
-                          <div className="pt-3 border-t border-[#E2E8F0] dark:border-white/10 flex justify-end">
+                          <div className="pt-3 border-t border-[#E2E8F0] dark:border-white/10 flex justify-between items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setEditingCustomer({
+                                  id: cust.id,
+                                  customerCode: cust.customerCode,
+                                  primaryName: cust.primaryName,
+                                  primaryMobile: cust.primaryMobile,
+                                  secondaryMobile: cust.secondaryMobile,
+                                  primaryEmail: cust.primaryEmail,
+                                  needsContactEnrichment: cust.needsContactEnrichment,
+                                })
+                              }
+                              className="text-xs px-3 py-1.5 rounded-lg border border-[#CBD5E1] dark:border-white/15 text-[#0F172A] dark:text-white font-semibold hover:border-[#F5951C] hover:text-[#F5951C] transition"
+                            >
+                              ✏️ Edit Customer
+                            </button>
                             <button
                               type="button"
                               onClick={() => {
@@ -2385,8 +2537,8 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
-                <h2 className="text-xl font-bold tracking-tight text-white">Bespoke Itinerary & Commercial Governance</h2>
-                <p className="text-xs text-white/60">Day-by-day scheduler, line-item pricing & white-label proposal exports</p>
+                <h2 className="text-xl font-bold tracking-tight text-[#0F172A] dark:text-white">Bespoke Itinerary & Commercial Governance</h2>
+                <p className="text-xs text-[#475569] dark:text-zinc-400">Day-by-day scheduler, line-item pricing & white-label proposal exports</p>
               </div>
               <div className="flex items-center gap-2">
                 <button
@@ -2402,7 +2554,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     setShowClaudeModal(true);
                     setClaudeImportSuccess(null);
                   }}
-                  className="rounded-xl border border-white/20 bg-white/5 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/10 transition flex items-center gap-1.5"
+                  className="rounded-xl border border-[#CBD5E1] dark:border-white/20 bg-black/5 dark:bg-white/5 px-3 py-1.5 text-xs font-semibold text-[#0F172A] dark:text-white hover:bg-black/10 dark:hover:bg-white/10 transition flex items-center gap-1.5"
                 >
                   <span>⚙️</span>
                   <span>Studio & Sync</span>
@@ -2411,7 +2563,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
             </div>
 
             {/* AI Itinerary Generator / Claude Project Integration Bridge Card */}
-            <div className="rounded-2xl border border-[#E2E8F0] dark:border-white/10 bg-gradient-to-r from-white to-[#F8FAFC] dark:from-[#121215] dark:to-[#09090B] p-5">
+            <div className="rounded-2xl border border-[#E2E8F0] dark:border-white/10 bg-gradient-to-r from-white to-[#F8FAFC] dark:from-[#121215] dark:to-[#09090B] p-5 shadow-sm">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                 <div className="flex items-center gap-3">
                   <div className="h-10 w-10 rounded-xl bg-[#F5951C]/20 border border-[#F5951C]/30 flex items-center justify-center text-lg">
@@ -2419,12 +2571,12 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h3 className="text-sm font-bold text-white">Claude Project Integration Bridge</h3>
-                      <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-semibold">
+                      <h3 className="text-sm font-bold text-[#0F172A] dark:text-white">Claude Project Integration Bridge</h3>
+                      <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 text-[10px] font-semibold">
                         Zero API Cost Pop-Up Active
                       </span>
                     </div>
-                    <p className="text-xs text-white/60">
+                    <p className="text-xs text-[#475569] dark:text-zinc-400">
                       Copy your client brief directly into your custom Claude project to generate 18-20 page proposal PDFs with Unsplash visuals at $0.00 added cost.
                     </p>
                   </div>
@@ -2443,7 +2595,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       setShowClaudeModal(true);
                       setClaudeInputText(SAMPLE_CLAUDE_ITINERARY);
                     }}
-                    className="px-3 py-1.5 rounded-lg border border-white/20 text-white/80 hover:text-white hover:border-[#F5951C] transition"
+                    className="px-3 py-1.5 rounded-lg border border-[#CBD5E1] dark:border-white/20 text-[#0F172A] dark:text-white/80 hover:border-[#F5951C] hover:text-[#F5951C] dark:hover:text-white transition"
                   >
                     View Sample Output
                   </button>
@@ -2451,95 +2603,43 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
               </div>
 
               {/* Headless API Evaluation Context */}
-              <div className="mt-4 p-3.5 rounded-xl bg-black/30 border border-[#E2E8F0] dark:border-white/10 text-xs space-y-1.5">
+              <div className="mt-4 p-3.5 rounded-xl bg-[#F1F5F9] dark:bg-black/30 border border-[#E2E8F0] dark:border-white/10 text-xs space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-white flex items-center gap-1.5">
+                  <span className="font-bold text-[#0F172A] dark:text-white flex items-center gap-1.5">
                     <span>💡</span> Zero-Cost Pop-Up vs Headless API Cost Benchmark
                   </span>
-                  <span className="text-[10px] text-emerald-400 font-mono font-semibold">100% Free Artifact Workflow</span>
+                  <span className="text-[10px] text-emerald-700 dark:text-emerald-400 font-mono font-semibold">100% Free Artifact Workflow</span>
                 </div>
-                <p className="text-[11px] text-white/70 leading-relaxed">
+                <p className="text-[11px] text-[#475569] dark:text-white/70 leading-relaxed">
                   Generating 50 itineraries/day (18–20 pages each) via direct Anthropic Claude 3.5 Sonnet API would cost approximately <strong>$4.50 USD/day (~₹380 INR/day)</strong> or <strong>$135.00 USD/month (~₹11,400 INR/month)</strong>.
                   The <strong>Zero-Cost Pop-Up Artifact Launcher</strong> generates the same high-touch 18–20 page PDFs using your existing Claude project and Unsplash key at <strong>$0.00 additional API cost</strong>.
                 </p>
               </div>
 
               {itineraryUpdatedFromClaude && (
-                <div className="mt-4 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs flex items-center justify-between">
+                <div className="mt-4 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-300 text-xs flex items-center justify-between">
                   <span>✓ 8-Day itinerary synchronized from Claude Project output. Pacing, properties & activities active.</span>
                   <span className="text-[10px] font-mono opacity-80">Synced just now</span>
                 </div>
               )}
             </div>
 
-            {/* Current Itinerary Dossier & Pricing */}
-            <div className="rounded-2xl border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] p-6 space-y-5">
-              <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
-                <div>
-                  <h3 className="text-base font-bold text-white">8-Day Kashmir Autumn Serenity Circuit</h3>
-                  <p className="text-xs text-white/60">Client: Ananya Sharma • Oct 10 - Oct 17, 2026</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-semibold">
-                    🟢 Margin Healthy (18.2%)
-                  </span>
-                  <button className="rounded-xl bg-[#F5951C] px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-[#0F172A]">
-                    Export Proposal (v1.0)
-                  </button>
-                </div>
-              </div>
-
-              {/* Pricing breakdown */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
-                <div className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5">
-                  <p className="text-[10px] uppercase tracking-wider text-white/50">Net Supplier Cost</p>
-                  <p className="text-sm font-bold font-mono text-white mt-1">₹312,000</p>
-                </div>
-                <div className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5">
-                  <p className="text-[10px] uppercase tracking-wider text-white/50">Agency Markup</p>
-                  <p className="text-sm font-bold font-mono text-[#F5951C] mt-1">₹69,500</p>
-                </div>
-                <div className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5">
-                  <p className="text-[10px] uppercase tracking-wider text-white/50">Estimated GST</p>
-                  <p className="text-sm font-bold font-mono text-white/70 mt-1">₹12,510</p>
-                </div>
-                <div className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5">
-                  <p className="text-[10px] uppercase tracking-wider text-white/50">Gross Selling Price</p>
-                  <p className="text-sm font-bold font-mono text-emerald-400 mt-1">₹394,010</p>
-                </div>
-              </div>
-
-              {/* Day-by-day Itinerary Schedule */}
-              <div className="pt-2 space-y-2.5">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-white/70">
-                  Day-by-Day Itinerary Schedule (8 Days)
-                </h4>
-                <div className="space-y-2 text-xs">
-                  {[
-                    { day: "Day 1", title: "Arrival in Srinagar & Nigeen Lake Shikara Sunset", stay: "Nigeen Heritage Floats (Interconnected Suite)" },
-                    { day: "Day 2", title: "Mughal Heritage (Nishat & Shalimar) & Old City Walk", stay: "Nigeen Heritage Floats" },
-                    { day: "Day 3", title: "Scenic Transfer to Gulmarg & Affarwat Gondola Phase 1", stay: "Khyber Mountain Resort (Heated Suite)" },
-                    { day: "Day 4", title: "Gulmarg Alpine Leisure & Strawberry Valley Pony Trail", stay: "Khyber Mountain Resort" },
-                    { day: "Day 5", title: "Drive to Pahalgam (Valley of Shepherds) via Saffron Fields", stay: "Pahalgam Pine Cottages" },
-                    { day: "Day 6", title: "Aru Valley & Betaab Valley Family Leisure Circuit", stay: "Pahalgam Pine Cottages" },
-                    { day: "Day 7", title: "Return to Srinagar, Pashmina Artisans & Farewell Dinner", stay: "Nigeen Heritage Floats" },
-                    { day: "Day 8", title: "Sheikh ul-Alam Airport Escort & Departure", stay: "Return Flight (DEL)" },
-                  ].map((d, i) => (
-                    <div key={i} className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5 flex flex-col sm:flex-row justify-between sm:items-center gap-1 sm:gap-4">
-                      <div>
-                        <span className="text-[11px] font-bold text-[#F5951C] mr-2">{d.day}:</span>
-                        <span className="font-semibold text-white">{d.title}</span>
-                      </div>
-                      <span className="text-[11px] text-white/50 font-mono">{d.stay}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="p-3.5 rounded-xl border border-[#E2E8F0] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] text-xs text-white/60">
-                🔒 <strong className="text-white">Commercial Privacy Guardrail (US-010):</strong> White-label client exports automatically strip all supplier vendor names, net costs, and markup percentages.
-              </div>
-            </div>
+            {/* Live Persisted Itinerary Builder & Margin Engine (R1.5.3 M2) */}
+            <ItineraryBuilderPanel
+              customers={crmCustomers.map((c) => ({
+                id: c.id,
+                customerCode: c.customerCode,
+                primaryName: c.primaryName,
+              }))}
+              trips={crmTrips.map((t) => ({
+                id: t.id,
+                dealReferenceId: t.dealReferenceId,
+                customerId: t.customerId,
+                destination: t.destination,
+              }))}
+              importedClaudeText={importedClaudeForBuilder}
+              onClearImportedClaude={() => setImportedClaudeForBuilder(null)}
+            />
           </div>
         )}
 
@@ -2548,8 +2648,8 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
-                <h2 className="text-xl font-bold tracking-tight text-white">Vendors & Team Governance</h2>
-                <p className="text-xs text-white/60">Role-based staff directory, vetted contracted DMC rates & security step-up</p>
+                <h2 className="text-xl font-bold tracking-tight text-[#0F172A] dark:text-white">Vendors & Team Governance</h2>
+                <p className="text-xs text-[#475569] dark:text-zinc-400">Role-based staff directory, vetted contracted DMC rates & security step-up</p>
               </div>
               <div className="flex items-center gap-2.5">
                 {canManageTeam && (
@@ -2559,28 +2659,28 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       setInviteSuccess(null);
                       setInviteError(null);
                     }}
-                    className="rounded-xl bg-[#F5951C] px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-[#0F172A] hover:bg-[#e08515] transition flex items-center gap-1.5"
+                    className="rounded-xl bg-[#F5951C] px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-[#0F172A] hover:bg-[#e08515] transition flex items-center gap-1.5 shadow-sm"
                   >
                     <span>➕</span>
                     <span>Invite Team Member</span>
                   </button>
                 )}
-                <button className="rounded-xl border border-white/20 bg-white/5 px-3.5 py-1.5 text-xs font-semibold text-white hover:border-[#F5951C]">
+                <button className="rounded-xl border border-[#CBD5E1] dark:border-white/20 bg-black/5 dark:bg-white/5 px-3.5 py-1.5 text-xs font-semibold text-[#0F172A] dark:text-white hover:border-[#F5951C]">
                   📥 Export Financial CSV (US-015)
                 </button>
               </div>
             </div>
 
             {/* Section 1: Staff Directory & Security Governance (US-001) */}
-            <div className="rounded-2xl border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] p-5 space-y-4">
+            <div className="rounded-2xl border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] p-5 space-y-4 shadow-sm">
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
                   <span className="text-lg">👥</span>
                   <div>
-                    <h3 className="text-sm font-bold uppercase tracking-wider text-white">
+                    <h3 className="text-sm font-bold uppercase tracking-wider text-[#0F172A] dark:text-white">
                       Internal Staff Directory & Access Roles (US-001)
                     </h3>
-                    <p className="text-[11px] text-white/50">
+                    <p className="text-[11px] text-[#475569] dark:text-zinc-400">
                       Super Admin & Administrator role-based provisioning with forced password rotation on first login
                     </p>
                   </div>
@@ -2591,9 +2691,9 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
               </div>
 
               {directoryNotice && (
-                <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs flex justify-between items-center">
+                <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs flex justify-between items-center">
                   <span>✓ {directoryNotice}</span>
-                  <button onClick={() => setDirectoryNotice(null)} className="text-white/40 hover:text-white">✕</button>
+                  <button onClick={() => setDirectoryNotice(null)} className="text-[#475569] dark:text-white/40 hover:text-[#0F172A] dark:hover:text-white">✕</button>
                 </div>
               )}
 
@@ -2603,15 +2703,15 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     <div className="flex justify-between items-start">
                       <div>
                         <div className="flex items-center gap-2">
-                          <p className="font-bold text-white text-sm">{member.fullName}</p>
+                          <p className="font-bold text-[#0F172A] dark:text-white text-sm">{member.fullName}</p>
                           {(member.role === "super_admin" || member.email.toLowerCase() === "vivek@searchmyvacation.com") && (
                             <span className="px-2 py-0.5 rounded-full bg-[#F5951C]/20 text-[#F5951C] border border-[#F5951C]/40 text-[9px] font-bold">
                               OWNER
                             </span>
                           )}
                         </div>
-                        <p className="text-white/60 text-[11px]">{member.email}</p>
-                        <p className="text-white/40 text-[10px] font-mono mt-0.5">{member.phoneE164}</p>
+                        <p className="text-[#475569] dark:text-white/60 text-[11px]">{member.email}</p>
+                        <p className="text-[#64748B] dark:text-white/40 text-[10px] font-mono mt-0.5">{member.phoneE164}</p>
                       </div>
 
                       {/* Interactive Role Switcher for Super Admin, or Styled Badge for viewers */}
@@ -2622,35 +2722,35 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                             onChange={(e) => handleRoleChange(member, e.target.value as TeamMember["role"])}
                             className={`text-[10px] font-semibold px-2.5 py-1 rounded-full border cursor-pointer outline-none transition appearance-none pr-6 ${
                               member.role === "super_admin" || member.role === "administrator"
-                                ? "bg-purple-950/80 text-purple-300 border-purple-500/40 hover:border-purple-400"
+                                ? "bg-purple-950/90 text-purple-200 border-purple-500/40 hover:border-purple-400"
                                 : member.role === "privilege_user"
-                                ? "bg-blue-950/80 text-blue-300 border-blue-500/40 hover:border-blue-400"
-                                : "bg-emerald-950/80 text-emerald-300 border-emerald-500/40 hover:border-emerald-400"
+                                ? "bg-blue-950/90 text-blue-200 border-blue-500/40 hover:border-blue-400"
+                                : "bg-emerald-950/90 text-emerald-200 border-emerald-500/40 hover:border-emerald-400"
                             }`}
                             title={`Change ${member.fullName}'s role (Super Admin Privilege)`}
                           >
-                            <option value="super_admin" className="bg-[#F8FAFC] dark:bg-[#09090B] text-purple-300">
+                            <option value="super_admin" className="bg-white dark:bg-[#09090B] text-purple-700 dark:text-purple-300">
                               Super Admin (Delegated)
                             </option>
-                            <option value="administrator" className="bg-[#F8FAFC] dark:bg-[#09090B] text-purple-300">
+                            <option value="administrator" className="bg-white dark:bg-[#09090B] text-purple-700 dark:text-purple-300">
                               Administrator
                             </option>
-                            <option value="privilege_user" className="bg-[#F8FAFC] dark:bg-[#09090B] text-blue-300">
+                            <option value="privilege_user" className="bg-white dark:bg-[#09090B] text-blue-700 dark:text-blue-300">
                               Privilege User (Senior)
                             </option>
-                            <option value="desk_user" className="bg-[#F8FAFC] dark:bg-[#09090B] text-emerald-300">
+                            <option value="desk_user" className="bg-white dark:bg-[#09090B] text-emerald-700 dark:text-emerald-300">
                               Desk User
                             </option>
                           </select>
-                          <span className="pointer-events-none absolute right-2 text-[8px] text-white/50">▼</span>
+                          <span className="pointer-events-none absolute right-2 text-[8px] text-white/70">▼</span>
                         </div>
                       ) : (
                         <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${
                           member.role === "super_admin" || member.email.toLowerCase() === "vivek@searchmyvacation.com" || member.role === "administrator"
-                            ? "bg-purple-500/20 text-purple-300 border-purple-500/30"
+                            ? "bg-purple-500/15 text-purple-700 dark:text-purple-300 border-purple-500/30"
                             : member.role === "privilege_user"
-                            ? "bg-blue-500/20 text-blue-300 border-blue-500/30"
-                            : "bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
+                            ? "bg-blue-500/15 text-blue-700 dark:text-blue-300 border-blue-500/30"
+                            : "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30"
                         }`}>
                           {member.email.toLowerCase() === "vivek@searchmyvacation.com"
                             ? "Super Admin"
@@ -2662,15 +2762,15 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     </div>
 
                     <div className="pt-2 border-t border-[#E2E8F0] dark:border-white/5 flex justify-between items-center text-[10px]">
-                      <span className="text-white/40">Provisioned: {member.invitedAt}</span>
+                      <span className="text-[#64748B] dark:text-white/40">Provisioned: {member.invitedAt}</span>
                       <div className="flex items-center gap-2">
                         <span
                           className={
                             member.status === "Active"
-                              ? "text-emerald-400 font-semibold"
+                              ? "text-emerald-600 dark:text-emerald-400 font-semibold"
                               : member.status === "Inactive"
-                              ? "text-rose-400 font-semibold"
-                              : "text-amber-400 font-semibold"
+                              ? "text-rose-600 dark:text-rose-400 font-semibold"
+                              : "text-amber-600 dark:text-amber-400 font-semibold"
                           }
                         >
                           ● {member.status}
@@ -2678,13 +2778,30 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                         {member.role !== "super_admin" &&
                         member.email.toLowerCase() !== "vivek@searchmyvacation.com" ? (
                           <div className="flex items-center gap-1.5">
+                            {canManageTeam && (
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setEditingStaff({
+                                    fullName: member.fullName,
+                                    email: member.email,
+                                    phoneE164: member.phoneE164,
+                                    role: member.role,
+                                  })
+                                }
+                                className="px-2 py-0.5 rounded text-[10px] font-semibold transition border border-[#CBD5E1] dark:border-white/15 text-[#0F172A] dark:text-white hover:border-[#F5951C] hover:text-[#F5951C]"
+                                title={`Edit ${member.fullName}'s name or mobile`}
+                              >
+                                ✏️ Edit
+                              </button>
+                            )}
                             <button
                               type="button"
                               onClick={() => handleToggleActiveStatus(member)}
                               className={`px-2 py-0.5 rounded text-[10px] font-semibold transition border ${
                                 member.status === "Inactive"
-                                  ? "bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
-                                  : "bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border-amber-500/30"
+                                  ? "bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-500/30"
+                                  : "bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/30"
                               }`}
                               title={
                                 member.status === "Inactive"
@@ -2697,14 +2814,14 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                             <button
                               type="button"
                               onClick={() => handleDeleteMember(member)}
-                              className="px-2 py-0.5 rounded bg-red-500/10 hover:bg-red-500/20 text-red-300 border border-red-500/30 text-[10px] font-semibold transition"
+                              className="px-2 py-0.5 rounded bg-red-500/10 hover:bg-red-500/20 text-red-700 dark:text-red-300 border border-red-500/30 text-[10px] font-semibold transition"
                               title={`Permanently delete ${member.fullName} from directory and database`}
                             >
                               Delete
                             </button>
                           </div>
                         ) : (
-                          <span className="px-2 py-0.5 rounded bg-white/5 text-white/50 border border-[#E2E8F0] dark:border-white/10 text-[9px] font-semibold flex items-center gap-1">
+                          <span className="px-2 py-0.5 rounded bg-black/5 dark:bg-white/5 text-[#475569] dark:text-white/50 border border-[#E2E8F0] dark:border-white/10 text-[9px] font-semibold flex items-center gap-1">
                             <span>🔒</span> Protected Super Admin
                           </span>
                         )}
@@ -2717,7 +2834,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
 
             {/* Section 2: Vendors & Document Vault */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="rounded-2xl border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] p-5 space-y-3">
+              <div className="rounded-2xl border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] p-5 space-y-3 shadow-sm">
                 <div className="flex justify-between items-center">
                   <h3 className="text-sm font-bold uppercase tracking-wider text-[#0F172A] dark:text-white flex items-center gap-2">
                     <span>🏢</span> Vetted Vendor Directory (RBAC)
@@ -2752,17 +2869,17 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] p-5 space-y-3">
-                <h3 className="text-sm font-bold uppercase tracking-wider text-white flex items-center gap-2">
+              <div className="rounded-2xl border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] p-5 space-y-3 shadow-sm">
+                <h3 className="text-sm font-bold uppercase tracking-wider text-[#0F172A] dark:text-white flex items-center gap-2">
                   <span>🔐</span> Encrypted Document Vault & Step-Up (US-016)
                 </h3>
                 <div className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5 text-xs space-y-2">
                   <div className="flex justify-between items-center">
-                    <span className="font-bold text-white">Ananya Sharma (Passport)</span>
-                    <span className="text-white/50 font-mono">XXXX-4567</span>
+                    <span className="font-bold text-[#0F172A] dark:text-white">Ananya Sharma (Passport)</span>
+                    <span className="text-[#475569] dark:text-white/50 font-mono">XXXX-4567</span>
                   </div>
-                  <p className="text-[11px] text-white/50">Auto-masked by default. Step-Up OTP authorization required for unmasked view.</p>
-                  <button className="w-full py-1.5 rounded-lg border border-[#E2E8F0] dark:border-white/15 text-[11px] font-semibold text-[#F5951C] hover:bg-white/5">
+                  <p className="text-[11px] text-[#475569] dark:text-white/50">Auto-masked by default. Step-Up OTP authorization required for unmasked view.</p>
+                  <button className="w-full py-1.5 rounded-lg border border-[#CBD5E1] dark:border-white/15 text-[11px] font-semibold text-[#F5951C] hover:bg-black/5 dark:hover:bg-white/5">
                     Request Step-Up Unmasking (5-Min Window)
                   </button>
                 </div>
@@ -2777,19 +2894,19 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
       {/* ========================================================================= */}
       {showInviteModal && (
         <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-[#121215] border border-white/20 rounded-2xl max-w-lg w-full p-6 text-white shadow-2xl relative">
+          <div className="bg-white dark:bg-[#121215] border border-[#E2E8F0] dark:border-white/20 rounded-2xl max-w-lg w-full p-6 text-[#0F172A] dark:text-white shadow-2xl relative">
             <div className="flex justify-between items-start mb-4">
               <div>
-                <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                <h3 className="text-lg font-bold text-[#0F172A] dark:text-white flex items-center gap-2">
                   <span>➕</span> Invite Team Member
                 </h3>
-                <p className="text-xs text-white/60">
+                <p className="text-xs text-[#475569] dark:text-zinc-400">
                   Role-based provisioning for Search My Vacation staff (US-001)
                 </p>
               </div>
               <button
                 onClick={() => setShowInviteModal(false)}
-                className="text-white/40 hover:text-white text-lg p-1"
+                className="text-[#475569] hover:text-[#0F172A] dark:text-white/40 dark:hover:text-white text-lg p-1"
               >
                 ✕
               </button>
@@ -2797,7 +2914,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
 
             {inviteSuccess ? (
               <div className="space-y-4">
-                <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs space-y-2">
+                <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-300 text-xs space-y-2">
                   <p className="font-bold flex items-center gap-2">
                     <span>✓</span> Staff Member Provisioned Successfully
                   </p>
@@ -2805,10 +2922,10 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                 </div>
 
                 <div className="p-3.5 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/10 space-y-2 text-xs">
-                  <p className="text-white/60 text-[11px] uppercase tracking-wider font-semibold">
+                  <p className="text-[#475569] dark:text-white/60 text-[11px] uppercase tracking-wider font-semibold">
                     Temporary Default Password:
                   </p>
-                  <div className="flex justify-between items-center bg-black/40 px-3 py-2 rounded-lg font-mono text-[#F5951C]">
+                  <div className="flex justify-between items-center bg-[#0F172A] dark:bg-black/40 px-3 py-2 rounded-lg font-mono text-[#F5951C]">
                     <span>TemporaryDefaultPass#2026</span>
                     <button
                       type="button"
@@ -2817,12 +2934,12 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                         setCopiedPass(true);
                         setTimeout(() => setCopiedPass(false), 2500);
                       }}
-                      className="text-xs font-sans text-white/70 hover:text-white underline ml-2 cursor-pointer"
+                      className="text-xs font-sans text-white/80 hover:text-white underline ml-2 cursor-pointer"
                     >
                       {copiedPass ? "Copied! ✓" : "Copy"}
                     </button>
                   </div>
-                  <p className="text-[10px] text-white/40">
+                  <p className="text-[10px] text-[#64748B] dark:text-white/40">
                     Security Mandate: The invited staff member will be required to configure their own permanent password upon their initial sign-in.
                   </p>
                 </div>
@@ -2842,13 +2959,13 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
             ) : (
               <form onSubmit={handleInviteSubmit} className="space-y-4 text-xs">
                 {inviteError && (
-                  <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs">
+                  <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-700 dark:text-rose-300 text-xs">
                     {inviteError}
                   </div>
                 )}
 
                 <div>
-                  <label className="block text-white/70 font-semibold mb-1">
+                  <label className="block text-[#0F172A] dark:text-white/70 font-semibold mb-1">
                     Full Name <span className="text-[#F5951C]">*</span>
                   </label>
                   <input
@@ -2857,12 +2974,12 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     value={inviteName}
                     onChange={(e) => setInviteName(e.target.value)}
                     placeholder="e.g. Ramesh Chandra"
-                    className="w-full rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/10 px-3.5 py-2.5 text-white placeholder-white/30 focus:border-[#F5951C] focus:outline-none"
+                    className="w-full rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#CBD5E1] dark:border-white/10 px-3.5 py-2.5 text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/30 focus:border-[#F5951C] focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-white/70 font-semibold mb-1">
+                  <label className="block text-[#0F172A] dark:text-white/70 font-semibold mb-1">
                     Company Email <span className="text-[#F5951C]">*</span>
                   </label>
                   <input
@@ -2871,12 +2988,12 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     value={inviteEmail}
                     onChange={(e) => setInviteEmail(e.target.value)}
                     placeholder="e.g. ramesh@searchmyvacation.com"
-                    className="w-full rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/10 px-3.5 py-2.5 text-white placeholder-white/30 focus:border-[#F5951C] focus:outline-none"
+                    className="w-full rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#CBD5E1] dark:border-white/10 px-3.5 py-2.5 text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/30 focus:border-[#F5951C] focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-white/70 font-semibold mb-1">
+                  <label className="block text-[#0F172A] dark:text-white/70 font-semibold mb-1">
                     Registered Mobile (E.164) <span className="text-[#F5951C]">*</span>
                   </label>
                   <input
@@ -2885,19 +3002,19 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     value={invitePhone}
                     onChange={(e) => setInvitePhone(e.target.value)}
                     placeholder="+91 98401 23456"
-                    className="w-full rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/10 px-3.5 py-2.5 text-white placeholder-white/30 focus:border-[#F5951C] focus:outline-none"
+                    className="w-full rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#CBD5E1] dark:border-white/10 px-3.5 py-2.5 text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/30 focus:border-[#F5951C] focus:outline-none"
                   />
-                  <p className="text-[10px] text-white/40 mt-1">Used for single-channel SMS OTP login challenges.</p>
+                  <p className="text-[10px] text-[#64748B] dark:text-white/40 mt-1">Used for single-channel SMS OTP login challenges.</p>
                 </div>
 
                 <div>
-                  <label className="block text-white/70 font-semibold mb-1">
+                  <label className="block text-[#0F172A] dark:text-white/70 font-semibold mb-1">
                     Role & Permissions <span className="text-[#F5951C]">*</span>
                   </label>
                   <select
                     value={inviteRole}
                     onChange={(e) => setInviteRole(e.target.value as any)}
-                    className="w-full rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/10 px-3.5 py-2.5 text-white focus:border-[#F5951C] focus:outline-none"
+                    className="w-full rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#CBD5E1] dark:border-white/10 px-3.5 py-2.5 text-[#0F172A] dark:text-white focus:border-[#F5951C] focus:outline-none"
                   >
                     <option value="desk_user">Desk User — Client CRM & Itinerary Operations</option>
                     <option value="privilege_user">Privilege User — Senior Advisor (Margin Overrides & VIP Docs)</option>
@@ -2910,10 +3027,10 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
 
                 <div className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/10 space-y-1">
                   <div className="flex justify-between items-center text-[11px]">
-                    <span className="text-white/60">Temporary Default Password:</span>
+                    <span className="text-[#475569] dark:text-white/60">Temporary Default Password:</span>
                     <span className="font-mono text-[#F5951C] font-semibold">TemporaryDefaultPass#2026</span>
                   </div>
-                  <p className="text-[10px] text-white/40">
+                  <p className="text-[10px] text-[#64748B] dark:text-white/40">
                     Invitees must configure a unique permanent password on first sign in.
                   </p>
                 </div>
@@ -2922,7 +3039,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   <button
                     type="button"
                     onClick={() => setShowInviteModal(false)}
-                    className="px-4 py-2 rounded-xl border border-[#E2E8F0] dark:border-white/15 text-white/70 hover:text-white"
+                    className="px-4 py-2 rounded-xl border border-[#CBD5E1] dark:border-white/15 text-[#475569] dark:text-white/70 hover:text-[#0F172A] dark:hover:text-white"
                   >
                     Cancel
                   </button>
@@ -2944,19 +3061,19 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
       {/* ========================================================================= */}
       {showClaudeModal && (
         <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-[#121215] border border-white/20 rounded-2xl max-w-2xl w-full p-6 text-white shadow-2xl relative max-h-[90vh] overflow-y-auto">
+          <div className="bg-white dark:bg-[#121215] border border-[#E2E8F0] dark:border-white/20 rounded-2xl max-w-2xl w-full p-6 text-[#0F172A] dark:text-white shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-start mb-4">
               <div>
-                <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                <h3 className="text-lg font-bold text-[#0F172A] dark:text-white flex items-center gap-2">
                   <span>🤖</span> Claude Project Itinerary & PDF Studio
                 </h3>
-                <p className="text-xs text-white/60">
+                <p className="text-xs text-[#475569] dark:text-zinc-400">
                   Connect your custom Claude project to generate and export client proposal PDFs
                 </p>
               </div>
               <button
                 onClick={() => setShowClaudeModal(false)}
-                className="text-white/40 hover:text-white text-lg p-1"
+                className="text-[#475569] hover:text-[#0F172A] dark:text-white/40 dark:hover:text-white text-lg p-1"
               >
                 ✕
               </button>
@@ -2964,7 +3081,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
 
             {claudeImportSuccess ? (
               <div className="space-y-4">
-                <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs">
+                <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-300 text-xs">
                   <p className="font-bold flex items-center gap-2 mb-1">
                     <span>✓</span> Itinerary & Proposal Synchronized!
                   </p>
@@ -2973,13 +3090,13 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
 
                 <div className="p-4 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/10 space-y-3 text-xs">
                   <div className="flex justify-between items-center">
-                    <span className="font-bold text-white">Proposal PDF Ready for Download:</span>
-                    <span className="text-emerald-400 font-mono text-[11px]">Format: Official Client PDF</span>
+                    <span className="font-bold text-[#0F172A] dark:text-white">Proposal PDF Ready for Download:</span>
+                    <span className="text-emerald-600 dark:text-emerald-400 font-mono text-[11px]">Format: Official Client PDF</span>
                   </div>
-                  <div className="p-3 bg-black/40 rounded-lg flex justify-between items-center">
+                  <div className="p-3 bg-[#F1F5F9] dark:bg-black/40 rounded-lg flex justify-between items-center">
                     <div>
                       <p className="font-bold text-[#F5951C]">8-Day_Kashmir_Serenity_Circuit_Proposal_v1.0.pdf</p>
-                      <p className="text-[10px] text-white/50">Includes Day-by-Day schedule, boutique stays, pure-veg dining & GST pricing</p>
+                      <p className="text-[10px] text-[#475569] dark:text-white/50">Includes Day-by-Day schedule, boutique stays, pure-veg dining & GST pricing</p>
                     </div>
                     <button
                       onClick={() => window.print()}
@@ -2996,7 +3113,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       setShowClaudeModal(false);
                       setClaudeImportSuccess(null);
                     }}
-                    className="px-4 py-2 rounded-xl bg-white/10 text-white text-xs font-bold uppercase tracking-wider hover:bg-white/20"
+                    className="px-4 py-2 rounded-xl bg-black/5 dark:bg-white/10 text-[#0F172A] dark:text-white text-xs font-bold uppercase tracking-wider hover:bg-black/10 dark:hover:bg-white/20"
                   >
                     Close
                   </button>
@@ -3007,10 +3124,10 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                 {/* 0. Claude Project URL Configuration */}
                 <div className="p-3.5 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#F5951C]/30 space-y-2">
                   <div className="flex justify-between items-center">
-                    <label className="text-white font-bold text-xs flex items-center gap-1.5">
+                    <label className="text-[#0F172A] dark:text-white font-bold text-xs flex items-center gap-1.5">
                       <span>🔗</span> Your Custom Claude Project URL:
                     </label>
-                    <span className="text-[10px] text-emerald-400 font-mono">Zero API Surcharge ($0.00)</span>
+                    <span className="text-[10px] text-emerald-700 dark:text-emerald-400 font-mono">Zero API Surcharge ($0.00)</span>
                   </div>
                   <input
                     type="url"
@@ -3022,9 +3139,9 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       } catch {}
                     }}
                     placeholder="e.g. https://claude.ai/project/... or https://claude.ai"
-                    className="w-full rounded-xl bg-black/40 border border-[#E2E8F0] dark:border-white/15 px-3 py-2 text-white text-xs font-mono focus:border-[#F5951C] focus:outline-none"
+                    className="w-full rounded-xl bg-white dark:bg-black/40 border border-[#CBD5E1] dark:border-white/15 px-3 py-2 text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/40 text-xs font-mono focus:border-[#F5951C] focus:outline-none"
                   />
-                  <p className="text-[10px] text-white/50">
+                  <p className="text-[10px] text-[#475569] dark:text-white/50">
                     Enter the URL of your existing Claude project. Clicking &quot;Launch Pop-Up&quot; will copy your client dossier and open this exact Claude project in a dedicated window.
                   </p>
                 </div>
@@ -3032,45 +3149,45 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                 {/* Brief Inputs matching Vivek's Claude Project settings */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-white/70 font-semibold mb-1">
+                    <label className="block text-[#0F172A] dark:text-white/70 font-semibold mb-1">
                       1. Destination / Location <span className="text-[#F5951C]">*</span>
                     </label>
                     <input
                       type="text"
                       value={claudeBriefLocation}
                       onChange={(e) => setClaudeBriefLocation(e.target.value)}
-                      className="w-full rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/10 px-3 py-2 text-white text-xs focus:border-[#F5951C] focus:outline-none"
+                      className="w-full rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#CBD5E1] dark:border-white/10 px-3 py-2 text-[#0F172A] dark:text-white text-xs focus:border-[#F5951C] focus:outline-none"
                     />
                   </div>
                   <div>
-                    <label className="block text-white/70 font-semibold mb-1">
+                    <label className="block text-[#0F172A] dark:text-white/70 font-semibold mb-1">
                       2. Trip Duration <span className="text-[#F5951C]">*</span>
                     </label>
                     <input
                       type="text"
                       value={claudeBriefDuration}
                       onChange={(e) => setClaudeBriefDuration(e.target.value)}
-                      className="w-full rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/10 px-3 py-2 text-white text-xs focus:border-[#F5951C] focus:outline-none"
+                      className="w-full rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#CBD5E1] dark:border-white/10 px-3 py-2 text-[#0F172A] dark:text-white text-xs focus:border-[#F5951C] focus:outline-none"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-white/70 font-semibold mb-1">
+                  <label className="block text-[#0F172A] dark:text-white/70 font-semibold mb-1">
                     3. Special Asks & Client Constraints <span className="text-[#F5951C]">*</span>
                   </label>
                   <textarea
                     rows={2}
                     value={claudeBriefAsks}
                     onChange={(e) => setClaudeBriefAsks(e.target.value)}
-                    className="w-full rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/10 p-2.5 text-white text-xs focus:border-[#F5951C] focus:outline-none"
+                    className="w-full rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#CBD5E1] dark:border-white/10 p-2.5 text-[#0F172A] dark:text-white text-xs focus:border-[#F5951C] focus:outline-none"
                   />
                 </div>
 
                 {/* Attachments Section */}
                 <div>
                   <div className="flex justify-between items-center mb-1">
-                    <label className="text-white/70 font-semibold">
+                    <label className="text-[#0F172A] dark:text-white/70 font-semibold">
                       4. Linked Attachments & Reference Documents:
                     </label>
                     <button
@@ -3090,11 +3207,11 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     {attachedFiles.map((file, idx) => (
                       <span
                         key={idx}
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/10 text-[11px] text-white/80"
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/10 text-[11px] text-[#0F172A] dark:text-white/80"
                       >
                         <span>📎</span>
                         <span>{file.name}</span>
-                        <span className="text-white/40 font-mono">({file.size})</span>
+                        <span className="text-[#64748B] dark:text-white/40 font-mono">({file.size})</span>
                       </span>
                     ))}
                   </div>
@@ -3102,14 +3219,14 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
 
                 {/* Action Bar: Copy Prompt & Launch Pop-Up */}
                 <div className="p-3 rounded-xl bg-gradient-to-r from-[#F8FAFC] to-white dark:from-[#09090B] dark:to-[#121215] border border-[#E2E8F0] dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-2">
-                  <span className="text-[11px] text-white/70">
+                  <span className="text-[11px] text-[#475569] dark:text-white/70">
                     {copiedPrompt ? "✓ Client dossier copied to clipboard!" : "Copy briefing dossier & launch in dedicated pop-up:"}
                   </span>
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
                       onClick={handleCopyClaudePrompt}
-                      className="px-3 py-1.5 rounded-lg bg-white/10 text-white font-semibold hover:bg-white/20 transition flex items-center gap-1.5 text-xs"
+                      className="px-3 py-1.5 rounded-lg bg-black/5 dark:bg-white/10 text-[#0F172A] dark:text-white font-semibold hover:bg-black/10 dark:hover:bg-white/20 transition flex items-center gap-1.5 text-xs"
                     >
                       <span>📋</span>
                       <span>{copiedPrompt ? "Copied! ✓" : "Copy Brief"}</span>
@@ -3128,7 +3245,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                 {/* Import / Paste Claude Output */}
                 <div>
                   <div className="flex justify-between items-center mb-1.5">
-                    <label className="text-white/70 font-semibold">
+                    <label className="text-[#0F172A] dark:text-white/70 font-semibold">
                       5. Paste Claude Project Output (Markdown or JSON):
                     </label>
                     <button
@@ -3143,15 +3260,15 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     value={claudeInputText}
                     onChange={(e) => setClaudeInputText(e.target.value)}
                     placeholder="Paste the output generated by your Claude project here..."
-                    className="w-full rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/10 p-3 text-white placeholder-white/30 font-mono text-[11px] focus:border-[#F5951C] focus:outline-none"
+                    className="w-full rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#CBD5E1] dark:border-white/10 p-3 text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/30 font-mono text-[11px] focus:border-[#F5951C] focus:outline-none"
                   />
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-200 space-y-2">
+                <div className="p-3.5 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-800 dark:text-blue-200 space-y-2">
                   <p className="font-semibold flex items-center gap-1.5">
                     <span>💡</span> Zero-Cost Pop-Up vs Headless API Evaluation
                   </p>
-                  <p className="text-[11px] text-blue-200/80 leading-relaxed">
+                  <p className="text-[11px] text-blue-700 dark:text-blue-200/80 leading-relaxed">
                     1. <strong>Zero-Cost Pop-Up Artifact Launcher:</strong> $0.00/month. Directly leverages your existing Claude Project and Unsplash key with zero additional infrastructure or token costs.<br />
                     2. <strong>Headless API Cost Benchmark:</strong> Generating 50 bespoke itineraries/day (18–20 pages each) via direct Anthropic Claude 3.5 Sonnet API would cost approximately <strong>$4.50 USD/day (~₹380 INR/day)</strong> or <strong>$135.00 USD/month (~₹11,400 INR/month)</strong>.<br />
                     3. <strong>Interactive Workflow:</strong> 1-click copies the dossier and opens your Claude Project in a pop-up window (`ClaudeProject`, 1200x850). Paste with Cmd+V, generate your proposal, and parse it back into SMV at $0.00 cost!
@@ -3162,7 +3279,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   <button
                     type="button"
                     onClick={() => setShowClaudeModal(false)}
-                    className="px-4 py-2 rounded-xl border border-[#E2E8F0] dark:border-white/15 text-white/70 hover:text-white"
+                    className="px-4 py-2 rounded-xl border border-[#CBD5E1] dark:border-white/15 text-[#475569] dark:text-white/70 hover:text-[#0F172A] dark:hover:text-white"
                   >
                     Cancel
                   </button>
@@ -3185,20 +3302,20 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
       {/* ========================================================================= */}
       {showAddClientModal && (
         <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-[#121215] border border-white/20 rounded-2xl max-w-2xl w-full p-6 text-white shadow-2xl relative max-h-[90vh] overflow-y-auto">
+          <div className="bg-white dark:bg-[#121215] border border-[#E2E8F0] dark:border-white/20 rounded-2xl max-w-2xl w-full p-6 text-[#0F172A] dark:text-white shadow-2xl relative max-h-[90vh] overflow-y-auto">
             {/* Modal Header */}
             <div className="flex justify-between items-start mb-5 pb-3 border-b border-[#E2E8F0] dark:border-white/10">
               <div>
-                <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                <h3 className="text-lg font-bold text-[#0F172A] dark:text-white flex items-center gap-2">
                   <span>➕</span> Add New Client Dossier
                 </h3>
-                <p className="text-xs text-white/60">
+                <p className="text-xs text-[#475569] dark:text-zinc-400">
                   Decoupled Master Client Profile with mandatory lead source attribution, preference tags & family companions
                 </p>
               </div>
               <button
                 onClick={() => setShowAddClientModal(false)}
-                className="text-white/40 hover:text-white text-lg p-1"
+                className="text-[#475569] hover:text-[#0F172A] dark:text-white/40 dark:hover:text-white text-lg p-1"
               >
                 ✕
               </button>
@@ -3206,19 +3323,19 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
 
             {/* Notification Messages */}
             {clientSubmitSuccess && (
-              <div className="mb-4 p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs flex items-center gap-2">
+              <div className="mb-4 p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-300 text-xs flex items-center gap-2">
                 <span>✓</span>
                 <span>{clientSubmitSuccess}</span>
               </div>
             )}
             {clientSubmitError && (
-              <div className="mb-4 p-3.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-300 text-xs flex items-center gap-2">
+              <div className="mb-4 p-3.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-700 dark:text-red-300 text-xs flex items-center gap-2">
                 <span>⚠️</span>
                 <span>{clientSubmitError}</span>
               </div>
             )}
             {duplicateWarning && (
-              <div className="mb-4 p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs space-y-1">
+              <div className="mb-4 p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs space-y-1">
                 <p className="font-bold flex items-center gap-1.5">
                   <span>⚠️</span> Existing Client Match Detected
                 </p>
@@ -3229,14 +3346,14 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
             {matchedCustomer && (
               <div className="mb-4 p-4 rounded-xl border border-amber-500/40 bg-amber-500/10 text-xs space-y-2.5">
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-amber-300 flex items-center gap-1.5">
+                  <span className="font-bold text-amber-800 dark:text-amber-300 flex items-center gap-1.5">
                     <span>⭐</span> Returning Customer Detected ({matchedCustomer.customerCode})
                   </span>
-                  <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-amber-500/20 text-amber-200">
+                  <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-amber-500/20 text-amber-900 dark:text-amber-200">
                     {matchedCustomer.pastTripsCount} Previous Journeys
                   </span>
                 </div>
-                <p className="text-amber-100">
+                <p className="text-[#0F172A] dark:text-amber-100">
                   <strong>{matchedCustomer.primaryName}</strong> ({matchedCustomer.primaryMobile}) is already cataloged in our atelier.
                 </p>
                 {!isLinkedToExisting ? (
@@ -3252,12 +3369,12 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     Link New Journey to {matchedCustomer.primaryName} ({matchedCustomer.customerCode})
                   </button>
                 ) : (
-                  <div className="flex items-center justify-between bg-emerald-500/20 border border-emerald-500/40 p-2.5 rounded-lg text-emerald-200">
+                  <div className="flex items-center justify-between bg-emerald-500/15 border border-emerald-500/40 p-2.5 rounded-lg text-emerald-800 dark:text-emerald-200">
                     <span className="font-semibold">✓ Linked to existing profile {matchedCustomer.customerCode}. New trip deal will be attached.</span>
                     <button
                       type="button"
                       onClick={() => setIsLinkedToExisting(false)}
-                      className="text-[11px] underline text-red-400 hover:text-red-300"
+                      className="text-[11px] underline text-red-600 dark:text-red-400 hover:text-red-500 dark:hover:text-red-300"
                     >
                       Unlink
                     </button>
@@ -3275,7 +3392,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold text-white/80 mb-1">
+                    <label className="block text-xs font-semibold text-[#0F172A] dark:text-white/80 mb-1">
                       Full Name <span className="text-[#F5951C]">*</span>
                     </label>
                     <input
@@ -3284,12 +3401,12 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       value={clientFormName}
                       onChange={(e) => setClientFormName(e.target.value)}
                       placeholder="e.g. Ananya Sharma"
-                      className="w-full rounded-xl border border-[#E2E8F0] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                      className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-white/80 mb-1">
-                      Primary Email <span className="text-white/40 text-[10px]">(Optional)</span>
+                    <label className="block text-xs font-semibold text-[#0F172A] dark:text-white/80 mb-1">
+                      Primary Email <span className="text-[#64748B] dark:text-white/40 text-[10px]">(Optional)</span>
                     </label>
                     <input
                       type="email"
@@ -3297,14 +3414,14 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       onChange={(e) => setClientFormEmail(e.target.value)}
                       onBlur={handleBlurDuplicateCheck}
                       placeholder="e.g. ananya.sharma@example.com"
-                      className="w-full rounded-xl border border-[#E2E8F0] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                      className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold text-white/80 mb-1">
+                    <label className="block text-xs font-semibold text-[#0F172A] dark:text-white/80 mb-1">
                       Registered Mobile (E.164) <span className="text-[#F5951C]">*</span>
                     </label>
                     <input
@@ -3314,11 +3431,11 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       onChange={(e) => setClientFormPhone(e.target.value)}
                       onBlur={handleBlurDuplicateCheck}
                       placeholder="+91 98401 12233"
-                      className="w-full rounded-xl border border-[#E2E8F0] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                      className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-white/80 mb-1">
+                    <label className="block text-xs font-semibold text-[#0F172A] dark:text-white/80 mb-1">
                       City / Nationality
                     </label>
                     <input
@@ -3326,20 +3443,20 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       value={clientFormCity}
                       onChange={(e) => setClientFormCity(e.target.value)}
                       placeholder="e.g. Bengaluru, India"
-                      className="w-full rounded-xl border border-[#E2E8F0] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                      className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                   <div>
-                    <label className="block text-xs font-semibold text-white/80 mb-1">
+                    <label className="block text-xs font-semibold text-[#0F172A] dark:text-white/80 mb-1">
                       Mandatory Lead Source <span className="text-[#F5951C]">*</span>
                     </label>
                     <select
                       value={clientFormLeadSource}
                       onChange={(e) => setClientFormLeadSource(e.target.value)}
-                      className="w-full rounded-xl border border-[#E2E8F0] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-white focus:border-[#F5951C] focus:outline-none"
+                      className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-[#0F172A] dark:text-white focus:border-[#F5951C] focus:outline-none"
                     >
                       <option value="instagram">Instagram Campaign</option>
                       <option value="client_referral">Client Referral</option>
@@ -3350,12 +3467,12 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     </select>
                   </div>
                   <div className="flex items-center pt-5">
-                    <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-white/90">
+                    <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-[#0F172A] dark:text-white/90">
                       <input
                         type="checkbox"
                         checked={clientFormIsVip}
                         onChange={(e) => setClientFormIsVip(e.target.checked)}
-                        className="rounded border-white/20 bg-[#F8FAFC] dark:bg-[#09090B] text-[#F5951C] focus:ring-[#F5951C] h-4 w-4"
+                        className="rounded border-[#CBD5E1] dark:border-white/20 bg-[#F8FAFC] dark:bg-[#09090B] text-[#F5951C] focus:ring-[#F5951C] h-4 w-4"
                       />
                       <span className="flex items-center gap-1">
                         <span>⭐</span> Mark as High-Touch VIP Client
@@ -3370,7 +3487,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                 <h4 className="text-xs font-bold uppercase tracking-wider text-[#F5951C]">
                   2. Travel Style & Preference Tagging (US-005)
                 </h4>
-                <p className="text-[11px] text-white/50">
+                <p className="text-[11px] text-[#475569] dark:text-white/50">
                   Select key travel, dietary, and accommodation preferences for this client:
                 </p>
                 <div className="flex flex-wrap gap-1.5 pt-1">
@@ -3393,7 +3510,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                         className={`text-xs px-3 py-1.5 rounded-lg border transition ${
                           isSelected
                             ? "bg-[#F5951C] text-[#0F172A] border-[#F5951C] font-bold"
-                            : "bg-[#F8FAFC] dark:bg-[#09090B] text-white/70 border-[#E2E8F0] dark:border-white/10 hover:border-white/30"
+                            : "bg-[#F8FAFC] dark:bg-[#09090B] text-[#475569] dark:text-white/70 border-[#CBD5E1] dark:border-white/10 hover:border-[#F5951C]"
                         }`}
                       >
                         {isSelected ? "✓ " : "+ "}
@@ -3414,12 +3531,12 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       }
                     }}
                     placeholder="Add custom tag (e.g. Interconnecting Rooms)..."
-                    className="flex-1 rounded-xl border border-[#E2E8F0] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-1.5 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                    className="flex-1 rounded-xl border border-[#CBD5E1] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-1.5 text-xs text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
                   />
                   <button
                     type="button"
                     onClick={handleAddCustomTag}
-                    className="px-3.5 py-1.5 rounded-xl border border-white/20 bg-white/5 text-xs font-semibold text-white hover:bg-white/10"
+                    className="px-3.5 py-1.5 rounded-xl border border-[#CBD5E1] dark:border-white/20 bg-black/5 dark:bg-white/5 text-xs font-semibold text-[#0F172A] dark:text-white hover:bg-black/10 dark:hover:bg-white/10"
                   >
                     Add
                   </button>
@@ -3433,7 +3550,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     <h4 className="text-xs font-bold uppercase tracking-wider text-[#F5951C]">
                       3. Family & Travel Companions (US-004)
                     </h4>
-                    <p className="text-[11px] text-white/50">
+                    <p className="text-[11px] text-[#475569] dark:text-white/50">
                       Link spouses, children, or travelling party members
                     </p>
                   </div>
@@ -3458,14 +3575,14 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                           value={comp.fullName}
                           onChange={(e) => handleUpdateCompanion(idx, "fullName", e.target.value)}
                           placeholder="Companion Name"
-                          className="w-full rounded-lg border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] px-2.5 py-1.5 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                          className="w-full rounded-lg border border-[#CBD5E1] dark:border-white/10 bg-white dark:bg-[#121215] px-2.5 py-1.5 text-xs text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
                         />
                       </div>
                       <div className="sm:col-span-3">
                         <select
                           value={comp.relationship}
                           onChange={(e) => handleUpdateCompanion(idx, "relationship", e.target.value)}
-                          className="w-full rounded-lg border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] px-2.5 py-1.5 text-xs text-white focus:border-[#F5951C] focus:outline-none"
+                          className="w-full rounded-lg border border-[#CBD5E1] dark:border-white/10 bg-white dark:bg-[#121215] px-2.5 py-1.5 text-xs text-[#0F172A] dark:text-white focus:border-[#F5951C] focus:outline-none"
                         >
                           <option value="spouse">Spouse</option>
                           <option value="child">Child</option>
@@ -3480,14 +3597,14 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                           value={comp.notes}
                           onChange={(e) => handleUpdateCompanion(idx, "notes", e.target.value)}
                           placeholder="Notes (e.g. Age 7, Pure Veg)"
-                          className="w-full rounded-lg border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] px-2.5 py-1.5 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                          className="w-full rounded-lg border border-[#CBD5E1] dark:border-white/10 bg-white dark:bg-[#121215] px-2.5 py-1.5 text-xs text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
                         />
                       </div>
                       <div className="sm:col-span-1 text-center">
                         <button
                           type="button"
                           onClick={() => handleRemoveCompanionRow(idx)}
-                          className="text-white/40 hover:text-red-400 text-sm p-1"
+                          className="text-[#64748B] dark:text-white/40 hover:text-red-500 dark:hover:text-red-400 text-sm p-1"
                           title="Remove companion"
                         >
                           ✕
@@ -3508,7 +3625,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   value={clientFormInitialNote}
                   onChange={(e) => setClientFormInitialNote(e.target.value)}
                   placeholder="e.g. Discovery call completed. Client requested 8-day slow-travel Kashmir autumn circuit, interconnected rooms, pure vegetarian dining."
-                  className="w-full rounded-xl border border-[#E2E8F0] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] p-3 text-xs text-white placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                  className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] p-3 text-xs text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
                 />
               </div>
 
@@ -3517,7 +3634,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                 <button
                   type="button"
                   onClick={() => setShowAddClientModal(false)}
-                  className="px-4 py-2 rounded-xl border border-white/20 text-xs font-semibold text-white/80 hover:bg-white/5"
+                  className="px-4 py-2 rounded-xl border border-[#CBD5E1] dark:border-white/20 text-xs font-semibold text-[#475569] dark:text-white/80 hover:bg-black/5 dark:hover:bg-white/5"
                 >
                   Cancel
                 </button>
@@ -3854,7 +3971,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
         {radarMinimized ? (
           <div
             onMouseDown={startDragging}
-            className="cursor-move rounded-full bg-white dark:bg-[#121215] border-2 border-[#F5951C] px-4 py-2.5 shadow-2xl flex items-center gap-2.5 text-xs text-white hover:shadow-[#F5951C]/20 transition"
+            className="cursor-move rounded-full bg-white dark:bg-[#121215] border-2 border-[#F5951C] px-4 py-2.5 shadow-2xl flex items-center gap-2.5 text-xs text-[#0F172A] dark:text-white hover:shadow-[#F5951C]/20 transition"
             title="Drag anywhere on screen. Re-login resets to Bottom-Right."
           >
             <span className="relative flex h-2.5 w-2.5">
@@ -3889,7 +4006,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setRadarMinimized(true)}
-                  className="text-xs text-white/60 hover:text-white px-2 py-0.5 rounded border border-[#E2E8F0] dark:border-white/10"
+                  className="text-xs text-white/70 hover:text-white px-2 py-0.5 rounded border border-white/20"
                 >
                   Minimize
                 </button>
@@ -3905,7 +4022,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition ${
                     activeDestination === dest
                       ? "bg-[#F5951C] text-[#0F172A]"
-                      : "text-white/60 hover:text-white"
+                      : "text-[#475569] dark:text-white/60 hover:text-[#0F172A] dark:hover:text-white"
                   }`}
                 >
                   {dest}
@@ -3918,35 +4035,89 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
               {/* Weather */}
               <div className="p-2.5 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5 flex justify-between items-center">
                 <div>
-                  <p className="text-[11px] text-white/50 uppercase font-semibold">Live Weather</p>
-                  <p className="font-bold text-white mt-0.5">14°C • Golden Autumn Skies</p>
+                  <p className="text-[11px] text-[#475569] dark:text-white/50 uppercase font-semibold">Live Weather</p>
+                  <p className="font-bold text-[#0F172A] dark:text-white mt-0.5">14°C • Golden Autumn Skies</p>
                 </div>
                 <span className="text-2xl">🍂</span>
               </div>
 
               {/* Flights */}
               <div className="p-2.5 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5 space-y-1">
-                <p className="text-[11px] text-white/50 uppercase font-semibold">Flight Intelligence</p>
-                <div className="flex justify-between items-center text-white">
+                <p className="text-[11px] text-[#475569] dark:text-white/50 uppercase font-semibold">Flight Intelligence</p>
+                <div className="flex justify-between items-center text-[#0F172A] dark:text-white">
                   <span>DEL ➔ SXR (AI-825)</span>
-                  <span className="text-emerald-400 font-bold">On Time</span>
+                  <span className="text-emerald-600 dark:text-emerald-400 font-bold">On Time</span>
                 </div>
               </div>
 
               {/* Ground Notice */}
               <div className="p-2.5 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5 space-y-1">
-                <p className="text-[11px] text-white/50 uppercase font-semibold">Local Supplier Advisory</p>
-                <p className="text-white/80">Srinagar-Gulmarg Highway: Clear, private chauffeured escort confirmed.</p>
+                <p className="text-[11px] text-[#475569] dark:text-white/50 uppercase font-semibold">Local Supplier Advisory</p>
+                <p className="text-[#334155] dark:text-white/80">Srinagar-Gulmarg Highway: Clear, private chauffeured escort confirmed.</p>
               </div>
             </div>
 
             {/* Inactivity Notice */}
-            <div className="p-2.5 bg-[#0F172A] border-t border-[#E2E8F0] dark:border-white/5 text-[10px] text-white/40 text-center">
-              Permanent dock. 30-min idle watchdog resets position to Bottom-Right.
+            <div className="p-2.5 bg-[#0F172A] border-t border-[#E2E8F0] dark:border-white/5 text-[10px] text-white/60 text-center">
+              Permanent dock. 30-min idle watchdog prompts before logout &amp; resets position.
             </div>
           </div>
         )}
       </div>
+
+      {/* Milestone 1 Edit Modals */}
+      {editingTrip && (
+        <EditTripModal
+          trip={editingTrip}
+          staffOptions={staffOptions}
+          callerEmail={session.email}
+          callerName={session.fullName}
+          callerRole={session.role}
+          onClose={() => setEditingTrip(null)}
+          onSaved={(msg) => {
+            setEditingTrip(null);
+            setCrmNotice(msg);
+            setTimeout(() => setCrmNotice(null), 5000);
+            refreshCrmData();
+          }}
+        />
+      )}
+
+      {editingCustomer && (
+        <EditCustomerModal
+          customer={editingCustomer}
+          onClose={() => setEditingCustomer(null)}
+          onSaved={(msg) => {
+            setEditingCustomer(null);
+            setCrmNotice(msg);
+            setTimeout(() => setCrmNotice(null), 5000);
+            refreshCrmData();
+          }}
+        />
+      )}
+
+      {editingStaff && (
+        <EditStaffModal
+          member={editingStaff}
+          callerEmail={session.email}
+          onClose={() => setEditingStaff(null)}
+          onSaved={(updated, msg) => {
+            setEditingStaff(null);
+            setTeamMembers((prev) =>
+              prev.map((m) =>
+                m.email.toLowerCase() === updated.email.toLowerCase()
+                  ? { ...m, fullName: updated.fullName, phoneE164: updated.phoneE164 }
+                  : m
+              )
+            );
+            setDirectoryNotice(msg);
+            setTimeout(() => setDirectoryNotice(null), 5000);
+          }}
+        />
+      )}
+
+      {/* 30-Min Inactivity Prompt + 2-Min Grace Countdown */}
+      <SessionIdleGuard onLogout={handleSignOut} />
     </div>
   );
 }

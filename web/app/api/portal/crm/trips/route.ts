@@ -16,7 +16,9 @@ export async function GET(request: Request) {
     const callerRole = searchParams.get("role")?.trim() || "desk_user";
 
     const isFinancialAuthorized =
-      callerRole === "super_admin" || callerRole === "administrator";
+      callerRole === "super_admin" ||
+      callerRole === "administrator" ||
+      callerRole === "privilege_user";
 
     const config = getSupabaseAdminConfig();
     if (!config) {
@@ -137,7 +139,15 @@ export async function GET(request: Request) {
         )
       : tripItems;
 
-    return NextResponse.json({ ok: true, trips: filtered });
+    return NextResponse.json({
+      ok: true,
+      trips: filtered,
+      staffOptions: staffList.map((s) => ({
+        userId: s.user_id,
+        displayName: s.display_name,
+        role: s.role,
+      })),
+    });
   } catch (err: any) {
     console.error("Trips GET error:", err);
     return NextResponse.json(
@@ -317,6 +327,291 @@ export async function POST(request: Request) {
     console.error("Trips POST error:", err);
     return NextResponse.json(
       { ok: false, message: err.message || "Failed to create trip deal." },
+      { status: 500 }
+    );
+  }
+}
+
+const VALID_DEAL_STAGES = new Set(["Enquiry", "In Progress", "Booked/Won", "Lost", "On Hold"]);
+const VALID_PAYMENT_STATUSES = new Set(["To Start", "In Progress", "Won", "Lost", "On Hold"]);
+const VALID_TRIP_STATUSES = new Set(["To Start", "In Progress", "Complete", "Lost", "On Hold"]);
+const VALID_PARTY_TYPES = new Set(["Solo", "Family", "Group", "Corporate", "Other"]);
+const DIRECT_FINANCIAL_ROLES = new Set(["super_admin", "administrator", "privilege_user"]);
+
+/**
+ * PATCH /api/portal/crm/trips
+ * Updates an existing trip deal's operational details and financials.
+ * - super_admin, administrator, privilege_user: direct financial & operational updates.
+ * - desk_user: operational updates save directly; financial changes create a Pending Approval
+ *   in workspace_trip_financial_approvals for single-concurrence review.
+ */
+export async function PATCH(request: Request) {
+  try {
+    const body = await request.json();
+    const {
+      id,
+      destination,
+      travelYear,
+      travelMonth,
+      durationLabel,
+      nights,
+      travelPartyType,
+      paxAdults,
+      paxChildren,
+      dealStage,
+      paymentStatus,
+      tripStatus,
+      bookedProperties,
+      bookedTransport,
+      leadOwnerId,
+      notes,
+      quotePrice,
+      actualCost,
+      preTaxAmount,
+      gstAmount,
+      profit,
+      financialJustification,
+      callerEmail,
+      callerName,
+      callerRole,
+    } = body;
+
+    if (!id || typeof id !== "string") {
+      return NextResponse.json(
+        { ok: false, message: "Trip ID is required for updates." },
+        { status: 400 }
+      );
+    }
+
+    if (destination !== undefined && (!destination || typeof destination !== "string" || !destination.trim())) {
+      return NextResponse.json(
+        { ok: false, message: "Trip destination cannot be empty." },
+        { status: 400 }
+      );
+    }
+
+    if (dealStage && !VALID_DEAL_STAGES.has(dealStage)) {
+      return NextResponse.json({ ok: false, message: `Invalid deal stage: ${dealStage}` }, { status: 400 });
+    }
+    if (paymentStatus && !VALID_PAYMENT_STATUSES.has(paymentStatus)) {
+      return NextResponse.json({ ok: false, message: `Invalid payment status: ${paymentStatus}` }, { status: 400 });
+    }
+    if (tripStatus && !VALID_TRIP_STATUSES.has(tripStatus)) {
+      return NextResponse.json({ ok: false, message: `Invalid trip status: ${tripStatus}` }, { status: 400 });
+    }
+    if (travelPartyType && !VALID_PARTY_TYPES.has(travelPartyType)) {
+      return NextResponse.json({ ok: false, message: `Invalid travel party type: ${travelPartyType}` }, { status: 400 });
+    }
+
+    const payloadStr = JSON.stringify(body).toLowerCase();
+    if (/\bluxury\b/.test(payloadStr)) {
+      return NextResponse.json(
+        {
+          ok: false,
+          message:
+            "Brand Tone Guardrail: Prohibited terminology detected. Use terms like premier, artisanal, bespoke, or high-touch.",
+        },
+        { status: 400 }
+      );
+    }
+
+    const config = getSupabaseAdminConfig();
+    if (!config) {
+      return NextResponse.json(
+        { ok: false, message: "Database configuration missing." },
+        { status: 500 }
+      );
+    }
+
+    const { projectUrl, secretKey } = config;
+    const headers = {
+      apikey: secretKey,
+      Authorization: `Bearer ${secretKey}`,
+      "Content-Type": "application/json",
+      Prefer: "return=representation",
+    };
+
+    // Fetch existing trip row
+    const existingRes = await fetch(
+      `${projectUrl}/rest/v1/workspace_trips?id=eq.${encodeURIComponent(id)}&select=*`,
+      { headers, signal: AbortSignal.timeout(5000) }
+    );
+    if (!existingRes.ok) {
+      return NextResponse.json({ ok: false, message: "Failed to locate trip record." }, { status: 502 });
+    }
+    const existingRows: any[] = await existingRes.json();
+    if (!existingRows || existingRows.length === 0) {
+      return NextResponse.json({ ok: false, message: "Trip record not found." }, { status: 404 });
+    }
+    const existingTrip = existingRows[0];
+
+    // Verify caller role against workspace_users when email is provided
+    const resolvedEmail = (request.headers.get("x-staff-email") || callerEmail || "").toLowerCase().trim();
+    let effectiveRole = (request.headers.get("x-staff-role") || callerRole || "desk_user").toLowerCase().trim();
+    let resolvedUserId: string | null = null;
+    let resolvedName: string | null = callerName || null;
+
+    if (resolvedEmail === "vivek@searchmyvacation.com") {
+      effectiveRole = "super_admin";
+      resolvedName = resolvedName || "Vivek Renganathan";
+    } else if (resolvedEmail) {
+      try {
+        const authRes = await fetch(`${projectUrl}/auth/v1/admin/users?per_page=100`, {
+          headers,
+          signal: AbortSignal.timeout(5000),
+        });
+        if (authRes.ok) {
+          const authData = await authRes.json();
+          const match = (authData.users || []).find(
+            (u: any) => u.email?.toLowerCase().trim() === resolvedEmail
+          );
+          if (match) {
+            resolvedUserId = match.id;
+            const wuRes = await fetch(
+              `${projectUrl}/rest/v1/workspace_users?user_id=eq.${match.id}&select=role,display_name`,
+              { headers, signal: AbortSignal.timeout(5000) }
+            );
+            if (wuRes.ok) {
+              const wuRows = await wuRes.json();
+              if (wuRows?.[0]) {
+                effectiveRole = (wuRows[0].role || effectiveRole).toLowerCase().trim();
+                resolvedName = wuRows[0].display_name || resolvedName;
+              }
+            }
+          }
+        }
+      } catch {}
+    }
+
+    const nowIso = new Date().toISOString();
+    const tripPatch: Record<string, any> = { updated_at: nowIso };
+
+    if (destination !== undefined) tripPatch.destination = destination.trim();
+    if (travelYear !== undefined) tripPatch.travel_year = Number(travelYear) || existingTrip.travel_year;
+    if (travelMonth !== undefined) tripPatch.travel_month = travelMonth?.trim() || null;
+    if (durationLabel !== undefined) tripPatch.duration_label = durationLabel?.trim() || null;
+    if (nights !== undefined) tripPatch.nights = Number(nights) || 0;
+    if (travelPartyType !== undefined) tripPatch.travel_party_type = travelPartyType;
+    if (paxAdults !== undefined) tripPatch.pax_adults = Math.max(1, Number(paxAdults) || 1);
+    if (paxChildren !== undefined) tripPatch.pax_children = Math.max(0, Number(paxChildren) || 0);
+    if (dealStage !== undefined) tripPatch.deal_stage = dealStage;
+    if (paymentStatus !== undefined) tripPatch.payment_status = paymentStatus;
+    if (tripStatus !== undefined) tripPatch.trip_status = tripStatus;
+    if (bookedProperties !== undefined) tripPatch.booked_properties = bookedProperties?.trim() || null;
+    if (bookedTransport !== undefined) tripPatch.booked_transport = bookedTransport?.trim() || null;
+    if (notes !== undefined) tripPatch.notes = notes?.trim() || null;
+    if (leadOwnerId !== undefined) tripPatch.lead_owner_id = leadOwnerId || null;
+
+    // Check if financials were included and changed
+    const hasFinancialPayload =
+      quotePrice !== undefined ||
+      actualCost !== undefined ||
+      preTaxAmount !== undefined ||
+      gstAmount !== undefined ||
+      profit !== undefined;
+
+    const nextQuote = quotePrice !== undefined ? Number(quotePrice) || 0 : Number(existingTrip.quote_price || 0);
+    const nextCost = actualCost !== undefined ? Number(actualCost) || 0 : Number(existingTrip.actual_cost || 0);
+    const nextPreTax = preTaxAmount !== undefined ? Number(preTaxAmount) || 0 : Number(existingTrip.pre_tax_amount || 0);
+    const nextGst = gstAmount !== undefined ? Number(gstAmount) || 0 : Number(existingTrip.gst_amount || 0);
+    const nextProfit = profit !== undefined ? Number(profit) || 0 : Number(existingTrip.profit || 0);
+
+    const financialsChanged =
+      hasFinancialPayload &&
+      (nextQuote !== Number(existingTrip.quote_price || 0) ||
+        nextCost !== Number(existingTrip.actual_cost || 0) ||
+        nextPreTax !== Number(existingTrip.pre_tax_amount || 0) ||
+        nextGst !== Number(existingTrip.gst_amount || 0) ||
+        nextProfit !== Number(existingTrip.profit || 0));
+
+    let pendingFinancialApproval = false;
+
+    if (DIRECT_FINANCIAL_ROLES.has(effectiveRole)) {
+      if (quotePrice !== undefined) tripPatch.quote_price = nextQuote;
+      if (actualCost !== undefined) tripPatch.actual_cost = nextCost;
+      if (preTaxAmount !== undefined) tripPatch.pre_tax_amount = nextPreTax;
+      if (gstAmount !== undefined) tripPatch.gst_amount = nextGst;
+      if (profit !== undefined) tripPatch.profit = nextProfit;
+    } else if (financialsChanged) {
+      // desk_user financial proposal -> route to Pending Approval Queue
+      pendingFinancialApproval = true;
+
+      // Supersede any existing pending proposal for this trip
+      await fetch(
+        `${projectUrl}/rest/v1/workspace_trip_financial_approvals?trip_id=eq.${encodeURIComponent(id)}&status=eq.pending`,
+        {
+          method: "PATCH",
+          headers,
+          body: JSON.stringify({ status: "superseded", updated_at: nowIso }),
+          signal: AbortSignal.timeout(5000),
+        }
+      );
+
+      const approvalRes = await fetch(`${projectUrl}/rest/v1/workspace_trip_financial_approvals`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
+          trip_id: id,
+          deal_reference_id: existingTrip.deal_reference_id,
+          requested_by_user_id: resolvedUserId,
+          requested_by_email: resolvedEmail || "desk@searchmyvacation.com",
+          requested_by_name: resolvedName || resolvedEmail || "Desk User",
+          proposed_quote_price: nextQuote,
+          proposed_actual_cost: nextCost,
+          proposed_pre_tax_amount: nextPreTax,
+          proposed_gst_amount: nextGst,
+          proposed_profit: nextProfit,
+          previous_quote_price: Number(existingTrip.quote_price || 0),
+          previous_actual_cost: Number(existingTrip.actual_cost || 0),
+          previous_profit: Number(existingTrip.profit || 0),
+          justification: financialJustification?.trim() || "Financial update submitted for approval",
+          status: "pending",
+        }),
+        signal: AbortSignal.timeout(5000),
+      });
+
+      if (!approvalRes.ok) {
+        const errText = await approvalRes.text();
+        return NextResponse.json(
+          { ok: false, message: `Failed to submit financial approval request: ${errText}` },
+          { status: 502 }
+        );
+      }
+    }
+
+    const patchRes = await fetch(
+      `${projectUrl}/rest/v1/workspace_trips?id=eq.${encodeURIComponent(id)}`,
+      {
+        method: "PATCH",
+        headers,
+        body: JSON.stringify(tripPatch),
+        signal: AbortSignal.timeout(6000),
+      }
+    );
+
+    if (!patchRes.ok) {
+      const errText = await patchRes.text();
+      return NextResponse.json(
+        { ok: false, message: `Failed to update trip: ${errText}` },
+        { status: 502 }
+      );
+    }
+
+    const updatedRows = await patchRes.json();
+    const updatedTrip = updatedRows[0] || existingTrip;
+
+    return NextResponse.json({
+      ok: true,
+      trip: updatedTrip,
+      pendingFinancialApproval,
+      message: pendingFinancialApproval
+        ? `Trip ${existingTrip.deal_reference_id} operational details saved. Financial changes submitted to the Privilege/Admin approval queue.`
+        : `Trip ${existingTrip.deal_reference_id} updated successfully.`,
+    });
+  } catch (err: any) {
+    console.error("Trips PATCH error:", err);
+    return NextResponse.json(
+      { ok: false, message: err.message || "Failed to update trip." },
       { status: 500 }
     );
   }

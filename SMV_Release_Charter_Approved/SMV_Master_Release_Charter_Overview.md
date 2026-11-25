@@ -1,7 +1,7 @@
 # Search My Vacation (SMV) — Master Release Charter (R1.3 to R1.7+ & Dedicated CRM Stream)
 
 **Status:** Approved (Expanded Baseline)  
-**Total Scope:** 95 Items (84 Product & Platform Items across R1.3–R1.7+ and 11 Dedicated CRM Items across Phases 1–3)
+**Total Scope:** 104 Items (93 Product & Platform Items across R1.3–R1.7+ and 11 Dedicated CRM Items across Phases 1–3)
 
 This charter consolidates your core product and platform backlog items (re-sequenced to eliminate dependency inversions and duplicate AI/Housekeeping tickets, with CRM separated into its own stream) together with the **Bespoke Slow-Travel Staff Portal (MVP) Backlog (v1.1)** and **Product Owner & Live-Site Gap enhancements** (`GAP-02`, `GAP-03`, `GAP-04`, `GAP-05`, `PO-01`, `PO-02`, `PO-03`, `PO-04`, `PO-05`) identified from `searchmyvacation.com`.
 
@@ -15,10 +15,11 @@ This charter consolidates your core product and platform backlog items (re-seque
 | **Release 1.4** | Destination Intelligence, Trip Anchors & Passport Experience | 22 | `SMV_R1.4_Release_Plan.md` / `SMV_R1.4_Release_Plan_APPROVED.xlsx` |
 | **Release 1.5** | High-Touch Travel Staff Portal, Advisor Workspace & Brand Storytelling | 22 | `SMV_R1.5_Release_Plan.md` / `SMV_R1.5_Release_Plan_APPROVED.xlsx` |
 | **Release 1.5.1** | High-Touch Team Profile, Customer CRM & Horizon Theme Refresh | 9 | `SMV_R1.5.1_Release_Plan.md` |
-| **Release 1.6** | Customer Accounts, Family Trip Board & Advanced Intelligence | 12 | `SMV_R1.6_Release_Plan.md` / `SMV_R1.6_Release_Plan_APPROVED.xlsx` |
+| **Release 1.5.3** | Portal Light Mode Contrast, Full CRUD, Financial Approval Queue, Idle Guard & Itinerary Persistence (M1 + M2) | 8 | `SMV_R1.5.3_Release_Plan.md` / `SMV_R1.5.3_Release_Plan_APPROVED.xlsx` |
+| **Release 1.6** | Customer Accounts, Family Trip Board, Theme Support & Advanced Intelligence | 13 | `SMV_R1.6_Release_Plan.md` / `SMV_R1.6_Release_Plan_APPROVED.xlsx` |
 | **Release 1.7+** | Interactive Itinerary Builder, AI Co-Pilot & Conditional Playbooks | 11 | `SMV_R1.7_Plus_Release_Plan.md` / `SMV_R1.7_Plus_Release_Plan_APPROVED.xlsx` |
 | **CRM Stream (Phases 1–3)** | Separated CRM Discovery, Lead Pipeline, Quotes & Retention | 11 | `SMV_CRM_Phased_Roadmap.md` / `SMV_CRM_Phased_Roadmap_APPROVED.xlsx` |
-| **TOTAL** | **All Chartered Product Releases + Dedicated CRM Stream** | **95** | |
+| **TOTAL** | **All Chartered Product Releases + Dedicated CRM Stream** | **104** | |
 
 ---
 
