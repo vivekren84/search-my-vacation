@@ -7,6 +7,7 @@ import SiteBrand from "@/components/brand/SiteBrand";
 import { StaffAvatar, AvatarPresetId } from "@/components/portal/StaffAvatar";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { useTheme } from "@/context/ThemeContext";
+import { SessionIdleGuard } from "@/components/portal/SessionIdleGuard";
 
 interface StaffProfile {
   userId: string;
@@ -1048,6 +1049,13 @@ export default function StaffProfilePage() {
           </div>
         </div>
       )}
+
+      <SessionIdleGuard
+        onLogout={() => {
+          localStorage.removeItem("smv_staff_session");
+          router.replace("/portal/login");
+        }}
+      />
     </div>
   );
 }
