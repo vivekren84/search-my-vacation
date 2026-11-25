@@ -371,11 +371,12 @@ export default function PortalLoginPage() {
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#09090B] text-[#0F172A] dark:text-zinc-100 flex flex-col justify-between py-10 px-4 sm:px-6 lg:px-8 transition-colors duration-200">
       {/* Top Header */}
       <div className="max-w-md w-full mx-auto flex justify-between items-center mb-6">
-        <Link href="/" className="inline-block">
-          <SiteBrand variant="header" surface="dark" className="w-36 text-[#0F172A] dark:text-white" />
-        </Link>
+        <div className="inline-block">
+          <SiteBrand variant="header" surface="light" className="w-36 block dark:hidden" />
+          <SiteBrand variant="header" surface="dark" className="w-36 hidden dark:block" />
+        </div>
         <div className="flex items-center gap-3">
-          <ThemeToggle variant="compact" />
+          <ThemeToggle variant="compact" surface="auto" />
           <Link
             href="/"
             className="text-xs uppercase tracking-wider text-[#475569] dark:text-zinc-400 hover:text-[#F5951C] transition-colors"
@@ -621,7 +622,7 @@ export default function PortalLoginPage() {
         {/* Footer Note */}
         <div className="mt-6 pt-5 border-t border-[#E2E8F0] dark:border-white/10 text-center">
           <p className="text-xs text-[#475569] dark:text-zinc-500">
-            Traveller self-registration is launching in Release 1.6.
+            Traveller self-registration is launching soon
           </p>
         </div>
       </div>

@@ -5,10 +5,11 @@ import { useTheme, ThemePreference } from "@/context/ThemeContext";
 
 interface ThemeToggleProps {
   variant?: "compact" | "segmented";
+  surface?: "dark" | "auto";
   className?: string;
 }
 
-export function ThemeToggle({ variant = "compact", className = "" }: ThemeToggleProps) {
+export function ThemeToggle({ variant = "compact", surface = "dark", className = "" }: ThemeToggleProps) {
   const { themePreference, setThemePreference } = useTheme();
 
   const options: Array<{ id: ThemePreference; label: string; icon: React.ReactNode }> = [
@@ -85,11 +86,20 @@ export function ThemeToggle({ variant = "compact", className = "" }: ThemeToggle
   }
 
   // Compact icon pill for headers
+  const containerSurface =
+    surface === "auto"
+      ? "bg-slate-200/80 dark:bg-white/10 border-slate-300 dark:border-white/15"
+      : "bg-white/10 border-white/15";
+  const unselectedSurface =
+    surface === "auto"
+      ? "text-slate-600 dark:text-white/70 hover:text-slate-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10"
+      : "text-white/70 hover:text-white hover:bg-white/10";
+
   return (
     <div
       role="radiogroup"
       aria-label="Theme mode switcher"
-      className={`inline-flex items-center p-0.5 rounded-full bg-white/10 border border-white/15 backdrop-blur-sm ${className}`}
+      className={`inline-flex items-center p-0.5 rounded-full border backdrop-blur-sm ${containerSurface} ${className}`}
     >
       {options.map((opt) => {
         const isSelected = themePreference === opt.id;
@@ -105,7 +115,7 @@ export function ThemeToggle({ variant = "compact", className = "" }: ThemeToggle
             className={`p-1.5 rounded-full transition-all ${
               isSelected
                 ? "bg-[#F5951C] text-[#0E0D0C] shadow-sm"
-                : "text-white/70 hover:text-white hover:bg-white/10"
+                : unselectedSurface
             }`}
           >
             {opt.icon}
