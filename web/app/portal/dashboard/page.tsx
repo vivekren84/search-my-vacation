@@ -11,6 +11,9 @@ import { EditTripModal, EditableTrip, StaffOption } from "@/components/portal/Ed
 import { EditCustomerModal, EditableCustomer } from "@/components/portal/EditCustomerModal";
 import { EditStaffModal, EditableStaffMember } from "@/components/portal/EditStaffModal";
 import { ItineraryBuilderPanel } from "@/components/portal/ItineraryBuilderPanel";
+import { NewJourneyModal, CustomerLookupOption } from "@/components/portal/NewJourneyModal";
+import { JourneyDetailDrawer } from "@/components/portal/JourneyDetailDrawer";
+import { StageGateModal } from "@/components/portal/StageGateModal";
 
 interface StaffSession {
   fullName: string;
@@ -91,6 +94,13 @@ export interface CrmTripItem {
   gstAmount: number | null;
   profit: number | null;
   isFinancialRestricted: boolean;
+  tripScope?: "Domestic" | "International";
+  leadSource?: string | null;
+  followUpDate?: string | null;
+  verifiedPaidAmount?: number;
+  pendingPaidAmount?: number;
+  balanceDue?: number;
+  readinessCount?: number;
   createdAt: string;
 }
 
@@ -313,6 +323,20 @@ export default function PortalDashboardPage() {
   const [pendingApprovals, setPendingApprovals] = useState<any[]>([]);
   const [approvalActionId, setApprovalActionId] = useState<string | null>(null);
   const [crmNotice, setCrmNotice] = useState<string | null>(null);
+
+  // Release 1.5.4: + New Journey, Unified Drawer, Stage Gates & Operational Quick-Filters
+  const [showNewJourneyModal, setShowNewJourneyModal] = useState(false);
+  const [newJourneyCustomer, setNewJourneyCustomer] = useState<CustomerLookupOption | null>(null);
+  const [drawerTripId, setDrawerTripId] = useState<string | null>(null);
+  const [quickFilter, setQuickFilter] = useState<
+    "all" | "mine" | "departing14" | "payment_due" | "on_hold" | "domestic" | "international" | "cancelled"
+  >("all");
+  const [yearFilter, setYearFilter] = useState<string>("all");
+  const [kanbanDragTrip, setKanbanDragTrip] = useState<CrmTripItem | null>(null);
+  const [kanbanStageGate, setKanbanStageGate] = useState<{
+    trip: CrmTripItem;
+    targetStage: "Booked/Won" | "On Hold" | "Lost" | "Cancelled" | "In Progress" | "Complete";
+  } | null>(null);
 
   function refreshApprovalsData() {
     fetch("/api/portal/crm/trips/approvals?status=pending")
@@ -1534,10 +1558,20 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                         <span>📋</span> Trip Operations Pipeline
                       </h2>
                       <p className="text-xs text-[#475569] dark:text-zinc-400">
-                        Live dynamic Kanban synchronized with customer master records ({crmTrips.length} Total Journeys)
+                        Live dynamic Kanban synchronized with customer master records ({crmTrips.length} Total Journeys) • Drag cards across columns to trigger stage gates
                       </p>
                     </div>
-                    <div className="flex flex-wrap gap-2 text-xs">
+                    <div className="flex flex-wrap items-center gap-2 text-xs">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setNewJourneyCustomer(null);
+                          setShowNewJourneyModal(true);
+                        }}
+                        className="px-3.5 py-1.5 rounded-xl bg-[#F5951C] text-[#0F172A] font-bold uppercase tracking-wider hover:bg-[#e08515] transition shadow-sm"
+                      >
+                        + New Journey
+                      </button>
                       <span className="px-3 py-1.5 rounded-xl bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 font-semibold">
                         ● Active Pipeline: {activeCount} Journeys
                       </span>
@@ -1550,13 +1584,77 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     </div>
                   </div>
 
+                  {/* Operational Quick-Filters & Omni-Search (US-154-10) */}
+                  <div className="p-3 rounded-2xl border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] flex flex-wrap items-center gap-2 text-[11px]">
+                    {[
+                      { id: "all", label: "All Active" },
+                      { id: "mine", label: "My Journeys" },
+                      { id: "departing14", label: "Departing Next 14d" },
+                      { id: "payment_due", label: "Payment Due" },
+                      { id: "on_hold", label: "On Hold (Follow-Up)" },
+                      { id: "domestic", label: "Domestic" },
+                      { id: "international", label: "International" },
+                    ].map((qf) => (
+                      <button
+                        key={qf.id}
+                        type="button"
+                        onClick={() => setQuickFilter(qf.id as any)}
+                        className={`px-2.5 py-1 rounded-lg font-bold transition ${
+                          quickFilter === qf.id
+                            ? "bg-[#F5951C] text-[#0F172A]"
+                            : "bg-black/5 dark:bg-white/5 text-[#475569] dark:text-zinc-400 hover:text-[#0F172A] dark:hover:text-white"
+                        }`}
+                      >
+                        {qf.label}
+                      </button>
+                    ))}
+                    <select
+                      value={yearFilter}
+                      onChange={(e) => setYearFilter(e.target.value)}
+                      className="ml-auto rounded-lg border border-[#CBD5E1] dark:border-white/15 bg-[#F8FAFC] dark:bg-[#09090B] px-2.5 py-1 text-[11px] font-semibold text-[#0F172A] dark:text-white"
+                    >
+                      <option value="all">All Years</option>
+                      <option value="2025">2025</option>
+                      <option value="2026">2026</option>
+                      <option value="2027">2027</option>
+                    </select>
+                  </div>
+
                   {/* 5-Column Live Kanban Board */}
                   <div className="grid grid-cols-1 md:grid-cols-5 gap-3.5">
                     {stages.map((col) => {
-                      const colValue = col.trips.reduce((acc, t) => acc + (Number(t.quotePrice) || 0), 0);
+                      const todayIso = new Date().toISOString().slice(0, 10);
+                      const in14Iso = new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10);
+                      const filteredColTrips = col.trips.filter((t) => {
+                        if (yearFilter !== "all" && String(t.travelYear) !== yearFilter) return false;
+                        if (quickFilter === "mine" && session?.fullName && !t.leadOwnerName.toLowerCase().includes(session.fullName.split(" ")[0].toLowerCase())) return false;
+                        if (quickFilter === "departing14" && (!t.startDate || t.startDate < todayIso || t.startDate > in14Iso)) return false;
+                        if (quickFilter === "payment_due" && Number(t.balanceDue ?? 0) <= 0) return false;
+                        if (quickFilter === "on_hold" && t.dealStage !== "On Hold") return false;
+                        if (quickFilter === "domestic" && (t.tripScope || "Domestic") !== "Domestic") return false;
+                        if (quickFilter === "international" && t.tripScope !== "International") return false;
+                        return true;
+                      });
+                      const colValue = filteredColTrips.reduce((acc, t) => acc + (Number(t.quotePrice) || 0), 0);
                       return (
                         <div
                           key={col.id}
+                          onDragOver={(e) => e.preventDefault()}
+                          onDrop={() => {
+                            if (!kanbanDragTrip) return;
+                            const target =
+                              col.id === "confirmed"
+                                ? "Booked/Won"
+                                : col.id === "completed"
+                                ? "Complete"
+                                : col.id === "planning"
+                                ? "In Progress"
+                                : null;
+                            if (target && session) {
+                              setKanbanStageGate({ trip: kanbanDragTrip, targetStage: target });
+                            }
+                            setKanbanDragTrip(null);
+                          }}
                           className="rounded-2xl border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] p-3 flex flex-col justify-between min-h-[380px] shadow-sm"
                         >
                           <div>
@@ -1573,24 +1671,23 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                               <span
                                 className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${col.badgeColor}`}
                               >
-                                {col.trips.length}
+                                {filteredColTrips.length}
                               </span>
                             </div>
 
                             {/* Cards in Column */}
                             <div className="space-y-2 max-h-[500px] overflow-y-auto pr-1">
-                              {col.trips.length === 0 ? (
+                              {filteredColTrips.length === 0 ? (
                                 <div className="p-4 text-center border border-dashed border-[#E2E8F0] dark:border-white/10 rounded-xl text-[11px] text-[#94A3B8] dark:text-zinc-500">
                                   No journeys in this stage
                                 </div>
                               ) : (
-                                col.trips.slice(0, 10).map((trip) => (
+                                filteredColTrips.slice(0, 10).map((trip) => (
                                   <div
                                     key={trip.id}
-                                    onClick={() => {
-                                      setActiveTab("crm");
-                                      setCrmSearchQuery(trip.dealReferenceId);
-                                    }}
+                                    draggable
+                                    onDragStart={() => setKanbanDragTrip(trip)}
+                                    onClick={() => setDrawerTripId(trip.id)}
                                     className="rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] p-2.5 border border-[#E2E8F0] dark:border-white/5 space-y-1 hover:border-[#F5951C]/50 cursor-pointer transition"
                                   >
                                     <div className="flex justify-between items-start gap-1">
@@ -1620,6 +1717,20 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                                     <p className="text-[11px] text-[#475569] dark:text-zinc-400 truncate">
                                       📍 {trip.destination || "Bespoke Circuit"}
                                     </p>
+                                    {(Number(trip.balanceDue || 0) > 0 || trip.dealStage === "Booked/Won") && (
+                                      <div className="flex items-center gap-1 flex-wrap pt-0.5">
+                                        {Number(trip.balanceDue || 0) > 0 && (
+                                          <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-700 dark:text-amber-300">
+                                            ₹{Number(trip.balanceDue).toLocaleString("en-IN")} Due
+                                          </span>
+                                        )}
+                                        {trip.dealStage === "Booked/Won" && (
+                                          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
+                                            {trip.readinessCount ?? 0}/6 Ready
+                                          </span>
+                                        )}
+                                      </div>
+                                    )}
                                     <div className="flex justify-between items-center text-[10px] pt-1 border-t border-[#E2E8F0] dark:border-white/5">
                                       <span className="text-[#64748B] dark:text-zinc-500">
                                         {trip.paxAdults}A{trip.paxChildren > 0 ? `+${trip.paxChildren}C` : ""} • {trip.durationLabel || "6N/7D"}
@@ -1631,7 +1742,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                                   </div>
                                 ))
                               )}
-                              {col.trips.length > 10 && (
+                              {filteredColTrips.length > 10 && (
                                 <button
                                   onClick={() => {
                                     setActiveTab("crm");
@@ -1639,7 +1750,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                                   }}
                                   className="w-full py-1 text-[10px] text-[#F5951C] hover:underline font-semibold text-center"
                                 >
-                                  + View {col.trips.length - 10} more in CRM →
+                                  + View {filteredColTrips.length - 10} more in CRM →
                                 </button>
                               )}
                             </div>
@@ -1676,8 +1787,17 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                             className="p-3.5 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5 space-y-1.5"
                           >
                             <div className="flex justify-between items-center font-bold text-[#0F172A] dark:text-white">
-                              <span className="font-mono text-[11px] text-[#F5951C]">{trip.dealReferenceId}</span>
+                              <button
+                                type="button"
+                                onClick={() => setDrawerTripId(trip.id)}
+                                className="font-mono text-[11px] text-[#F5951C] hover:underline"
+                              >
+                                {trip.dealReferenceId} ↗
+                              </button>
                               <div className="flex items-center gap-2">
+                                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
+                                  {trip.readinessCount ?? 0}/6 Ready
+                                </span>
                                 <span className="text-emerald-600 dark:text-emerald-400 text-[10px]">● {trip.paymentStatus}</span>
                                 <button
                                   type="button"
@@ -1728,18 +1848,31 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   1 Customer Master (CUST-XXXXX) → Many Trips (DDSMV/VDSMV) architecture with lead attribution
                 </p>
               </div>
-              <button
-                onClick={() => {
-                  setShowAddClientModal(true);
-                  setClientSubmitError(null);
-                  setClientSubmitSuccess(null);
-                  setDuplicateWarning(null);
-                }}
-                className="rounded-xl bg-[#F5951C] px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#0F172A] hover:bg-[#e08515] transition flex items-center gap-2 shadow-md"
-              >
-                <span>➕</span>
-                <span>Add Client / Customer</span>
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setNewJourneyCustomer(null);
+                    setShowNewJourneyModal(true);
+                  }}
+                  className="rounded-xl bg-[#F5951C] px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#0F172A] hover:bg-[#e08515] transition flex items-center gap-2 shadow-md"
+                >
+                  <span>🧭</span>
+                  <span>+ New Journey</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setShowAddClientModal(true);
+                    setClientSubmitError(null);
+                    setClientSubmitSuccess(null);
+                    setDuplicateWarning(null);
+                  }}
+                  className="rounded-xl border border-[#CBD5E1] dark:border-white/15 px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-[#0F172A] dark:text-white hover:border-[#F5951C] transition flex items-center gap-1.5"
+                >
+                  <span>➕</span>
+                  <span>Add Client</span>
+                </button>
+              </div>
             </div>
 
             {/* View Mode Switcher & Item 4 Filter Mode Pills */}
@@ -1904,6 +2037,43 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
               </div>
             </div>
 
+            {/* Operational Quick-Filters (US-154-10) */}
+            <div className="flex flex-wrap items-center gap-1.5 text-[11px]">
+              {[
+                { id: "all", label: "All Operational" },
+                { id: "mine", label: "My Journeys" },
+                { id: "departing14", label: "Departing 14d" },
+                { id: "payment_due", label: "Payment Due" },
+                { id: "on_hold", label: "On Hold" },
+                { id: "domestic", label: "Domestic" },
+                { id: "international", label: "International" },
+                { id: "cancelled", label: "Cancelled" },
+              ].map((qf) => (
+                <button
+                  key={qf.id}
+                  type="button"
+                  onClick={() => setQuickFilter(qf.id as any)}
+                  className={`px-2.5 py-1 rounded-lg font-bold transition ${
+                    quickFilter === qf.id
+                      ? "bg-[#F5951C] text-[#0F172A]"
+                      : "bg-black/5 dark:bg-white/5 text-[#475569] dark:text-zinc-400 hover:text-[#0F172A] dark:hover:text-white"
+                  }`}
+                >
+                  {qf.label}
+                </button>
+              ))}
+              <select
+                value={yearFilter}
+                onChange={(e) => setYearFilter(e.target.value)}
+                className="ml-auto rounded-lg border border-[#CBD5E1] dark:border-white/15 bg-white dark:bg-[#121215] px-2.5 py-1 text-[11px] font-semibold text-[#0F172A] dark:text-white"
+              >
+                <option value="all">All Years</option>
+                <option value="2025">2025</option>
+                <option value="2026">2026</option>
+                <option value="2027">2027</option>
+              </select>
+            </div>
+
             {/* Client Cards List & Relational Lists (Pillar A) */}
             {crmLoading ? (
               <div className="p-12 text-center text-[#475569] dark:text-zinc-400 text-xs">
@@ -1946,7 +2116,17 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
 
                   {(() => {
                     const q = crmSearchQuery.toLowerCase().trim();
+                    const todayIso = new Date().toISOString().slice(0, 10);
+                    const in14Iso = new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10);
                     let list = crmTrips.filter((t) => {
+                      if (yearFilter !== "all" && String(t.travelYear) !== yearFilter) return false;
+                      if (quickFilter === "mine" && session?.fullName && !t.leadOwnerName.toLowerCase().includes(session.fullName.split(" ")[0].toLowerCase())) return false;
+                      if (quickFilter === "departing14" && (!t.startDate || t.startDate < todayIso || t.startDate > in14Iso)) return false;
+                      if (quickFilter === "payment_due" && Number(t.balanceDue ?? 0) <= 0) return false;
+                      if (quickFilter === "on_hold" && t.dealStage !== "On Hold") return false;
+                      if (quickFilter === "domestic" && (t.tripScope || "Domestic") !== "Domestic") return false;
+                      if (quickFilter === "international" && t.tripScope !== "International") return false;
+                      if (quickFilter === "cancelled" && t.dealStage !== "Cancelled") return false;
                       if (!q) return true;
                       return (
                         t.dealReferenceId.toLowerCase().includes(q) ||
@@ -1957,18 +2137,18 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       );
                     });
 
-                    if (!q && crmFilterMode === "active") {
+                    if (!q && quickFilter === "all" && crmFilterMode === "active") {
                       list = list
                         .filter((t) => {
                           const s = (t.dealStage || "").toLowerCase();
                           const ts = (t.tripStatus || "").toLowerCase();
                           return (
-                            !["completed", "complete", "closed won", "lost", "on hold", "archived"].includes(s) &&
-                            !["completed", "complete", "returned", "lost", "on hold"].includes(ts)
+                            !["completed", "complete", "closed won", "lost", "on hold", "cancelled", "archived"].includes(s) &&
+                            !["completed", "complete", "returned", "lost", "on hold", "cancelled"].includes(ts)
                           );
                         })
                         .slice(0, 10);
-                    } else if (!q && crmFilterMode === "booked") {
+                    } else if (!q && quickFilter === "all" && crmFilterMode === "booked") {
                       list = list.filter((t) => {
                         const s = (t.dealStage || "").toLowerCase();
                         const p = (t.paymentStatus || "").toLowerCase();
@@ -1997,9 +2177,14 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                         {/* Top Bar: Deal Ref, Channel, Customer */}
                         <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b border-[#E2E8F0] dark:border-white/10 pb-3">
                           <div className="flex items-center gap-2.5 flex-wrap">
-                            <span className="font-mono text-xs font-bold px-2.5 py-1 rounded-lg bg-[#F5951C]/15 text-[#F5951C] border border-[#F5951C]/30">
-                              {trip.dealReferenceId}
-                            </span>
+                            <button
+                              type="button"
+                              onClick={() => setDrawerTripId(trip.id)}
+                              className="font-mono text-xs font-bold px-2.5 py-1 rounded-lg bg-[#F5951C]/15 text-[#F5951C] border border-[#F5951C]/30 hover:bg-[#F5951C] hover:text-[#0F172A] transition"
+                              title="Open Unified Journey Workspace Drawer"
+                            >
+                              {trip.dealReferenceId} ↗
+                            </button>
                             <span
                               className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full ${
                                 trip.dealChannel === "VENDOR"
@@ -2009,6 +2194,16 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                             >
                               {trip.dealChannel} DEAL
                             </span>
+                            {Number(trip.balanceDue || 0) > 0 && (
+                              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30">
+                                ₹{Number(trip.balanceDue).toLocaleString("en-IN")} Due
+                              </span>
+                            )}
+                            {trip.dealStage === "Booked/Won" && (
+                              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
+                                {trip.readinessCount ?? 0}/6 Ready
+                              </span>
+                            )}
                             <span className="text-xs font-bold text-[#0F172A] dark:text-white">
                               {trip.customerName}
                             </span>
@@ -2258,22 +2453,18 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                             <button
                               type="button"
                               onClick={() => {
-                                setMatchedCustomer({
+                                setNewJourneyCustomer({
                                   id: cust.id,
                                   customerCode: cust.customerCode,
                                   primaryName: cust.primaryName,
-                                  primaryMobile: cust.primaryMobile || "",
-                                  pastTripsCount: cust.tripsCount,
+                                  primaryMobile: cust.primaryMobile,
+                                  primaryEmail: cust.primaryEmail,
                                 });
-                                setIsLinkedToExisting(true);
-                                setClientFormName(cust.primaryName);
-                                setClientFormPhone(cust.primaryMobile || "+91 ");
-                                setClientFormEmail(cust.primaryEmail || "");
-                                setShowAddClientModal(true);
+                                setShowNewJourneyModal(true);
                               }}
                               className="text-xs px-3 py-1.5 rounded-lg bg-[#F5951C] text-[#0F172A] font-bold uppercase tracking-wider hover:bg-[#e08515] transition shadow-sm"
                             >
-                              + Add Journey
+                              + New Journey
                             </button>
                           </div>
                         </div>
@@ -4085,6 +4276,35 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                 <p className="text-[11px] text-[#475569] dark:text-white/50 uppercase font-semibold">Local Supplier Advisory</p>
                 <p className="text-[#334155] dark:text-white/80">Srinagar-Gulmarg Highway: Clear, private chauffeured escort confirmed.</p>
               </div>
+
+              {/* On Hold Follow-Up Reminders (US-154-03) */}
+              {(() => {
+                const in7Iso = new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10);
+                const dueHolds = crmTrips.filter(
+                  (t) => t.dealStage === "On Hold" && t.followUpDate && t.followUpDate <= in7Iso
+                );
+                if (dueHolds.length === 0) return null;
+                return (
+                  <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 space-y-1.5">
+                    <p className="text-[11px] text-amber-700 dark:text-amber-300 uppercase font-bold">
+                      ⏰ On Hold Follow-Ups Due ({dueHolds.length})
+                    </p>
+                    {dueHolds.slice(0, 3).map((h) => (
+                      <button
+                        key={h.id}
+                        type="button"
+                        onClick={() => setDrawerTripId(h.id)}
+                        className="w-full text-left text-[11px] text-[#0F172A] dark:text-white hover:text-[#F5951C] flex justify-between items-center"
+                      >
+                        <span className="truncate font-semibold">
+                          {h.dealReferenceId} • {h.customerName}
+                        </span>
+                        <span className="font-mono text-[10px] shrink-0 ml-1">{h.followUpDate}</span>
+                      </button>
+                    ))}
+                  </div>
+                );
+              })()}
             </div>
 
             {/* Inactivity Notice */}
@@ -4094,6 +4314,68 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
           </div>
         )}
       </div>
+
+      {/* Release 1.5.4: + New Journey Modal, Unified Drawer & Kanban Stage Gate Modal */}
+      {showNewJourneyModal && (
+        <NewJourneyModal
+          customers={crmCustomers.map((c) => ({
+            id: c.id,
+            customerCode: c.customerCode,
+            primaryName: c.primaryName,
+            primaryMobile: c.primaryMobile,
+            primaryEmail: c.primaryEmail,
+          }))}
+          staffOptions={staffOptions}
+          preselectedCustomer={newJourneyCustomer}
+          callerEmail={session.email}
+          callerName={session.fullName}
+          callerRole={session.role}
+          onClose={() => {
+            setShowNewJourneyModal(false);
+            setNewJourneyCustomer(null);
+          }}
+          onCreated={(res) => {
+            setShowNewJourneyModal(false);
+            setNewJourneyCustomer(null);
+            setCrmNotice(res.message);
+            setTimeout(() => setCrmNotice(null), 5000);
+            refreshCrmData();
+            setDrawerTripId(res.tripId);
+          }}
+        />
+      )}
+
+      {drawerTripId && (
+        <JourneyDetailDrawer
+          tripId={drawerTripId}
+          staffOptions={staffOptions}
+          callerEmail={session.email}
+          callerName={session.fullName}
+          callerRole={session.role}
+          onClose={() => setDrawerTripId(null)}
+          onRefreshDashboard={refreshCrmData}
+          onOpenTripInDrawer={(nextId) => setDrawerTripId(nextId)}
+          onOpenEditModal={(tripObj) => setEditingTrip(tripObj)}
+          onOpenItineraryTab={() => setActiveTab("itinerary")}
+        />
+      )}
+
+      {kanbanStageGate && (
+        <StageGateModal
+          trip={kanbanStageGate.trip}
+          targetStage={kanbanStageGate.targetStage}
+          callerEmail={session.email}
+          callerName={session.fullName}
+          callerRole={session.role}
+          onClose={() => setKanbanStageGate(null)}
+          onCompleted={(msg) => {
+            setKanbanStageGate(null);
+            setCrmNotice(msg);
+            setTimeout(() => setCrmNotice(null), 5000);
+            refreshCrmData();
+          }}
+        />
+      )}
 
       {/* Milestone 1 Edit Modals */}
       {editingTrip && (
