@@ -72,6 +72,8 @@ export interface CrmTripItem {
   destination: string;
   travelYear: number;
   travelMonth: string;
+  startDate?: string | null;
+  endDate?: string | null;
   durationLabel: string;
   nights: number;
   travelPartyType: string;
@@ -1400,12 +1402,19 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
         {activeTab === "operations" && (
           <div className="space-y-6">
             {(() => {
+              const todayIso = new Date().toISOString().slice(0, 10);
+
               // Helper to assign each journey to EXACTLY ONE mutually exclusive stage
-              function getKanbanStage(trip: CrmTripItem): "enquiries" | "planning" | "confirmed" | "travel" | "completed" {
+              function getKanbanStage(trip: CrmTripItem): "enquiries" | "planning" | "confirmed" | "travel" | "completed" | "closed" {
                 const ts = (trip.tripStatus || "").toLowerCase();
                 const ds = (trip.dealStage || "").toLowerCase();
                 const ps = (trip.paymentStatus || "").toLowerCase();
                 const notes = (trip.notes || "").toLowerCase();
+
+                // 0. Closed / Paused (Lost or On Hold — kept out of active Enquiry queue)
+                if (ds === "lost" || ds === "on hold" || ts === "lost" || ts === "on hold") {
+                  return "closed";
+                }
 
                 // 1. Completed Journeys (Final state — strictly exclusive, takes highest precedence)
                 if (
@@ -1417,8 +1426,17 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   return "completed";
                 }
 
-                // 2. In Travel / Active (In-flight journeys on tour)
+                // 2. In Travel / Active (Manual In Progress / In Travel OR Booked/Won within startDate..endDate)
+                const isDateInFlight =
+                  ds.includes("book") &&
+                  Boolean(trip.startDate) &&
+                  Boolean(trip.endDate) &&
+                  todayIso >= (trip.startDate || "") &&
+                  todayIso <= (trip.endDate || "");
+
                 if (
+                  isDateInFlight ||
+                  ts === "in progress" ||
                   ts.includes("in travel") ||
                   ts.includes("travel") ||
                   ts.includes("active") ||
@@ -1492,7 +1510,11 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
               ];
 
               const totalValuation = crmTrips.reduce((acc, t) => acc + (Number(t.quotePrice) || 0), 0);
-              const activeTrips = crmTrips.filter((t) => getKanbanStage(t) !== "completed");
+              const closedCount = crmTrips.filter((t) => getKanbanStage(t) === "closed").length;
+              const activeTrips = crmTrips.filter((t) => {
+                const st = getKanbanStage(t);
+                return st !== "completed" && st !== "closed";
+              });
               const activeCount = activeTrips.length;
               const activeValuation = activeTrips.reduce((acc, t) => acc + (Number(t.quotePrice) || 0), 0);
 
@@ -1518,6 +1540,9 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     <div className="flex flex-wrap gap-2 text-xs">
                       <span className="px-3 py-1.5 rounded-xl bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20 font-semibold">
                         ● Active Pipeline: {activeCount} Journeys
+                      </span>
+                      <span className="px-3 py-1.5 rounded-xl bg-black/5 dark:bg-white/5 text-[#475569] dark:text-zinc-400 border border-[#E2E8F0] dark:border-white/10 font-semibold">
+                        Paused / Lost: {closedCount}
                       </span>
                       <span className="px-3 py-1.5 rounded-xl bg-[#F5951C]/15 text-[#F5951C] border border-[#F5951C]/30 font-bold font-mono">
                         Active Value: ₹{(activeValuation / 100000).toFixed(1)} Lakhs
@@ -1938,8 +1963,8 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                           const s = (t.dealStage || "").toLowerCase();
                           const ts = (t.tripStatus || "").toLowerCase();
                           return (
-                            !["completed", "closed won", "lost", "archived"].includes(s) &&
-                            !["completed", "returned"].includes(ts)
+                            !["completed", "complete", "closed won", "lost", "on hold", "archived"].includes(s) &&
+                            !["completed", "complete", "returned", "lost", "on hold"].includes(ts)
                           );
                         })
                         .slice(0, 10);
@@ -2022,6 +2047,11 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                             <p className="text-[11px] text-[#475569] dark:text-zinc-400">
                               {trip.travelMonth} {trip.travelYear} • {trip.durationLabel}
                             </p>
+                            {(trip.startDate || trip.endDate) && (
+                              <p className="text-[10px] font-mono text-[#F5951C] mt-0.5">
+                                {trip.startDate || "?"} → {trip.endDate || "?"}
+                              </p>
+                            )}
                           </div>
 
                           <div className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5">

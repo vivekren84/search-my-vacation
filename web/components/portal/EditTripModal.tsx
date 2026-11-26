@@ -20,6 +20,8 @@ export interface EditableTrip {
   destination: string;
   travelYear: number;
   travelMonth: string;
+  startDate?: string | null;
+  endDate?: string | null;
   durationLabel: string;
   nights: number;
   travelPartyType: string;
@@ -87,10 +89,25 @@ export function EditTripModal({
   const isDeskUser =
     callerRole.toLowerCase() === "desk_user" &&
     callerEmail.toLowerCase() !== "vivek@searchmyvacation.com";
+  const isSuperAdmin =
+    callerRole.toLowerCase() === "super_admin" ||
+    callerEmail.toLowerCase() === "vivek@searchmyvacation.com";
+
+  const todayIso = new Date().toISOString().slice(0, 10);
+  const isTripActiveNow =
+    trip.tripStatus === "In Progress" ||
+    (trip.dealStage === "Booked/Won" &&
+      Boolean(trip.startDate) &&
+      Boolean(trip.endDate) &&
+      todayIso >= (trip.startDate || "") &&
+      todayIso <= (trip.endDate || ""));
+  const canEditDates = !isTripActiveNow || isSuperAdmin;
 
   const [destination, setDestination] = useState(trip.destination || "");
   const [travelYear, setTravelYear] = useState(String(trip.travelYear || new Date().getFullYear()));
   const [travelMonth, setTravelMonth] = useState(trip.travelMonth === "—" ? "" : trip.travelMonth || "");
+  const [startDate, setStartDate] = useState(trip.startDate || "");
+  const [endDate, setEndDate] = useState(trip.endDate || "");
   const [durationLabel, setDurationLabel] = useState(trip.durationLabel === "—" ? "" : trip.durationLabel || "");
   const [nights, setNights] = useState(String(trip.nights || 0));
   const [travelPartyType, setTravelPartyType] = useState(trip.travelPartyType || "Family");
@@ -161,6 +178,8 @@ export function EditTripModal({
           destination,
           travelYear: Number(travelYear) || trip.travelYear,
           travelMonth,
+          startDate: canEditDates ? startDate || null : undefined,
+          endDate: canEditDates ? endDate || null : undefined,
           durationLabel,
           nights: Number(nights) || 0,
           travelPartyType,
@@ -311,6 +330,47 @@ export function EditTripModal({
                   value={nights}
                   onChange={(e) => setNights(e.target.value)}
                   className={inputClass}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-xs font-semibold text-[#0F172A] dark:text-white/80">
+                    Start Date (Drives In-Travel Stage)
+                  </label>
+                  {!canEditDates && (
+                    <span className="text-[10px] font-semibold text-amber-600 dark:text-amber-400">
+                      🔒 Super Admin Only (Trip Active)
+                    </span>
+                  )}
+                </div>
+                <input
+                  type="date"
+                  value={startDate}
+                  disabled={!canEditDates}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  className={`${inputClass} disabled:opacity-60 disabled:cursor-not-allowed`}
+                />
+              </div>
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-xs font-semibold text-[#0F172A] dark:text-white/80">
+                    End Date
+                  </label>
+                  {!canEditDates && (
+                    <span className="text-[10px] font-semibold text-amber-600 dark:text-amber-400">
+                      🔒 Locked
+                    </span>
+                  )}
+                </div>
+                <input
+                  type="date"
+                  value={endDate}
+                  disabled={!canEditDates}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  className={`${inputClass} disabled:opacity-60 disabled:cursor-not-allowed`}
                 />
               </div>
             </div>
