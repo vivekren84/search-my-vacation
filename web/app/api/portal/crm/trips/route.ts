@@ -89,6 +89,8 @@ export async function GET(request: Request) {
         destination: t.destination,
         travelYear: t.travel_year,
         travelMonth: t.travel_month || "—",
+        startDate: t.start_date || null,
+        endDate: t.end_date || null,
         durationLabel: t.duration_label || "—",
         nights: t.nights || 0,
         travelPartyType: t.travel_party_type || "Family",
@@ -353,6 +355,8 @@ export async function PATCH(request: Request) {
       destination,
       travelYear,
       travelMonth,
+      startDate,
+      endDate,
       durationLabel,
       nights,
       travelPartyType,
@@ -489,6 +493,43 @@ export async function PATCH(request: Request) {
     if (destination !== undefined) tripPatch.destination = destination.trim();
     if (travelYear !== undefined) tripPatch.travel_year = Number(travelYear) || existingTrip.travel_year;
     if (travelMonth !== undefined) tripPatch.travel_month = travelMonth?.trim() || null;
+
+    // Date update RBAC:
+    // - Active / In-Flight trips: ONLY super_admin can update start_date / end_date.
+    // - Pre-active trips (not booked, or booked but not yet started): all authorized staff can update.
+    if (startDate !== undefined || endDate !== undefined) {
+      const nextStart = startDate ? String(startDate).trim() : null;
+      const nextEnd = endDate ? String(endDate).trim() : null;
+      const datesChanged =
+        nextStart !== (existingTrip.start_date || null) ||
+        nextEnd !== (existingTrip.end_date || null);
+
+      if (datesChanged) {
+        const todayIso = new Date().toISOString().slice(0, 10);
+        const isTripActiveNow =
+          existingTrip.trip_status === "In Progress" ||
+          (existingTrip.deal_stage === "Booked/Won" &&
+            Boolean(existingTrip.start_date) &&
+            Boolean(existingTrip.end_date) &&
+            todayIso >= existingTrip.start_date &&
+            todayIso <= existingTrip.end_date);
+
+        if (isTripActiveNow && effectiveRole !== "super_admin") {
+          return NextResponse.json(
+            {
+              ok: false,
+              message:
+                "Governance Lock: Travel dates on an active in-flight journey can only be modified by the Super Admin.",
+            },
+            { status: 403 }
+          );
+        }
+
+        if (startDate !== undefined) tripPatch.start_date = nextStart;
+        if (endDate !== undefined) tripPatch.end_date = nextEnd;
+      }
+    }
+
     if (durationLabel !== undefined) tripPatch.duration_label = durationLabel?.trim() || null;
     if (nights !== undefined) tripPatch.nights = Number(nights) || 0;
     if (travelPartyType !== undefined) tripPatch.travel_party_type = travelPartyType;
