@@ -75,7 +75,7 @@ export default function StepCompanions({
               onClick={() => onChange(option.value)}
               className={[
                 "group relative block w-full overflow-hidden rounded-3xl border text-left",
-                "min-h-[280px] sm:min-h-[300px] lg:h-[300px]",
+                "min-h-[180px] sm:min-h-[240px] lg:h-[280px]",
                 "transition-all duration-300 ease-out",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-4 focus-visible:ring-offset-black",
                 isSelected

@@ -307,8 +307,8 @@ export default function PortalDashboardPage() {
   const [pdfGenerating, setPdfGenerating] = useState(false);
   const [pdfReadyUrl, setPdfReadyUrl] = useState<string | null>(null);
 
-  // Concierge Intelligence Radar state (US-018)
-  const [radarMinimized, setRadarMinimized] = useState(false);
+  // Concierge Intelligence Radar state (US-018) — starts minimized as compact circle to avoid overlapping cards
+  const [radarMinimized, setRadarMinimized] = useState(true);
   const [radarPos, setRadarPos] = useState({ x: 0, y: 0, isCustom: false });
   const [activeDestination, setActiveDestination] = useState("Kashmir");
   const isDraggingRef = useRef(false);
@@ -1315,12 +1315,12 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
     session.role === "privilege_user";
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#09090B] text-[#0F172A] dark:text-white flex flex-col font-sans transition-colors duration-200">
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#09090B] text-[#0F172A] dark:text-white flex flex-col font-sans transition-colors duration-200 pb-24">
       {/* Top Staff Navbar — Fully Unified with Search My Vacation */}
-      <header className="border-b border-[#E2E8F0] dark:border-white/10 bg-[#0F172A] dark:bg-[#09090B] px-4 sm:px-8 py-3 flex items-center justify-between sticky top-0 z-40 shadow-md transition-colors">
-        <div className="flex items-center gap-3 sm:gap-6">
-          <Link href="/" title="Go to Search My Vacation Home (Session Persists)">
-            <SiteBrand variant="header" surface="dark" className="w-32 sm:w-36 text-white" />
+      <header className="border-b border-[#E2E8F0] dark:border-white/10 bg-[#0F172A] dark:bg-[#09090B] px-3 sm:px-8 py-3 flex items-center justify-between gap-2 sticky top-0 z-40 shadow-md transition-colors">
+        <div className="flex items-center gap-3 sm:gap-6 min-w-0">
+          <Link href="/" title="Go to Search My Vacation Home (Session Persists)" className="shrink-0">
+            <SiteBrand variant="header" surface="dark" className="w-24 sm:w-36 text-white" />
           </Link>
 
           {/* Integrated Main Site Navigation */}
@@ -1340,7 +1340,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
           </nav>
         </div>
 
-        <div className="flex items-center gap-2.5 sm:gap-3.5">
+        <div className="flex items-center gap-1.5 sm:gap-3.5 shrink-0">
           {/* Invite Team Members Button (Super Admin & Admin Only) */}
           {canManageTeam && (
             <button
@@ -1349,7 +1349,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                 setInviteSuccess(null);
                 setInviteError(null);
               }}
-              className="flex items-center gap-1.5 rounded-full bg-[#F5951C] px-3 sm:px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-[#0F172A] hover:bg-[#e08515] transition shadow-md"
+              className="flex items-center gap-1 rounded-full bg-[#F5951C] px-2.5 sm:px-3.5 py-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#0F172A] hover:bg-[#e08515] transition shadow-md whitespace-nowrap"
             >
               <span>➕</span>
               <span className="hidden sm:inline">Invite Team</span>
@@ -1362,7 +1362,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
           {/* Prominent Profile Access (Punch-List Item 2) */}
           <Link
             href="/portal/profile"
-            className="flex items-center gap-2 rounded-full border border-white/20 bg-white/10 hover:bg-white/15 px-3 py-1.5 text-xs text-white transition hover:border-[#F5951C] shadow-sm"
+            className="flex items-center gap-2 rounded-full border border-white/20 bg-white/10 hover:bg-white/15 px-2 sm:px-3 py-1 sm:py-1.5 text-xs text-white transition hover:border-[#F5951C] shadow-sm shrink-0"
             title="View / Edit Advisor Workspace Profile"
           >
             <StaffAvatar name={session.fullName} size="xs" />
@@ -1379,9 +1379,10 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
 
           <button
             onClick={handleSignOut}
-            className="rounded-full border border-white/20 px-3 sm:px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-white/80 hover:border-[#F5951C] hover:text-[#F5951C] transition"
+            className="whitespace-nowrap rounded-full border border-white/20 px-2.5 sm:px-3.5 py-1.5 text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-white/80 hover:border-[#F5951C] hover:text-[#F5951C] transition shrink-0"
           >
-            Sign Out
+            <span className="hidden sm:inline">Sign Out</span>
+            <span className="sm:hidden">Exit</span>
           </button>
         </div>
       </header>
@@ -1621,7 +1622,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   </div>
 
                   {/* 5-Column Live Kanban Board */}
-                  <div className="grid grid-cols-1 md:grid-cols-5 gap-3.5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3.5">
                     {stages.map((col) => {
                       const todayIso = new Date().toISOString().slice(0, 10);
                       const in14Iso = new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10);
@@ -1655,7 +1656,11 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                             }
                             setKanbanDragTrip(null);
                           }}
-                          className="rounded-2xl border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] p-3 flex flex-col justify-between min-h-[380px] shadow-sm"
+                          className={`rounded-2xl border border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#121215] p-3 flex flex-col justify-between shadow-sm ${
+                            filteredColTrips.length === 0
+                              ? "min-h-0 xl:min-h-[380px]"
+                              : "min-h-0 md:min-h-[260px] xl:min-h-[380px]"
+                          }`}
                         >
                           <div>
                             {/* Column Header */}
@@ -1678,7 +1683,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                             {/* Cards in Column */}
                             <div className="space-y-2 max-h-[500px] overflow-y-auto pr-1">
                               {filteredColTrips.length === 0 ? (
-                                <div className="p-4 text-center border border-dashed border-[#E2E8F0] dark:border-white/10 rounded-xl text-[11px] text-[#94A3B8] dark:text-zinc-500">
+                                <div className="py-2.5 px-3 text-center border border-dashed border-[#E2E8F0] dark:border-white/10 rounded-xl text-[11px] text-[#94A3B8] dark:text-zinc-500">
                                   No journeys in this stage
                                 </div>
                               ) : (
@@ -1776,7 +1781,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                     </div>
 
                     {voucherTrips.length === 0 ? (
-                      <div className="p-6 text-center border border-dashed border-[#E2E8F0] dark:border-white/10 rounded-xl text-xs text-[#475569] dark:text-zinc-400">
+                      <div className="p-4 sm:p-5 text-center border border-dashed border-[#E2E8F0] dark:border-white/10 rounded-xl text-xs text-[#475569] dark:text-zinc-400">
                         No upcoming or in-flight bookings currently active in pipeline. Completed journeys are safely archived in stage 5.
                       </div>
                     ) : (
@@ -2076,12 +2081,12 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
 
             {/* Client Cards List & Relational Lists (Pillar A) */}
             {crmLoading ? (
-              <div className="p-12 text-center text-[#475569] dark:text-zinc-400 text-xs">
+              <div className="p-6 sm:p-10 text-center text-[#475569] dark:text-zinc-400 text-xs">
                 Loading client profiles and trip deals...
               </div>
             ) : crmViewMode === "trips" ? (
               crmTrips.length === 0 ? (
-                <div className="p-12 text-center rounded-2xl border border-dashed border-[#E2E8F0] dark:border-white/15 bg-white dark:bg-[#121215] space-y-3">
+                <div className="p-6 sm:p-10 text-center rounded-2xl border border-dashed border-[#E2E8F0] dark:border-white/15 bg-white dark:bg-[#121215] space-y-3">
                   <div className="text-3xl">✈️</div>
                   <h3 className="text-sm font-bold text-[#0F172A] dark:text-white">No Trip Deals Found</h3>
                   <p className="text-xs text-[#475569] dark:text-zinc-400 max-w-md mx-auto">
@@ -2323,7 +2328,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
               )
             ) : (
               crmCustomers.length === 0 ? (
-                <div className="p-12 text-center rounded-2xl border border-dashed border-[#E2E8F0] dark:border-white/15 bg-white dark:bg-[#121215] space-y-3">
+                <div className="p-6 sm:p-10 text-center rounded-2xl border border-dashed border-[#E2E8F0] dark:border-white/15 bg-white dark:bg-[#121215] space-y-3">
                   <div className="text-3xl">👥</div>
                   <h3 className="text-sm font-bold text-[#0F172A] dark:text-white">
                     No Customers Master Records Yet
@@ -2564,7 +2569,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
             {(() => {
               if (vendorsLoading && vendors.length === 0) {
                 return (
-                  <div className="p-12 text-center text-[#475569] dark:text-zinc-400 text-xs">
+                  <div className="p-6 sm:p-10 text-center text-[#475569] dark:text-zinc-400 text-xs">
                     Loading verified partner directory...
                   </div>
                 );
@@ -2589,7 +2594,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
 
               if (filtered.length === 0) {
                 return (
-                  <div className="p-12 text-center rounded-2xl border border-dashed border-[#E2E8F0] dark:border-white/15 bg-white dark:bg-[#121215] space-y-3">
+                  <div className="p-6 sm:p-10 text-center rounded-2xl border border-dashed border-[#E2E8F0] dark:border-white/15 bg-white dark:bg-[#121215] space-y-3">
                     <div className="text-3xl">🏢</div>
                     <h3 className="text-sm font-bold text-[#0F172A] dark:text-white">No Vendors Found</h3>
                     <p className="text-xs text-[#475569] dark:text-zinc-400 max-w-md mx-auto">
@@ -4185,31 +4190,38 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
         className={
           radarPos.isCustom
             ? "z-50 select-none"
-            : "fixed bottom-6 right-6 z-50 select-none"
+            : "fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 select-none"
         }
       >
-        {/* State A: Minimized Draggable Pill */}
+        {/* State A: Minimized Compact Circular Button */}
         {radarMinimized ? (
-          <div
-            onMouseDown={startDragging}
-            className="cursor-move rounded-full bg-white dark:bg-[#121215] border-2 border-[#F5951C] px-4 py-2.5 shadow-2xl flex items-center gap-2.5 text-xs text-[#0F172A] dark:text-white hover:shadow-[#F5951C]/20 transition"
-            title="Drag anywhere on screen. Re-login resets to Bottom-Right."
-          >
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#F5951C] opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#F5951C]"></span>
-            </span>
-            <span className="font-bold">Radar: {activeDestination}</span>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setRadarMinimized(false);
-              }}
-              className="text-[#F5951C] hover:underline font-semibold ml-1 cursor-pointer"
-            >
-              Expand
-            </button>
-          </div>
+          (() => {
+            const in7Iso = new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10);
+            const dueHoldCount = crmTrips.filter(
+              (t) => t.dealStage === "On Hold" && t.followUpDate && t.followUpDate <= in7Iso
+            ).length;
+            return (
+              <button
+                type="button"
+                onMouseDown={startDragging}
+                onClick={() => setRadarMinimized(false)}
+                aria-label={`Expand Concierge Radar (${activeDestination})`}
+                title={`Concierge Radar: ${activeDestination} (Tap to expand, drag to move)`}
+                className="relative w-12 h-12 rounded-full bg-white dark:bg-[#121215] border-2 border-[#F5951C] shadow-2xl flex items-center justify-center text-[#0F172A] dark:text-white hover:scale-105 transition cursor-pointer"
+              >
+                <span className="text-lg leading-none" aria-hidden="true">📡</span>
+                <span className="absolute top-0.5 right-0.5 flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                </span>
+                {dueHoldCount > 0 && (
+                  <span className="absolute -top-1 -left-1 min-w-[18px] h-[18px] px-1 rounded-full bg-rose-600 text-white text-[10px] font-bold flex items-center justify-center shadow">
+                    {dueHoldCount}
+                  </span>
+                )}
+              </button>
+            );
+          })()
         ) : (
           /* State B: Expanded Dock */
           <div className="w-80 sm:w-96 rounded-2xl bg-white dark:bg-[#121215] border border-[#E2E8F0] dark:border-white/15 shadow-2xl overflow-hidden backdrop-blur-md">

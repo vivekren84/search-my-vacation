@@ -66,7 +66,7 @@ export default function HeroJourney() {
   const selectedEmotion = emotions.find((emotion) => emotion.key === selected);
 
   return (
-    <section className="relative flex min-h-[44rem] w-full items-center justify-center overflow-hidden text-center md:min-h-[48rem]">
+    <section className="relative flex min-h-[30rem] sm:min-h-[38rem] w-full items-center justify-center overflow-hidden text-center md:min-h-[48rem]">
 
       {/* Background */}
       <div

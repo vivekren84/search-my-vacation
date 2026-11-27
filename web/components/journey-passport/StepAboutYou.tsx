@@ -7,7 +7,7 @@ type Props = {
 
 export default function StepAboutYou({ value, onChange }: Props) {
   return (
-    <div className="flex items-center justify-center min-h-[60vh]">
+    <div className="flex items-center justify-center min-h-[32vh] sm:min-h-[45vh] lg:min-h-[60vh]">
       <div className="w-full max-w-xl text-center space-y-8">
         
         {/* Heading */}

@@ -775,7 +775,7 @@ export function JourneyDetailDrawer({
         {/* Drawer Body */}
         <div className="flex-1 overflow-y-auto p-6 text-xs space-y-5">
           {loading || !trip ? (
-            <div className="p-12 text-center text-[#475569] dark:text-zinc-400">
+            <div className="p-6 sm:p-10 text-center text-[#475569] dark:text-zinc-400">
               Loading journey workspace...
             </div>
           ) : (
@@ -1011,7 +1011,7 @@ export function JourneyDetailDrawer({
                     </button>
                   </div>
                   {itineraries.length === 0 ? (
-                    <div className="p-8 text-center rounded-xl border border-dashed border-[#E2E8F0] dark:border-white/10 text-[#64748B] dark:text-zinc-400">
+                    <div className="p-5 sm:p-8 text-center rounded-xl border border-dashed border-[#E2E8F0] dark:border-white/10 text-[#64748B] dark:text-zinc-400">
                       No itinerary linked to {trip.deal_reference_id} yet. Open the Itinerary Builder to craft and link a white-label proposal.
                     </div>
                   ) : (

@@ -57,7 +57,7 @@ export default function TravellerPassport({ isOpen, onClose, emotion }: Props) {
           ✕
         </button>
 
-        <div className="px-12 py-14 min-h-[480px] flex flex-col justify-between">
+        <div className="p-6 sm:p-10 lg:px-12 lg:py-14 min-h-0 lg:min-h-[480px] flex flex-col justify-between">
 
           {/* Heading */}
           <div className="text-center max-w-xl mx-auto">

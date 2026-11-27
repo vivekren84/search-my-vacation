@@ -35,13 +35,13 @@ export default function Header() {
     <header
       className="sticky inset-x-0 top-0 z-50 border-b border-white/10 bg-[#0E0D0C]/95 dark:bg-[#09090B]/95 shadow-[0_4px_18px_rgba(0,0,0,.2)] backdrop-blur-md transition-colors duration-200"
     >
-      <Container variant="wide" className="flex min-h-[5.5rem] items-center justify-between gap-4 py-3 xl:min-h-32 xl:py-2">
-        <Link href="/" className="inline-block">
+      <Container variant="wide" className="flex min-h-[5.5rem] items-center justify-between gap-2 sm:gap-4 py-3 xl:min-h-32 xl:py-2">
+        <Link href="/" className="inline-block shrink-0">
           <SiteBrand
             variant="header"
             surface="dark"
             preload
-            className="w-[clamp(11rem,48vw,14rem)] shrink-0 text-white xl:w-[clamp(14rem,20vw,21rem)]"
+            className="w-24 shrink-0 text-white sm:w-[clamp(11rem,28vw,14rem)] xl:w-[clamp(14rem,20vw,21rem)]"
           />
         </Link>
 
@@ -61,16 +61,19 @@ export default function Header() {
           </ul>
         </nav>
 
-        <div className="ml-auto flex items-center gap-2.5 xl:ml-0">
+        <div className="ml-auto flex items-center gap-1.5 sm:gap-2.5 xl:ml-0 shrink-0">
           {staffSession ? (
             <div className="flex items-center gap-2">
               <Link
                 href="/portal/dashboard"
-                className="flex items-center gap-2 rounded-full border border-[#F5951C]/60 bg-[#F5951C]/10 px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-[#F5951C]/20 transition shadow"
+                className="flex items-center gap-1.5 sm:gap-2 rounded-full border border-[#F5951C]/60 bg-[#F5951C]/10 px-2.5 sm:px-3.5 py-1 sm:py-1.5 text-[11px] sm:text-xs font-semibold text-white hover:bg-[#F5951C]/20 transition shadow whitespace-nowrap"
               >
-                <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
                 <span className="font-bold text-[#F5951C]">
-                  {staffSession.fullName.split(" ")[0]} ({staffSession.role === "super_admin" ? "Super Admin" : staffSession.role.replace("_", " ")})
+                  {staffSession.fullName.split(" ")[0]}
+                  <span className="hidden sm:inline">
+                    {" "}({staffSession.role === "super_admin" ? "Super Admin" : staffSession.role.replace("_", " ")})
+                  </span>
                 </span>
                 <span className="text-[10px] uppercase tracking-wider text-white/70 hidden sm:inline">
                   • Advisor Dashboard ➔
