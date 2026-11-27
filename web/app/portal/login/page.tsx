@@ -372,8 +372,8 @@ export default function PortalLoginPage() {
       {/* Top Header */}
       <div className="max-w-md w-full mx-auto flex justify-between items-center mb-6">
         <div className="inline-block">
-          <SiteBrand variant="header" surface="light" className="w-36 block dark:hidden" />
-          <SiteBrand variant="header" surface="dark" className="w-36 hidden dark:block" />
+          <SiteBrand variant="header" surface="light" linked={false} className="w-36 block dark:hidden" />
+          <SiteBrand variant="header" surface="dark" linked={false} className="w-36 hidden dark:block" />
         </div>
         <div className="flex items-center gap-3">
           <ThemeToggle variant="compact" surface="auto" />

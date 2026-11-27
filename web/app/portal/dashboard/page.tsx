@@ -1320,7 +1320,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
       <header className="border-b border-[#E2E8F0] dark:border-white/10 bg-[#0F172A] dark:bg-[#09090B] px-3 sm:px-8 py-3 flex items-center justify-between gap-2 sticky top-0 z-40 shadow-md transition-colors">
         <div className="flex items-center gap-3 sm:gap-6 min-w-0">
           <Link href="/" title="Go to Search My Vacation Home (Session Persists)" className="shrink-0">
-            <SiteBrand variant="header" surface="dark" className="w-24 sm:w-36 text-white" />
+            <SiteBrand variant="header" surface="dark" linked={false} className="w-24 sm:w-36 text-white" />
           </Link>
 
           {/* Integrated Main Site Navigation */}

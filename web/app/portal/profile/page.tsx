@@ -361,7 +361,7 @@ export default function StaffProfilePage() {
       <header className="border-b border-white/10 bg-[#0F172A] dark:bg-[#09090B] px-4 sm:px-8 py-3.5 flex items-center justify-between sticky top-0 z-40 shadow-md transition-colors">
         <div className="flex items-center gap-4">
           <Link href="/portal/dashboard" className="inline-block">
-            <SiteBrand variant="header" surface="dark" className="w-32 sm:w-36 text-white" />
+            <SiteBrand variant="header" surface="dark" linked={false} className="w-32 sm:w-36 text-white" />
           </Link>
           <span className="text-white/20 hidden sm:inline">|</span>
           <div className="hidden sm:flex items-center gap-2">

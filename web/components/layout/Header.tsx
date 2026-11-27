@@ -40,6 +40,7 @@ export default function Header() {
           <SiteBrand
             variant="header"
             surface="dark"
+            linked={false}
             preload
             className="w-24 shrink-0 text-white sm:w-[clamp(11rem,28vw,14rem)] xl:w-[clamp(14rem,20vw,21rem)]"
           />
