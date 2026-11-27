@@ -589,7 +589,26 @@ export async function PATCH(request: Request) {
     if (bookedProperties !== undefined) tripPatch.booked_properties = bookedProperties?.trim() || null;
     if (bookedTransport !== undefined) tripPatch.booked_transport = bookedTransport?.trim() || null;
     if (notes !== undefined) tripPatch.notes = notes?.trim() || null;
-    if (leadOwnerId !== undefined) tripPatch.lead_owner_id = leadOwnerId || null;
+    if (leadOwnerId !== undefined && (leadOwnerId || null) !== (existingTrip.lead_owner_id || null)) {
+      if (leadOwnerId) {
+        const ownerCheckRes = await fetch(
+          `${projectUrl}/rest/v1/workspace_users?user_id=eq.${encodeURIComponent(leadOwnerId)}&select=user_id`,
+          { headers, signal: AbortSignal.timeout(4000) }
+        );
+        const ownerRows: any[] = ownerCheckRes.ok ? await ownerCheckRes.json() : [];
+        if (!ownerRows || ownerRows.length === 0) {
+          return NextResponse.json(
+            {
+              ok: false,
+              message:
+                "Selected Lead Owner is not present in workspace_users. Please refresh and re-select a valid Lead Owner or Unassigned.",
+            },
+            { status: 400 }
+          );
+        }
+      }
+      tripPatch.lead_owner_id = leadOwnerId || null;
+    }
     if (holdReason !== undefined) tripPatch.hold_reason = holdReason?.trim() || null;
     if (lossReason !== undefined) tripPatch.loss_reason = lossReason?.trim() || null;
     if (cancellationReason !== undefined) tripPatch.cancellation_reason = cancellationReason?.trim() || null;

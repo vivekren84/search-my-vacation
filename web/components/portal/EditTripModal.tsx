@@ -185,7 +185,8 @@ export function EditTripModal({
           travelPartyType,
           paxAdults: Number(paxAdults) || 1,
           paxChildren: Number(paxChildren) || 0,
-          leadOwnerId: leadOwnerId || null,
+          leadOwnerId:
+            leadOwnerId !== (trip.leadOwnerId || "") ? leadOwnerId || null : undefined,
           dealStage,
           paymentStatus,
           tripStatus,
