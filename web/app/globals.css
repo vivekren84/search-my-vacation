@@ -196,6 +196,12 @@ body {
   padding-block: var(--layout-section-space);
 }
 
+@media (max-width: 767px) {
+  .layout-section {
+    padding-block: 2.5rem;
+  }
+}
+
 .layout-intro {
   width: min(100%, 52rem);
   margin-inline: auto;
