@@ -13,9 +13,9 @@ type SiteBrandProps = {
 
 const imageDetails = {
   header: { width: 1384, height: 310 },
-  full: { width: 3232, height: 518 },
-  compact: { width: 2215, height: 380 },
-  footer: { width: 3232, height: 518 },
+  full: { width: 1384, height: 310 },
+  compact: { width: 1384, height: 310 },
+  footer: { width: 1384, height: 310 },
 } as const;
 
 export default function SiteBrand({

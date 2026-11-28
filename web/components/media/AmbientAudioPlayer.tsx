@@ -8,7 +8,7 @@ import { useAmbientAudio } from "@/context/AmbientAudioContext";
 /**
  * Site-Wide Ambient Soundscape Player (Release 1.4 — HP-05, upgrading HP-04)
  *
- * Implements a discreet, luxury floating audio player that brings continuous
+ * Implements a discreet, curated floating audio player that brings continuous
  * ambient travel music ("Sanctuary of Silence") across the entire Search My Vacation site.
  *
  * Architectural Invariants:
@@ -37,16 +37,16 @@ export function AmbientAudioPlayer() {
   const { isMuted, showDiscoveryTooltip, toggleMute, dismissDiscoveryTooltip } = audioContext;
   const isPlayingActive = !isMuted;
 
-  // Collision avoidance on Journey Passport
+  // Collision avoidance on Journey Passport & bottom-right placement
   const isPassportRoute = pathname?.startsWith("/journey-passport");
   const positionClasses = isPassportRoute
-    ? "bottom-24 left-4 sm:bottom-28 sm:left-6"
-    : "bottom-5 left-4 sm:bottom-6 sm:left-6";
+    ? "bottom-24 right-4 md:bottom-28 md:right-6"
+    : "bottom-4 right-4 md:bottom-5 md:right-5";
 
   return (
     <aside
       aria-label="Ambient soundscape player"
-      className={`fixed ${positionClasses} z-40 transition-all duration-500`}
+      className={`fixed ${positionClasses} z-30 transition-all duration-500`}
     >
       {/* Hidden static anchors for verification invariants */}
       <audio
@@ -61,7 +61,7 @@ export function AmbientAudioPlayer() {
       {showDiscoveryTooltip ? (
         <div
           role="status"
-          className="journey-passport-enter absolute bottom-full left-0 mb-3 w-64 rounded-2xl border border-[#e4d2b5] bg-[#2A211C]/95 p-3.5 text-xs text-white shadow-2xl backdrop-blur-md"
+          className="journey-passport-enter absolute bottom-full right-0 mb-3 w-64 max-w-[calc(100vw-2rem)] rounded-2xl border border-[#e4d2b5] bg-[#2A211C]/95 p-3.5 text-xs text-white shadow-2xl backdrop-blur-md"
         >
           <div className="flex items-start justify-between gap-2">
             <div>
@@ -80,7 +80,7 @@ export function AmbientAudioPlayer() {
             </button>
           </div>
           {/* Tooltip pointer arrow */}
-          <div className="absolute -bottom-1.5 left-6 size-3 rotate-45 border-b border-r border-[#e4d2b5] bg-[#2A211C]" />
+          <div className="absolute -bottom-1.5 right-4 size-3 rotate-45 border-b border-r border-[#e4d2b5] bg-[#2A211C]" />
         </div>
       ) : null}
 
@@ -97,12 +97,9 @@ export function AmbientAudioPlayer() {
         <button
           type="button"
           onClick={() => void toggleMute()}
-          aria-label={
-            isPlayingActive
-              ? "Mute ambient soundscape: Sanctuary of Silence"
-              : "Unmute ambient soundscape: Sanctuary of Silence"
-          }
-          className={`group relative flex items-center gap-2.5 rounded-full border border-[#e4d2b5]/40 bg-[#2A211C]/90 px-3.5 py-2.5 text-xs font-medium text-white/90 shadow-[0_8px_24px_rgba(42,33,28,0.28)] backdrop-blur-md transition duration-300 hover:border-[#F5951C]/60 hover:bg-[#2A211C] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F5951C] ${
+          aria-pressed={isPlayingActive}
+          aria-label="Toggle sanctuary ambience audio"
+          className={`group relative flex size-9 items-center justify-center rounded-full border border-white/15 bg-black/45 p-0 text-xs font-medium text-white/80 opacity-90 shadow-[0_8px_24px_rgba(42,33,28,0.28)] backdrop-blur-md transition duration-300 hover:border-[#F5951C]/60 hover:text-white hover:opacity-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F5951C] md:h-auto md:w-auto md:gap-2.5 md:border-[#e4d2b5]/40 md:bg-[#2A211C]/90 md:px-3.5 md:py-2.5 md:text-white/90 md:opacity-100 md:hover:bg-[#2A211C] ${
             showDiscoveryTooltip ? "ring-2 ring-[#F5951C]/60 ring-offset-2 ring-offset-[#2A211C]" : ""
           }`}
         >
@@ -133,7 +130,7 @@ export function AmbientAudioPlayer() {
           </span>
 
           {/* Desktop/Tablet Label (compact icon-only on mobile screens) */}
-          <span className="hidden sm:inline tracking-wide">
+          <span className="hidden md:inline tracking-wide">
             {isPlayingActive ? (
               <span className="flex items-center gap-1.5">
                 <span className="font-semibold text-white">Sanctuary of Silence</span>

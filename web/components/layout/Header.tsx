@@ -35,14 +35,14 @@ export default function Header() {
     <header
       className="sticky inset-x-0 top-0 z-50 border-b border-white/10 bg-[#0E0D0C]/95 dark:bg-[#09090B]/95 shadow-[0_4px_18px_rgba(0,0,0,.2)] backdrop-blur-md transition-colors duration-200"
     >
-      <Container variant="wide" className="flex min-h-[5.5rem] items-center justify-between gap-2 sm:gap-4 py-3 xl:min-h-32 xl:py-2">
+      <Container variant="wide" className="flex h-16 items-center justify-between gap-2 px-4 md:h-auto md:min-h-[5.5rem] md:gap-4 md:py-3 xl:min-h-32 xl:py-2">
         <Link href="/" className="inline-block shrink-0">
           <SiteBrand
             variant="header"
             surface="dark"
             linked={false}
             preload
-            className="w-24 shrink-0 text-white sm:w-[clamp(10rem,24vw,12rem)] xl:w-44 2xl:w-52"
+            className="w-[clamp(10.5rem,48vw,12.1875rem)] min-h-[34px] max-w-[195px] shrink-0 text-white md:w-[clamp(10rem,24vw,12rem)] md:max-w-none xl:w-44 2xl:w-52"
           />
         </Link>
 
@@ -63,57 +63,61 @@ export default function Header() {
         </nav>
 
         <div className="ml-auto flex items-center gap-1.5 sm:gap-2.5 xl:ml-0 shrink-0">
-          {staffSession ? (
-            <div className="flex items-center gap-2">
-              <Link
-                href="/portal/dashboard"
-                className="flex items-center gap-1.5 sm:gap-2 rounded-full border border-[#F5951C]/60 bg-[#F5951C]/10 px-2.5 sm:px-3.5 py-1 sm:py-1.5 text-[11px] sm:text-xs font-semibold text-white hover:bg-[#F5951C]/20 transition shadow whitespace-nowrap"
-              >
-                <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-                <span className="font-bold text-[#F5951C]">
-                  {staffSession.fullName.split(" ")[0]}
-                  <span className="hidden 2xl:inline">
-                    {" "}({staffSession.role === "super_admin" ? "Super Admin" : staffSession.role.replace("_", " ")})
-                  </span>
-                </span>
-                <span className="text-[10px] uppercase tracking-wider text-white/70 hidden 2xl:inline">
-                  • Advisor Dashboard ➔
-                </span>
-              </Link>
-              <button
-                onClick={handleStaffSignOut}
-                className="hidden md:inline-flex text-[11px] text-white/50 hover:text-[#F5951C] px-2 py-1 rounded transition"
-                title="Sign Out of Advisor Workspace"
-              >
-                Sign Out
-              </button>
-            </div>
-          ) : (
-            <>
-              <Link
-                href="/portal/login"
-                className="hidden shrink-0 whitespace-nowrap rounded-full border border-white/30 px-3.5 py-2 text-xs font-semibold uppercase tracking-[0.1em] text-white transition hover:border-[#F5951C] hover:text-[#F5951C] md:inline-flex"
-              >
-                Sign In
-              </Link>
-
-              <div className="relative group hidden md:inline-flex">
-                <button
-                  type="button"
-                  disabled
-                  aria-disabled="true"
-                  className="cursor-not-allowed opacity-50 shrink-0 whitespace-nowrap rounded-full border border-white/15 px-3.5 py-2 text-xs font-medium uppercase tracking-[0.1em] text-white/60"
+          <div className="hidden md:flex items-center gap-2">
+            {staffSession ? (
+              <div className="flex items-center gap-2">
+                <Link
+                  href="/portal/dashboard"
+                  className="flex items-center gap-1.5 sm:gap-2 rounded-full border border-[#F5951C]/60 bg-[#F5951C]/10 px-2.5 sm:px-3.5 py-1 sm:py-1.5 text-[11px] sm:text-xs font-semibold text-white hover:bg-[#F5951C]/20 transition shadow whitespace-nowrap"
                 >
-                  Sign Up
+                  <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+                  <span className="font-bold text-[#F5951C]">
+                    {staffSession.fullName.split(" ")[0]}
+                    <span className="hidden 2xl:inline">
+                      {" "}({staffSession.role === "super_admin" ? "Super Admin" : staffSession.role.replace("_", " ")})
+                    </span>
+                  </span>
+                  <span className="text-[10px] uppercase tracking-wider text-white/70 hidden 2xl:inline">
+                    • Advisor Dashboard ➔
+                  </span>
+                </Link>
+                <button
+                  onClick={handleStaffSignOut}
+                  className="text-[11px] text-white/50 hover:text-[#F5951C] px-2 py-1 rounded transition"
+                  title="Sign Out of Advisor Workspace"
+                >
+                  Sign Out
                 </button>
-                <span className="pointer-events-none absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-[#0E0D0C] dark:bg-[#09090B] px-2 py-1 text-[10px] font-medium text-[#F5951C] border border-white/10 opacity-0 shadow-lg transition-opacity duration-200 group-hover:opacity-100 z-50">
-                  Coming Soon
-                </span>
               </div>
-            </>
-          )}
+            ) : (
+              <>
+                <Link
+                  href="/portal/login"
+                  className="shrink-0 whitespace-nowrap rounded-full border border-white/30 px-3.5 py-2 text-xs font-semibold uppercase tracking-[0.1em] text-white transition hover:border-[#F5951C] hover:text-[#F5951C] inline-flex"
+                >
+                  Sign In
+                </Link>
 
-          <ThemeToggle variant="compact" />
+                <div className="relative group inline-flex">
+                  <button
+                    type="button"
+                    disabled
+                    aria-disabled="true"
+                    className="cursor-not-allowed opacity-50 shrink-0 whitespace-nowrap rounded-full border border-white/15 px-3.5 py-2 text-xs font-medium uppercase tracking-[0.1em] text-white/60"
+                  >
+                    Sign Up
+                  </button>
+                  <span className="pointer-events-none absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-[#0E0D0C] dark:bg-[#09090B] px-2 py-1 text-[10px] font-medium text-[#F5951C] border border-white/10 opacity-0 shadow-lg transition-opacity duration-200 group-hover:opacity-100 z-50">
+                    Coming Soon
+                  </span>
+                </div>
+              </>
+            )}
+          </div>
+
+          <div className="hidden md:flex">
+            <ThemeToggle variant="compact" />
+          </div>
 
           <Link
             href="/journey-passport"
@@ -127,18 +131,41 @@ export default function Header() {
               type="button"
               aria-expanded={isMenuOpen}
               aria-controls="mobile-primary-navigation"
+              aria-label={isMenuOpen ? "Close navigation menu" : "Open navigation menu"}
               onClick={() => setIsMenuOpen((isOpen) => !isOpen)}
-              className="inline-flex items-center gap-2 rounded-full border border-white/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-white transition hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+              className="inline-flex h-11 w-11 shrink-0 items-center justify-center gap-2 rounded-full border border-white/30 text-xs font-semibold uppercase tracking-[0.12em] text-white transition hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white md:h-auto md:w-auto md:border-white/70 md:px-4 md:py-2"
             >
-              Menu
-              <span aria-hidden="true" className="h-3 w-4 border-y border-current" />
+              <span className="hidden md:inline">Menu</span>
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                strokeLinecap="round"
+                className="h-5 w-5 md:hidden"
+              >
+                {isMenuOpen ? (
+                  <>
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                  </>
+                ) : (
+                  <>
+                    <line x1="4" y1="7" x2="20" y2="7" />
+                    <line x1="4" y1="12" x2="20" y2="12" />
+                    <line x1="4" y1="17" x2="20" y2="17" />
+                  </>
+                )}
+              </svg>
+              <span aria-hidden="true" className="hidden h-3 w-4 border-y border-current md:inline-block" />
             </button>
 
             {isMenuOpen ? (
               <nav
                 id="mobile-primary-navigation"
                 aria-label="Mobile primary navigation"
-                className="absolute right-0 top-[calc(100%+0.75rem)] w-64 rounded-2xl border border-white/15 bg-[#0E0D0C]/98 dark:bg-[#09090B]/98 p-2 shadow-xl shadow-black/25 backdrop-blur-md"
+                className="absolute right-0 top-[calc(100%+0.75rem)] w-64 max-w-[calc(100vw-2rem)] rounded-2xl border border-white/15 bg-[#0E0D0C]/98 dark:bg-[#09090B]/98 p-2 shadow-xl shadow-black/25 backdrop-blur-md"
               >
                 <ul>
                   {staffSession && (
@@ -203,6 +230,10 @@ export default function Header() {
                     >
                       Plan My Experience
                     </Link>
+                  </li>
+                  <li className="mt-2 border-t border-white/10 pt-2.5 px-2 flex items-center justify-between md:hidden">
+                    <span className="text-xs font-semibold uppercase tracking-wider text-white/70">Theme</span>
+                    <ThemeToggle variant="compact" />
                   </li>
                 </ul>
               </nav>
