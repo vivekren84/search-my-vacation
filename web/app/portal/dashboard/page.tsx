@@ -14,6 +14,11 @@ import { ItineraryBuilderPanel } from "@/components/portal/ItineraryBuilderPanel
 import { NewJourneyModal, CustomerLookupOption } from "@/components/portal/NewJourneyModal";
 import { JourneyDetailDrawer } from "@/components/portal/JourneyDetailDrawer";
 import { StageGateModal } from "@/components/portal/StageGateModal";
+import { ConciergeRadar } from "@/components/portal/ConciergeRadar";
+import { DestinationAutocomplete } from "@/components/portal/DestinationAutocomplete";
+import { MultiContactEditor, StructuredContact } from "@/components/portal/MultiContactEditor";
+import { ZohoGstImportModal } from "@/components/portal/ZohoGstImportModal";
+import { ExportTripsModal } from "@/components/portal/ExportTripsModal";
 
 interface StaffSession {
   fullName: string;
@@ -214,6 +219,10 @@ export default function PortalDashboardPage() {
   const [vendorFormRateCardLink, setVendorFormRateCardLink] = useState("");
   const [vendorFormB2bRates, setVendorFormB2bRates] = useState("");
   const [vendorFormComments, setVendorFormComments] = useState("");
+  const [vendorFormGstNumber, setVendorFormGstNumber] = useState("");
+  const [vendorFormContacts, setVendorFormContacts] = useState<StructuredContact[]>([]);
+  const [showZohoGstModal, setShowZohoGstModal] = useState(false);
+  const [showExportModal, setShowExportModal] = useState(false);
   const [vendorSubmitLoading, setVendorSubmitLoading] = useState(false);
   const [vendorSubmitError, setVendorSubmitError] = useState<string | null>(null);
   const [vendorSubmitSuccess, setVendorSubmitSuccess] = useState<string | null>(null);
@@ -307,13 +316,6 @@ export default function PortalDashboardPage() {
   const [pdfGenerating, setPdfGenerating] = useState(false);
   const [pdfReadyUrl, setPdfReadyUrl] = useState<string | null>(null);
 
-  // Concierge Intelligence Radar state (US-018) — starts minimized as compact circle to avoid overlapping cards
-  const [radarMinimized, setRadarMinimized] = useState(true);
-  const [radarPos, setRadarPos] = useState({ x: 0, y: 0, isCustom: false });
-  const [activeDestination, setActiveDestination] = useState("Kashmir");
-  const isDraggingRef = useRef(false);
-  const dragStartRef = useRef({ mouseX: 0, mouseY: 0, elemX: 0, elemY: 0 });
-
   // Milestone 1 Edit Modals & Financial Approval Queue
   const [staffOptions, setStaffOptions] = useState<StaffOption[]>([]);
   const [editingTrip, setEditingTrip] = useState<EditableTrip | null>(null);
@@ -323,6 +325,7 @@ export default function PortalDashboardPage() {
   const [pendingApprovals, setPendingApprovals] = useState<any[]>([]);
   const [approvalActionId, setApprovalActionId] = useState<string | null>(null);
   const [crmNotice, setCrmNotice] = useState<string | null>(null);
+  const didHydrationSyncRef = useRef(false);
 
   // Release 1.5.4: + New Journey, Unified Drawer, Stage Gates & Operational Quick-Filters
   const [showNewJourneyModal, setShowNewJourneyModal] = useState(false);
@@ -390,6 +393,34 @@ export default function PortalDashboardPage() {
       .then((data) => {
         if (data && data.ok && Array.isArray(data.trips)) {
           setCrmTrips(data.trips);
+          if (!didHydrationSyncRef.current) {
+            const todayIst = new Intl.DateTimeFormat("en-CA", {
+              timeZone: "Asia/Kolkata",
+            }).format(new Date());
+            const hasDueBookedTrip = data.trips.some(
+              (t: CrmTripItem) =>
+                t.dealStage === "Booked/Won" &&
+                t.tripStatus !== "Complete" &&
+                Boolean(t.startDate) &&
+                (t.startDate || "") <= todayIst
+            );
+            if (hasDueBookedTrip) {
+              didHydrationSyncRef.current = true;
+              fetch("/api/portal/crm/trips/sync-in-travel", { method: "POST" })
+                .then((r) => r.json())
+                .then((syncData) => {
+                  if (syncData?.ok && syncData.promotedCount > 0) {
+                    fetch(`/api/portal/crm/trips?role=${encodeURIComponent(activeRole)}`)
+                      .then((r2) => r2.json())
+                      .then((d2) => {
+                        if (d2?.ok && Array.isArray(d2.trips)) setCrmTrips(d2.trips);
+                      })
+                      .catch(() => {});
+                  }
+                })
+                .catch(() => {});
+            }
+          }
         }
         if (data && data.ok && Array.isArray(data.staffOptions)) {
           setStaffOptions(data.staffOptions);
@@ -456,6 +487,8 @@ export default function PortalDashboardPage() {
     setVendorFormRateCardLink("");
     setVendorFormB2bRates("");
     setVendorFormComments("");
+    setVendorFormGstNumber("");
+    setVendorFormContacts([]);
     setVendorSubmitError(null);
     setVendorSubmitSuccess(null);
     setShowAddVendorModal(true);
@@ -477,6 +510,8 @@ export default function PortalDashboardPage() {
     setVendorFormRateCardLink(v.rate_card_link || "");
     setVendorFormB2bRates(v.b2b_rates || "");
     setVendorFormComments(v.comments || "");
+    setVendorFormGstNumber(v.gst_number || "");
+    setVendorFormContacts(Array.isArray(v.contacts) ? v.contacts : []);
     setVendorSubmitError(null);
     setVendorSubmitSuccess(null);
     setShowAddVendorModal(true);
@@ -539,6 +574,12 @@ export default function PortalDashboardPage() {
         rate_card_link: vendorFormRateCardLink.trim() || null,
         b2b_rates: vendorFormB2bRates.trim() || null,
         comments: vendorFormComments.trim() || null,
+        gst_number: vendorFormGstNumber.trim().toUpperCase() || null,
+        contacts: vendorFormContacts.map((c) => ({
+          ...c,
+          emails: c.emails.map((e) => e.trim()).filter(Boolean),
+          phones: c.phones.map((p) => p.trim()).filter(Boolean),
+        })),
         callerRole: session?.role || "desk_user",
         callerEmail: session?.email || "",
       };
@@ -695,44 +736,7 @@ export default function PortalDashboardPage() {
 
   function handleSignOut() {
     localStorage.removeItem("smv_staff_session");
-    // Reset radar position to default bottom-right
-    setRadarPos({ x: 0, y: 0, isCustom: false });
     router.replace("/portal/login");
-  }
-
-  // Radar drag handler with 16px screen clamping
-  function startDragging(e: React.MouseEvent) {
-    if (!radarMinimized) return;
-    isDraggingRef.current = true;
-    dragStartRef.current = {
-      mouseX: e.clientX,
-      mouseY: e.clientY,
-      elemX: radarPos.isCustom ? radarPos.x : window.innerWidth - 180,
-      elemY: radarPos.isCustom ? radarPos.y : window.innerHeight - 80,
-    };
-
-    function onMouseMove(moveEvent: MouseEvent) {
-      if (!isDraggingRef.current) return;
-      const deltaX = moveEvent.clientX - dragStartRef.current.mouseX;
-      const deltaY = moveEvent.clientY - dragStartRef.current.mouseY;
-
-      // 16px screen boundary clamp
-      const rawX = dragStartRef.current.elemX + deltaX;
-      const rawY = dragStartRef.current.elemY + deltaY;
-      const clampedX = Math.max(16, Math.min(window.innerWidth - 160, rawX));
-      const clampedY = Math.max(16, Math.min(window.innerHeight - 60, rawY));
-
-      setRadarPos({ x: clampedX, y: clampedY, isCustom: true });
-    }
-
-    function onMouseUp() {
-      isDraggingRef.current = false;
-      window.removeEventListener("mousemove", onMouseMove);
-      window.removeEventListener("mouseup", onMouseUp);
-    }
-
-    window.addEventListener("mousemove", onMouseMove);
-    window.addEventListener("mouseup", onMouseUp);
   }
 
   // Team Invite Submit Handler (US-001)
@@ -1619,6 +1623,18 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       <option value="2026">2026</option>
                       <option value="2027">2027</option>
                     </select>
+                    {(session?.role === "super_admin" ||
+                      session?.role === "administrator" ||
+                      session?.role === "privilege_user" ||
+                      session?.email?.toLowerCase() === "vivek@searchmyvacation.com") && (
+                      <button
+                        type="button"
+                        onClick={() => setShowExportModal(true)}
+                        className="rounded-lg border border-[#CBD5E1] dark:border-white/15 bg-white dark:bg-[#121215] px-2.5 py-1 text-[11px] font-bold text-[#0F172A] dark:text-white hover:border-[#F5951C] transition"
+                      >
+                        📊 Export Excel
+                      </button>
+                    )}
                   </div>
 
                   {/* 5-Column Live Kanban Board */}
@@ -1652,6 +1668,21 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                                 ? "In Progress"
                                 : null;
                             if (target && session) {
+                              if (kanbanDragTrip.dealStage === "In Travel" && target === "Booked/Won") {
+                                const matchingStaff = staffOptions.find(
+                                  (s) => s.displayName?.toLowerCase() === session.fullName?.toLowerCase()
+                                );
+                                const callerUid = matchingStaff?.userId || null;
+                                const isOwnerOrSuperAdmin =
+                                  session.role === "super_admin" ||
+                                  session.email?.toLowerCase() === "vivek@searchmyvacation.com" ||
+                                  (Boolean(callerUid) && kanbanDragTrip.leadOwnerId === callerUid);
+                                if (!isOwnerOrSuperAdmin) {
+                                  setCrmNotice("Only the assigned Travel Advisor or Super Admin can revert an Active journey.");
+                                  setKanbanDragTrip(null);
+                                  return;
+                                }
+                              }
                               setKanbanStageGate({ trip: kanbanDragTrip, targetStage: target });
                             }
                             setKanbanDragTrip(null);
@@ -2495,7 +2526,17 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   Curated boutique slow-travel properties, verified fleet operators, DMCs & partner agencies ({vendors.length} Total Registered Partners)
                 </p>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
+                {(isSuperAdmin || session?.role === "administrator") && (
+                  <button
+                    type="button"
+                    onClick={() => setShowZohoGstModal(true)}
+                    className="rounded-xl border border-[#CBD5E1] dark:border-white/15 bg-white dark:bg-[#121215] px-3 py-2 text-xs font-bold text-[#0F172A] dark:text-white hover:border-[#F5951C] transition flex items-center gap-1.5"
+                  >
+                    <span>📥</span>
+                    <span>Import GST from Zoho CSV</span>
+                  </button>
+                )}
                 {canManageVendors ? (
                   <button
                     onClick={openAddVendorModal}
@@ -2528,7 +2569,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   type="text"
                   value={vendorSearchQuery}
                   onChange={(e) => setVendorSearchQuery(e.target.value)}
-                  placeholder="Search vendors by name, code (VND-XXXX), destination, POC name, mobile..."
+                  placeholder="Search vendors by name, code (VND-XXXX), GSTIN, destination, POC name, mobile..."
                   className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
                 />
                 {vendorSearchQuery && (
@@ -2666,22 +2707,87 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                               👤 <strong>POC:</strong> {v.poc_name}
                             </p>
                           )}
-                          {(v.poc_mobile || v.office_phone) && (
-                            <p className="font-mono text-[11px] truncate">
-                              📱 {v.poc_mobile || v.office_phone}
+                          {v.gst_number && (
+                            <p className="font-mono text-[10px] font-bold text-emerald-700 dark:text-emerald-300">
+                              GSTIN: {v.gst_number}
                             </p>
                           )}
-                          {v.email && (
-                            <p className="truncate">
-                              ✉️{" "}
-                              <a
-                                href={`mailto:${v.email}`}
-                                className="text-[#0F172A] dark:text-white hover:text-[#F5951C] underline decoration-[#F5951C]/50"
-                              >
-                                {v.email}
-                              </a>
-                            </p>
-                          )}
+                          {(() => {
+                            const contactList = Array.isArray(v.contacts) && v.contacts.length > 0
+                              ? v.contacts
+                              : [{
+                                  name: v.poc_name,
+                                  phones: [v.poc_mobile, v.office_phone].filter(Boolean),
+                                  emails: [v.email].filter(Boolean),
+                                }];
+                            const allPhones: string[] = Array.from(
+                              new Set(
+                                contactList.flatMap((c: any) =>
+                                  (c.phones || []).map((p: string) => String(p).trim()).filter(Boolean)
+                                )
+                              )
+                            );
+                            const allEmails: string[] = Array.from(
+                              new Set(
+                                contactList.flatMap((c: any) =>
+                                  (c.emails || []).map((em: string) => String(em).trim()).filter(Boolean)
+                                )
+                              )
+                            );
+                            return (
+                              <>
+                                {allPhones.map((ph, pi) => {
+                                  const waDigits = ph.replace(/\D/g, "");
+                                  return (
+                                    <div key={pi} className="flex items-center gap-1.5 font-mono text-[11px] flex-wrap">
+                                      <span>📱</span>
+                                      <a href={`tel:${ph}`} className="text-[#0F172A] dark:text-white hover:text-[#F5951C]">
+                                        {ph}
+                                      </a>
+                                      <button
+                                        type="button"
+                                        onClick={() => navigator.clipboard?.writeText(ph)}
+                                        title="Copy phone"
+                                        className="text-[10px] text-[#64748B] hover:text-[#F5951C]"
+                                      >
+                                        📋
+                                      </button>
+                                      {waDigits.length >= 10 && (
+                                        <a
+                                          href={`https://wa.me/${waDigits.length === 10 ? `91${waDigits}` : waDigits}`}
+                                          target="_blank"
+                                          rel="noreferrer"
+                                          title="WhatsApp"
+                                          className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold hover:underline"
+                                        >
+                                          WA
+                                        </a>
+                                      )}
+                                    </div>
+                                  );
+                                })}
+                                {allEmails.map((em, ei) => (
+                                  <div key={ei} className="flex items-center gap-1.5 text-[11px] truncate">
+                                    <span>✉️</span>
+                                    <a
+                                      href={`mailto:${em}`}
+                                      className="text-[#0F172A] dark:text-white hover:text-[#F5951C] underline decoration-[#F5951C]/50 truncate"
+                                    >
+                                      {em}
+                                    </a>
+                                    <button
+                                      type="button"
+                                      onClick={() => navigator.clipboard?.writeText(em)}
+                                      title="Copy email"
+                                      className="text-[10px] text-[#64748B] hover:text-[#F5951C] shrink-0"
+                                    >
+                                      📋
+                                    </button>
+                                  </div>
+                                ))}
+                              </>
+                            );
+                          })()}
                           {v.website && (
                             <p className="truncate text-[11px]">
                               🌐{" "}
@@ -3992,12 +4098,23 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       <label className="block text-xs font-semibold text-[#0F172A] dark:text-white/80 mb-1">
                         Destination / City
                       </label>
+                      <DestinationAutocomplete
+                        value={vendorFormDestination}
+                        onChange={setVendorFormDestination}
+                        placeholder="e.g. Srinagar, Munnar, Sri Lanka"
+                        className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-[#0F172A] dark:text-white/80 mb-1">
+                        GST Number (GSTIN)
+                      </label>
                       <input
                         type="text"
-                        value={vendorFormDestination}
-                        onChange={(e) => setVendorFormDestination(e.target.value)}
-                        placeholder="e.g. Srinagar, Munnar, Bentota"
-                        className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                        value={vendorFormGstNumber}
+                        onChange={(e) => setVendorFormGstNumber(e.target.value.toUpperCase())}
+                        placeholder="e.g. 32AAKFD2016R1ZD"
+                        className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs font-mono text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
                       />
                     </div>
                     <div>
@@ -4020,6 +4137,12 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   <h4 className="text-xs font-bold uppercase tracking-wider text-[#F5951C]">
                     2. Key Contact & Communications
                   </h4>
+                  <MultiContactEditor
+                    contacts={vendorFormContacts}
+                    onChange={setVendorFormContacts}
+                    maxContacts={5}
+                    addButtonLabel="+ Add Contact"
+                  />
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <label className="block text-xs font-semibold text-[#0F172A] dark:text-white/80 mb-1">
@@ -4178,154 +4301,32 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
       )}
 
       {/* ========================================================================= */}
-      {/* PERSISTENT CONCIERGE INTELLIGENCE RADAR (US-018) */}
-      {/* Staff cannot permanently close or disable this dock. */}
+      {/* PERSISTENT CONCIERGE INTELLIGENCE RADAR (R1.5.5 EPIC 2)                   */}
       {/* ========================================================================= */}
-      <div
-        style={
-          radarPos.isCustom
-            ? { left: `${radarPos.x}px`, top: `${radarPos.y}px`, position: "fixed" }
-            : {}
-        }
-        className={
-          radarPos.isCustom
-            ? "z-50 select-none"
-            : "fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 select-none"
-        }
-      >
-        {/* State A: Minimized Compact Circular Button */}
-        {radarMinimized ? (
-          (() => {
-            const in7Iso = new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10);
-            const dueHoldCount = crmTrips.filter(
-              (t) => t.dealStage === "On Hold" && t.followUpDate && t.followUpDate <= in7Iso
-            ).length;
-            return (
-              <button
-                type="button"
-                onMouseDown={startDragging}
-                onClick={() => setRadarMinimized(false)}
-                aria-label={`Expand Concierge Radar (${activeDestination})`}
-                title={`Concierge Radar: ${activeDestination} (Tap to expand, drag to move)`}
-                className="relative w-12 h-12 rounded-full bg-white dark:bg-[#121215] border-2 border-[#F5951C] shadow-2xl flex items-center justify-center text-[#0F172A] dark:text-white hover:scale-105 transition cursor-pointer"
-              >
-                <span className="text-lg leading-none" aria-hidden="true">📡</span>
-                <span className="absolute top-0.5 right-0.5 flex h-2.5 w-2.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-                </span>
-                {dueHoldCount > 0 && (
-                  <span className="absolute -top-1 -left-1 min-w-[18px] h-[18px] px-1 rounded-full bg-rose-600 text-white text-[10px] font-bold flex items-center justify-center shadow">
-                    {dueHoldCount}
-                  </span>
-                )}
-              </button>
-            );
-          })()
-        ) : (
-          /* State B: Expanded Dock */
-          <div className="w-80 sm:w-96 rounded-2xl bg-white dark:bg-[#121215] border border-[#E2E8F0] dark:border-white/15 shadow-2xl overflow-hidden backdrop-blur-md">
-            {/* Header */}
-            <div className="p-3.5 bg-[#0F172A] border-b border-[#E2E8F0] dark:border-white/10 flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                </span>
-                <span className="text-xs font-bold uppercase tracking-wider text-white">
-                  Concierge Radar
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setRadarMinimized(true)}
-                  className="text-xs text-white/70 hover:text-white px-2 py-0.5 rounded border border-white/20"
-                >
-                  Minimize
-                </button>
-              </div>
-            </div>
+      <ConciergeRadar trips={crmTrips} onOpenTrip={(id) => setDrawerTripId(id)} />
 
-            {/* Context Selector */}
-            <div className="p-3 bg-[#F8FAFC] dark:bg-[#09090B] border-b border-[#E2E8F0] dark:border-white/5 flex gap-2 overflow-x-auto text-xs">
-              {["Kashmir", "Rajasthan", "Kerala", "Ladakh"].map((dest) => (
-                <button
-                  key={dest}
-                  onClick={() => setActiveDestination(dest)}
-                  className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition ${
-                    activeDestination === dest
-                      ? "bg-[#F5951C] text-[#0F172A]"
-                      : "text-[#475569] dark:text-white/60 hover:text-[#0F172A] dark:hover:text-white"
-                  }`}
-                >
-                  {dest}
-                </button>
-              ))}
-            </div>
-
-            {/* Live Context Cards */}
-            <div className="p-4 space-y-3 text-xs max-h-72 overflow-y-auto">
-              {/* Weather */}
-              <div className="p-2.5 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5 flex justify-between items-center">
-                <div>
-                  <p className="text-[11px] text-[#475569] dark:text-white/50 uppercase font-semibold">Live Weather</p>
-                  <p className="font-bold text-[#0F172A] dark:text-white mt-0.5">14°C • Golden Autumn Skies</p>
-                </div>
-                <span className="text-2xl">🍂</span>
-              </div>
-
-              {/* Flights */}
-              <div className="p-2.5 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5 space-y-1">
-                <p className="text-[11px] text-[#475569] dark:text-white/50 uppercase font-semibold">Flight Intelligence</p>
-                <div className="flex justify-between items-center text-[#0F172A] dark:text-white">
-                  <span>DEL ➔ SXR (AI-825)</span>
-                  <span className="text-emerald-600 dark:text-emerald-400 font-bold">On Time</span>
-                </div>
-              </div>
-
-              {/* Ground Notice */}
-              <div className="p-2.5 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5 space-y-1">
-                <p className="text-[11px] text-[#475569] dark:text-white/50 uppercase font-semibold">Local Supplier Advisory</p>
-                <p className="text-[#334155] dark:text-white/80">Srinagar-Gulmarg Highway: Clear, private chauffeured escort confirmed.</p>
-              </div>
-
-              {/* On Hold Follow-Up Reminders (US-154-03) */}
-              {(() => {
-                const in7Iso = new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10);
-                const dueHolds = crmTrips.filter(
-                  (t) => t.dealStage === "On Hold" && t.followUpDate && t.followUpDate <= in7Iso
-                );
-                if (dueHolds.length === 0) return null;
-                return (
-                  <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 space-y-1.5">
-                    <p className="text-[11px] text-amber-700 dark:text-amber-300 uppercase font-bold">
-                      ⏰ On Hold Follow-Ups Due ({dueHolds.length})
-                    </p>
-                    {dueHolds.slice(0, 3).map((h) => (
-                      <button
-                        key={h.id}
-                        type="button"
-                        onClick={() => setDrawerTripId(h.id)}
-                        className="w-full text-left text-[11px] text-[#0F172A] dark:text-white hover:text-[#F5951C] flex justify-between items-center"
-                      >
-                        <span className="truncate font-semibold">
-                          {h.dealReferenceId} • {h.customerName}
-                        </span>
-                        <span className="font-mono text-[10px] shrink-0 ml-1">{h.followUpDate}</span>
-                      </button>
-                    ))}
-                  </div>
-                );
-              })()}
-            </div>
-
-            {/* Inactivity Notice */}
-            <div className="p-2.5 bg-[#0F172A] border-t border-[#E2E8F0] dark:border-white/5 text-[10px] text-white/60 text-center">
-              Permanent dock. 30-min idle watchdog prompts before logout &amp; resets position.
-            </div>
-          </div>
-        )}
-      </div>
+      {/* Release 1.5.5 Milestone 4: Excel Export & Zoho GST Sync Modals */}
+      {showExportModal && session && (
+        <ExportTripsModal
+          callerEmail={session.email}
+          callerName={session.fullName}
+          callerRole={session.role}
+          onClose={() => setShowExportModal(false)}
+        />
+      )}
+      {showZohoGstModal && session && (
+        <ZohoGstImportModal
+          callerEmail={session.email}
+          callerName={session.fullName}
+          callerRole={session.role}
+          onClose={() => setShowZohoGstModal(false)}
+          onSynced={(msg) => {
+            setShowZohoGstModal(false);
+            setCrmNotice(msg);
+            refreshVendorsData();
+          }}
+        />
+      )}
 
       {/* Release 1.5.4: + New Journey Modal, Unified Drawer & Kanban Stage Gate Modal */}
       {showNewJourneyModal && (

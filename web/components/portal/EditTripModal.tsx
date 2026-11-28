@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { DestinationAutocomplete } from "./DestinationAutocomplete";
 
 export interface StaffOption {
   userId: string;
@@ -268,11 +269,10 @@ export function EditTripModal({
                 <label className={labelClass}>
                   Destination <span className="text-[#F5951C]">*</span>
                 </label>
-                <input
-                  type="text"
-                  required
+                <DestinationAutocomplete
                   value={destination}
-                  onChange={(e) => setDestination(e.target.value)}
+                  onChange={setDestination}
+                  required
                   className={inputClass}
                 />
               </div>
@@ -430,6 +430,7 @@ export function EditTripModal({
                   <option value="Enquiry">Enquiry</option>
                   <option value="In Progress">In Progress</option>
                   <option value="Booked/Won">Booked/Won</option>
+                  <option value="In Travel">In Travel / Active</option>
                   <option value="On Hold">On Hold</option>
                   <option value="Lost">Lost</option>
                 </select>

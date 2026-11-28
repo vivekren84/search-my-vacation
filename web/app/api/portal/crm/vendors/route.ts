@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSupabaseAdminConfig } from "@/lib/supabase/admin";
+import { normalizeDestinationServer } from "@/lib/portal/destination-normalize";
 
 export const runtime = "nodejs";
 
@@ -52,6 +53,7 @@ export async function GET(request: Request) {
             (v.name && v.name.toLowerCase().includes(query)) ||
             (v.vendor_code && v.vendor_code.toLowerCase().includes(query)) ||
             (v.destination && v.destination.toLowerCase().includes(query)) ||
+            (v.gst_number && v.gst_number.toLowerCase().includes(query)) ||
             (v.region && v.region.toLowerCase().includes(query)) ||
             (v.poc_name && v.poc_name.toLowerCase().includes(query)) ||
             (v.poc_mobile && v.poc_mobile.includes(query)) ||
@@ -112,6 +114,9 @@ export async function POST(request: Request) {
       rate_card_link,
       b2b_rates,
       comments,
+      contacts,
+      gst_number,
+      gst_treatment,
     } = body;
 
     if (!name || typeof name !== "string" || !name.trim()) {
@@ -159,10 +164,16 @@ export async function POST(request: Request) {
       Prefer: "return=representation",
     };
 
+    const normalizedVendorDest = destination?.trim()
+      ? await normalizeDestinationServer(destination, projectUrl, secretKey, {
+          allowTitleCaseUnlisted: true,
+        })
+      : null;
+
     const vendorPayload = {
       name: name.trim(),
       category: normalizedCategory,
-      destination: destination?.trim() || null,
+      destination: normalizedVendorDest,
       region: region?.trim() || null,
       star_rating: star_rating?.trim() || null,
       poc_name: poc_name?.trim() || null,
@@ -174,6 +185,9 @@ export async function POST(request: Request) {
       rate_card_link: rate_card_link?.trim() || null,
       b2b_rates: b2b_rates?.trim() || null,
       comments: comments?.trim() || null,
+      contacts: Array.isArray(contacts) ? contacts.slice(0, 5) : [],
+      gst_number: gst_number?.trim()?.toUpperCase() || null,
+      gst_treatment: gst_treatment?.trim() || null,
       is_active: true,
     };
 
@@ -267,6 +281,14 @@ export async function PATCH(request: Request) {
 
     delete updates.callerRole;
     delete updates.callerEmail;
+    if (typeof updates.destination === "string" && updates.destination.trim()) {
+      updates.destination = await normalizeDestinationServer(
+        updates.destination,
+        projectUrl,
+        secretKey,
+        { allowTitleCaseUnlisted: true }
+      );
+    }
     updates.updated_at = new Date().toISOString();
 
     const res = await fetch(`${projectUrl}/rest/v1/workspace_vendors?id=eq.${encodeURIComponent(id)}`, {

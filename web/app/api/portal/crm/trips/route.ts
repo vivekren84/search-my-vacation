@@ -8,6 +8,7 @@ import {
   logTripEvent,
   resolveStaffCaller,
 } from "@/lib/portal/trip-helpers";
+import { normalizeDestinationServer } from "@/lib/portal/destination-normalize";
 
 export const runtime = "nodejs";
 
@@ -15,6 +16,7 @@ const VALID_DEAL_STAGES = new Set([
   "Enquiry",
   "In Progress",
   "Booked/Won",
+  "In Travel",
   "Lost",
   "On Hold",
   "Cancelled",
@@ -330,6 +332,10 @@ export async function POST(request: Request) {
     const { projectUrl, secretKey } = config;
     const headers = getAdminHeaders(secretKey);
 
+    const normalizedDestination = await normalizeDestinationServer(destination, projectUrl, secretKey, {
+      allowTitleCaseUnlisted: true,
+    });
+
     const rpcPayload = {
       p_customer_id: customerId || null,
       p_primary_name: primaryName?.trim() || null,
@@ -337,7 +343,7 @@ export async function POST(request: Request) {
       p_primary_email: primaryEmail?.trim() || null,
       p_deal_channel: dealChannel === "VENDOR" ? "VENDOR" : "DIRECT",
       p_trip_scope: tripScope === "International" ? "International" : "Domestic",
-      p_destination: destination.trim(),
+      p_destination: normalizedDestination,
       p_travel_year: Number(travelYear) || new Date().getFullYear(),
       p_travel_month: travelMonth?.trim() || null,
       p_start_date: startDate?.trim() || null,
@@ -447,6 +453,8 @@ export async function PATCH(request: Request) {
       pinnedNotes,
       isArchived,
       reopenReason,
+      postponementReason,
+      revisedStartDate,
       bookedProperties,
       bookedTransport,
       leadOwnerId,
@@ -541,7 +549,11 @@ export async function PATCH(request: Request) {
       tripPatch.archived_at = isArchived ? nowIso : null;
     }
 
-    if (destination !== undefined) tripPatch.destination = destination.trim();
+    if (destination !== undefined) {
+      tripPatch.destination = await normalizeDestinationServer(destination, projectUrl, secretKey, {
+        allowTitleCaseUnlisted: true,
+      });
+    }
     if (tripScope !== undefined) tripPatch.trip_scope = tripScope === "International" ? "International" : "Domestic";
     if (leadSource !== undefined) tripPatch.lead_source = leadSource?.trim() || null;
     if (travelYear !== undefined) tripPatch.travel_year = Number(travelYear) || existingTrip.travel_year;
@@ -641,15 +653,44 @@ export async function PATCH(request: Request) {
         nextGst !== Number(existingTrip.gst_amount || 0) ||
         nextProfit !== Number(existingTrip.profit || 0));
 
-    // Stage-Gate Validations (US-154-03 & US-154-04)
+    // Stage-Gate Validations (US-154-03, US-154-04 & R1.5.5 EPIC 1.1)
     const nextStage = dealStage ?? existingTrip.deal_stage;
     const stageChanged = dealStage !== undefined && dealStage !== existingTrip.deal_stage;
     const isReopening =
       stageChanged &&
       (existingTrip.deal_stage === "Lost" || existingTrip.deal_stage === "On Hold") &&
       nextStage === "In Progress";
+    const isRollbackFromInTravel =
+      stageChanged &&
+      existingTrip.deal_stage === "In Travel" &&
+      nextStage === "Booked/Won";
 
     if (stageChanged) {
+      if (isRollbackFromInTravel) {
+        const isOwnerOrSuperAdmin =
+          effectiveRole === "super_admin" ||
+          caller.email === "vivek@searchmyvacation.com" ||
+          (Boolean(caller.userId) && caller.userId === existingTrip.lead_owner_id);
+        if (!isOwnerOrSuperAdmin) {
+          return NextResponse.json(
+            { ok: false, message: "Only the assigned Travel Advisor or Super Admin can revert an Active journey." },
+            { status: 403 }
+          );
+        }
+        if (!postponementReason || !String(postponementReason).trim()) {
+          return NextResponse.json(
+            { ok: false, message: "Postponement Reason is required when reverting an Active journey to Confirmed & Booked." },
+            { status: 400 }
+          );
+        }
+        if (revisedStartDate && String(revisedStartDate).trim()) {
+          tripPatch.start_date = String(revisedStartDate).trim();
+        }
+        if (!tripStatus) {
+          tripPatch.trip_status = "To Start";
+        }
+      }
+
       if (isReopening && !DIRECT_FINANCIAL_ROLES.has(effectiveRole)) {
         return NextResponse.json(
           { ok: false, message: "Permission Denied: Only Privilege User, Administrator, or Super Admin can re-open a Lost or On Hold deal." },
@@ -814,18 +855,20 @@ export async function PATCH(request: Request) {
         eventType: isReopening ? "STAGE_REOPENED" : nextStage === "Cancelled" ? "CANCELLED" : "STAGE_CHANGED",
         previousState: { deal_stage: existingTrip.deal_stage, trip_status: existingTrip.trip_status },
         newState: { deal_stage: updatedTrip.deal_stage, trip_status: updatedTrip.trip_status },
-        reasonCode:
-          nextStage === "On Hold"
+        reasonCode: isRollbackFromInTravel
+          ? "POSTPONEMENT_ROLLBACK"
+          : nextStage === "On Hold"
             ? updatedTrip.hold_reason
             : nextStage === "Lost"
             ? updatedTrip.loss_reason
             : nextStage === "Cancelled"
             ? updatedTrip.cancellation_reason
             : null,
-        comment:
-          reopenReason?.trim() ||
-          notes?.trim() ||
-          `Stage transitioned from ${existingTrip.deal_stage} to ${updatedTrip.deal_stage}`,
+        comment: isRollbackFromInTravel
+          ? `${String(postponementReason).trim()}${revisedStartDate ? ` (Revised Start Date: ${String(revisedStartDate).trim()})` : ""}`
+          : reopenReason?.trim() ||
+            notes?.trim() ||
+            `Stage transitioned from ${existingTrip.deal_stage} to ${updatedTrip.deal_stage}`,
       });
     }
 

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { StaffOption } from "./EditTripModal";
 import { StageGateModal } from "./StageGateModal";
+import { useDestinationClock } from "@/lib/portal/useDestinationClock";
 
 interface JourneyDetailDrawerProps {
   tripId: string;
@@ -56,6 +57,7 @@ export function JourneyDetailDrawer({
   const [activeTab, setActiveTab] = useState<DrawerTab>("overview");
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any>(null);
+  const destinationClock = useDestinationClock(data?.trip?.destination);
   const [toast, setToast] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
@@ -581,6 +583,11 @@ export function JourneyDetailDrawer({
               </div>
               <p className="text-xs text-[#475569] dark:text-zinc-400">
                 📍 {trip?.destination || "—"} • {trip?.travel_month || ""} {trip?.travel_year || ""} • {trip?.pax_adults || 1}A{trip?.pax_children > 0 ? `+${trip.pax_children}C` : ""}
+                {destinationClock && (
+                  <span className="text-[#0F172A] dark:text-zinc-200 font-medium">
+                    {" "}• 🕒 {destinationClock}
+                  </span>
+                )}
               </p>
             </div>
 
@@ -636,13 +643,22 @@ export function JourneyDetailDrawer({
                 <span className="px-2 py-0.5 rounded-full bg-[#F5951C]/20 text-[#F5951C] font-bold">
                   {trip.deal_stage}
                 </span>
-                {trip.deal_stage !== "Booked/Won" && trip.deal_stage !== "Cancelled" && (
+                {trip.deal_stage !== "Booked/Won" && trip.deal_stage !== "In Travel" && trip.deal_stage !== "Cancelled" && (
                   <button
                     type="button"
                     onClick={() => setStageGateTarget("Booked/Won")}
                     className="px-2 py-0.5 rounded-lg bg-emerald-600 text-white font-bold hover:bg-emerald-700"
                   >
                     → Booked/Won
+                  </button>
+                )}
+                {trip.deal_stage === "In Travel" && (
+                  <button
+                    type="button"
+                    onClick={() => setStageGateTarget("Booked/Won")}
+                    className="px-2 py-0.5 rounded-lg border border-amber-500/40 text-amber-700 dark:text-amber-300 font-semibold hover:bg-amber-500/10"
+                  >
+                    ← Revert to Booked/Won
                   </button>
                 )}
                 {trip.deal_stage !== "On Hold" && trip.deal_stage !== "Lost" && trip.deal_stage !== "Cancelled" && (
@@ -663,7 +679,7 @@ export function JourneyDetailDrawer({
                     Mark Lost
                   </button>
                 )}
-                {trip.deal_stage === "Booked/Won" && trip.trip_status !== "Complete" && (
+                {(trip.deal_stage === "Booked/Won" || trip.deal_stage === "In Travel") && trip.trip_status !== "Complete" && (
                   <>
                     <button
                       type="button"
