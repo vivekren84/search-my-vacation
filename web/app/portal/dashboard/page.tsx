@@ -1432,6 +1432,22 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
           <div className="space-y-6">
             {(() => {
               const todayIso = new Date().toISOString().slice(0, 10);
+              const istNowIso = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata" }).format(new Date());
+              const currentIstMonthPrefix = istNowIso.slice(0, 7);
+              const currentIstYear = Number(istNowIso.slice(0, 4));
+              const currentIstMonthShort = new Intl.DateTimeFormat("en-US", {
+                timeZone: "Asia/Kolkata",
+                month: "short",
+              }).format(new Date());
+
+              function isCompletedInCurrentMonth(trip: CrmTripItem): boolean {
+                if (trip.endDate) return trip.endDate.slice(0, 7) === currentIstMonthPrefix;
+                if (trip.startDate) return trip.startDate.slice(0, 7) === currentIstMonthPrefix;
+                return (
+                  Number(trip.travelYear) === currentIstYear &&
+                  (trip.travelMonth || "").trim().toLowerCase().startsWith(currentIstMonthShort.toLowerCase())
+                );
+              }
 
               // Helper to assign each journey to EXACTLY ONE mutually exclusive stage
               function getKanbanStage(trip: CrmTripItem): "enquiries" | "planning" | "confirmed" | "travel" | "completed" | "closed" {
@@ -1643,6 +1659,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       const todayIso = new Date().toISOString().slice(0, 10);
                       const in14Iso = new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10);
                       const filteredColTrips = col.trips.filter((t) => {
+                        if (col.id === "completed" && !isCompletedInCurrentMonth(t)) return false;
                         if (yearFilter !== "all" && String(t.travelYear) !== yearFilter) return false;
                         if (quickFilter === "mine" && session?.fullName && !t.leadOwnerName.toLowerCase().includes(session.fullName.split(" ")[0].toLowerCase())) return false;
                         if (quickFilter === "departing14" && (!t.startDate || t.startDate < todayIso || t.startDate > in14Iso)) return false;
@@ -1699,6 +1716,11 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                               <div>
                                 <h3 className="text-[11px] font-bold uppercase tracking-wider text-[#0F172A] dark:text-white">
                                   {col.title}
+                                  {col.id === "completed" && (
+                                    <span className="ml-1 text-[10px] font-semibold text-[#F5951C]">
+                                      ({currentIstMonthShort})
+                                    </span>
+                                  )}
                                 </h3>
                                 <p className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400">
                                   ₹{(colValue / 100000).toFixed(1)}L
@@ -1794,7 +1816,21 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                           </div>
 
                           <div className="pt-2 border-t border-[#E2E8F0] dark:border-white/5 text-[10px] text-[#94A3B8] dark:text-zinc-500 text-center">
-                            Synchronized with Supabase
+                            {col.id === "completed" ? (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setActiveTab("crm");
+                                  setCrmFilterMode("all");
+                                  setCrmSearchQuery("");
+                                }}
+                                className="w-full py-0.5 text-[10px] font-semibold text-[#F5951C] hover:underline text-center"
+                              >
+                                View all {col.trips.length} completed trips in CRM →
+                              </button>
+                            ) : (
+                              "Synchronized with Supabase"
+                            )}
                           </div>
                         </div>
                       );
