@@ -69,6 +69,7 @@ export async function GET(request: Request) {
         primaryMobile: c.primary_mobile,
         secondaryMobile: c.secondary_mobile,
         primaryEmail: c.primary_email,
+        contacts: Array.isArray(c.contacts) ? c.contacts : [],
         zohoSynced: c.zoho_synced,
         needsContactEnrichment: c.needs_contact_enrichment,
         tripsCount: custTrips.length,
@@ -120,6 +121,7 @@ export async function PATCH(request: Request) {
       primaryMobile,
       secondaryMobile,
       primaryEmail,
+      contacts,
       needsContactEnrichment,
     } = body;
 
@@ -168,12 +170,14 @@ export async function PATCH(request: Request) {
     const cleanedPrimaryMobile = primaryMobile?.trim() || null;
     const cleanedSecondaryMobile = secondaryMobile?.trim() || null;
     const cleanedEmail = primaryEmail?.trim() || null;
+    const cleanedContacts = Array.isArray(contacts) ? contacts.slice(0, 2) : undefined;
 
     const patchPayload: Record<string, any> = {
       primary_name: primaryName.trim(),
       primary_mobile: cleanedPrimaryMobile,
       secondary_mobile: cleanedSecondaryMobile,
       primary_email: cleanedEmail,
+      ...(cleanedContacts !== undefined ? { contacts: cleanedContacts } : {}),
       updated_at: new Date().toISOString(),
     };
 

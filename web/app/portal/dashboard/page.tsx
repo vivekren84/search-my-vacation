@@ -15,6 +15,10 @@ import { NewJourneyModal, CustomerLookupOption } from "@/components/portal/NewJo
 import { JourneyDetailDrawer } from "@/components/portal/JourneyDetailDrawer";
 import { StageGateModal } from "@/components/portal/StageGateModal";
 import { ConciergeRadar } from "@/components/portal/ConciergeRadar";
+import { DestinationAutocomplete } from "@/components/portal/DestinationAutocomplete";
+import { MultiContactEditor, StructuredContact } from "@/components/portal/MultiContactEditor";
+import { ZohoGstImportModal } from "@/components/portal/ZohoGstImportModal";
+import { ExportTripsModal } from "@/components/portal/ExportTripsModal";
 
 interface StaffSession {
   fullName: string;
@@ -215,6 +219,10 @@ export default function PortalDashboardPage() {
   const [vendorFormRateCardLink, setVendorFormRateCardLink] = useState("");
   const [vendorFormB2bRates, setVendorFormB2bRates] = useState("");
   const [vendorFormComments, setVendorFormComments] = useState("");
+  const [vendorFormGstNumber, setVendorFormGstNumber] = useState("");
+  const [vendorFormContacts, setVendorFormContacts] = useState<StructuredContact[]>([]);
+  const [showZohoGstModal, setShowZohoGstModal] = useState(false);
+  const [showExportModal, setShowExportModal] = useState(false);
   const [vendorSubmitLoading, setVendorSubmitLoading] = useState(false);
   const [vendorSubmitError, setVendorSubmitError] = useState<string | null>(null);
   const [vendorSubmitSuccess, setVendorSubmitSuccess] = useState<string | null>(null);
@@ -479,6 +487,8 @@ export default function PortalDashboardPage() {
     setVendorFormRateCardLink("");
     setVendorFormB2bRates("");
     setVendorFormComments("");
+    setVendorFormGstNumber("");
+    setVendorFormContacts([]);
     setVendorSubmitError(null);
     setVendorSubmitSuccess(null);
     setShowAddVendorModal(true);
@@ -500,6 +510,8 @@ export default function PortalDashboardPage() {
     setVendorFormRateCardLink(v.rate_card_link || "");
     setVendorFormB2bRates(v.b2b_rates || "");
     setVendorFormComments(v.comments || "");
+    setVendorFormGstNumber(v.gst_number || "");
+    setVendorFormContacts(Array.isArray(v.contacts) ? v.contacts : []);
     setVendorSubmitError(null);
     setVendorSubmitSuccess(null);
     setShowAddVendorModal(true);
@@ -562,6 +574,12 @@ export default function PortalDashboardPage() {
         rate_card_link: vendorFormRateCardLink.trim() || null,
         b2b_rates: vendorFormB2bRates.trim() || null,
         comments: vendorFormComments.trim() || null,
+        gst_number: vendorFormGstNumber.trim().toUpperCase() || null,
+        contacts: vendorFormContacts.map((c) => ({
+          ...c,
+          emails: c.emails.map((e) => e.trim()).filter(Boolean),
+          phones: c.phones.map((p) => p.trim()).filter(Boolean),
+        })),
         callerRole: session?.role || "desk_user",
         callerEmail: session?.email || "",
       };
@@ -1605,6 +1623,18 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       <option value="2026">2026</option>
                       <option value="2027">2027</option>
                     </select>
+                    {(session?.role === "super_admin" ||
+                      session?.role === "administrator" ||
+                      session?.role === "privilege_user" ||
+                      session?.email?.toLowerCase() === "vivek@searchmyvacation.com") && (
+                      <button
+                        type="button"
+                        onClick={() => setShowExportModal(true)}
+                        className="rounded-lg border border-[#CBD5E1] dark:border-white/15 bg-white dark:bg-[#121215] px-2.5 py-1 text-[11px] font-bold text-[#0F172A] dark:text-white hover:border-[#F5951C] transition"
+                      >
+                        📊 Export Excel
+                      </button>
+                    )}
                   </div>
 
                   {/* 5-Column Live Kanban Board */}
@@ -2496,7 +2526,17 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   Curated boutique slow-travel properties, verified fleet operators, DMCs & partner agencies ({vendors.length} Total Registered Partners)
                 </p>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
+                {(isSuperAdmin || session?.role === "administrator") && (
+                  <button
+                    type="button"
+                    onClick={() => setShowZohoGstModal(true)}
+                    className="rounded-xl border border-[#CBD5E1] dark:border-white/15 bg-white dark:bg-[#121215] px-3 py-2 text-xs font-bold text-[#0F172A] dark:text-white hover:border-[#F5951C] transition flex items-center gap-1.5"
+                  >
+                    <span>📥</span>
+                    <span>Import GST from Zoho CSV</span>
+                  </button>
+                )}
                 {canManageVendors ? (
                   <button
                     onClick={openAddVendorModal}
@@ -2529,7 +2569,7 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   type="text"
                   value={vendorSearchQuery}
                   onChange={(e) => setVendorSearchQuery(e.target.value)}
-                  placeholder="Search vendors by name, code (VND-XXXX), destination, POC name, mobile..."
+                  placeholder="Search vendors by name, code (VND-XXXX), GSTIN, destination, POC name, mobile..."
                   className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
                 />
                 {vendorSearchQuery && (
@@ -2667,22 +2707,87 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                               👤 <strong>POC:</strong> {v.poc_name}
                             </p>
                           )}
-                          {(v.poc_mobile || v.office_phone) && (
-                            <p className="font-mono text-[11px] truncate">
-                              📱 {v.poc_mobile || v.office_phone}
+                          {v.gst_number && (
+                            <p className="font-mono text-[10px] font-bold text-emerald-700 dark:text-emerald-300">
+                              GSTIN: {v.gst_number}
                             </p>
                           )}
-                          {v.email && (
-                            <p className="truncate">
-                              ✉️{" "}
-                              <a
-                                href={`mailto:${v.email}`}
-                                className="text-[#0F172A] dark:text-white hover:text-[#F5951C] underline decoration-[#F5951C]/50"
-                              >
-                                {v.email}
-                              </a>
-                            </p>
-                          )}
+                          {(() => {
+                            const contactList = Array.isArray(v.contacts) && v.contacts.length > 0
+                              ? v.contacts
+                              : [{
+                                  name: v.poc_name,
+                                  phones: [v.poc_mobile, v.office_phone].filter(Boolean),
+                                  emails: [v.email].filter(Boolean),
+                                }];
+                            const allPhones: string[] = Array.from(
+                              new Set(
+                                contactList.flatMap((c: any) =>
+                                  (c.phones || []).map((p: string) => String(p).trim()).filter(Boolean)
+                                )
+                              )
+                            );
+                            const allEmails: string[] = Array.from(
+                              new Set(
+                                contactList.flatMap((c: any) =>
+                                  (c.emails || []).map((em: string) => String(em).trim()).filter(Boolean)
+                                )
+                              )
+                            );
+                            return (
+                              <>
+                                {allPhones.map((ph, pi) => {
+                                  const waDigits = ph.replace(/\D/g, "");
+                                  return (
+                                    <div key={pi} className="flex items-center gap-1.5 font-mono text-[11px] flex-wrap">
+                                      <span>📱</span>
+                                      <a href={`tel:${ph}`} className="text-[#0F172A] dark:text-white hover:text-[#F5951C]">
+                                        {ph}
+                                      </a>
+                                      <button
+                                        type="button"
+                                        onClick={() => navigator.clipboard?.writeText(ph)}
+                                        title="Copy phone"
+                                        className="text-[10px] text-[#64748B] hover:text-[#F5951C]"
+                                      >
+                                        📋
+                                      </button>
+                                      {waDigits.length >= 10 && (
+                                        <a
+                                          href={`https://wa.me/${waDigits.length === 10 ? `91${waDigits}` : waDigits}`}
+                                          target="_blank"
+                                          rel="noreferrer"
+                                          title="WhatsApp"
+                                          className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold hover:underline"
+                                        >
+                                          WA
+                                        </a>
+                                      )}
+                                    </div>
+                                  );
+                                })}
+                                {allEmails.map((em, ei) => (
+                                  <div key={ei} className="flex items-center gap-1.5 text-[11px] truncate">
+                                    <span>✉️</span>
+                                    <a
+                                      href={`mailto:${em}`}
+                                      className="text-[#0F172A] dark:text-white hover:text-[#F5951C] underline decoration-[#F5951C]/50 truncate"
+                                    >
+                                      {em}
+                                    </a>
+                                    <button
+                                      type="button"
+                                      onClick={() => navigator.clipboard?.writeText(em)}
+                                      title="Copy email"
+                                      className="text-[10px] text-[#64748B] hover:text-[#F5951C] shrink-0"
+                                    >
+                                      📋
+                                    </button>
+                                  </div>
+                                ))}
+                              </>
+                            );
+                          })()}
                           {v.website && (
                             <p className="truncate text-[11px]">
                               🌐{" "}
@@ -3993,12 +4098,23 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                       <label className="block text-xs font-semibold text-[#0F172A] dark:text-white/80 mb-1">
                         Destination / City
                       </label>
+                      <DestinationAutocomplete
+                        value={vendorFormDestination}
+                        onChange={setVendorFormDestination}
+                        placeholder="e.g. Srinagar, Munnar, Sri Lanka"
+                        className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-[#0F172A] dark:text-white/80 mb-1">
+                        GST Number (GSTIN)
+                      </label>
                       <input
                         type="text"
-                        value={vendorFormDestination}
-                        onChange={(e) => setVendorFormDestination(e.target.value)}
-                        placeholder="e.g. Srinagar, Munnar, Bentota"
-                        className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
+                        value={vendorFormGstNumber}
+                        onChange={(e) => setVendorFormGstNumber(e.target.value.toUpperCase())}
+                        placeholder="e.g. 32AAKFD2016R1ZD"
+                        className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] px-3.5 py-2 text-xs font-mono text-[#0F172A] dark:text-white placeholder-[#94A3B8] dark:placeholder-white/40 focus:border-[#F5951C] focus:outline-none"
                       />
                     </div>
                     <div>
@@ -4021,6 +4137,12 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                   <h4 className="text-xs font-bold uppercase tracking-wider text-[#F5951C]">
                     2. Key Contact & Communications
                   </h4>
+                  <MultiContactEditor
+                    contacts={vendorFormContacts}
+                    onChange={setVendorFormContacts}
+                    maxContacts={5}
+                    addButtonLabel="+ Add Contact"
+                  />
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <label className="block text-xs font-semibold text-[#0F172A] dark:text-white/80 mb-1">
@@ -4182,6 +4304,29 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
       {/* PERSISTENT CONCIERGE INTELLIGENCE RADAR (R1.5.5 EPIC 2)                   */}
       {/* ========================================================================= */}
       <ConciergeRadar trips={crmTrips} onOpenTrip={(id) => setDrawerTripId(id)} />
+
+      {/* Release 1.5.5 Milestone 4: Excel Export & Zoho GST Sync Modals */}
+      {showExportModal && session && (
+        <ExportTripsModal
+          callerEmail={session.email}
+          callerName={session.fullName}
+          callerRole={session.role}
+          onClose={() => setShowExportModal(false)}
+        />
+      )}
+      {showZohoGstModal && session && (
+        <ZohoGstImportModal
+          callerEmail={session.email}
+          callerName={session.fullName}
+          callerRole={session.role}
+          onClose={() => setShowZohoGstModal(false)}
+          onSynced={(msg) => {
+            setShowZohoGstModal(false);
+            setCrmNotice(msg);
+            refreshVendorsData();
+          }}
+        />
+      )}
 
       {/* Release 1.5.4: + New Journey Modal, Unified Drawer & Kanban Stage Gate Modal */}
       {showNewJourneyModal && (
