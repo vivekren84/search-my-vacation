@@ -715,8 +715,21 @@ export default function PortalLoginPage() {
           </form>
         )}
 
+        {/* Keep me signed in */}
+        <div className="mt-4 pt-3 border-t border-[#E2E8F0] dark:border-white/10 flex items-center justify-between text-xs text-[#475569] dark:text-zinc-400">
+          <label className="inline-flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={keepSignedIn}
+              onChange={(e) => setKeepSignedIn(e.target.checked)}
+              className="rounded text-[#F5951C] focus:ring-[#F5951C]"
+            />
+            <span>Keep me signed in on this device</span>
+          </label>
+        </div>
+
         {/* Footer Note */}
-        <div className="mt-6 pt-5 border-t border-[#E2E8F0] dark:border-white/10 text-center">
+        <div className="mt-3 text-center">
           <p className="text-xs text-[#475569] dark:text-zinc-500">
             Traveller self-registration is launching soon
           </p>
@@ -785,17 +798,8 @@ export default function PortalLoginPage() {
         </div>
       )}
 
-      {/* Keep me signed in + Bottom Copyright */}
-      <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pb-6 pt-2 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-[#475569] dark:text-zinc-500">
-        <label className="inline-flex items-center gap-2 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={keepSignedIn}
-            onChange={(e) => setKeepSignedIn(e.target.checked)}
-            className="rounded text-[#F5951C] focus:ring-[#F5951C]"
-          />
-          <span>Keep me signed in on this device</span>
-        </label>
+      {/* Bottom Copyright */}
+      <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pb-6 pt-2 text-center text-xs text-[#475569] dark:text-zinc-500">
         <p>© 2026 Search My Vacation. High-touch internal advisory workspace.</p>
       </div>
     </div>
