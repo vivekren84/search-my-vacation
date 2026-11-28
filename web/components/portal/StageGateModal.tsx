@@ -214,7 +214,8 @@ export function StageGateModal({
                 </label>
                 <input
                   type="number"
-                  min={1}
+                  min="0.01"
+                  step="0.01"
                   value={quotePrice}
                   onChange={(e) => setQuotePrice(e.target.value)}
                   className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/15 bg-[#F8FAFC] dark:bg-[#09090B] px-3 py-2 text-[#0F172A] dark:text-white"
@@ -352,6 +353,7 @@ export function StageGateModal({
                   <input
                     type="number"
                     min={0}
+                    step="0.01"
                     value={cancellationFee}
                     onChange={(e) => setCancellationFee(e.target.value)}
                     className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/15 bg-[#F8FAFC] dark:bg-[#09090B] px-2 py-1.5 text-[#0F172A] dark:text-white"
@@ -364,6 +366,7 @@ export function StageGateModal({
                   <input
                     type="number"
                     min={0}
+                    step="0.01"
                     value={refundAmount}
                     onChange={(e) => setRefundAmount(e.target.value)}
                     className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/15 bg-[#F8FAFC] dark:bg-[#09090B] px-2 py-1.5 text-[#0F172A] dark:text-white"

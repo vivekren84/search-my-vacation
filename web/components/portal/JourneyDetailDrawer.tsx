@@ -910,6 +910,7 @@ export function JourneyDetailDrawer({
                           </label>
                           <input
                             type="number"
+                            step="0.01"
                             value={amendQuoteDelta}
                             onChange={(e) => setAmendQuoteDelta(e.target.value)}
                             className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/15 bg-white dark:bg-[#121215] px-3 py-2 text-[#0F172A] dark:text-white"
@@ -921,6 +922,7 @@ export function JourneyDetailDrawer({
                           </label>
                           <input
                             type="number"
+                            step="0.01"
                             value={amendCostDelta}
                             onChange={(e) => setAmendCostDelta(e.target.value)}
                             className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/15 bg-white dark:bg-[#121215] px-3 py-2 text-[#0F172A] dark:text-white"
@@ -1311,7 +1313,8 @@ export function JourneyDetailDrawer({
                       <label className="text-[10px] text-[#64748B] dark:text-zinc-400">Amount (₹)</label>
                       <input
                         type="number"
-                        min={1}
+                        min="0.01"
+                        step="0.01"
                         value={payAmount}
                         onChange={(e) => setPayAmount(e.target.value)}
                         className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/15 bg-white dark:bg-[#121215] px-2.5 py-2 text-[#0F172A] dark:text-white"
