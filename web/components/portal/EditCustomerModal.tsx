@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { MultiContactEditor, StructuredContact } from "./MultiContactEditor";
 
 export interface EditableCustomer {
   id: string;
@@ -9,6 +10,7 @@ export interface EditableCustomer {
   primaryMobile: string | null;
   secondaryMobile: string | null;
   primaryEmail: string | null;
+  contacts?: StructuredContact[];
   needsContactEnrichment: boolean;
 }
 
@@ -23,6 +25,9 @@ export function EditCustomerModal({ customer, onClose, onSaved }: EditCustomerMo
   const [primaryMobile, setPrimaryMobile] = useState(customer.primaryMobile || "");
   const [secondaryMobile, setSecondaryMobile] = useState(customer.secondaryMobile || "");
   const [primaryEmail, setPrimaryEmail] = useState(customer.primaryEmail || "");
+  const [contacts, setContacts] = useState<StructuredContact[]>(
+    Array.isArray(customer.contacts) ? customer.contacts : []
+  );
   const [needsEnrichment, setNeedsEnrichment] = useState(Boolean(customer.needsContactEnrichment));
 
   const [saving, setSaving] = useState(false);
@@ -43,6 +48,11 @@ export function EditCustomerModal({ customer, onClose, onSaved }: EditCustomerMo
           primaryMobile,
           secondaryMobile,
           primaryEmail,
+          contacts: contacts.map((c) => ({
+            ...c,
+            emails: c.emails.map((e) => e.trim()).filter(Boolean),
+            phones: c.phones.map((p) => p.trim()).filter(Boolean),
+          })),
           needsContactEnrichment: needsEnrichment,
         }),
       });
@@ -67,7 +77,7 @@ export function EditCustomerModal({ customer, onClose, onSaved }: EditCustomerMo
 
   return (
     <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-[#121215] border border-[#E2E8F0] dark:border-white/20 rounded-2xl max-w-lg w-full p-6 text-[#0F172A] dark:text-white shadow-2xl relative">
+      <div className="bg-white dark:bg-[#121215] border border-[#E2E8F0] dark:border-white/20 rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 text-[#0F172A] dark:text-white shadow-2xl relative">
         <div className="flex justify-between items-start mb-4 pb-3 border-b border-[#E2E8F0] dark:border-white/10">
           <div>
             <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-[#F5951C]/15 text-[#F5951C] border border-[#F5951C]/30">
@@ -145,6 +155,13 @@ export function EditCustomerModal({ customer, onClose, onSaved }: EditCustomerMo
               className={inputClass}
             />
           </div>
+
+          <MultiContactEditor
+            contacts={contacts}
+            onChange={setContacts}
+            maxContacts={2}
+            addButtonLabel="+ Add Secondary Contact"
+          />
 
           <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-[#475569] dark:text-zinc-300">
             <input

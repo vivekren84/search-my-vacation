@@ -53,6 +53,7 @@ export async function GET(request: Request) {
             (v.name && v.name.toLowerCase().includes(query)) ||
             (v.vendor_code && v.vendor_code.toLowerCase().includes(query)) ||
             (v.destination && v.destination.toLowerCase().includes(query)) ||
+            (v.gst_number && v.gst_number.toLowerCase().includes(query)) ||
             (v.region && v.region.toLowerCase().includes(query)) ||
             (v.poc_name && v.poc_name.toLowerCase().includes(query)) ||
             (v.poc_mobile && v.poc_mobile.includes(query)) ||
@@ -113,6 +114,9 @@ export async function POST(request: Request) {
       rate_card_link,
       b2b_rates,
       comments,
+      contacts,
+      gst_number,
+      gst_treatment,
     } = body;
 
     if (!name || typeof name !== "string" || !name.trim()) {
@@ -181,6 +185,9 @@ export async function POST(request: Request) {
       rate_card_link: rate_card_link?.trim() || null,
       b2b_rates: b2b_rates?.trim() || null,
       comments: comments?.trim() || null,
+      contacts: Array.isArray(contacts) ? contacts.slice(0, 5) : [],
+      gst_number: gst_number?.trim()?.toUpperCase() || null,
+      gst_treatment: gst_treatment?.trim() || null,
       is_active: true,
     };
 
