@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSupabaseAdminConfig } from "@/lib/supabase/admin";
+import { normalizeDestinationServer } from "@/lib/portal/destination-normalize";
 
 export const runtime = "nodejs";
 
@@ -159,10 +160,16 @@ export async function POST(request: Request) {
       Prefer: "return=representation",
     };
 
+    const normalizedVendorDest = destination?.trim()
+      ? await normalizeDestinationServer(destination, projectUrl, secretKey, {
+          allowTitleCaseUnlisted: true,
+        })
+      : null;
+
     const vendorPayload = {
       name: name.trim(),
       category: normalizedCategory,
-      destination: destination?.trim() || null,
+      destination: normalizedVendorDest,
       region: region?.trim() || null,
       star_rating: star_rating?.trim() || null,
       poc_name: poc_name?.trim() || null,
@@ -267,6 +274,14 @@ export async function PATCH(request: Request) {
 
     delete updates.callerRole;
     delete updates.callerEmail;
+    if (typeof updates.destination === "string" && updates.destination.trim()) {
+      updates.destination = await normalizeDestinationServer(
+        updates.destination,
+        projectUrl,
+        secretKey,
+        { allowTitleCaseUnlisted: true }
+      );
+    }
     updates.updated_at = new Date().toISOString();
 
     const res = await fetch(`${projectUrl}/rest/v1/workspace_vendors?id=eq.${encodeURIComponent(id)}`, {

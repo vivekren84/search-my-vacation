@@ -8,6 +8,7 @@ import type {
   ValidatedJourneyLead,
 } from "./types";
 import { resolveSupabaseProjectUrl } from "../supabase/project";
+import { normalizeDestinationServer } from "../portal/destination-normalize";
 
 export class JourneyLeadRepositoryError extends Error {
   constructor(readonly code: string) {
@@ -52,6 +53,19 @@ export function createSupabaseJourneyLeadRepository(
 
   return {
     async upsertLead(lead) {
+      const rawDestinationText =
+        [
+          ...lead.passportSummary.preferredDestinations.map((item) => item.canonicalName),
+          ...(lead.passportSummary.getawayDescription.trim()
+            ? [lead.passportSummary.getawayDescription.trim()]
+            : []),
+        ].join(", ") || null;
+      const normalizedDestinationText = rawDestinationText
+        ? await normalizeDestinationServer(rawDestinationText, projectUrl, secretKey, {
+            allowTitleCaseUnlisted: true,
+          })
+        : null;
+
       await request("/rest/v1/journey_passport_leads?on_conflict=passport_reference", {
         method: "POST",
         headers: createHeaders(secretKey, "resolution=merge-duplicates,return=minimal"),
@@ -79,7 +93,7 @@ export function createSupabaseJourneyLeadRepository(
           // this phase (preferred-destination names, then the free-text getaway
           // description), not with a duplicated destinationMode field.
           destination_mode: lead.passportSummary.preferredDestinations.length > 0 || lead.passportSummary.getawayDescription.trim() ? "known" : "discovery",
-          destination_free_text: [...lead.passportSummary.preferredDestinations.map((item) => item.canonicalName), ...(lead.passportSummary.getawayDescription.trim() ? [lead.passportSummary.getawayDescription.trim()] : [])].join(", ") || null,
+          destination_free_text: normalizedDestinationText,
           entry_context: lead.passportSummary.entryContext ?? {},
           passport_summary: lead.passportSummary,
           source: lead.source,
