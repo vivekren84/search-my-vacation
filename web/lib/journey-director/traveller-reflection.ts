@@ -190,6 +190,7 @@ const homepageFeelingQuality = {
   // quality — without this entry the lookup below would silently push
   // `undefined` into the traveller's "matching qualities" list.
   memory: "Moments made together",
+  memory_makers: "Moments made together",
 } as const satisfies Record<JourneyFeeling, string>;
 
 const signalLabels: Readonly<Record<string, string>> = {

@@ -78,6 +78,7 @@ const moodPreselections = {
   // (`experiencePreselections["Memory Makers"]` above), so both "Memory
   // Makers" entry points on the site now resolve to the same pre-selection.
   memory: travelStyleDefaults("pace-and-timing", ["Photography"]),
+  memory_makers: travelStyleDefaults("pace-and-timing", ["Photography"]),
 } as const satisfies Record<NonNullable<JourneyPassportEntryContext["feeling"]>, JourneyEntryPreselection | undefined>;
 
 /**

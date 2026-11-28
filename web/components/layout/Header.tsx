@@ -42,12 +42,12 @@ export default function Header() {
             surface="dark"
             linked={false}
             preload
-            className="w-24 shrink-0 text-white sm:w-[clamp(11rem,28vw,14rem)] xl:w-[clamp(14rem,20vw,21rem)]"
+            className="w-24 shrink-0 text-white sm:w-[clamp(10rem,24vw,12rem)] xl:w-44 2xl:w-52"
           />
         </Link>
 
         <nav aria-label="Primary navigation" className="hidden flex-1 justify-center xl:flex">
-          <ul className="flex items-center gap-5 2xl:gap-8">
+          <ul className="flex items-center gap-3.5 2xl:gap-6">
             {siteConfig.navigation.map((item) => (
               <li key={`${item.label}-${item.href}`}>
                 <Link
@@ -72,11 +72,11 @@ export default function Header() {
                 <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
                 <span className="font-bold text-[#F5951C]">
                   {staffSession.fullName.split(" ")[0]}
-                  <span className="hidden sm:inline">
+                  <span className="hidden 2xl:inline">
                     {" "}({staffSession.role === "super_admin" ? "Super Admin" : staffSession.role.replace("_", " ")})
                   </span>
                 </span>
-                <span className="text-[10px] uppercase tracking-wider text-white/70 hidden sm:inline">
+                <span className="text-[10px] uppercase tracking-wider text-white/70 hidden 2xl:inline">
                   • Advisor Dashboard ➔
                 </span>
               </Link>
