@@ -23,7 +23,7 @@ const links = [
 
 export default function PublicFooter() {
   return (
-    <footer className="bg-[#2A211C] text-white">
+    <footer className="bg-[#2A211C] pb-16 text-white md:pb-0">
       <Container className="grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.5fr_repeat(3,1fr)]">
         <div>
           <SiteBrand variant="footer" surface="dark" className="max-w-[21rem] text-[#F5951C]" />
