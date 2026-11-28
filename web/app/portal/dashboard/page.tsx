@@ -14,6 +14,7 @@ import { ItineraryBuilderPanel } from "@/components/portal/ItineraryBuilderPanel
 import { NewJourneyModal, CustomerLookupOption } from "@/components/portal/NewJourneyModal";
 import { JourneyDetailDrawer } from "@/components/portal/JourneyDetailDrawer";
 import { StageGateModal } from "@/components/portal/StageGateModal";
+import { ConciergeRadar } from "@/components/portal/ConciergeRadar";
 
 interface StaffSession {
   fullName: string;
@@ -306,13 +307,6 @@ export default function PortalDashboardPage() {
   ]);
   const [pdfGenerating, setPdfGenerating] = useState(false);
   const [pdfReadyUrl, setPdfReadyUrl] = useState<string | null>(null);
-
-  // Concierge Intelligence Radar state (US-018) — starts minimized as compact circle to avoid overlapping cards
-  const [radarMinimized, setRadarMinimized] = useState(true);
-  const [radarPos, setRadarPos] = useState({ x: 0, y: 0, isCustom: false });
-  const [activeDestination, setActiveDestination] = useState("Kashmir");
-  const isDraggingRef = useRef(false);
-  const dragStartRef = useRef({ mouseX: 0, mouseY: 0, elemX: 0, elemY: 0 });
 
   // Milestone 1 Edit Modals & Financial Approval Queue
   const [staffOptions, setStaffOptions] = useState<StaffOption[]>([]);
@@ -724,44 +718,7 @@ export default function PortalDashboardPage() {
 
   function handleSignOut() {
     localStorage.removeItem("smv_staff_session");
-    // Reset radar position to default bottom-right
-    setRadarPos({ x: 0, y: 0, isCustom: false });
     router.replace("/portal/login");
-  }
-
-  // Radar drag handler with 16px screen clamping
-  function startDragging(e: React.MouseEvent) {
-    if (!radarMinimized) return;
-    isDraggingRef.current = true;
-    dragStartRef.current = {
-      mouseX: e.clientX,
-      mouseY: e.clientY,
-      elemX: radarPos.isCustom ? radarPos.x : window.innerWidth - 180,
-      elemY: radarPos.isCustom ? radarPos.y : window.innerHeight - 80,
-    };
-
-    function onMouseMove(moveEvent: MouseEvent) {
-      if (!isDraggingRef.current) return;
-      const deltaX = moveEvent.clientX - dragStartRef.current.mouseX;
-      const deltaY = moveEvent.clientY - dragStartRef.current.mouseY;
-
-      // 16px screen boundary clamp
-      const rawX = dragStartRef.current.elemX + deltaX;
-      const rawY = dragStartRef.current.elemY + deltaY;
-      const clampedX = Math.max(16, Math.min(window.innerWidth - 160, rawX));
-      const clampedY = Math.max(16, Math.min(window.innerHeight - 60, rawY));
-
-      setRadarPos({ x: clampedX, y: clampedY, isCustom: true });
-    }
-
-    function onMouseUp() {
-      isDraggingRef.current = false;
-      window.removeEventListener("mousemove", onMouseMove);
-      window.removeEventListener("mouseup", onMouseUp);
-    }
-
-    window.addEventListener("mousemove", onMouseMove);
-    window.addEventListener("mouseup", onMouseUp);
   }
 
   // Team Invite Submit Handler (US-001)
@@ -4222,154 +4179,9 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
       )}
 
       {/* ========================================================================= */}
-      {/* PERSISTENT CONCIERGE INTELLIGENCE RADAR (US-018) */}
-      {/* Staff cannot permanently close or disable this dock. */}
+      {/* PERSISTENT CONCIERGE INTELLIGENCE RADAR (R1.5.5 EPIC 2)                   */}
       {/* ========================================================================= */}
-      <div
-        style={
-          radarPos.isCustom
-            ? { left: `${radarPos.x}px`, top: `${radarPos.y}px`, position: "fixed" }
-            : {}
-        }
-        className={
-          radarPos.isCustom
-            ? "z-50 select-none"
-            : "fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 select-none"
-        }
-      >
-        {/* State A: Minimized Compact Circular Button */}
-        {radarMinimized ? (
-          (() => {
-            const in7Iso = new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10);
-            const dueHoldCount = crmTrips.filter(
-              (t) => t.dealStage === "On Hold" && t.followUpDate && t.followUpDate <= in7Iso
-            ).length;
-            return (
-              <button
-                type="button"
-                onMouseDown={startDragging}
-                onClick={() => setRadarMinimized(false)}
-                aria-label={`Expand Concierge Radar (${activeDestination})`}
-                title={`Concierge Radar: ${activeDestination} (Tap to expand, drag to move)`}
-                className="relative w-12 h-12 rounded-full bg-white dark:bg-[#121215] border-2 border-[#F5951C] shadow-2xl flex items-center justify-center text-[#0F172A] dark:text-white hover:scale-105 transition cursor-pointer"
-              >
-                <span className="text-lg leading-none" aria-hidden="true">📡</span>
-                <span className="absolute top-0.5 right-0.5 flex h-2.5 w-2.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-                </span>
-                {dueHoldCount > 0 && (
-                  <span className="absolute -top-1 -left-1 min-w-[18px] h-[18px] px-1 rounded-full bg-rose-600 text-white text-[10px] font-bold flex items-center justify-center shadow">
-                    {dueHoldCount}
-                  </span>
-                )}
-              </button>
-            );
-          })()
-        ) : (
-          /* State B: Expanded Dock */
-          <div className="w-80 sm:w-96 rounded-2xl bg-white dark:bg-[#121215] border border-[#E2E8F0] dark:border-white/15 shadow-2xl overflow-hidden backdrop-blur-md">
-            {/* Header */}
-            <div className="p-3.5 bg-[#0F172A] border-b border-[#E2E8F0] dark:border-white/10 flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                </span>
-                <span className="text-xs font-bold uppercase tracking-wider text-white">
-                  Concierge Radar
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setRadarMinimized(true)}
-                  className="text-xs text-white/70 hover:text-white px-2 py-0.5 rounded border border-white/20"
-                >
-                  Minimize
-                </button>
-              </div>
-            </div>
-
-            {/* Context Selector */}
-            <div className="p-3 bg-[#F8FAFC] dark:bg-[#09090B] border-b border-[#E2E8F0] dark:border-white/5 flex gap-2 overflow-x-auto text-xs">
-              {["Kashmir", "Rajasthan", "Kerala", "Ladakh"].map((dest) => (
-                <button
-                  key={dest}
-                  onClick={() => setActiveDestination(dest)}
-                  className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition ${
-                    activeDestination === dest
-                      ? "bg-[#F5951C] text-[#0F172A]"
-                      : "text-[#475569] dark:text-white/60 hover:text-[#0F172A] dark:hover:text-white"
-                  }`}
-                >
-                  {dest}
-                </button>
-              ))}
-            </div>
-
-            {/* Live Context Cards */}
-            <div className="p-4 space-y-3 text-xs max-h-72 overflow-y-auto">
-              {/* Weather */}
-              <div className="p-2.5 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5 flex justify-between items-center">
-                <div>
-                  <p className="text-[11px] text-[#475569] dark:text-white/50 uppercase font-semibold">Live Weather</p>
-                  <p className="font-bold text-[#0F172A] dark:text-white mt-0.5">14°C • Golden Autumn Skies</p>
-                </div>
-                <span className="text-2xl">🍂</span>
-              </div>
-
-              {/* Flights */}
-              <div className="p-2.5 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5 space-y-1">
-                <p className="text-[11px] text-[#475569] dark:text-white/50 uppercase font-semibold">Flight Intelligence</p>
-                <div className="flex justify-between items-center text-[#0F172A] dark:text-white">
-                  <span>DEL ➔ SXR (AI-825)</span>
-                  <span className="text-emerald-600 dark:text-emerald-400 font-bold">On Time</span>
-                </div>
-              </div>
-
-              {/* Ground Notice */}
-              <div className="p-2.5 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/5 space-y-1">
-                <p className="text-[11px] text-[#475569] dark:text-white/50 uppercase font-semibold">Local Supplier Advisory</p>
-                <p className="text-[#334155] dark:text-white/80">Srinagar-Gulmarg Highway: Clear, private chauffeured escort confirmed.</p>
-              </div>
-
-              {/* On Hold Follow-Up Reminders (US-154-03) */}
-              {(() => {
-                const in7Iso = new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10);
-                const dueHolds = crmTrips.filter(
-                  (t) => t.dealStage === "On Hold" && t.followUpDate && t.followUpDate <= in7Iso
-                );
-                if (dueHolds.length === 0) return null;
-                return (
-                  <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 space-y-1.5">
-                    <p className="text-[11px] text-amber-700 dark:text-amber-300 uppercase font-bold">
-                      ⏰ On Hold Follow-Ups Due ({dueHolds.length})
-                    </p>
-                    {dueHolds.slice(0, 3).map((h) => (
-                      <button
-                        key={h.id}
-                        type="button"
-                        onClick={() => setDrawerTripId(h.id)}
-                        className="w-full text-left text-[11px] text-[#0F172A] dark:text-white hover:text-[#F5951C] flex justify-between items-center"
-                      >
-                        <span className="truncate font-semibold">
-                          {h.dealReferenceId} • {h.customerName}
-                        </span>
-                        <span className="font-mono text-[10px] shrink-0 ml-1">{h.followUpDate}</span>
-                      </button>
-                    ))}
-                  </div>
-                );
-              })()}
-            </div>
-
-            {/* Inactivity Notice */}
-            <div className="p-2.5 bg-[#0F172A] border-t border-[#E2E8F0] dark:border-white/5 text-[10px] text-white/60 text-center">
-              Permanent dock. 30-min idle watchdog prompts before logout &amp; resets position.
-            </div>
-          </div>
-        )}
-      </div>
+      <ConciergeRadar trips={crmTrips} onOpenTrip={(id) => setDrawerTripId(id)} />
 
       {/* Release 1.5.4: + New Journey Modal, Unified Drawer & Kanban Stage Gate Modal */}
       {showNewJourneyModal && (
