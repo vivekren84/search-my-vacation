@@ -36,6 +36,8 @@ export function StageGateModal({
   const isReopen =
     (trip.dealStage === "Lost" || trip.dealStage === "On Hold") &&
     targetStage === "In Progress";
+  const isRollbackFromInTravel =
+    trip.dealStage === "In Travel" && targetStage === "Booked/Won";
 
   const [holdReason, setHoldReason] = useState("Awaiting Dates");
   const [followUpDate, setFollowUpDate] = useState("");
@@ -45,6 +47,8 @@ export function StageGateModal({
   const [cancellationFee, setCancellationFee] = useState("0");
   const [refundAmount, setRefundAmount] = useState("0");
   const [reopenReason, setReopenReason] = useState("");
+  const [postponementReason, setPostponementReason] = useState("");
+  const [revisedStartDate, setRevisedStartDate] = useState(trip.startDate || "");
   const [notes, setNotes] = useState("");
 
   // Booked/Won gate overrides if missing
@@ -71,6 +75,17 @@ export function StageGateModal({
 
       if (targetStage === "Complete") {
         payload.tripStatus = "Complete";
+      } else if (isRollbackFromInTravel) {
+        if (!postponementReason.trim()) {
+          setErrorMsg("Please provide a Postponement Reason before reverting this Active journey.");
+          setSubmitting(false);
+          return;
+        }
+        payload.postponementReason = postponementReason.trim();
+        if (revisedStartDate.trim()) {
+          payload.revisedStartDate = revisedStartDate.trim();
+        }
+        payload.tripStatus = "To Start";
       } else if (targetStage === "Booked/Won") {
         payload.quotePrice = Number(quotePrice) || 0;
         if (startDate) payload.startDate = startDate;
@@ -129,7 +144,9 @@ export function StageGateModal({
         <div className="px-5 py-3.5 border-b border-[#E2E8F0] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] flex justify-between items-center">
           <div>
             <h3 className="text-xs font-bold uppercase tracking-wider text-[#0F172A] dark:text-white">
-              Stage Gate: {isReopen ? "Re-Open Deal" : `Move to ${targetStage}`}
+              {isRollbackFromInTravel
+                ? "Revert Active Journey to Confirmed & Booked?"
+                : `Stage Gate: ${isReopen ? "Re-Open Deal" : `Move to ${targetStage}`}`}
             </h3>
             <p className="text-[11px] font-mono text-[#F5951C]">
               {trip.dealReferenceId} • {trip.customerName}
@@ -151,7 +168,42 @@ export function StageGateModal({
             </div>
           )}
 
-          {targetStage === "Booked/Won" && (
+          {isRollbackFromInTravel && (
+            <div className="space-y-3">
+              <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-[11px] leading-relaxed">
+                This journey has already reached or passed its start date. Reverting it to{" "}
+                <strong>Confirmed &amp; Booked</strong> should only be done if the journey is postponed.{" "}
+                <strong>Note:</strong> Unless you update the Start Date to a future date, automated promotion will move it back to{" "}
+                <strong>In Travel / Active</strong> tomorrow.
+              </div>
+              <div>
+                <label className="block text-[10px] font-semibold mb-1 text-[#475569] dark:text-zinc-400">
+                  Revised Start Date (Optional)
+                </label>
+                <input
+                  type="date"
+                  value={revisedStartDate}
+                  onChange={(e) => setRevisedStartDate(e.target.value)}
+                  className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/15 bg-[#F8FAFC] dark:bg-[#09090B] px-3 py-2 text-[#0F172A] dark:text-white"
+                />
+              </div>
+              <div>
+                <label className="block text-[10px] font-semibold mb-1 text-[#475569] dark:text-zinc-400">
+                  Postponement Reason *
+                </label>
+                <textarea
+                  rows={2}
+                  placeholder="Why is this active journey being reverted to Confirmed & Booked?"
+                  value={postponementReason}
+                  onChange={(e) => setPostponementReason(e.target.value)}
+                  className="w-full rounded-xl border border-[#CBD5E1] dark:border-white/15 bg-[#F8FAFC] dark:bg-[#09090B] px-3 py-2 text-[#0F172A] dark:text-white"
+                  required
+                />
+              </div>
+            </div>
+          )}
+
+          {targetStage === "Booked/Won" && !isRollbackFromInTravel && (
             <div className="space-y-3">
               <p className="text-[11px] text-[#475569] dark:text-zinc-400">
                 Confirm commercial quote and travel window to unlock the 6-Point Readiness Checklist and Active Voucher shell.

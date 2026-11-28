@@ -16,6 +16,7 @@ const VALID_DEAL_STAGES = new Set([
   "Enquiry",
   "In Progress",
   "Booked/Won",
+  "In Travel",
   "Lost",
   "On Hold",
   "Cancelled",
@@ -452,6 +453,8 @@ export async function PATCH(request: Request) {
       pinnedNotes,
       isArchived,
       reopenReason,
+      postponementReason,
+      revisedStartDate,
       bookedProperties,
       bookedTransport,
       leadOwnerId,
@@ -650,15 +653,44 @@ export async function PATCH(request: Request) {
         nextGst !== Number(existingTrip.gst_amount || 0) ||
         nextProfit !== Number(existingTrip.profit || 0));
 
-    // Stage-Gate Validations (US-154-03 & US-154-04)
+    // Stage-Gate Validations (US-154-03, US-154-04 & R1.5.5 EPIC 1.1)
     const nextStage = dealStage ?? existingTrip.deal_stage;
     const stageChanged = dealStage !== undefined && dealStage !== existingTrip.deal_stage;
     const isReopening =
       stageChanged &&
       (existingTrip.deal_stage === "Lost" || existingTrip.deal_stage === "On Hold") &&
       nextStage === "In Progress";
+    const isRollbackFromInTravel =
+      stageChanged &&
+      existingTrip.deal_stage === "In Travel" &&
+      nextStage === "Booked/Won";
 
     if (stageChanged) {
+      if (isRollbackFromInTravel) {
+        const isOwnerOrSuperAdmin =
+          effectiveRole === "super_admin" ||
+          caller.email === "vivek@searchmyvacation.com" ||
+          (Boolean(caller.userId) && caller.userId === existingTrip.lead_owner_id);
+        if (!isOwnerOrSuperAdmin) {
+          return NextResponse.json(
+            { ok: false, message: "Only the assigned Travel Advisor or Super Admin can revert an Active journey." },
+            { status: 403 }
+          );
+        }
+        if (!postponementReason || !String(postponementReason).trim()) {
+          return NextResponse.json(
+            { ok: false, message: "Postponement Reason is required when reverting an Active journey to Confirmed & Booked." },
+            { status: 400 }
+          );
+        }
+        if (revisedStartDate && String(revisedStartDate).trim()) {
+          tripPatch.start_date = String(revisedStartDate).trim();
+        }
+        if (!tripStatus) {
+          tripPatch.trip_status = "To Start";
+        }
+      }
+
       if (isReopening && !DIRECT_FINANCIAL_ROLES.has(effectiveRole)) {
         return NextResponse.json(
           { ok: false, message: "Permission Denied: Only Privilege User, Administrator, or Super Admin can re-open a Lost or On Hold deal." },
@@ -823,18 +855,20 @@ export async function PATCH(request: Request) {
         eventType: isReopening ? "STAGE_REOPENED" : nextStage === "Cancelled" ? "CANCELLED" : "STAGE_CHANGED",
         previousState: { deal_stage: existingTrip.deal_stage, trip_status: existingTrip.trip_status },
         newState: { deal_stage: updatedTrip.deal_stage, trip_status: updatedTrip.trip_status },
-        reasonCode:
-          nextStage === "On Hold"
+        reasonCode: isRollbackFromInTravel
+          ? "POSTPONEMENT_ROLLBACK"
+          : nextStage === "On Hold"
             ? updatedTrip.hold_reason
             : nextStage === "Lost"
             ? updatedTrip.loss_reason
             : nextStage === "Cancelled"
             ? updatedTrip.cancellation_reason
             : null,
-        comment:
-          reopenReason?.trim() ||
-          notes?.trim() ||
-          `Stage transitioned from ${existingTrip.deal_stage} to ${updatedTrip.deal_stage}`,
+        comment: isRollbackFromInTravel
+          ? `${String(postponementReason).trim()}${revisedStartDate ? ` (Revised Start Date: ${String(revisedStartDate).trim()})` : ""}`
+          : reopenReason?.trim() ||
+            notes?.trim() ||
+            `Stage transitioned from ${existingTrip.deal_stage} to ${updatedTrip.deal_stage}`,
       });
     }
 
