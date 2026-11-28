@@ -1760,7 +1760,8 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                                             ₹{Number(trip.balanceDue).toLocaleString("en-IN")} Due
                                           </span>
                                         )}
-                                        {trip.dealStage === "Booked/Won" && (
+                                        {(trip.dealStage === "Booked/Won" || trip.dealStage === "In Travel") &&
+                                          trip.tripStatus !== "Complete" && (
                                           <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
                                             {trip.readinessCount ?? 0}/6 Ready
                                           </span>

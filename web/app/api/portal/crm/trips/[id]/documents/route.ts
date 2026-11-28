@@ -10,6 +10,7 @@ const VALID_CATEGORIES = new Set([
   "Tickets",
   "Visa/Insurance",
   "Client ID",
+  "Accepted Itinerary",
 ]);
 
 export async function POST(
@@ -87,6 +88,35 @@ export async function POST(
     }
 
     const [doc] = await insertRes.json();
+
+    // Auto-check itinerary_exported readiness flag when an Accepted Itinerary is attached
+    if (category === "Accepted Itinerary") {
+      try {
+        const tripRes = await fetch(
+          `${config.projectUrl}/rest/v1/workspace_trips?id=eq.${encodeURIComponent(id)}&select=readiness_checklist`,
+          { headers, signal: AbortSignal.timeout(4000) }
+        );
+        if (tripRes.ok) {
+          const [tripRow] = await tripRes.json();
+          const nextChecklist = {
+            ...(tripRow?.readiness_checklist || {}),
+            itinerary_exported: true,
+          };
+          await fetch(
+            `${config.projectUrl}/rest/v1/workspace_trips?id=eq.${encodeURIComponent(id)}`,
+            {
+              method: "PATCH",
+              headers,
+              body: JSON.stringify({ readiness_checklist: nextChecklist, updated_at: new Date().toISOString() }),
+              signal: AbortSignal.timeout(4000),
+            }
+          );
+        }
+      } catch {
+        // Non-blocking readiness auto-sync
+      }
+    }
+
     return NextResponse.json({ ok: true, document: doc, message: `Uploaded ${file.name} to ${category}.` });
   } catch (err: any) {
     return NextResponse.json({ ok: false, message: err.message || "Document upload failed." }, { status: 500 });

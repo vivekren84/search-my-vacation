@@ -946,7 +946,7 @@ export function JourneyDetailDrawer({
                   )}
 
                   {/* 6-Point Pre-Departure Readiness Checklist & Voucher Publisher (US-154-08) */}
-                  {trip.deal_stage === "Booked/Won" && (
+                  {(trip.deal_stage === "Booked/Won" || trip.deal_stage === "In Travel") && (
                     <div className="p-4 rounded-2xl border border-[#E2E8F0] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#09090B] space-y-3">
                       <div className="flex justify-between items-center flex-wrap gap-2">
                         <div>
@@ -1028,7 +1028,7 @@ export function JourneyDetailDrawer({
                   </div>
                   {itineraries.length === 0 ? (
                     <div className="p-5 sm:p-8 text-center rounded-xl border border-dashed border-[#E2E8F0] dark:border-white/10 text-[#64748B] dark:text-zinc-400">
-                      No itinerary linked to {trip.deal_reference_id} yet. Open the Itinerary Builder to craft and link a white-label proposal.
+                      No builder itinerary linked to {trip.deal_reference_id} yet. Open the Itinerary Builder or attach your already-shared &amp; accepted itinerary file below.
                     </div>
                   ) : (
                     itineraries.map((it) => (
@@ -1055,6 +1055,91 @@ export function JourneyDetailDrawer({
                       </div>
                     ))
                   )}
+
+                  {/* Attach Shared / Accepted Itinerary Files */}
+                  <div className="p-4 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/10 space-y-3">
+                    <div>
+                      <h5 className="font-bold text-[11px] uppercase tracking-wider text-[#0F172A] dark:text-white">
+                        📎 Attached Shared / Accepted Itineraries
+                      </h5>
+                      <p className="text-[11px] text-[#475569] dark:text-zinc-400">
+                        Upload the final itinerary PDF/DOCX/image shared with and accepted by the guest. Auto-marks &ldquo;White-Label Itinerary Exported&rdquo; as Ready.
+                      </p>
+                    </div>
+                    <form
+                      onSubmit={async (e) => {
+                        e.preventDefault();
+                        if (!trip || !docFile) return;
+                        const fd = new FormData();
+                        fd.append("file", docFile);
+                        fd.append("category", "Accepted Itinerary");
+                        fd.append("callerEmail", callerEmail);
+                        fd.append("callerName", callerName);
+                        fd.append("callerRole", callerRole);
+                        const res = await fetch(`/api/portal/crm/trips/${encodeURIComponent(trip.id)}/documents`, {
+                          method: "POST",
+                          body: fd,
+                        });
+                        const json = await res.json();
+                        if (!res.ok || !json.ok) {
+                          setErrorMsg(json.message || "Failed to attach itinerary.");
+                          return;
+                        }
+                        setDocFile(null);
+                        showToastMsg(`Attached accepted itinerary: ${json.document?.file_name || "file"}`);
+                        loadWorkspace();
+                        onRefreshDashboard();
+                      }}
+                      className="flex flex-col sm:flex-row gap-2 items-stretch sm:items-center"
+                    >
+                      <input
+                        type="file"
+                        accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.webp"
+                        onChange={(e) => setDocFile(e.target.files?.[0] || null)}
+                        className="text-xs text-[#0F172A] dark:text-white flex-1"
+                        required
+                      />
+                      <button
+                        type="submit"
+                        disabled={!docFile}
+                        className="px-3.5 py-2 rounded-xl bg-[#F5951C] text-[#0F172A] font-bold text-[11px] hover:bg-[#e08515] disabled:opacity-40"
+                      >
+                        Upload Itinerary
+                      </button>
+                    </form>
+                    {documents.filter((d) => d.category === "Accepted Itinerary").length > 0 && (
+                      <div className="space-y-1.5 pt-1">
+                        {documents
+                          .filter((d) => d.category === "Accepted Itinerary")
+                          .map((d) => (
+                            <div
+                              key={d.id}
+                              className="flex items-center justify-between gap-2 p-2 rounded-lg bg-white dark:bg-[#121215] border border-[#E2E8F0] dark:border-white/10"
+                            >
+                              <div className="min-w-0">
+                                <p className="font-semibold text-[#0F172A] dark:text-white truncate">
+                                  📄 {d.file_name}
+                                </p>
+                                <p className="text-[10px] text-[#64748B] dark:text-zinc-400">
+                                  Uploaded by {d.uploaded_by_name || "Staff"} •{" "}
+                                  {new Date(d.created_at).toLocaleDateString("en-IN")}
+                                </p>
+                              </div>
+                              {d.signedUrl && (
+                                <a
+                                  href={d.signedUrl}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="px-2.5 py-1 rounded-lg border border-[#CBD5E1] dark:border-white/15 text-[11px] font-bold text-[#F5951C] hover:underline shrink-0"
+                                >
+                                  View / Download
+                                </a>
+                              )}
+                            </div>
+                          ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
 

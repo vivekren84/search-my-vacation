@@ -40,6 +40,7 @@ export interface EditableTrip {
   gstAmount: number | null;
   profit: number | null;
   isFinancialRestricted: boolean;
+  readinessChecklist?: Record<string, boolean>;
 }
 
 interface EditTripModalProps {
@@ -127,6 +128,14 @@ export function EditTripModal({
     trip.bookedTransport === "—" ? "" : trip.bookedTransport || ""
   );
   const [notes, setNotes] = useState(trip.notes || "");
+  const [readinessChecklist, setReadinessChecklist] = useState<Record<string, boolean>>({
+    stays_confirmed: Boolean(trip.readinessChecklist?.stays_confirmed),
+    transport_assigned: Boolean(trip.readinessChecklist?.transport_assigned),
+    roster_verified: Boolean(trip.readinessChecklist?.roster_verified),
+    itinerary_exported: Boolean(trip.readinessChecklist?.itinerary_exported),
+    payment_settled: Boolean(trip.readinessChecklist?.payment_settled),
+    voucher_published: Boolean(trip.readinessChecklist?.voucher_published),
+  });
 
   const [quotePrice, setQuotePrice] = useState(String(trip.quotePrice || 0));
   const [actualCost, setActualCost] = useState(String(trip.actualCost ?? 0));
@@ -194,6 +203,8 @@ export function EditTripModal({
           bookedProperties,
           bookedTransport,
           notes,
+          readinessChecklist:
+            dealStage === "Booked/Won" || dealStage === "In Travel" ? readinessChecklist : undefined,
           quotePrice: Number(quotePrice) || 0,
           actualCost: Number(actualCost) || 0,
           preTaxAmount: Number(preTaxAmount) || 0,
@@ -607,6 +618,39 @@ export function EditTripModal({
                 className={inputClass}
               />
             </div>
+
+            {(dealStage === "Booked/Won" || dealStage === "In Travel") && (
+              <div className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-[#09090B] border border-[#E2E8F0] dark:border-white/10 space-y-2">
+                <p className="text-[11px] font-bold uppercase tracking-wider text-[#0F172A] dark:text-white">
+                  6-Point Pre-Departure Readiness ({Object.values(readinessChecklist).filter(Boolean).length}/6 Ready)
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                  {[
+                    { key: "stays_confirmed", label: "Stays Confirmed" },
+                    { key: "transport_assigned", label: "Transport / Cab Assigned" },
+                    { key: "roster_verified", label: "Traveller Roster Verified" },
+                    { key: "itinerary_exported", label: "White-Label Itinerary Exported" },
+                    { key: "payment_settled", label: "Payment Settled (Balance = ₹0)" },
+                    { key: "voucher_published", label: "Active Voucher Published" },
+                  ].map((item) => (
+                    <label
+                      key={item.key}
+                      className="flex items-center gap-2 p-2 rounded-lg bg-white dark:bg-[#121215] border border-[#E2E8F0] dark:border-white/10 cursor-pointer text-[11px]"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={Boolean(readinessChecklist[item.key])}
+                        onChange={() =>
+                          setReadinessChecklist((prev) => ({ ...prev, [item.key]: !prev[item.key] }))
+                        }
+                        className="accent-[#F5951C]"
+                      />
+                      <span className="font-medium text-[#0F172A] dark:text-white">{item.label}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Actions */}
