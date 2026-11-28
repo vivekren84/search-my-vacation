@@ -64,3 +64,31 @@
   * `Bespoken` / `bespoken` / `BESPOKEN` → **`Bespoke`** / **`bespoke`** / **`BESPOKE`**
 * **8.2 Editorial Refinement:** Vary repetitive `Atelier`/`Bespoke` phrasing naturally (`Curation Studio`, `Journey Design Desk`, `Tailored`, `Custom-Crafted`, `Made-to-Measure`, `Handpicked`, `Signature`, `Heritage`, `Boutique`, `Intimate`, `High-Touch`).
 * **8.3 Acceptance Criteria:** Case-insensitive repo & DB audit returns `0` matches for `aetelier`, `bespoken`, and the prohibited term in user-facing UI and seed data.
+
+
+### EPIC 9: Homepage Hero Redesign — "How Do You Want to Feel?" Interactive Experience *(Added as M6)*
+* **9.1 Visual & Layout Specification:**
+  * **Background Asset:** Clean golden-hour coastal family photograph stored at `public/images/hero-coastal-family.webp` (`< 350 KB` WebP with fallback). Full-bleed (`min-h-[90vh]` or `h-screen` below top nav) with `object-cover`.
+  * **Focal Point & Overlap Protection:** Desktop (`>= 1024px`) anchors `object-position: right bottom` with foreground content constrained to `max-w-4xl` (`lg:ml-[7%] lg:mr-auto`) so the right `22%` remains unobstructed (keeping the bottom-right family silhouette visible). Mobile (`< 768px`) sets `object-position: 78% 65%`.
+  * **Readability Scrim:** Soft radial gradient behind the center-left typography zone (`radial-gradient(circle at 38% 45%, rgba(20, 17, 14, 0.52) 0%, rgba(20, 17, 14, 0.25) 55%, rgba(20, 17, 14, 0.05) 100%)`) for WCAG AA contrast without darkening the sunset horizon or family.
+* **9.2 Top Navigation Bar Update:**
+  * Left: Search My Vacation crest + wordmark (`SEARCH MY VACATION`).
+  * Center Links: `Destinations`, `Traveller Stories`, `Travel Inspiration`, `About Us`, `Contact`.
+  * Right Actions: Outlined pill buttons `SIGN IN` and `SIGN UP`, Dusk Light/Dark Mode theme toggle, and warm-gold CTA `PLAN MY EXPERIENCE` (routes to Passport Journey).
+* **9.3 Foreground Hero Copy & 5 Interactive Feeling Cards:**
+  * Header Stack: Pill eyebrow `YOUR JOURNEY, YOUR FEELING`, `<h1>` `How do you want to feel?` (editorial serif, warm ivory `#FAF6F0`, hand-drawn gold underline beneath `feel?`), subheadline `Every journey begins with a feeling. Tell us yours, and we’ll create an experience around it.`
+  * Interactive 5-Card Staggered Grid (3 Top + 2 Bottom Centered on Desktop; Stacked on Mobile) with `backdrop-blur-md`, warm dark glass fill (`rgba(28, 24, 20, 0.62)`), `1px solid rgba(245, 194, 107, 0.35)` border, custom monochrome gold line-art SVG left icon, title + 2-line micro-copy, and circular gold `→` arrow:
+    1. **Relax** — *Slow down & unwind* → `mood = 'relax'`
+    2. **Explore** — *Discover & adventure* → `mood = 'explore'`
+    3. **Celebrate** — *Make it unforgettable* → `mood = 'celebrate'`
+    4. **Romance** — *Moments that connect* → `mood = 'romance'`
+    5. **Memory Makers** — *Make moments together* → `mood = 'memory_makers'`
+  * Footer Tagline Inside Hero: `YOUR NEXT CHAPTER STARTS HERE` (with flanking horizontal rules) + italic serif subtitle `Thoughtfully curated. Entirely yours.`
+* **9.4 Functional Integration with Passport Journey (Epic 7 Compatibility):**
+  * Clicking any of the 5 cards routes directly into Passport Journey with that `mood` pre-selected (`PLAN MY EXPERIENCE` opens with no pre-selected mood).
+  * Pre-seeded `mood` obeys Epic 7's Destination-First Hierarchy (explicit destination locks regional circuits first; feeling tailors pacing, stay style, and experiences).
+  * Brand Check: Zero usage of the prohibited term anywhere in hero copy, alt tags, or SVG labels.
+* **9.5 Acceptance Criteria:**
+  1. Desktop (`1440px` and `1280px`) renders the 3+2 feeling card grid cleanly with zero overlap over the bottom-right family silhouette.
+  2. Mobile (`390px`) stacks cards cleanly with zero horizontal overflow and keeps the family silhouette visible via `object-position: 78% 65%`.
+  3. Clicking any of the 5 cards opens Passport Journey with the corresponding feeling pre-selected.
