@@ -55,6 +55,49 @@ export default function PortalLoginPage() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordChangeError, setPasswordChangeError] = useState<string | null>(null);
+  const [keepSignedIn, setKeepSignedIn] = useState(true);
+  const [banners, setBanners] = useState<
+    { id: string; title: string; subtitle: string; region_label: string; image_url: string; cta_label?: string; cta_href?: string }[]
+  >([
+    {
+      id: "default-1",
+      title: "Unhurried Mornings on Kerala Backwaters",
+      subtitle: "Private heritage houseboats, spice-trail estates, and quiet coastal pauses crafted for thoughtful travellers.",
+      region_label: "Kerala • Slow Travel",
+      image_url: "/images/golden-hour.png",
+      cta_label: "Explore Destinations",
+      cta_href: "/destinations",
+    },
+    {
+      id: "default-2",
+      title: "Western Himalayan Deodar Sanctuaries",
+      subtitle: "Colonial ridge retreats in Dalhousie & Kangra Valley paired with private mountain transfers and guided forest walks.",
+      region_label: "Himachal Pradesh • Mountains",
+      image_url: "/images/travel-inspiration/feeling-led-journey.webp",
+      cta_label: "Explore Himalayas",
+      cta_href: "/destinations",
+    },
+  ]);
+  const [activeBannerIdx, setActiveBannerIdx] = useState(0);
+
+  useEffect(() => {
+    fetch("/api/portal/login-banners")
+      .then((r) => r.json())
+      .then((d) => {
+        if (d?.ok && Array.isArray(d.banners) && d.banners.length > 0) {
+          setBanners(d.banners);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    if (banners.length <= 1) return;
+    const id = setInterval(() => {
+      setActiveBannerIdx((prev) => (prev + 1) % banners.length);
+    }, 6000);
+    return () => clearInterval(id);
+  }, [banners.length]);
 
   // Cooldown countdown
   useEffect(() => {
@@ -367,10 +410,12 @@ export default function PortalLoginPage() {
     router.push("/portal/dashboard");
   }
 
+  const currentBanner = banners[activeBannerIdx % banners.length] || banners[0];
+
   return (
-    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#09090B] text-[#0F172A] dark:text-zinc-100 flex flex-col justify-between py-10 px-4 sm:px-6 lg:px-8 transition-colors duration-200">
-      {/* Top Header */}
-      <div className="max-w-md w-full mx-auto flex justify-between items-center mb-6">
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#09090B] text-[#0F172A] dark:text-zinc-100 flex flex-col justify-between transition-colors duration-200">
+      {/* Top Bar */}
+      <header className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4 flex justify-between items-center">
         <div className="inline-block">
           <SiteBrand variant="header" surface="light" linked={false} className="w-36 block dark:hidden" />
           <SiteBrand variant="header" surface="dark" linked={false} className="w-36 hidden dark:block" />
@@ -384,16 +429,67 @@ export default function PortalLoginPage() {
             ← Back to Site
           </Link>
         </div>
-      </div>
+      </header>
 
-      {/* Main Card */}
-      <div className="max-w-md w-full mx-auto bg-white dark:bg-[#121215] border border-[#E2E8F0] dark:border-white/10 rounded-2xl p-6 sm:p-8 shadow-xl dark:shadow-2xl">
-        <div className="text-center mb-6">
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#0F172A] dark:text-white">Sign In</h1>
-          <p className="mt-2 text-xs sm:text-sm text-[#475569] dark:text-zinc-400">
-            Access your Search My Vacation advisor workspace
-          </p>
-        </div>
+      {/* Split Layout: 12-Column Grid (Left Editorial Showcase + Right Auth Card) */}
+      <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex-1 flex items-center">
+        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
+          {/* Left Panel: Visual & Editorial Showcase */}
+          <section className="lg:col-span-7 relative rounded-3xl overflow-hidden border border-[#E2E8F0] dark:border-white/10 min-h-[280px] lg:min-h-[540px] flex flex-col justify-end shadow-xl">
+            <img
+              src={currentBanner.image_url}
+              alt={currentBanner.title}
+              className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/15" />
+            <div className="relative z-10 p-6 sm:p-8 text-white space-y-3">
+              <span className="inline-block px-3 py-1 rounded-full bg-[#F5951C] text-[#0F172A] text-[10px] font-bold uppercase tracking-widest">
+                {currentBanner.region_label}
+              </span>
+              <h2 className="text-xl sm:text-3xl font-bold tracking-tight leading-tight">
+                {currentBanner.title}
+              </h2>
+              <p className="text-xs sm:text-sm text-white/85 max-w-xl leading-relaxed">
+                {currentBanner.subtitle}
+              </p>
+              <div className="flex items-center justify-between pt-2">
+                {currentBanner.cta_href && (
+                  <Link
+                    href={currentBanner.cta_href}
+                    className="inline-flex items-center gap-1.5 text-xs font-bold text-[#F5951C] hover:underline"
+                  >
+                    <span>{currentBanner.cta_label || "Explore Destinations"}</span>
+                    <span>→</span>
+                  </Link>
+                )}
+                {banners.length > 1 && (
+                  <div className="flex items-center gap-1.5">
+                    {banners.map((b, idx) => (
+                      <button
+                        key={b.id}
+                        type="button"
+                        aria-label={`Show banner ${idx + 1}`}
+                        onClick={() => setActiveBannerIdx(idx)}
+                        className={`h-1.5 rounded-full transition-all ${
+                          idx === activeBannerIdx ? "w-6 bg-[#F5951C]" : "w-2 bg-white/40"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </section>
+
+          {/* Right Panel: Sign-In Card */}
+          <div className="lg:col-span-5 flex items-center justify-center lg:justify-end">
+            <div className="w-full max-w-md bg-white dark:bg-[#121215] border border-[#E2E8F0] dark:border-white/10 rounded-2xl p-6 sm:p-8 shadow-xl dark:shadow-2xl">
+              <div className="text-center mb-6">
+                <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#0F172A] dark:text-white">Sign In</h1>
+                <p className="mt-2 text-xs sm:text-sm text-[#475569] dark:text-zinc-400">
+                  Access your Search My Vacation advisor workspace
+                </p>
+              </div>
 
         {/* Auth Method Selector */}
         <div className="grid grid-cols-2 gap-2 bg-[#F1F5F9] dark:bg-[#09090B] p-1 rounded-xl mb-6 border border-[#E2E8F0] dark:border-white/10">
@@ -626,6 +722,9 @@ export default function PortalLoginPage() {
           </p>
         </div>
       </div>
+          </div>
+        </div>
+      </main>
 
       {/* Forced Password Change Modal */}
       {showPasswordChangeModal && (
@@ -686,11 +785,18 @@ export default function PortalLoginPage() {
         </div>
       )}
 
-      {/* Bottom Copyright */}
-      <div className="max-w-md w-full mx-auto text-center mt-6">
-        <p className="text-xs text-[#475569] dark:text-zinc-500">
-          © 2026 Search My Vacation. High-touch internal advisory workspace.
-        </p>
+      {/* Keep me signed in + Bottom Copyright */}
+      <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pb-6 pt-2 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-[#475569] dark:text-zinc-500">
+        <label className="inline-flex items-center gap-2 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={keepSignedIn}
+            onChange={(e) => setKeepSignedIn(e.target.checked)}
+            className="rounded text-[#F5951C] focus:ring-[#F5951C]"
+          />
+          <span>Keep me signed in on this device</span>
+        </label>
+        <p>© 2026 Search My Vacation. High-touch internal advisory workspace.</p>
       </div>
     </div>
   );
