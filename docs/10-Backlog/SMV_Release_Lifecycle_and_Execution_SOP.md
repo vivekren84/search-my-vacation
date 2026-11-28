@@ -83,5 +83,30 @@ Every milestone plan must explicitly delineate both customer and internal team e
 | **Full-Stack Engineering** | `Arjun` | Core feature implementation, test double engines, automated test authoring. |
 | **UX & Visual Design** | `Sophie` | Interaction rhythms, stamp cadence, typography, component aesthetics. |
 | **Accessibility & Frontend** | `Rad` | WAI-ARIA compliance, touch ergonomics, polite live regions, reduced motion. |
-| **Quality Assurance** | `Keerthi` | Cumulative regression runs, edge-case testing, CI stability. |
+| **Quality Assurance** | `Keerthi` | Cumulative regression runs, multi-device smoke/regression gates, edge-case testing, CI stability. |
 | **Operations & Concierge** | `Sri` | Downstream lead integrity, CRM payload readiness, booking continuity. |
+
+---
+
+## 4. Mandatory Multi-Device Smoke Test & Regression Gate (All Releases & Milestones)
+
+> **Policy Mandate (Added in R1.5.6):** Every release — **including minor, patch, and individual milestone releases (e.g., R1.5.6 - Milestone 1)** — must pass a full **Multi-Device Smoke Test & Regression Suite** across all target device classes **before** milestone merge and **before** production deployment.
+
+### 4.1 Required Device & Viewport Matrix
+
+| Device Class | Viewport | Mandatory Checks |
+| :--- | :--- | :--- |
+| **Mobile Small** | `375×812` | Zero horizontal overflow (`scrollWidth <= clientWidth`), unclipped header & `44×44px` tap targets, mobile drawer controls, above-the-fold hero CTAs, compact floating audio toggle (`36×36px`), footer clearance (`pb-16`). |
+| **Mobile Standard** | `390×844` | All Mobile Small checks + full destination card visibility (image, region, title, 2-line copy, `Discover destination →`) without mid-card scrolling. |
+| **Tablet** | `768×1024` | Responsive grid transition, header nav/drawer breakpoint parity, no overlapping floating controls. |
+| **Desktop** | `1280×800` & `1440×900` | Unobstructed hero family silhouette (`object-right-bottom`), 3+2 feeling card grid, top nav actions, Concierge Radar & Staff Portal layout integrity. |
+
+### 4.2 Mandatory Gate Checklist (Pre-Merge & Pre-Prod)
+1. **Build & Typecheck:** `npm run build` (or `next typegen` + `tsc --noEmit`) passes with zero errors.
+2. **Multi-Device Smoke Suite:** Execute automated/browser smoke checks across `375px`, `390px`, `768px`, `1280px`, and `1440px` covering:
+   - Homepage (`/`)
+   - Journey Passport (`/journey-passport`) & Journey Director (`/journey-director`)
+   - Destinations (`/destinations`), Traveller Stories (`/traveller-stories`), About (`/about`), Contact (`/contact`)
+   - Staff Portal Login (`/portal/login`) & authenticated Dashboard (`/portal/dashboard`) when portal/auth/shared layout is touched
+3. **Full Regression Suite:** Run existing release verification and regression suites across all device breakpoints to ensure zero regressions on prior milestone invariants (`BOUND-01`, Dusk Light / Dark Mode parity, brand asset consistency, and zero prohibited vocabulary).
+4. **Sign-Off:** No milestone or minor release may be promoted to `main` or production without documented pass evidence across all device classes.
