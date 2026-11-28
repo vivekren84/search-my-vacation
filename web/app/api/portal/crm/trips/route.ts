@@ -8,6 +8,7 @@ import {
   logTripEvent,
   resolveStaffCaller,
 } from "@/lib/portal/trip-helpers";
+import { normalizeDestinationServer } from "@/lib/portal/destination-normalize";
 
 export const runtime = "nodejs";
 
@@ -330,6 +331,10 @@ export async function POST(request: Request) {
     const { projectUrl, secretKey } = config;
     const headers = getAdminHeaders(secretKey);
 
+    const normalizedDestination = await normalizeDestinationServer(destination, projectUrl, secretKey, {
+      allowTitleCaseUnlisted: true,
+    });
+
     const rpcPayload = {
       p_customer_id: customerId || null,
       p_primary_name: primaryName?.trim() || null,
@@ -337,7 +342,7 @@ export async function POST(request: Request) {
       p_primary_email: primaryEmail?.trim() || null,
       p_deal_channel: dealChannel === "VENDOR" ? "VENDOR" : "DIRECT",
       p_trip_scope: tripScope === "International" ? "International" : "Domestic",
-      p_destination: destination.trim(),
+      p_destination: normalizedDestination,
       p_travel_year: Number(travelYear) || new Date().getFullYear(),
       p_travel_month: travelMonth?.trim() || null,
       p_start_date: startDate?.trim() || null,
@@ -541,7 +546,11 @@ export async function PATCH(request: Request) {
       tripPatch.archived_at = isArchived ? nowIso : null;
     }
 
-    if (destination !== undefined) tripPatch.destination = destination.trim();
+    if (destination !== undefined) {
+      tripPatch.destination = await normalizeDestinationServer(destination, projectUrl, secretKey, {
+        allowTitleCaseUnlisted: true,
+      });
+    }
     if (tripScope !== undefined) tripPatch.trip_scope = tripScope === "International" ? "International" : "Domestic";
     if (leadSource !== undefined) tripPatch.lead_source = leadSource?.trim() || null;
     if (travelYear !== undefined) tripPatch.travel_year = Number(travelYear) || existingTrip.travel_year;
