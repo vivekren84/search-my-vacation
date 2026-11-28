@@ -323,6 +323,7 @@ export default function PortalDashboardPage() {
   const [pendingApprovals, setPendingApprovals] = useState<any[]>([]);
   const [approvalActionId, setApprovalActionId] = useState<string | null>(null);
   const [crmNotice, setCrmNotice] = useState<string | null>(null);
+  const didHydrationSyncRef = useRef(false);
 
   // Release 1.5.4: + New Journey, Unified Drawer, Stage Gates & Operational Quick-Filters
   const [showNewJourneyModal, setShowNewJourneyModal] = useState(false);
@@ -390,6 +391,34 @@ export default function PortalDashboardPage() {
       .then((data) => {
         if (data && data.ok && Array.isArray(data.trips)) {
           setCrmTrips(data.trips);
+          if (!didHydrationSyncRef.current) {
+            const todayIst = new Intl.DateTimeFormat("en-CA", {
+              timeZone: "Asia/Kolkata",
+            }).format(new Date());
+            const hasDueBookedTrip = data.trips.some(
+              (t: CrmTripItem) =>
+                t.dealStage === "Booked/Won" &&
+                t.tripStatus !== "Complete" &&
+                Boolean(t.startDate) &&
+                (t.startDate || "") <= todayIst
+            );
+            if (hasDueBookedTrip) {
+              didHydrationSyncRef.current = true;
+              fetch("/api/portal/crm/trips/sync-in-travel", { method: "POST" })
+                .then((r) => r.json())
+                .then((syncData) => {
+                  if (syncData?.ok && syncData.promotedCount > 0) {
+                    fetch(`/api/portal/crm/trips?role=${encodeURIComponent(activeRole)}`)
+                      .then((r2) => r2.json())
+                      .then((d2) => {
+                        if (d2?.ok && Array.isArray(d2.trips)) setCrmTrips(d2.trips);
+                      })
+                      .catch(() => {});
+                  }
+                })
+                .catch(() => {});
+            }
+          }
         }
         if (data && data.ok && Array.isArray(data.staffOptions)) {
           setStaffOptions(data.staffOptions);
@@ -1652,6 +1681,21 @@ Please produce the day-by-day travel itinerary and formatted proposal PDF struct
                                 ? "In Progress"
                                 : null;
                             if (target && session) {
+                              if (kanbanDragTrip.dealStage === "In Travel" && target === "Booked/Won") {
+                                const matchingStaff = staffOptions.find(
+                                  (s) => s.displayName?.toLowerCase() === session.fullName?.toLowerCase()
+                                );
+                                const callerUid = matchingStaff?.userId || null;
+                                const isOwnerOrSuperAdmin =
+                                  session.role === "super_admin" ||
+                                  session.email?.toLowerCase() === "vivek@searchmyvacation.com" ||
+                                  (Boolean(callerUid) && kanbanDragTrip.leadOwnerId === callerUid);
+                                if (!isOwnerOrSuperAdmin) {
+                                  setCrmNotice("Only the assigned Travel Advisor or Super Admin can revert an Active journey.");
+                                  setKanbanDragTrip(null);
+                                  return;
+                                }
+                              }
                               setKanbanStageGate({ trip: kanbanDragTrip, targetStage: target });
                             }
                             setKanbanDragTrip(null);

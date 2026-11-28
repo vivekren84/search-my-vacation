@@ -430,6 +430,7 @@ export function EditTripModal({
                   <option value="Enquiry">Enquiry</option>
                   <option value="In Progress">In Progress</option>
                   <option value="Booked/Won">Booked/Won</option>
+                  <option value="In Travel">In Travel / Active</option>
                   <option value="On Hold">On Hold</option>
                   <option value="Lost">Lost</option>
                 </select>

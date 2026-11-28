@@ -636,13 +636,22 @@ export function JourneyDetailDrawer({
                 <span className="px-2 py-0.5 rounded-full bg-[#F5951C]/20 text-[#F5951C] font-bold">
                   {trip.deal_stage}
                 </span>
-                {trip.deal_stage !== "Booked/Won" && trip.deal_stage !== "Cancelled" && (
+                {trip.deal_stage !== "Booked/Won" && trip.deal_stage !== "In Travel" && trip.deal_stage !== "Cancelled" && (
                   <button
                     type="button"
                     onClick={() => setStageGateTarget("Booked/Won")}
                     className="px-2 py-0.5 rounded-lg bg-emerald-600 text-white font-bold hover:bg-emerald-700"
                   >
                     → Booked/Won
+                  </button>
+                )}
+                {trip.deal_stage === "In Travel" && (
+                  <button
+                    type="button"
+                    onClick={() => setStageGateTarget("Booked/Won")}
+                    className="px-2 py-0.5 rounded-lg border border-amber-500/40 text-amber-700 dark:text-amber-300 font-semibold hover:bg-amber-500/10"
+                  >
+                    ← Revert to Booked/Won
                   </button>
                 )}
                 {trip.deal_stage !== "On Hold" && trip.deal_stage !== "Lost" && trip.deal_stage !== "Cancelled" && (
@@ -663,7 +672,7 @@ export function JourneyDetailDrawer({
                     Mark Lost
                   </button>
                 )}
-                {trip.deal_stage === "Booked/Won" && trip.trip_status !== "Complete" && (
+                {(trip.deal_stage === "Booked/Won" || trip.deal_stage === "In Travel") && trip.trip_status !== "Complete" && (
                   <>
                     <button
                       type="button"
