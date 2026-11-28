@@ -130,6 +130,7 @@ export const HOMEPAGE_FEELING_MAP: Readonly<Record<JourneyFeeling, EmotionId>> =
   celebrate: "celebration",
   romance: "romance",
   escape: "escape",
+  memory_makers: "reconnection",
   // EBC-036 (D-08): Memory Maker now enters via the shared `?mood=` mechanism
   // (see entry-context.ts moodPreselections), so it needs a supporting
   // EmotionId here too, otherwise TypeScript's exhaustiveness check on this

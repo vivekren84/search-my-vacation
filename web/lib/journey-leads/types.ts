@@ -45,7 +45,7 @@ export type JourneyLeadPassportSummary = {
   entryContext?: {
     // EBC-036 (D-08): "memory" added alongside the other five moods now that
     // Memory Maker routes through the shared `?mood=` mechanism.
-    feeling?: "relax" | "explore" | "celebrate" | "romance" | "escape" | "memory";
+    feeling?: "relax" | "explore" | "celebrate" | "romance" | "escape" | "memory" | "memory_makers";
     experience?: "Memory Makers" | "Celebration Moments" | "Family Time" | "Weekend Getaways" | "Global Escapes" | "Nature & Serenity";
     // EBC-030: governed Travel Inspiration stable IDs (replaces the previous
     // ad-hoc Mountains/Beaches/Wildlife/Romance/Relaxation set).
