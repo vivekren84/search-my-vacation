@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { StaffOption } from "./EditTripModal";
 import { StageGateModal } from "./StageGateModal";
+import { useDestinationClock } from "@/lib/portal/useDestinationClock";
 
 interface JourneyDetailDrawerProps {
   tripId: string;
@@ -56,6 +57,7 @@ export function JourneyDetailDrawer({
   const [activeTab, setActiveTab] = useState<DrawerTab>("overview");
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any>(null);
+  const destinationClock = useDestinationClock(data?.trip?.destination);
   const [toast, setToast] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
@@ -581,6 +583,11 @@ export function JourneyDetailDrawer({
               </div>
               <p className="text-xs text-[#475569] dark:text-zinc-400">
                 📍 {trip?.destination || "—"} • {trip?.travel_month || ""} {trip?.travel_year || ""} • {trip?.pax_adults || 1}A{trip?.pax_children > 0 ? `+${trip.pax_children}C` : ""}
+                {destinationClock && (
+                  <span className="text-[#0F172A] dark:text-zinc-200 font-medium">
+                    {" "}• 🕒 {destinationClock}
+                  </span>
+                )}
               </p>
             </div>
 
